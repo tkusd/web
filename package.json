@@ -1,0 +1,38 @@
+{
+  "name": "tkusd-web",
+  "version": "0.0.0",
+  "private": true,
+  "main": "index",
+  "scripts": {
+    "start": "NODE_ENV=production node index",
+    "dev": "NODE_ENV=development node index",
+    "build": "webpack --stats --progress"
+  },
+  "author": "Tommy Chen <tommy351@gmail.com> (http://zespia.tw)",
+  "dependencies": {
+    "body-parser": "^1.12.4",
+    "compression": "^1.4.4",
+    "cookie-parser": "^1.3.4",
+    "csurf": "^1.8.2",
+    "express": "^4.12.3",
+    "fluxible": "^0.4.7",
+    "fluxible-router": "^0.1.4",
+    "graceful-fs": "^3.0.6",
+    "lodash": "^3.8.0",
+    "morgan": "^1.5.3",
+    "react": "^0.13.3",
+    "serialize-javascript": "^1.0.0"
+  },
+  "devDependencies": {
+    "babel-core": "^5.4.2",
+    "babel-eslint": "^3.1.1",
+    "babel-loader": "^5.1.0",
+    "eslint": "^0.21.0",
+    "eslint-loader": "^0.11.2",
+    "eslint-plugin-react": "^2.3.0",
+    "minimist": "^1.1.1",
+    "react-hot-loader": "^1.2.7",
+    "webpack": "^1.9.5",
+    "webpack-dev-server": "^1.8.2"
+  }
+}
