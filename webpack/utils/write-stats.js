@@ -23,7 +23,7 @@ function writeStats(stats){
 
   let content = {
     script: getChunks('main', 'js'),
-    css: getChunks('main', 'css')
+    style: getChunks('main', 'css')
   };
 
   mkdirs(this.options.output.path);

@@ -3,7 +3,7 @@ import ApplicationStore from '../stores/ApplicationStore';
 
 class HtmlDocument extends React.Component {
   render(){
-    const {script} = this.props.stats;
+    const {script, style} = this.props.stats;
 
     return (
       <html>
@@ -11,6 +11,7 @@ class HtmlDocument extends React.Component {
           <meta charSet="utf-8"/>
           <title>{this.props.context.getStore(ApplicationStore).getPageTitle()}</title>
           <meta property="og:type" content="website"/>
+          {style.map((href, key) => <link rel="stylesheet" type="text/css" href={href} key={key}/>)}
         </head>
         <body>
           <div id="app" dangerouslySetInnerHTML={{__html: this.props.markup}}></div>

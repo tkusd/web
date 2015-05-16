@@ -3,6 +3,10 @@ import ApplicationStore from '../stores/ApplicationStore';
 import {connectToStores, provideContext} from 'fluxible/addons';
 import {handleHistory} from 'fluxible-router';
 
+if (process.env.BROWSER){
+  require('../styles/Application.css');
+}
+
 class Application extends React.Component {
   static contextTypes = {
     getStore: React.PropTypes.func,

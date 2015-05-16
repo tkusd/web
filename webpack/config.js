@@ -9,7 +9,7 @@ export default {
   output: {
     path: assetPath,
     filename: '[name].js',
-    chunkFilename: '[name].js',
+    chunkFilename: '[id].js',
     publicPath: '/assets/'
   },
   resolve: {
@@ -28,8 +28,17 @@ export default {
         test: /\.jsx?$/,
         loaders: ['react-hot', 'babel'],
         exclude: /node_modules/
+      },
+      {
+        test: /\.css$/,
+        loader: 'style-loader!css-loader!postcss-loader'
       }
     ]
   },
-  progress: true
+  progress: true,
+  postcss: [
+    require('postcss-nested'),
+    require('cssnext'),
+    require('cssnano')
+  ]
 };

@@ -28,15 +28,12 @@ export default merge({}, config, {
     // hot reload
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoErrorsPlugin(),
-/*
-    // print progress
-    new webpack.ProgressPlugin(function(percentage, message){
-      process.stdout.write('\u001b[0K' + Math.round(percentage * 100) + '%: ' + message + '\u001b[1000D');
-    }),
-*/
+
+    // env variables
     new webpack.DefinePlugin({
       'process.env': {
-        NODE_ENV: JSON.stringify('development')
+        NODE_ENV: JSON.stringify('development'),
+        BROWSER: JSON.stringify(true)
       }
     }),
 
