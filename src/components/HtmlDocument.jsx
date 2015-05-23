@@ -1,22 +1,36 @@
 import React from 'react';
-import ApplicationStore from '../stores/ApplicationStore';
+import AppStore from '../stores/AppStore';
 
 class HtmlDocument extends React.Component {
+  static propTypes = {
+    context: React.PropTypes.object.isRequired,
+    markup: React.PropTypes.string.isRequired,
+    state: React.PropTypes.string.isRequired,
+    script: React.PropTypes.arrayOf(React.PropTypes.string),
+    style: React.PropTypes.arrayOf(React.PropTypes.string)
+  }
+
+  static defaultProps = {
+    script: [],
+    style: []
+  }
+
   render(){
-    const {script, style} = this.props.stats;
+    let {context, markup, state, script, style} = this.props;
+    let appStore = context.getStore(AppStore);
 
     return (
       <html>
         <head>
           <meta charSet="utf-8"/>
-          <title>{this.props.context.getStore(ApplicationStore).getPageTitle()}</title>
-          <meta property="og:type" content="website"/>
+          <title>{appStore.getPageTitle()}</title>
+          <meta name="viewport" content="width=device-width, user-scalable=no"/>
           {style.map((href, key) => <link rel="stylesheet" type="text/css" href={href} key={key}/>)}
         </head>
         <body>
-          <div id="app" dangerouslySetInnerHTML={{__html: this.props.markup}}></div>
-          <script dangerouslySetInnerHTML={{__html: this.props.state}}/>
-          {script.map((src, key) => <script src={src} key={key}/>)}
+          <div id="app" dangerouslySetInnerHTML={{__html: markup}}></div>
+          <script dangerouslySetInnerHTML={{__html: state}}/>
+          {script.map((src, key) => <script src={src} key={key} defer/>)}
         </body>
       </html>
     );

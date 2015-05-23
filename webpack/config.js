@@ -37,8 +37,8 @@ export default {
   },
   progress: true,
   postcss: [
-    require('postcss-nested'),
-    require('cssnext'),
-    require('cssnano')
+    require('postcss-nested')(),
+    require('cssnext')(),
+    require('cssnano')()
   ]
 };
