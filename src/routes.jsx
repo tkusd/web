@@ -5,6 +5,7 @@ import Signup from './components/Signup';
 import Login from './components/Login';
 import Home from './components/Home';
 import Settings from './components/Settings';
+import Profile from './components/Profile';
 
 function bindHook(hook, context){
   return function(){
@@ -39,6 +40,7 @@ export default function(context){
       <Route name="signup" handler={Signup}/>
       <Route name="login" handler={Login}/>
       <Route name="settings" handler={Settings}/>
+      <Route name="profile" path="/users/:id" handler={Profile}/>
       <DefaultRoute name="home" handler={Home}/>
     </Route>
   );

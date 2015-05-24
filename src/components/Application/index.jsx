@@ -5,7 +5,7 @@ import {connectToStores} from 'fluxible/addons';
 import Header from './Header';
 
 if (process.env.BROWSER){
-  require('../../styles/Application.css');
+  require('../../styles/Application/Application.styl');
 }
 
 class Application extends React.Component {
@@ -15,7 +15,7 @@ class Application extends React.Component {
 
   render(){
     return (
-      <div>
+      <div id="app">
         <Header/>
         <RouteHandler/>
       </div>

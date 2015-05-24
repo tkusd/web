@@ -24,13 +24,12 @@ class HtmlDocument extends React.Component {
         <head>
           <meta charSet="utf-8"/>
           <title>{appStore.getPageTitle()}</title>
-          <meta name="viewport" content="width=device-width, user-scalable=no"/>
           {style.map((href, key) => <link rel="stylesheet" type="text/css" href={href} key={key}/>)}
         </head>
         <body>
-          <div id="app" dangerouslySetInnerHTML={{__html: markup}}></div>
+          <div id="root" dangerouslySetInnerHTML={{__html: markup}}></div>
           <script dangerouslySetInnerHTML={{__html: state}}/>
-          {script.map((src, key) => <script src={src} key={key} defer/>)}
+          {script.map((src, key) => <script src={src} key={key}/>)}
         </body>
       </html>
     );

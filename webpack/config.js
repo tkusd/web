@@ -30,15 +30,19 @@ export default {
         exclude: /node_modules/
       },
       {
-        test: /\.css$/,
-        loader: 'style-loader!css-loader!postcss-loader'
+        test: /\.styl$/,
+        loader: 'style-loader!css-loader!postcss-loader!stylus-loader'
       }
     ]
   },
   progress: true,
+  stylus: {
+    use: [
+      require('nib')()
+    ]
+  },
   postcss: [
-    require('postcss-nested')(),
-    require('cssnext')(),
+    require('autoprefixer-core')(),
     require('cssnano')()
   ]
 };

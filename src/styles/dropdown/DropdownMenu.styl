@@ -1,0 +1,22 @@
+@import "nib"
+@import "../common"
+
+.dropdown-menu
+  display: none
+  position: absolute
+  top: 100%
+  list-style: none
+  background: #fff
+  border: 1px solid color-border
+  border-radius: 0 0 3px 3px
+  margin: 0
+  padding: 5px 0
+  .dropdown--active &
+  .dropdown--hover:hover &
+    display: block
+
+.dropdown-menu--left
+  left: 0
+
+.dropdown-menu--right
+  right: 0

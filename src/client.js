@@ -4,7 +4,7 @@ import Router from 'react-router';
 import {FluxibleComponent} from 'fluxible/addons';
 import routes from './routes';
 
-const mountNode = document.getElementById('app');
+const root = document.getElementById('root');
 const dehydratedState = window.$STATE;
 
 app.rehydrate(dehydratedState, (err, context) => {
@@ -17,6 +17,6 @@ app.rehydrate(dehydratedState, (err, context) => {
       FluxibleComponent,
       {context: context.getComponentContext()},
       Component()
-    ), mountNode);
+    ), root);
   });
 });

@@ -1,0 +1,21 @@
+@import "nib"
+@import "../common"
+
+$button
+  color: color-default
+  text-decoration: none
+  display: inline-block
+  background: #fff
+  border-radius: 3px
+  border: 1px solid color-border
+  text-align: center
+  vertical-align: middle
+  user-select: none
+  cursor: pointer
+  padding: 6px 12px
+
+$button-cyan
+  @extend $button
+  background: color-cyan
+  color: #fff
+  border-color: darken(color-cyan, 10%)

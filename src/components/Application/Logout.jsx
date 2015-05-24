@@ -3,6 +3,10 @@ import {logout} from '../../actions/TokenAction';
 import {connectToStores} from 'fluxible/addons';
 import TokenStore from '../../stores/TokenStore';
 
+if (process.env.BROWSER){
+  require('../../styles/Application/Logout.styl');
+}
+
 class Logout extends React.Component {
   static contextTypes = {
     executeAction: React.PropTypes.func.isRequired,
@@ -24,7 +28,7 @@ class Logout extends React.Component {
   render(){
     return (
       <form onSubmit={this.handleSubmit.bind(this)}>
-        <button type="submit">Log out</button>
+        <button type="submit" id="logout--button">Log out</button>
       </form>
     );
   }

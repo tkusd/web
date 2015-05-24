@@ -1,10 +1,6 @@
 import React from 'react';
 import cx from 'classnames';
 
-if (process.env.BROWSER){
-  require('../../styles/form/Input.css');
-}
-
 function noop(){}
 
 class Input extends React.Component {
