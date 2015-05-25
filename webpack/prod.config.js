@@ -12,7 +12,7 @@ export default merge({}, config, {
   },
   module: {
     loaders: config.module.loaders.slice(0, config.module.loaders.length - 1).concat({
-      test: /\.css$/,
+      test: /\.styl$/,
       loader: ExtractTextPlugin.extract('style-loader', 'css-loader!postcss-loader!stylus-loader')
     })
   },

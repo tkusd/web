@@ -14,7 +14,7 @@ export default merge({}, config, {
     host: WEBPACK_HOST,
     port: WEBPACK_PORT
   },
-  devtool: 'eval-cheap-module-source-map',
+  devtool: 'eval',
   entry: {
     main: [].concat([
       `webpack-dev-server/client?http://${WEBPACK_HOST}:${WEBPACK_PORT}`,
