@@ -21,8 +21,21 @@ export default merge({}, config, {
       'webpack/hot/only-dev-server'
     ], config.entry.main)
   },
+  module: {
+    loaders: [
+      {
+        test: /\.jsx?$/,
+        loaders: ['react-hot', 'babel'],
+        exclude: /node_modules/
+      },
+      {
+        test: /\.styl$/,
+        loader: 'style-loader!css-loader!postcss-loader!stylus-loader'
+      }
+    ]
+  },
   output: {
-    publicPath: `http://${WEBPACK_HOST}:${WEBPACK_PORT}/assets/`
+    publicPath: `http://${WEBPACK_HOST}:${WEBPACK_PORT}/build/`
   },
   plugins: [
     // hot reload

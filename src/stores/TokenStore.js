@@ -1,19 +1,17 @@
-import {BaseStore} from 'fluxible/addons';
+import {BaseStore} from '../flux';
 import Actions from '../constants/Actions';
 
 class TokenStore extends BaseStore {
   static storeName = 'TokenStore'
 
   static handlers = {
-    [Actions.UPDATE_TOKEN_SUCCESS]: 'setData',
-    [Actions.UPDATE_TOKEN_FAILED]: 'setError'
+    [Actions.UPDATE_TOKEN_SUCCESS]: 'setData'
   }
 
-  constructor(dispatcher){
-    super(dispatcher);
+  constructor(context){
+    super(context);
 
     this.data = null;
-    this.error = null;
   }
 
   getData(){
@@ -22,7 +20,6 @@ class TokenStore extends BaseStore {
 
   setData(data){
     this.data = data;
-    this.error = null;
     this.emitChange();
   }
 
@@ -30,25 +27,14 @@ class TokenStore extends BaseStore {
     return Boolean(this.data && this.data.id);
   }
 
-  getError(){
-    return this.error;
-  }
-
-  setError(err){
-    this.error = err;
-    this.emitChange();
-  }
-
   dehydrate(){
     return {
-      data: this.data,
-      error: this.error
+      data: this.data
     };
   }
 
   rehydrate(state){
     this.data = state.data;
-    this.error = state.error;
   }
 }
 

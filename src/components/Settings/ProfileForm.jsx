@@ -1,7 +1,5 @@
 import React from 'react';
 import {Input, validators} from '../form';
-import {connectToStores} from 'fluxible/addons';
-import UserStore from '../../stores/UserStore';
 import * as UserAction from '../../actions/UserAction';
 
 class ProfileForm extends React.Component {
@@ -10,30 +8,46 @@ class ProfileForm extends React.Component {
   }
 
   static propTypes = {
-    userData: React.PropTypes.object,
-    userError: React.PropTypes.object
+    user: React.PropTypes.object.isRequired
   }
 
-  componentWillUnmount(){
-    this.context.executeAction(UserAction.resetError);
+  constructor(props, context){
+    super(props, context);
+
+    this.state = {
+      error: null
+    };
+
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  componentDidUpdate(){
+    let {error} = this.state;
+
+    if (error && error.field){
+      this.refs[error.field].setError(error.message);
+    }
   }
 
   render(){
-    let {userData} = this.props;
+    let {user} = this.props;
+    let {error} = this.state;
+    let commonError = error && !error.field ? error.message : null;
 
     return (
       <form
         className="form"
-        onSubmit={this.handleSubmit.bind(this)}>
+        onSubmit={this.handleSubmit}>
+        <div className="form-error">{commonError}</div>
         <Input
           id="profile-name"
           name="name"
           ref="name"
           label="Name"
           type="text"
-          value={userData.name}
+          value={user.name}
           validator={[
-            validators.required,
+            validators.required(),
             validators.length(0, 100)
           ]}/>
         <Input
@@ -42,10 +56,10 @@ class ProfileForm extends React.Component {
           ref="email"
           label="Email"
           type="email"
-          value={userData.email}
+          value={user.email}
           validator={[
-            validators.required,
-            validators.email
+            validators.required(),
+            validators.email()
           ]}/>
         <button type="submit" className="btn">Update</button>
       </form>
@@ -61,17 +75,16 @@ class ProfileForm extends React.Component {
       return;
     }
 
+    this.setState({error: null});
+
     this.context.executeAction(UserAction.update, {
-      id: this.props.userData.id,
+      id: this.props.user.id,
       name: name.getValue(),
       email: email.getValue()
+    }).catch(err => {
+      this.setState({error: err.body || err});
     });
   }
 }
-
-ProfileForm = connectToStores(ProfileForm, [UserStore], (stores, props) => ({
-  userData: stores.UserStore.getCurrentUser() || {},
-  userError: stores.UserStore.getError()
-}));
 
 export default ProfileForm;

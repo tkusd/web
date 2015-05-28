@@ -1,6 +1,6 @@
 import path from 'path';
 
-const assetPath = path.join(__dirname, '../public/assets');
+const assetPath = path.join(__dirname, '../public/build');
 
 export default {
   entry: {
@@ -10,7 +10,7 @@ export default {
     path: assetPath,
     filename: '[name].js',
     chunkFilename: '[id].js',
-    publicPath: '/assets/'
+    publicPath: '/build/'
   },
   resolve: {
     extensions: ['', '.js', '.jsx']
@@ -21,17 +21,6 @@ export default {
         test: /\.jsx?$/,
         exclude: /node_modules/,
         loaders: ['eslint']
-      }
-    ],
-    loaders: [
-      {
-        test: /\.jsx?$/,
-        loaders: ['react-hot', 'babel'],
-        exclude: /node_modules/
-      },
-      {
-        test: /\.styl$/,
-        loader: 'style-loader!css-loader!postcss-loader!stylus-loader'
       }
     ]
   },

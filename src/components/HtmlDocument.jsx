@@ -29,7 +29,7 @@ class HtmlDocument extends React.Component {
         <body>
           <div id="root" dangerouslySetInnerHTML={{__html: markup}}></div>
           <script dangerouslySetInnerHTML={{__html: state}}/>
-          {script.map((src, key) => <script src={src} key={key}/>)}
+          {script.map((src, key) => <script src={src} key={key} defer/>)}
         </body>
       </html>
     );

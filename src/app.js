@@ -1,11 +1,10 @@
-import Fluxible from 'fluxible';
+import {Flux} from './flux';
 
-let app = new Fluxible({
-  stores: [
-    require('./stores/AppStore'),
-    require('./stores/UserStore'),
-    require('./stores/TokenStore')
-  ]
-});
+const app = new Flux();
+
+app.registerStore(require('./stores/AppStore'));
+app.registerStore(require('./stores/UserStore'));
+app.registerStore(require('./stores/TokenStore'));
+app.registerStore(require('./stores/ProjectStore'));
 
 export default app;

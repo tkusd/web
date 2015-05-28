@@ -1,4 +1,4 @@
-import {BaseStore} from 'fluxible/addons';
+import {BaseStore} from '../flux';
 import Actions from '../constants/Actions';
 import {Map} from 'immutable';
 import TokenStore from './TokenStore';
@@ -8,15 +8,13 @@ class UserStore extends BaseStore {
 
   static handlers = {
     [Actions.UPDATE_USER_SUCCESS]: 'setData',
-    [Actions.UPDATE_USER_FAILED]: 'setError',
     [Actions.DELETE_USER_DATA]: 'removeUser'
   }
 
-  constructor(dispatcher){
-    super(dispatcher);
+  constructor(context){
+    super(context);
 
     this.data = Map({});
-    this.error = null;
   }
 
   getUser(id){
@@ -39,7 +37,7 @@ class UserStore extends BaseStore {
   }
 
   getCurrentUser(){
-    let token = this.dispatcher.getStore(TokenStore).getData();
+    let token = this.context.getStore(TokenStore).getData();
     if (!token) return null;
 
     return this.getUser(token.user_id);
@@ -50,29 +48,17 @@ class UserStore extends BaseStore {
   }
 
   setData(payload){
-    this.error = null;
     this.setUser(payload.id, payload);
-  }
-
-  getError(){
-    return this.error;
-  }
-
-  setError(err){
-    this.error = err;
-    this.emitChange();
   }
 
   dehydrate(){
     return {
-      data: this.data.toObject(),
-      error: this.error
+      data: this.data.toObject()
     };
   }
 
   rehydrate(state){
     this.data = Map(state.data);
-    this.error = state.error;
   }
 }
 

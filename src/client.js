@@ -1,22 +1,33 @@
+require('babel-core/polyfill');
+
 import React from 'react';
 import app from './app';
 import Router from 'react-router';
-import {FluxibleComponent} from 'fluxible/addons';
 import routes from './routes';
+import AppStore from './stores/AppStore';
+import {Container} from './flux';
 
 const root = document.getElementById('root');
-const dehydratedState = window.$STATE;
+const context = app.rehydrate(window.$STATE);
 
-app.rehydrate(dehydratedState, (err, context) => {
-  if (err) throw err;
+const router = Router.create({
+  routes: routes(context),
+  location: Router.HistoryLocation,
+  onError: err => {
+    console.error(err);
+  }
+});
 
-  Router.run(routes(context.getActionContext()), Router.HistoryLocation, (Root, state) => {
-    let Component = React.createFactory(Root);
+router.run((Root, state) => {
+  let appStore = context.getStore(AppStore);
 
-    React.render(React.createElement(
-      FluxibleComponent,
-      {context: context.getComponentContext()},
-      Component()
-    ), root);
-  });
+  React.render(React.createElement(
+    Container,
+    {context},
+    React.createFactory(Root)()
+  ), root);
+
+  if (appStore.isFirstRender()){
+    appStore.setFirstRender(false);
+  }
 });

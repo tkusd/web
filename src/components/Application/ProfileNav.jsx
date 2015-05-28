@@ -1,10 +1,10 @@
 import React from 'react';
 import {Link} from 'react-router';
 import UserStore from '../../stores/UserStore';
-import {connectToStores} from 'fluxible/addons';
-import {Dropdown, DropdownMenu, DropdownItem, DropdownDivider} from '../dropdown';
+import {connectToStores} from '../../flux';
+import {Dropdown, DropdownMenu, DropdownItem, DropdownDivider} from '../../components/dropdown';
 import Logout from './Logout';
-import Gravatar from '../common/Gravatar';
+import Gravatar from '../../components/common/Gravatar';
 
 if (process.env.BROWSER){
   require('../../styles/Application/HeaderActions.styl');
@@ -16,7 +16,7 @@ class HeaderActions extends React.Component {
   }
 
   render(){
-    let {currentUser} = this.props;
+    let {currentUser} = this.state;
 
     if (currentUser){
       return (

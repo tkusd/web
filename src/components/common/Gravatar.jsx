@@ -1,5 +1,5 @@
 import React from 'react';
-import qs from 'qs';
+import qs from 'querystring';
 import {assign, omit} from 'lodash';
 
 class Gravatar extends React.Component {

@@ -1,4 +1,5 @@
 .DS_Store
 node_modules/
 *.log
-public/assets/
+public/build/
+.idea

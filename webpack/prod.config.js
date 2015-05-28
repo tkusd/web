@@ -11,10 +11,17 @@ export default merge({}, config, {
     chunkFilename: '[id]-[chunkhash].js'
   },
   module: {
-    loaders: config.module.loaders.slice(0, config.module.loaders.length - 1).concat({
-      test: /\.styl$/,
-      loader: ExtractTextPlugin.extract('style-loader', 'css-loader!postcss-loader!stylus-loader')
-    })
+    loaders: [
+      {
+        test: /\.jsx?$/,
+        loaders: ['babel'],
+        exclude: /node_modules/
+      },
+      {
+        test: /\.styl$/,
+        loader: ExtractTextPlugin.extract('style-loader', 'css-loader!postcss-loader!stylus-loader')
+      }
+    ]
   },
   plugins: [
     // extract css files

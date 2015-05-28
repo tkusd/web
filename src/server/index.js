@@ -8,7 +8,6 @@ import csurf from 'csurf';
 import serveStatic from 'serve-static';
 import errorhandler from 'errorhandler';
 import minimist from 'minimist';
-import app from '../app';
 
 // Create a server
 const server = express();

@@ -9,7 +9,7 @@ if (process.env.BROWSER){
 class Dropdown extends React.Component {
   static propTypes = {
     className: React.PropTypes.string,
-    mode: React.PropTypes.oneOf('hover', 'click')
+    mode: React.PropTypes.oneOf(['hover', 'click'])
   }
 
   static defaultProps = {

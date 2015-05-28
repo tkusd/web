@@ -1,35 +1,39 @@
 import {isEmail, isURL} from 'validator';
 
-export function required(input, value){
-  if (!value.length){
-    return input.getLabel() + ' is required';
-  }
+export function required(message='Required'){
+  return (input, value) => {
+    if (!value || !value.length) return message;
+  };
 }
 
-export function length(min, max){
+export function length(min, max, message){
   min = min || 0;
+
+  if (!message){
+    if (min && max){
+      message = `The length must be between ${min} to ${max}`;
+    } else if (max){
+      message = `The maximum length is ${max}`;
+    } else if (min){
+      message = `The minimum length is ${min}`;
+    }
+  }
 
   return (input, value) => {
     if (value.length < min || (max && value.length > max)){
-      if (min && max){
-        return `The length of ${input.getLabel()} must be between ${min}~${max}`;
-      } else if (max){
-        return `The maximum length of ${input.getLabel()} is ${max}`;
-      } else if (min){
-        return `The minimum length of ${input.getLabel()} is ${min}`;
-      }
+      return message;
     }
   };
 }
 
-export function email(input, value){
-  if (!isEmail(value)){
-    return 'Email is not valid';
-  }
+export function email(message='Email is invalid'){
+  return (input, value) => {
+    if (!isEmail(value)) return message;
+  };
 }
 
-export function url(input, value){
-  if (!isURL(value)){
-    return 'URL is not valid';
-  }
+export function url(message='URL is invalid'){
+  return (input, value) => {
+    if (!isURL(value)) return message;
+  };
 }

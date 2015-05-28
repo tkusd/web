@@ -9,7 +9,7 @@ if (process.env.BROWSER){
 class DropdownMenu extends React.Component {
   static propTypes = {
     className: React.PropTypes.string,
-    position: React.PropTypes.oneOf('left', 'right')
+    position: React.PropTypes.oneOf(['left', 'right'])
   }
 
   static defaultProps = {

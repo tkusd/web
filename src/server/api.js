@@ -1,6 +1,5 @@
 import express from 'express';
 import {api} from '../utils/request';
-import {assign} from 'lodash';
 
 const app = express();
 
@@ -9,30 +8,45 @@ function refreshCSRFToken(req, res, next){
   next();
 }
 
+function getText(res){
+  return res.text();
+}
+
 app.post('/tokens', refreshCSRFToken, (req, res, next) => {
-  api('post', 'tokens')
-    .send(req.body)
-    .end((err, data) => {
-      let {status, body} = data;
+  api('tokens', {
+    method: 'post',
+    body: req.body
+  }).then(response => {
+    res.status(response.status);
+    return response;
+  })
+  .then(getText)
+  .then(txt => {
+    if (txt){
+      req.session.token = JSON.parse(txt);
+    }
 
-      if (!err){
-        req.session.token = body;
-      }
-
-      res.status(status).send(body);
-    });
+    res.send(txt);
+  }).catch(next);
 });
 
 app.delete('/tokens', refreshCSRFToken, (req, res, next) => {
-  api('delete', 'tokens/' + req.body.id).end((err, data) => {
-    let {status, body} = data;
+  api('tokens/' + req.body.id, {
+    method: 'delete'
+  }).then(response => {
+    let {status} = response;
 
-    if (!err){
+    if (status === 204){
       req.session.token = null;
     }
 
-    res.status(status).send(body);
-  });
+    res.status(status);
+    return response;
+  })
+  .then(getText)
+  .then(txt => {
+    res.send(txt);
+  }).catch(next);
 });
 
 app.delete('/users', refreshCSRFToken, (req, res, next) => {
@@ -45,17 +59,25 @@ app.delete('/users', refreshCSRFToken, (req, res, next) => {
     });
   }
 
-  api('delete', 'users/' + req.body.id)
-    .set('Authorization', 'Bearer ' + token.id)
-    .end((err, data) => {
-      let {status, body} = data;
+  api('users/' + req.body.id, {
+    method: 'delete',
+    headers: {
+      Authorization: 'Bearer ' + token.id
+    }
+  }).then(response => {
+    let {status} = response;
 
-      if (!err){
-        req.session.token = null;
-      }
+    if (status === 204){
+      req.session.token = null;
+    }
 
-      res.status(status).send(body);
-    });
+    res.status(status);
+    return response;
+  })
+  .then(getText)
+  .then(txt => {
+    res.send(txt);
+  }).catch(next);
 });
 
 app.use((req, res, next) => {

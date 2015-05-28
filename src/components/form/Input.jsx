@@ -1,21 +1,16 @@
 import React from 'react';
 import cx from 'classnames';
+import {assign, omit} from 'lodash';
 
 function noop(){}
 
 class Input extends React.Component {
   static propTypes = {
-    id: React.PropTypes.string,
     name: React.PropTypes.string.isRequired,
-    type: React.PropTypes.string,
     label: React.PropTypes.string,
-    hint: React.PropTypes.string,
     validator: React.PropTypes.arrayOf(React.PropTypes.func),
     transform: React.PropTypes.arrayOf(React.PropTypes.func),
-    value: React.PropTypes.any,
-    onChange: React.PropTypes.func,
-    error: React.PropTypes.string,
-    disabled: React.PropTypes.bool
+    onChange: React.PropTypes.func
   }
 
   static defaultProps = {
@@ -29,33 +24,35 @@ class Input extends React.Component {
 
     let data = this.checkData(this.props.value || '');
     let value = data.value;
-    let error = this.props.error || data.error;
+    let error = data.error;
     let dirty = false;
 
     this.state = {value, error, dirty};
+    this.handleChange = this.handleChange.bind(this);
   }
 
   render(){
     let dirty = this.isDirty();
 
-    let className = cx('input-group', {
+    let className = cx('input__group', {
       dirty: dirty,
       pristine: !dirty
     });
 
+    let props = assign({
+      className: 'input'
+    }, this.props, {
+      onChange: this.handleChange,
+      value: this.getValue()
+    });
+
+    let input = React.DOM.input(omit(props, 'transform', 'validator'));
+
     return (
       <div className={className}>
-        <label htmlFor={this.props.id} className="input-label">{this.props.label}</label>
-        <input
-          id={this.props.id}
-          className="input"
-          name={this.getName()}
-          type={this.props.type || 'text'}
-          placeholder={this.props.hint}
-          value={this.getValue()}
-          onChange={this.handleChange.bind(this)}
-          disabled={this.props.disabled}/>
-        <span className="input-error">{this.getError()}</span>
+        <label htmlFor={this.props.id} className="input__label">{this.props.label}</label>
+        {input}
+        <span className="input__error">{this.getError()}</span>
       </div>
     );
   }

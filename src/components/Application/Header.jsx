@@ -1,6 +1,6 @@
 import React from 'react';
 import MainNav from './MainNav';
-import HeaderActions from './HeaderActions';
+import ProfileNav from './ProfileNav';
 
 if (process.env.BROWSER){
   require('../../styles/Application/Header.styl');
@@ -11,7 +11,7 @@ class Header extends React.Component {
     return (
       <header id="header">
         <MainNav/>
-        <HeaderActions/>
+        <ProfileNav/>
       </header>
     );
   }

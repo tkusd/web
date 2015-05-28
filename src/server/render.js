@@ -4,93 +4,81 @@ import path from 'path';
 import fs from 'graceful-fs';
 import {checkToken} from '../actions/TokenAction';
 import {loadCurrentUser} from '../actions/UserAction';
-import {setCSRFToken} from '../actions/AppAction';
-import TokenStore from '../stores/TokenStore';
-import {FluxibleComponent} from 'fluxible/addons';
+import AppStore from '../stores/AppStore';
+import {Container} from '../flux';
 import Router from 'react-router';
-import async from 'async';
 import routes from '../routes';
 
 import app from '../app';
 import HtmlDocument from '../components/HtmlDocument';
 
-const STATS_PATH = path.join(__dirname, '../../public/assets/webpack-stats.json');
+const STATS_PATH = path.join(__dirname, '../../public/build/webpack-stats.json');
 
 let webpackStats;
 
-function readStats(req, callback){
+function readStats(req){
   if (req.get('env') === 'production' && webpackStats){
-    return callback(null, webpackStats);
+    return Promise.resolve(webpackStats);
   }
 
-  fs.readFile(STATS_PATH, 'utf8', function(err, content){
-    if (err) return callback(err);
+  return new Promise((resolve, reject) => {
+    fs.readFile(STATS_PATH, 'utf8', (err, content) => {
+      if (err) return reject(err);
 
-    webpackStats = JSON.parse(content);
-    callback(null, webpackStats);
+      webpackStats = JSON.parse(content);
+      resolve(webpackStats);
+    });
   });
 }
 
 function render(req, res, next){
   const context = app.createContext();
-  const ctx = context.getComponentContext();
 
-  async.auto({
-    // Read webpack stats
-    webpackStats: next => { readStats(req, next); },
+  // Read webpack stats
+  readStats(req).then(() => {
     // Check the token
-    checkToken: next => {
-      context.executeAction(checkToken, req.session.token, () => {
-        if (!ctx.getStore(TokenStore).isLoggedIn()){
-          req.session.token = null;
-        }
-
-        next();
-      });
-    },
-    // Create a CSRF token
-    csrfToken: next => { context.executeAction(setCSRFToken, req.csrfToken(), next); },
+    return context.executeAction(checkToken, req.session.token).catch(() => {
+      req.session.token = null;
+    });
+  }).then(() => {
     // Load current user
-    currentUser: ['checkToken', next => { context.executeAction(loadCurrentUser, {}, next); }]
-  }, (err, results) => {
-    if (err) return next(err);
+    return context.executeAction(loadCurrentUser);
+  }).then(() => {
+    const appStore = context.getStore(AppStore);
 
-    let {webpackStats} = results;
+    appStore.setFirstRender(false);
+    appStore.setCSRFToken(req.csrfToken());
 
     let router = Router.create({
-      routes: routes(context.getActionContext()),
+      routes: routes(context),
       location: req.path,
       onAbort: options => {
         let path = options.to ? router.makePath(options.to, options.params, options.query) : '/';
         res.redirect(path);
       },
-      onError: err => {
-        next(err);
-      }
+      onError: next
     });
 
     router.run((Root, state) => {
-      let exposed = 'window.$STATE=' + serialize(app.dehydrate(context)) + ';';
-      let Component = React.createFactory(Root);
+      let exposed = 'window.$STATE=' + serialize(context.dehydrate()) + ';';
 
       let markup = React.renderToString(React.createElement(
-        FluxibleComponent,
-        {context: ctx},
-        Component()
+        Container,
+        {context},
+        React.createFactory(Root)()
       ));
 
-      let html = React.renderToStaticMarkup(
-        <HtmlDocument
-          context={ctx}
-          state={exposed}
-          markup={markup}
-          script={webpackStats.script}
-          style={webpackStats.style}/>
-      );
+      let html = React.renderToStaticMarkup(React.createElement(HtmlDocument, {
+        context,
+        state: exposed,
+        markup,
+        script: webpackStats.script,
+        style: webpackStats.style
+      }));
 
-      res.end('<!DOCTYPE html>' + html);
+      res.send('<!DOCTYPE html>' + html);
     });
-  });
+  }).catch(next);
 }
 
 export default render;

@@ -1,4 +1,4 @@
-import {BaseStore} from 'fluxible/addons';
+import {BaseStore} from '../flux';
 import Actions from '../constants/Actions';
 
 class AppStore extends BaseStore {
@@ -6,14 +6,16 @@ class AppStore extends BaseStore {
 
   static handlers = {
     [Actions.SET_PAGE_TITLE]: 'setPageTitle',
-    [Actions.SET_CSRF_TOKEN]: 'setCSRFToken'
+    [Actions.SET_STATUS_CODE]: 'setStatusCode'
   }
 
-  constructor(dispatcher){
-    super(dispatcher);
+  constructor(context){
+    super(context);
 
     this.pageTitle = '';
     this.csrfToken = '';
+    this.firstRender = true;
+    this.statusCode = 200;
   }
 
   getPageTitle(){
@@ -35,6 +37,24 @@ class AppStore extends BaseStore {
 
   setCSRFToken(token){
     this.csrfToken = token;
+    this.emitChange();
+  }
+
+  isFirstRender(){
+    return this.firstRender;
+  }
+
+  setFirstRender(payload){
+    this.firstRender = payload;
+    this.emitChange();
+  }
+
+  getStatusCode(){
+    return this.statusCode;
+  }
+
+  setStatusCode(payload){
+    this.statusCode = payload;
     this.emitChange();
   }
 
