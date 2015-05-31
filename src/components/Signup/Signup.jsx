@@ -11,7 +11,7 @@ class Signup extends React.Component {
     router: React.PropTypes.func.isRequired
   }
 
-  static onEnter(transition, params, query, callback){
+  static onEnter(transition, params, query){
     const tokenStore = this.context.getStore(TokenStore);
 
     if (tokenStore.isLoggedIn()){
@@ -20,8 +20,6 @@ class Signup extends React.Component {
     } else {
       this.context.executeAction(setPageTitle, 'Sign up');
     }
-
-    callback();
   }
 
   constructor(props, context){

@@ -7,44 +7,48 @@ import UserStore from '../../stores/UserStore';
 import AppStore from '../../stores/AppStore';
 import {connectToStores} from '../../flux';
 
+@connectToStores([UserStore], (stores, props) => ({
+  user: stores.UserStore.getUser(props.params.id),
+  currentUser: stores.UserStore.getCurrentUser()
+}))
 class Profile extends React.Component {
-  static onEnter(transition, params, query, callback){
-    if (this.context.getStore(AppStore).isFirstRender()) return callback();
-/*
-    this.context.executeAction(UserAction.get, params).then(user => {
-      this.context.executeAction(setPageTitle, user.name);
-      ProjectList.onEnter(transition, params, query, callback);
-    }).catch(err => {
-      console.log(err);
+  static onEnter(transition, params, query){
+    if (this.context.getStore(AppStore).isFirstRender()) {
+      return Promise.resolve();
+    }
 
-      if (err.response.status !== 404) return callback(err);
+    const currentUser = this.context.getStore(UserStore).getCurrentUser();
 
-      this.context.executeAction(setPageTitle, 'Not found');
-      this.context.executeAction(setStatusCode, 404);
-      callback();
-    });*/
+    if (currentUser && currentUser.id === params.id){
+      this.context.executeAction(setPageTitle, currentUser.name);
+
+      return ProjectList.onEnter.call(this, transition, params, query);
+    }
 
     return this.context.executeAction(UserAction.get, params).then(user => {
       this.context.executeAction(setPageTitle, user.name);
-      callback();
-    }).catch(err => {
-      console.log(err);
 
+      return ProjectList.onEnter.call(this, transition, params, query);
+    }).catch(() => {
       this.context.executeAction(setPageTitle, 'Not found');
       this.context.executeAction(setStatusCode, 404);
-
-      callback();
     });
   }
 
+  componentDidUpdate(prevProps){
+    if (this.props.params.id !== prevProps.params.id){
+      this.updateState();
+    }
+  }
+
   render(){
-    let {user} = this.state;
+    let {user, currentUser} = this.state;
 
     if (user){
       return (
         <div>
-          <ProfileData user={user}/>
-          <ProjectList user={user}/>
+          <ProfileData user={user} currentUser={currentUser}/>
+          <ProjectList user={user} currentUser={currentUser} params={this.props.params}/>
         </div>
       );
     } else {
@@ -52,9 +56,5 @@ class Profile extends React.Component {
     }
   }
 }
-
-Profile = connectToStores(Profile, [UserStore], (stores, props) => ({
-  user: stores.UserStore.getUser(props.params.id)
-}));
 
 export default Profile;

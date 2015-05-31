@@ -2,8 +2,6 @@ import {BaseStore} from '../flux';
 import Actions from '../constants/Actions';
 
 class AppStore extends BaseStore {
-  static storeName = 'AppStore'
-
   static handlers = {
     [Actions.SET_PAGE_TITLE]: 'setPageTitle',
     [Actions.SET_STATUS_CODE]: 'setStatusCode'

@@ -76,6 +76,7 @@ function render(req, res, next){
         style: webpackStats.style
       }));
 
+      res.status(appStore.getStatusCode());
       res.send('<!DOCTYPE html>' + html);
     });
   }).catch(next);

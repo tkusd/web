@@ -3,18 +3,16 @@ import Actions from '../constants/Actions';
 import {Map} from 'immutable';
 
 class ProjectStore extends BaseStore {
-  static storeName = 'ProjectStore';
-
   static handlers = {
     [Actions.UPDATE_PROJECT_SUCCESS]: 'setData',
-    [Actions.UPDATE_PROJECT_FAILED]: 'setError'
+    [Actions.UPDATE_PROJECT_LIST]: 'setList'
   }
 
   constructor(context){
     super(context);
 
     this.data = Map({});
-    this.error = null;
+    this.pagination = Map({});
   }
 
   getProject(id){
@@ -29,38 +27,41 @@ class ProjectStore extends BaseStore {
     this.emitChange();
   }
 
-  getProjectOfUser(id){
-    return this.data.filter(item => item.user_id === id);
-  }
-
   getData(){
     return this.data;
   }
 
   setData(payload){
-    this.error = null;
     this.setProject(payload.id, payload);
   }
 
-  getError(){
-    return this.error;
+  getList(id){
+    return this.data.filter(item => item.user_id === id);
   }
 
-  setError(err){
-    this.error = err;
+  setList(payload){
+    this.pagination = this.pagination.set(payload.user_id, payload);
+    this.data = this.data.withMutations(data => {
+      payload.data.forEach(item => data.set(item.id, item));
+    });
+
     this.emitChange();
+  }
+
+  getPagination(id){
+    return this.pagination.get(id);
   }
 
   dehydrate(){
     return {
       data: this.data.toObject(),
-      error: this.error
+      pagination: this.pagination.toObject()
     };
   }
 
   rehydrate(state){
     this.data = Map(state.data);
-    this.error = state.error;
+    this.pagination = Map(state.pagination);
   }
 }
 

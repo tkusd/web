@@ -35,7 +35,7 @@ export function update(context, payload){
 
 export function destroy(context, payload){
   let user = context.getStore(UserStore).getCurrentUser();
-  if (!user) return Promise.resolve();
+  if (!user) return Promise.reject(new Error('User has not logged in.'));
 
   return internal('users', {
     method: 'delete',

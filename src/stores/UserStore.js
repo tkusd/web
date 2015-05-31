@@ -4,8 +4,6 @@ import {Map} from 'immutable';
 import TokenStore from './TokenStore';
 
 class UserStore extends BaseStore {
-  static storeName = 'UserStore'
-
   static handlers = {
     [Actions.UPDATE_USER_SUCCESS]: 'setData',
     [Actions.DELETE_USER_DATA]: 'removeUser'

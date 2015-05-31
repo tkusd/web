@@ -4,7 +4,7 @@ const assetPath = path.join(__dirname, '../public/build');
 
 export default {
   entry: {
-    main: ['./src/client.js']
+    main: ['./src/client']
   },
   output: {
     path: assetPath,

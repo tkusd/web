@@ -10,7 +10,7 @@ class Login extends React.Component {
     router: React.PropTypes.func.isRequired
   }
 
-  static onEnter(transition, params, query, callback){
+  static onEnter(transition, params, query){
     const tokenStore = this.context.getStore(TokenStore);
 
     if (tokenStore.isLoggedIn()){
@@ -19,8 +19,6 @@ class Login extends React.Component {
     } else {
       this.context.executeAction(setPageTitle, 'Log in');
     }
-
-    callback();
   }
 
   constructor(props, context){

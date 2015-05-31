@@ -1,4 +1,4 @@
-import keyMirror from 'react/lib/keyMirror';
+import keyMirror from 'keymirror';
 
 export default keyMirror({
   SET_PAGE_TITLE: null,
@@ -10,6 +10,9 @@ export default keyMirror({
   UPDATE_TOKEN_SUCCESS: null,
 
   UPDATE_PROJECT_SUCCESS: null,
-  UPDATE_PROJECT_FAILED: null,
-  UPDATE_PROJECT_LIST: null
+  UPDATE_PROJECT_LIST: null,
+
+  ADD_MODAL: null,
+  REMOVE_MODAL: null,
+  POP_MODAL: null
 });

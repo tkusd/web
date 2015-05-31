@@ -7,8 +7,11 @@ import DeleteUser from './DeleteUser';
 import ChangePassword from './ChangePassword';
 import {connectToStores} from '../../flux';
 
+@connectToStores([UserStore], (stores, props) => ({
+  user: stores.UserStore.getCurrentUser()
+}))
 class Settings extends React.Component {
-  static onEnter(transition, params, query, callback){
+  static onEnter(transition, params, query){
     const tokenStore = this.context.getStore(TokenStore);
 
     if (tokenStore.isLoggedIn()){
@@ -16,8 +19,6 @@ class Settings extends React.Component {
     } else {
       transition.redirect('login');
     }
-
-    callback();
   }
 
   render(){
@@ -36,9 +37,5 @@ class Settings extends React.Component {
     }
   }
 }
-
-Settings = connectToStores(Settings, [UserStore], (stores, props) => ({
-  user: stores.UserStore.getCurrentUser()
-}));
 
 export default Settings;

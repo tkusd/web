@@ -2,7 +2,8 @@ import React from 'react';
 
 class ProfileData extends React.Component {
   static propTypes = {
-    user: React.PropTypes.object.isRequired
+    user: React.PropTypes.object.isRequired,
+    currentUser: React.PropTypes.object
   }
 
   render(){

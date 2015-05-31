@@ -1,15 +1,12 @@
 import React from 'react';
+import contextTypes from './contextTypes';
 
 class Container extends React.Component {
   static propTypes = {
     context: React.PropTypes.object.isRequired
   }
 
-  static childContextTypes = {
-    executeAction: React.PropTypes.func.isRequired,
-    getStore: React.PropTypes.func.isRequired,
-    dispatch: React.PropTypes.func.isRequired
-  }
+  static childContextTypes = contextTypes
 
   getChildContext(){
     let {context} = this.props;

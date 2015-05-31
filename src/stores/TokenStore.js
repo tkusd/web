@@ -2,8 +2,6 @@ import {BaseStore} from '../flux';
 import Actions from '../constants/Actions';
 
 class TokenStore extends BaseStore {
-  static storeName = 'TokenStore'
-
   static handlers = {
     [Actions.UPDATE_TOKEN_SUCCESS]: 'setData'
   }

@@ -10,6 +10,9 @@ if (process.env.BROWSER){
   require('../../styles/Application/HeaderActions.styl');
 }
 
+@connectToStores([UserStore], (stores, props) => ({
+  currentUser: stores.UserStore.getCurrentUser()
+}))
 class HeaderActions extends React.Component {
   static propTypes = {
     currentUser: React.PropTypes.object
@@ -48,9 +51,5 @@ class HeaderActions extends React.Component {
     }
   }
 }
-
-HeaderActions = connectToStores(HeaderActions, [UserStore], (stores, props) => ({
-  currentUser: stores.UserStore.getCurrentUser()
-}));
 
 export default HeaderActions;

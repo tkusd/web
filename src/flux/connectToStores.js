@@ -1,11 +1,7 @@
 import React from 'react';
 import {assign} from 'lodash';
 
-function connectToStores(Component, stores, getter){
-  if (!Component){
-    throw new TypeError('Component is required');
-  }
-
+function connectToStores(stores, getter){
   if (!Array.isArray(stores)){
     stores = [stores];
   }
@@ -14,57 +10,57 @@ function connectToStores(Component, stores, getter){
     throw new TypeError('getter must be a function');
   }
 
-  class StoreConnector extends Component {
-    static contextTypes = assign({
-      getStore: React.PropTypes.func.isRequired
-    }, Component.contextTypes)
+  return function(Component){
+    return class extends Component {
+      static contextTypes = assign({
+        getStore: React.PropTypes.func.isRequired
+      }, Component.contextTypes)
 
-    static displayName = Component.displayName || Component.name
+      static displayName = Component.displayName || Component.name || 'StoreConnector'
 
-    constructor(props, context){
-      super(props, context);
+      constructor(props, context){
+        super(props, context);
 
-      this._handleStoreChange = this._handleStoreChange.bind(this);
-      this.state = assign(this.getStateFromStores(), this.state);
-    }
-
-    componentDidMount(){
-      stores.forEach(store => {
-        this.context.getStore(store).addChangeListener(this._handleStoreChange);
-      });
-
-      if (typeof super.componentDidMount === 'function'){
-        super.componentDidMount();
+        this.updateState = this.updateState.bind(this);
+        this.state = assign(this.getStateFromStores(props), this.state);
       }
-    }
 
-    componentWillUnmount(){
-      stores.forEach(store => {
-        this.context.getStore(store).removeChangeListener(this._handleStoreChange);
-      });
+      componentDidMount(){
+        stores.forEach(store => {
+          this.context.getStore(store).addChangeListener(this.updateState);
+        });
 
-      if (typeof super.componentWillUnmount === 'function'){
-        super.componentWillUnmount();
+        if (typeof super.componentDidMount === 'function'){
+          super.componentDidMount();
+        }
       }
-    }
 
-    getStateFromStores(){
-      let storeInstances = {};
+      componentWillUnmount(){
+        stores.forEach(store => {
+          this.context.getStore(store).removeChangeListener(this.updateState);
+        });
 
-      stores.forEach(store => {
-        let storeName = store.storeName || store.name || store;
-        storeInstances[storeName] = this.context.getStore(store);
-      });
+        if (typeof super.componentWillUnmount === 'function'){
+          super.componentWillUnmount();
+        }
+      }
 
-      return getter(storeInstances, this.props);
-    }
+      getStateFromStores(props=this.props){
+        let storeInstances = {};
 
-    _handleStoreChange(){
-      this.setState(this.getStateFromStores());
-    }
-  }
+        stores.forEach(store => {
+          let storeName = store.storeName || store.name || store;
+          storeInstances[storeName] = this.context.getStore(store);
+        });
 
-  return StoreConnector;
+        return getter(storeInstances, props);
+      }
+
+      updateState(){
+        this.setState(this.getStateFromStores());
+      }
+    };
+  };
 }
 
 export default connectToStores;

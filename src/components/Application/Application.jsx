@@ -8,6 +8,9 @@ if (process.env.BROWSER){
   require('../../styles/Application/Application.styl');
 }
 
+@connectToStores([AppStore], (stores, props) => ({
+  pageTitle: stores.AppStore.getPageTitle()
+}))
 class Application extends React.Component {
   componentDidUpdate(){
     if (process.env.BROWSER){
@@ -24,9 +27,5 @@ class Application extends React.Component {
     );
   }
 }
-
-Application = connectToStores(Application, [AppStore], (stores, props) => ({
-  pageTitle: stores.AppStore.getPageTitle()
-}));
 
 export default Application;

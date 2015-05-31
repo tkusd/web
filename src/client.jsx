@@ -21,11 +21,11 @@ const router = Router.create({
 router.run((Root, state) => {
   let appStore = context.getStore(AppStore);
 
-  React.render(React.createElement(
-    Container,
-    {context},
-    React.createFactory(Root)()
-  ), root);
+  React.render(
+    <Container context={context}>
+      <Root/>
+    </Container>
+  , root);
 
   if (appStore.isFirstRender()){
     appStore.setFirstRender(false);
