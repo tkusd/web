@@ -36,7 +36,9 @@ class Context {
 
   rehydrate(state){
     Object.keys(state).forEach(key => {
-      this.stores[key].rehydrate(state[key]);
+      if (this.stores.hasOwnProperty(key)){
+        this.stores[key].rehydrate(state[key]);
+      }
     });
   }
 

@@ -4,6 +4,8 @@ import TokenStore from './TokenStore';
 import ProjectStore from './ProjectStore';
 
 class UserStore extends CollectionStore {
+  static storeName = 'UserStore'
+
   static handlers = {
     [Actions.UPDATE_USER]: 'setUser',
     [Actions.DELETE_USER]: 'deleteUser'

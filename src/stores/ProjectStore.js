@@ -4,6 +4,8 @@ import {Map} from 'immutable';
 import ElementStore from './ElementStore';
 
 class ProjectStore extends CollectionStore {
+  static storeName = 'ProjectStore'
+
   static handlers = {
     [Actions.UPDATE_PROJECT]: 'setProject',
     [Actions.UPDATE_PROJECT_LIST]: 'setList',
