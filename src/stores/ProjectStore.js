@@ -1,67 +1,54 @@
-import {BaseStore} from '../flux';
+import CollectionStore from './CollectionStore';
 import Actions from '../constants/Actions';
 import {Map} from 'immutable';
+import ElementStore from './ElementStore';
 
-class ProjectStore extends BaseStore {
+class ProjectStore extends CollectionStore {
   static handlers = {
-    [Actions.UPDATE_PROJECT_SUCCESS]: 'setData',
-    [Actions.UPDATE_PROJECT_LIST]: 'setList'
+    [Actions.UPDATE_PROJECT]: 'setProject',
+    [Actions.UPDATE_PROJECT_LIST]: 'setList',
+    [Actions.DELETE_PROJECT]: 'deleteProject'
   }
 
   constructor(context){
     super(context);
 
-    this.data = Map({});
-    this.pagination = Map({});
+    this.pagination = Map();
   }
 
   getProject(id){
-    return this.data.get(id);
+    return this.get(id);
   }
 
-  setProject(id, data){
-    let newCollection = this.data.set(id, data);
-    if (newCollection === this.data) return;
+  setProject(payload){
+    this.set(payload.id, payload);
+  }
 
-    this.data = newCollection;
+  deleteProject(id){
+    if (!this.has(id)) return;
+
+    const elementStore = this.context.getStore(ElementStore);
+
+    this.remove(id);
+    elementStore.deleteElementsOfProject(id);
+  }
+
+  deleteProjectsOfUser(id){
+    this.data = this.data.filter(item => item.get('user_id') !== id);
     this.emitChange();
   }
 
-  getData(){
-    return this.data;
-  }
-
-  setData(payload){
-    this.setProject(payload.id, payload);
-  }
-
   getList(id){
-    return this.data.filter(item => item.user_id === id);
+    return this.data.filter(item => item.get('user_id') === id);
   }
 
   setList(payload){
     this.pagination = this.pagination.set(payload.user_id, payload);
     this.data = this.data.withMutations(data => {
-      payload.data.forEach(item => data.set(item.id, item));
+      payload.data.forEach(item => data.set(item.id, Map(item)));
     });
 
     this.emitChange();
-  }
-
-  getPagination(id){
-    return this.pagination.get(id);
-  }
-
-  dehydrate(){
-    return {
-      data: this.data.toObject(),
-      pagination: this.pagination.toObject()
-    };
-  }
-
-  rehydrate(state){
-    this.data = Map(state.data);
-    this.pagination = Map(state.pagination);
   }
 }
 

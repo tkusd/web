@@ -1,5 +1,5 @@
 import React from 'react';
-import * as UserAction from '../../actions/UserAction';
+import {deleteData} from '../../actions/UserAction';
 
 class DeleteUser extends React.Component {
   static contextTypes = {
@@ -25,7 +25,7 @@ class DeleteUser extends React.Component {
     e.preventDefault();
     if (!confirm('Are you sure?')) return;
 
-    this.context.executeAction(UserAction.destroy).then(() => {
+    this.context.executeAction(deleteData).then(() => {
       this.context.router.transitionTo('home');
     });
   }

@@ -1,11 +1,11 @@
 import React from 'react';
 import {Modal} from '../modal';
 import {Input} from '../form';
-import {createProject} from '../../actions/ProjectAction';
+import {createElement} from '../../actions/ElementAction';
 
-class NewProjectModal extends React.Component {
+class NewScreenModal extends React.Component {
   static propTypes = {
-    user: React.PropTypes.object.isRequired
+    project: React.PropTypes.object.isRequired
   }
 
   constructor(props, context){
@@ -30,14 +30,14 @@ class NewProjectModal extends React.Component {
     let {error} = this.state;
 
     return (
-      <Modal title="New project" onDismiss={this.props.closePortal}>
+      <Modal title="New screen" onDismiss={this.props.closePortal}>
         <form onSubmit={this.handleSubmit}>
           {error && !error.field && <div className="form-error">{error.message}</div>}
           <Input
-            id="new-project-title"
-            name="title"
-            ref="title"
-            label="Title"
+            id="new-screen-name"
+            name="name"
+            ref="name"
+            label="Name"
             type="text"
             required
             maxLength={255}/>
@@ -50,22 +50,22 @@ class NewProjectModal extends React.Component {
   handleSubmit(e){
     e.preventDefault();
 
-    let {title} = this.refs;
+    let {name} = this.refs;
     let {context} = this.props;
 
-    if (title.getError()){
+    if (name.getError()){
       return;
     }
 
-    context.executeAction(createProject, this.props.user.get('id'), {
-      title: title.getValue()
-    }).then(project => {
-      this.setState({error: null});
-      context.router.transitionTo('project', project);
+    context.executeAction(createElement, this.props.project.id, {
+      name: name.getValue(),
+      type: 'screen'
+    }).then(element => {
+      this.props.closePortal();
     }, err => {
       this.setState({error: err.body || err});
     });
   }
 }
 
-export default NewProjectModal;
+export default NewScreenModal;

@@ -31,8 +31,7 @@ export function api(url, options, context){
     const tokenStore = context.getStore(TokenStore);
 
     if (tokenStore.isLoggedIn()){
-      const token = tokenStore.getData();
-      options.headers.Authorization = 'Bearer ' + token.id;
+      options.headers.Authorization = 'Bearer ' + tokenStore.getToken();
     }
   }
 

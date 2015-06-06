@@ -4,61 +4,52 @@ import TokenStore from '../stores/TokenStore';
 import {loadCurrentUser} from './UserAction';
 import {parseJSON, dispatchEvent, filterError} from './common';
 
-export function create(context, payload){
+export function createToken(payload){
   return internal('tokens', {
     method: 'post',
     body: payload
-  }, context)
+  }, this)
     .then(filterError)
     .then(parseJSON)
-    .then(dispatchEvent(context, Actions.UPDATE_TOKEN_SUCCESS));
+    .then(dispatchEvent(this, Actions.UPDATE_TOKEN));
 }
 
-export function update(context, payload){
-  return api('tokens/' + payload.id, {
+export function updateToken(id){
+  return api('tokens/' + id, {
     method: 'put'
-  }, context)
+  }, this)
     .then(filterError)
     .then(parseJSON)
-    .then(dispatchEvent(context, Actions.UPDATE_TOKEN_SUCCESS));
+    .then(dispatchEvent(this, Actions.UPDATE_TOKEN));
 }
 
-export function destroy(context, payload){
+export function deleteToken(id){
   return internal('tokens', {
     method: 'delete',
-    body: {
-      id: payload.id
-    }
-  }, context)
+    body: {id}
+  }, this)
     .then(filterError)
-    .then(res => {
-      context.dispatch(Actions.UPDATE_TOKEN_SUCCESS, null);
+    .then(() => {
+      this.dispatch(Actions.DELETE_TOKEN);
     });
 }
 
-export function login(context, payload){
-  let data;
-
-  return create(context, payload).then(data_ => {
-    data = data_;
-    return context.executeAction(loadCurrentUser);
-  }).then(() => {
-    return data;
+export function login(payload){
+  return createToken.call(this, payload).then(data => {
+    return this.executeAction(loadCurrentUser).then(() => data);
   });
 }
 
-export function logout(context, payload, done){
-  const tokenStore = context.getStore(TokenStore);
+export function logout(){
+  const tokenStore = this.getStore(TokenStore);
   if (!tokenStore.isLoggedIn()) return Promise.resolve();
 
-  let token = tokenStore.getData();
-
-  return destroy(context, token).then(() => {
-    context.dispatch(Actions.DELETE_USER_DATA, token.user_id);
+  return deleteToken.call(this, tokenStore.getToken()).then(() => {
+    this.dispatch(Actions.DELETE_USER, tokenStore.getUserID());
   });
 }
 
-export function checkToken(context, payload){
+export function checkToken(payload){
   if (!payload || !payload.id) return Promise.resolve();
-  return update(context, payload);
+  return updateToken.call(this, payload.id);
 }

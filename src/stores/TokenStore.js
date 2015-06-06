@@ -1,38 +1,53 @@
-import {BaseStore} from '../flux';
+import BaseStore from './BaseStore';
 import Actions from '../constants/Actions';
 
 class TokenStore extends BaseStore {
   static handlers = {
-    [Actions.UPDATE_TOKEN_SUCCESS]: 'setData'
+    [Actions.UPDATE_TOKEN]: 'setData',
+    [Actions.DELETE_TOKEN]: 'deleteData'
   }
 
   constructor(context){
     super(context);
 
-    this.data = null;
+    this.id = null;
+    this.userID = null;
   }
 
-  getData(){
-    return this.data;
+  getToken(){
+    return this.id;
   }
 
-  setData(data){
-    this.data = data;
+  getUserID(){
+    return this.userID;
+  }
+
+  setData(payload){
+    this.id = payload.id;
+    this.userID = payload.user_id;
+    this.emitChange();
+  }
+
+  deleteData(){
+    this.id = null;
+    this.userID = null;
     this.emitChange();
   }
 
   isLoggedIn(){
-    return Boolean(this.data && this.data.id);
+    return Boolean(this.id);
   }
 
   dehydrate(){
     return {
-      data: this.data
+      id: this.id,
+      userID: this.userID
     };
   }
 
   rehydrate(state){
-    this.data = state.data;
+    this.id = state.id;
+    this.userID = state.userID;
   }
 }
 

@@ -1,9 +1,11 @@
 import React from 'react';
+import pureRender from '../../utils/pureRender';
 
 if (process.env.BROWSER){
   require('../../styles/modal/Modal.styl');
 }
 
+@pureRender
 class Modal extends React.Component {
   static propTypes = {
     title: React.PropTypes.string,

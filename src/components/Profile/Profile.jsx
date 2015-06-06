@@ -2,10 +2,11 @@ import React from 'react';
 import ProfileData from './ProfileData';
 import ProjectList from './ProjectList';
 import {setPageTitle, setStatusCode} from '../../actions/AppAction';
-import * as UserAction from '../../actions/UserAction';
+import {getUser} from '../../actions/UserAction';
 import UserStore from '../../stores/UserStore';
 import AppStore from '../../stores/AppStore';
-import {connectToStores} from '../../flux';
+import connectToStores from '../../utils/connectToStores';
+import NotFound from '../NotFound';
 
 @connectToStores([UserStore], (stores, props) => ({
   user: stores.UserStore.getUser(props.params.id),
@@ -19,17 +20,19 @@ class Profile extends React.Component {
 
     const currentUser = this.context.getStore(UserStore).getCurrentUser();
 
-    if (currentUser && currentUser.id === params.id){
-      this.context.executeAction(setPageTitle, currentUser.name);
+    if (currentUser && currentUser.get('id') === params.id){
+      this.context.executeAction(setPageTitle, currentUser.get('name'));
 
       return ProjectList.onEnter.call(this, transition, params, query);
     }
 
-    return this.context.executeAction(UserAction.get, params).then(user => {
+    return this.context.executeAction(getUser, params.id).then(user => {
       this.context.executeAction(setPageTitle, user.name);
 
       return ProjectList.onEnter.call(this, transition, params, query);
-    }).catch(() => {
+    }).catch(err => {
+      console.error(err);
+
       this.context.executeAction(setPageTitle, 'Not found');
       this.context.executeAction(setStatusCode, 404);
     });
@@ -52,7 +55,7 @@ class Profile extends React.Component {
         </div>
       );
     } else {
-      return <div>Not found</div>;
+      return <NotFound/>;
     }
   }
 }

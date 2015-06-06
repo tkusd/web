@@ -1,33 +1,34 @@
 import React from 'react';
 import {Link} from 'react-router';
 import UserStore from '../../stores/UserStore';
-import {connectToStores} from '../../flux';
+import connectToStores from '../../utils/connectToStores';
+import pureRender from '../../utils/pureRender';
 import {Dropdown, DropdownMenu, DropdownItem, DropdownDivider} from '../../components/dropdown';
 import Logout from './Logout';
 import Gravatar from '../../components/common/Gravatar';
 
 if (process.env.BROWSER){
-  require('../../styles/Application/HeaderActions.styl');
+  require('../../styles/Application/ProfileNav.styl');
 }
 
 @connectToStores([UserStore], (stores, props) => ({
   currentUser: stores.UserStore.getCurrentUser()
 }))
-class HeaderActions extends React.Component {
-  static propTypes = {
-    currentUser: React.PropTypes.object
-  }
-
+@pureRender
+class ProfileNav extends React.Component {
   render(){
     let {currentUser} = this.state;
 
     if (currentUser){
+      let userid = currentUser.get('id');
+      let linkParams = {id: userid};
+
       return (
         <nav id="header-actions">
-          <Link to="profile" params={currentUser} className="header-actions__primary-link">My projects</Link>
+          <Link to="profile" params={linkParams} className="header-actions__primary-link">My projects</Link>
           <Dropdown className="header-actions__dropdown" mode="hover">
-            <Link to="profile" params={currentUser} className="header-actions__avatar">
-              <Gravatar src={currentUser.avatar} size={50} className="header-actions__avatar-img"/>
+            <Link to="profile" params={linkParams} className="header-actions__avatar">
+              <Gravatar src={currentUser.get('avatar')} size={50} className="header-actions__avatar-img"/>
             </Link>
             <DropdownMenu position="right">
               <DropdownItem>
@@ -52,4 +53,4 @@ class HeaderActions extends React.Component {
   }
 }
 
-export default HeaderActions;
+export default ProfileNav;

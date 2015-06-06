@@ -1,4 +1,4 @@
-import {BaseStore} from '../flux';
+import BaseStore from './BaseStore';
 import Actions from '../constants/Actions';
 
 class AppStore extends BaseStore {

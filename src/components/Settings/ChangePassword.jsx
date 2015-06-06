@@ -1,6 +1,6 @@
 import React from 'react';
-import {Input, validators} from '../form';
-import * as UserAction from '../../actions/UserAction';
+import {Input} from '../form';
+import {updateUser} from '../../actions/UserAction';
 
 class ChangePassword extends React.Component {
   static contextTypes = {
@@ -31,31 +31,28 @@ class ChangePassword extends React.Component {
 
   render(){
     let {error} = this.state;
-    let commonError = error && !error.field ? error.message : null;
 
     return (
       <form
         className="form"
         onSubmit={this.handleSubmit}>
-        <div className="form-error">{commonError}</div>
+        {error && !error.field && <div className="form-error">{error.message}</div>}
         <Input
           id="password-old"
           name="old_password"
           ref="old_password"
           label="Current password"
           type="password"
-          validator={[
-            validators.length(6, 50)
-          ]}/>
+          minLength={6}
+          maxLength={50}/>
         <Input
           id="password-new"
           name="password"
           ref="password"
           label="New password"
           type="password"
-          validator={[
-            validators.length(6, 50)
-          ]}/>
+          minLength={6}
+          maxLength={50}/>
         <button type="submit">Change password</button>
       </form>
     );
@@ -64,18 +61,18 @@ class ChangePassword extends React.Component {
   handleSubmit(e){
     e.preventDefault();
 
-    let {old_password, password} = this.refs;
+    const {old_password, password} = this.refs;
+    const {user} = this.props;
 
     if (old_password.getError() || password.getError()){
       return;
     }
 
-    this.setState({error: null});
-
-    this.context.executeAction(UserAction.update, {
-      id: this.props.user.id,
+    this.context.executeAction(updateUser, user.get('id'), {
       old_password: old_password.getValue(),
       password: password.getValue()
+    }).then(() => {
+      this.setState({error: null});
     }).catch(err => {
       this.setState({error: err.body || err});
     });

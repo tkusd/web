@@ -1,5 +1,5 @@
 import React from 'react';
-import {Input, validators} from '../form';
+import {Input} from '../form';
 import TokenStore from '../../stores/TokenStore';
 import {login} from '../../actions/TokenAction';
 import {setPageTitle} from '../../actions/AppAction';
@@ -14,8 +14,7 @@ class Login extends React.Component {
     const tokenStore = this.context.getStore(TokenStore);
 
     if (tokenStore.isLoggedIn()){
-      let token = tokenStore.getData();
-      transition.redirect('profile', {id: token.user_id});
+      transition.redirect('profile', {id: tokenStore.getUserID()});
     } else {
       this.context.executeAction(setPageTitle, 'Log in');
     }
@@ -41,33 +40,28 @@ class Login extends React.Component {
 
   render(){
     let {error} = this.state;
-    let commonError = error && !error.field ? error.message : null;
 
     return (
       <form
         className="form"
         onSubmit={this.handleSubmit}>
-        <div className="form-error">{commonError}</div>
+        {error && !error.field && <div className="form-error">{error.message}</div>}
         <Input
           id="login-email"
           name="email"
           ref="email"
           label="Email"
           type="email"
-          validator={[
-            validators.required(),
-            validators.email()
-          ]}/>
+          required/>
         <Input
           id="login-password"
           name="password"
           ref="password"
           label="Password"
           type="password"
-          validator={[
-            validators.required(),
-            validators.length(6, 50)
-          ]}/>
+          required
+          minLength={6}
+          maxLength={50}/>
         <button type="submit" className="btn">Log in</button>
       </form>
     );
@@ -76,7 +70,7 @@ class Login extends React.Component {
   handleSubmit(e){
     e.preventDefault();
 
-    let {email, password} = this.refs;
+    const {email, password} = this.refs;
 
     if (email.getError() || password.getError()){
       return;
@@ -86,6 +80,7 @@ class Login extends React.Component {
       email: email.getValue(),
       password: password.getValue()
     }).then(token => {
+      this.setState({error: null});
       this.context.router.transitionTo('profile', {id: token.user_id});
     }, err => {
       this.setState({error: err.body || err});

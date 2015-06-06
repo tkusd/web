@@ -1,5 +1,5 @@
 import React from 'react'; // eslint-disable-line
-import {Route, DefaultRoute, createRoutesFromReactChildren} from 'react-router';
+import {Route, DefaultRoute, NotFoundRoute, createRoutesFromReactChildren} from 'react-router';
 import Application from './components/Application';
 import Signup from './components/Signup';
 import Login from './components/Login';
@@ -7,6 +7,7 @@ import Home from './components/Home';
 import Settings from './components/Settings';
 import Profile from './components/Profile';
 import Project from './components/Project';
+import NotFound from './components/NotFound';
 
 function bindHook(hook, context){
   return function(){
@@ -44,6 +45,7 @@ export default function(context){
       <Route name="profile" path="/users/:id" handler={Profile}/>
       <Route name="project" path="/projects/:id" handler={Project}/>
       <DefaultRoute name="home" handler={Home}/>
+      <NotFoundRoute handler={NotFound}/>
     </Route>
   );
 

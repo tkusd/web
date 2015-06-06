@@ -1,58 +1,57 @@
 import Actions from '../constants/Actions';
 import {api, internal} from '../utils/request';
 import TokenStore from '../stores/TokenStore';
-import UserStore from '../stores/UserStore';
 import {parseJSON, dispatchEvent, filterError} from './common';
 
-export function get(context, payload){
-  return api('users/' + payload.id, {
+export function getUser(id){
+  return api('users/' + id, {
     method: 'get'
-  }, context)
+  }, this)
     .then(filterError)
     .then(parseJSON)
-    .then(dispatchEvent(context, Actions.UPDATE_USER_SUCCESS));
+    .then(dispatchEvent(this, Actions.UPDATE_USER));
 }
 
-export function create(context, payload){
+export function createUser(payload){
   return api('users', {
     method: 'post',
     body: payload
-  }, context)
+  }, this)
     .then(filterError)
     .then(parseJSON)
-    .then(dispatchEvent(context, Actions.UPDATE_USER_SUCCESS));
+    .then(dispatchEvent(this, Actions.UPDATE_USER));
 }
 
-export function update(context, payload){
-  return api('users/' + payload.id, {
+export function updateUser(id, payload){
+  return api('users/' + id, {
     method: 'put',
     body: payload
-  }, context)
+  }, this)
     .then(filterError)
     .then(parseJSON)
-    .then(dispatchEvent(context, Actions.UPDATE_USER_SUCCESS));
+    .then(dispatchEvent(this, Actions.UPDATE_USER));
 }
 
-export function destroy(context, payload){
-  let user = context.getStore(UserStore).getCurrentUser();
-  if (!user) return Promise.reject(new Error('User has not logged in.'));
+export function deleteData(){
+  const tokenStore = this.getStore(TokenStore);
+  if (!tokenStore.isLoggedIn()) return Promise.reject(new Error('User has not logged in'));
+
+  const id = tokenStore.getUserID();
 
   return internal('users', {
     method: 'delete',
     body: {
-      id: user.id
+      id: id
     }
-  }, context).then(res => {
-    context.dispatch(Actions.DELETE_USER_DATA, user.id);
-    context.dispatch(Actions.UPDATE_TOKEN_SUCCESS, null);
+  }, this).then(() => {
+    this.dispatch(Actions.DELETE_USER, id);
+    this.dispatch(Actions.DELETE_TOKEN);
   });
 }
 
-export function loadCurrentUser(context){
-  const tokenStore = context.getStore(TokenStore);
+export function loadCurrentUser(){
+  const tokenStore = this.getStore(TokenStore);
   if (!tokenStore.isLoggedIn()) return Promise.resolve();
 
-  let token = tokenStore.getData();
-
-  return get(context, {id: token.user_id});
+  return getUser.call(this, tokenStore.getUserID());
 }

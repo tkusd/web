@@ -1,6 +1,6 @@
 import React from 'react';
-import {Input, validators} from '../form';
-import * as UserAction from '../../actions/UserAction';
+import {Input} from '../form';
+import {updateUser} from '../../actions/UserAction';
 
 class ProfileForm extends React.Component {
   static contextTypes = {
@@ -32,35 +32,29 @@ class ProfileForm extends React.Component {
   render(){
     let {user} = this.props;
     let {error} = this.state;
-    let commonError = error && !error.field ? error.message : null;
 
     return (
       <form
         className="form"
         onSubmit={this.handleSubmit}>
-        <div className="form-error">{commonError}</div>
+        {error && !error.field && <div className="form-error">{error.message}</div>}
         <Input
           id="profile-name"
           name="name"
           ref="name"
           label="Name"
           type="text"
-          value={user.name}
-          validator={[
-            validators.required(),
-            validators.length(0, 100)
-          ]}/>
+          initialValue={user.get('name')}
+          required
+          maxLength={100}/>
         <Input
           id="profile-email"
           name="email"
           ref="email"
           label="Email"
           type="email"
-          value={user.email}
-          validator={[
-            validators.required(),
-            validators.email()
-          ]}/>
+          initialValue={user.get('email')}
+          required/>
         <button type="submit" className="btn">Update</button>
       </form>
     );
@@ -69,18 +63,18 @@ class ProfileForm extends React.Component {
   handleSubmit(e){
     e.preventDefault();
 
-    let {name, email} = this.refs;
+    const {name, email} = this.refs;
+    const {user} = this.props;
 
     if (name.getError() || email.getError()){
       return;
     }
 
-    this.setState({error: null});
-
-    this.context.executeAction(UserAction.update, {
-      id: this.props.user.id,
+    this.context.executeAction(updateUser, user.get('id'), {
       name: name.getValue(),
       email: email.getValue()
+    }).then(() => {
+      this.setState({error: null});
     }).catch(err => {
       this.setState({error: err.body || err});
     });

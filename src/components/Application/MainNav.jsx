@@ -5,7 +5,7 @@ if (process.env.BROWSER){
   require('../../styles/Application/MainNav.styl');
 }
 
-const links = [
+const LINKS = [
   {to: 'home', text: 'Home'}
 ];
 
@@ -13,7 +13,9 @@ class MainNav extends React.Component {
   render(){
     return (
       <nav id="main-nav">
-        {links.map((link, i) => <Link to={link.to} className="main-nav__link" key={i}>{link.text}</Link>)}
+        {LINKS.map((link, i) => (
+          <Link to={link.to} className="main-nav__link" key={i}>{link.text}</Link>
+        ))}
       </nav>
     );
   }

@@ -5,7 +5,7 @@ import {setPageTitle} from '../../actions/AppAction';
 import ProfileForm from './ProfileForm';
 import DeleteUser from './DeleteUser';
 import ChangePassword from './ChangePassword';
-import {connectToStores} from '../../flux';
+import connectToStores from '../../utils/connectToStores';
 
 @connectToStores([UserStore], (stores, props) => ({
   user: stores.UserStore.getCurrentUser()

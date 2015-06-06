@@ -1,4 +1,5 @@
 import React from 'react';
+import {Link} from 'react-router';
 
 class ProfileData extends React.Component {
   static propTypes = {
@@ -7,9 +8,14 @@ class ProfileData extends React.Component {
   }
 
   render(){
-    let {user} = this.props;
+    let {user, currentUser} = this.props;
 
-    return <div>{user.name}</div>;
+    return (
+      <div>
+        <h1>{user.get('name')}</h1>
+        {currentUser && user.get('id') === currentUser.get('id') && <Link to="settings">Edit profile</Link>}
+      </div>
+    );
   }
 }
 

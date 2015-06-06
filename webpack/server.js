@@ -10,6 +10,9 @@ new WebpackDevServer(webpack(config), {
   quiet: true,
   stats: {
     colors: true
+  },
+  headers: {
+    'Access-Control-Allow-Origin': '*'
   }
 }).listen(config.server.port, config.server.host, (err) => {
   if (err) throw err;

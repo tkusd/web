@@ -1,62 +1,36 @@
-import {BaseStore} from '../flux';
+import CollectionStore from './CollectionStore';
 import Actions from '../constants/Actions';
-import {Map} from 'immutable';
 import TokenStore from './TokenStore';
+import ProjectStore from './ProjectStore';
 
-class UserStore extends BaseStore {
+class UserStore extends CollectionStore {
   static handlers = {
-    [Actions.UPDATE_USER_SUCCESS]: 'setData',
-    [Actions.DELETE_USER_DATA]: 'removeUser'
-  }
-
-  constructor(context){
-    super(context);
-
-    this.data = Map({});
+    [Actions.UPDATE_USER]: 'setUser',
+    [Actions.DELETE_USER]: 'deleteUser'
   }
 
   getUser(id){
-    return this.data.get(id);
+    return this.get(id);
   }
 
-  setUser(id, data){
-    let newCollection = this.data.set(id, data);
-    if (newCollection === this.data) return;
-
-    this.data = newCollection;
-    this.emitChange();
+  setUser(payload){
+    this.set(payload.id, payload);
   }
 
-  removeUser(id){
-    if (!this.data.has(id)) return;
+  deleteUser(id){
+    if (!this.has(id)) return;
 
-    this.data = this.data.remove(id);
-    this.emitChange();
+    const projectStore = this.context.getStore(ProjectStore);
+
+    this.remove(id);
+    projectStore.deleteProjectsOfUser(id);
   }
 
   getCurrentUser(){
-    let token = this.context.getStore(TokenStore).getData();
-    if (!token) return null;
+    const tokenStore = this.context.getStore(TokenStore);
+    if (!tokenStore.isLoggedIn()) return null;
 
-    return this.getUser(token.user_id);
-  }
-
-  getData(){
-    return this.data;
-  }
-
-  setData(payload){
-    this.setUser(payload.id, payload);
-  }
-
-  dehydrate(){
-    return {
-      data: this.data.toObject()
-    };
-  }
-
-  rehydrate(state){
-    this.data = Map(state.data);
+    return this.getUser(tokenStore.getUserID());
   }
 }
 

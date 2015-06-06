@@ -64,7 +64,7 @@ class Context {
       throw new TypeError('action must be a function');
     }
 
-    return action(this, ...args);
+    return action.apply(this, args);
   }
 }
 

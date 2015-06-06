@@ -4,15 +4,19 @@ export default keyMirror({
   SET_PAGE_TITLE: null,
   SET_STATUS_CODE: null,
 
-  UPDATE_USER_SUCCESS: null,
-  DELETE_USER_DATA: null,
+  UPDATE_USER: null,
+  DELETE_USER: null,
 
-  UPDATE_TOKEN_SUCCESS: null,
+  UPDATE_TOKEN: null,
+  DELETE_TOKEN: null,
 
-  UPDATE_PROJECT_SUCCESS: null,
+  UPDATE_PROJECT: null,
   UPDATE_PROJECT_LIST: null,
+  DELETE_PROJECT: null,
 
-  ADD_MODAL: null,
-  REMOVE_MODAL: null,
-  POP_MODAL: null
+  UPDATE_ELEMENT: null,
+  UPDATE_ELEMENT_LIST: null,
+  DELETE_ELEMENT: null,
+
+  SELECT_ELEMENT: null
 });

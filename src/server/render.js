@@ -31,6 +31,22 @@ function readStats(req){
   });
 }
 
+function renderMarkup(context, Root){
+  return new Promise((resolve, reject) => {
+    try {
+      let result = React.renderToString(React.createElement(
+        Container,
+        {context},
+        React.createFactory(Root)()
+      ));
+
+      resolve(result);
+    } catch (err){
+      reject(err);
+    }
+  });
+}
+
 function render(req, res, next){
   const context = app.createContext();
 
@@ -60,24 +76,19 @@ function render(req, res, next){
     });
 
     router.run((Root, state) => {
-      let exposed = 'window.$STATE=' + serialize(context.dehydrate()) + ';';
+      renderMarkup(context, Root).then(markup => {
+        let exposed = 'window.$STATE=' + serialize(context.dehydrate()) + ';';
+        let html = React.renderToStaticMarkup(React.createElement(HtmlDocument, {
+          context,
+          state: exposed,
+          markup,
+          script: webpackStats.script,
+          style: webpackStats.style
+        }));
 
-      let markup = React.renderToString(React.createElement(
-        Container,
-        {context},
-        React.createFactory(Root)()
-      ));
-
-      let html = React.renderToStaticMarkup(React.createElement(HtmlDocument, {
-        context,
-        state: exposed,
-        markup,
-        script: webpackStats.script,
-        style: webpackStats.style
-      }));
-
-      res.status(appStore.getStatusCode());
-      res.send('<!DOCTYPE html>' + html);
+        res.status(appStore.getStatusCode());
+        res.send('<!DOCTYPE html>' + html);
+      }).catch(next);
     });
   }).catch(next);
 }

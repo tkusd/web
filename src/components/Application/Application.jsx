@@ -1,7 +1,7 @@
 import React from 'react';
 import AppStore from '../../stores/AppStore';
 import {RouteHandler} from 'react-router';
-import {connectToStores} from '../../flux';
+import connectToStores from '../../utils/connectToStores';
 import Header from './Header';
 
 if (process.env.BROWSER){

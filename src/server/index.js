@@ -38,7 +38,7 @@ if (PRODUCTION){
 server.use('/_api', require('./api'));
 
 // Render the app server-side and send it as response.
-server.use(require('./render'));
+server.get('/*', require('./render'));
 
 server.use(errorhandler());
 

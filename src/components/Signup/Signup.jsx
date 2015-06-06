@@ -1,6 +1,6 @@
 import React from 'react';
-import {Input, validators} from '../form';
-import * as UserAction from '../../actions/UserAction';
+import {Input} from '../form';
+import {createUser} from '../../actions/UserAction';
 import {setPageTitle} from '../../actions/AppAction';
 import {login} from '../../actions/TokenAction';
 import TokenStore from '../../stores/TokenStore';
@@ -15,8 +15,7 @@ class Signup extends React.Component {
     const tokenStore = this.context.getStore(TokenStore);
 
     if (tokenStore.isLoggedIn()){
-      let token = tokenStore.getData();
-      transition.redirect('profile', {id: token.user_id});
+      transition.redirect('profile', {id: tokenStore.getUserID()});
     } else {
       this.context.executeAction(setPageTitle, 'Sign up');
     }
@@ -42,43 +41,36 @@ class Signup extends React.Component {
 
   render(){
     let {error} = this.state;
-    let commonError = error && !error.field ? error.message : null;
 
     return (
       <form
         className="form"
         onSubmit={this.handleSubmit}>
-        <div className="form-error">{commonError}</div>
+        {error && !error.field && <div className="form-error">{error.message}</div>}
         <Input
           id="signup-name"
           name="name"
           ref="name"
           label="Name"
           type="text"
-          validator={[
-            validators.required(),
-            validators.length(0, 100)
-          ]}/>
+          required
+          maxLength={100}/>
         <Input
           id="signup-email"
           name="email"
           ref="email"
           label="Email"
           type="email"
-          validator={[
-            validators.required(),
-            validators.email()
-          ]}/>
+          required/>
         <Input
           id="signup-password"
           name="password"
           ref="password"
           label="Password"
           type="password"
-          validator={[
-            validators.required(),
-            validators.length(6, 50)
-          ]}/>
+          required
+          minLength={6}
+          maxLength={50}/>
         <button type="submit" className="btn">Sign up</button>
       </form>
     );
@@ -87,17 +79,18 @@ class Signup extends React.Component {
   handleSubmit(e){
     e.preventDefault();
 
-    let {name, email, password} = this.refs;
+    const {name, email, password} = this.refs;
 
     if (name.getError() || email.getError() || password.getError()){
       return;
     }
 
-    this.context.executeAction(UserAction.create, {
+    this.context.executeAction(createUser, {
       name: name.getValue(),
       email: email.getValue(),
       password: password.getValue()
     }).then(user => {
+      this.setState({error: null});
       return this.createToken(user);
     }, err => {
       this.setState({error: err.body || err});
