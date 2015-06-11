@@ -1,7 +1,11 @@
-import fetch from 'isomorphic-fetch';
+import fetch_ from 'isomorphic-fetch';
 import {merge} from 'lodash';
 import AppStore from '../stores/AppStore';
 import TokenStore from '../stores/TokenStore';
+
+// Fix "Illegal invocation" error in Chrome
+// https://github.com/matthew-andrews/isomorphic-fetch/pull/20
+const fetch = fetch_.bind(this);
 
 const API_BASE = process.env.NODE_ENV === 'production' ? 'http://tkusd.zespia.tw/v1/' : 'http://localhost:3000/v1/';
 const INTERNAL_BASE = '/_api/';
