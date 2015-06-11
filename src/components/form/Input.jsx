@@ -127,20 +127,21 @@ class Input extends React.Component {
   }
 
   validate(value){
-    if (!this.state.validator) return '';
+    let error = '';
 
-    for (let validator of this.state.validator){
-      let error = validator(this, value);
-      if (error) return error;
-    }
+    // Don't use for..of because it may cause errors on Safari
+    this.state.validator.forEach(validator => {
+      error = validator(this, value);
+      if (error) return false;
+    });
+
+    return error;
   }
 
   transform(value){
-    if (!this.state.transform) return value;
-
-    for (let transform of this.state.transform){
+    this.state.transform.forEach(transform => {
       value = transform(this, value);
-    }
+    });
 
     return value;
   }
