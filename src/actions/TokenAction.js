@@ -44,8 +44,10 @@ export function logout(){
   const tokenStore = this.getStore(TokenStore);
   if (!tokenStore.isLoggedIn()) return Promise.resolve();
 
+  const id = tokenStore.getUserID();
+
   return deleteToken.call(this, tokenStore.getToken()).then(() => {
-    this.dispatch(Actions.DELETE_USER, tokenStore.getUserID());
+    this.dispatch(Actions.DELETE_USER, id);
   });
 }
 
