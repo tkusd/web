@@ -1,11 +1,12 @@
 import React from 'react';
 import {Modal} from '../modal';
-import {Input} from '../form';
+import {Form, Input} from '../form';
 import {createProject} from '../../actions/ProjectAction';
 
 class NewProjectModal extends React.Component {
   static propTypes = {
-    user: React.PropTypes.object.isRequired
+    user: React.PropTypes.object.isRequired,
+    context: React.PropTypes.object.isRequired
   }
 
   constructor(props, context){
@@ -28,21 +29,26 @@ class NewProjectModal extends React.Component {
 
   render(){
     let {error} = this.state;
+    const {context, closePortal} = this.props;
+    const {__} = context;
 
     return (
-      <Modal title="New project" onDismiss={this.props.closePortal}>
-        <form onSubmit={this.handleSubmit}>
-          {error && !error.field && <div className="form-error">{error.message}</div>}
+      <Modal title={__('profile.new_project')} onDismiss={closePortal}>
+        <Form onSubmit={this.handleSubmit}>
+          {error && !error.field && <div>{error.message}</div>}
           <Input
             id="new-project-title"
             name="title"
             ref="title"
-            label="Title"
+            label={__('common.title')}
             type="text"
             required
             maxLength={255}/>
-          <button type="submit">Create</button>
-        </form>
+          <div className="modal__btn-group">
+            <a className="modal__btn" onClick={closePortal}>{__('common.cancel')}</a>
+            <button className="modal__btn--primary" type="submit">{__('common.create')}</button>
+          </div>
+        </Form>
       </Modal>
     );
   }
@@ -50,8 +56,8 @@ class NewProjectModal extends React.Component {
   handleSubmit(e){
     e.preventDefault();
 
-    let {title} = this.refs;
-    let {context} = this.props;
+    const {title} = this.refs;
+    const {context} = this.props;
 
     if (title.getError()){
       return;

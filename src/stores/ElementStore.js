@@ -1,6 +1,6 @@
 import CollectionStore from './CollectionStore';
 import Actions from '../constants/Actions';
-import {Map, Set} from 'immutable';
+import {Map} from 'immutable';
 
 class ElementStore extends CollectionStore {
   static storeName = 'ElementStore'
@@ -9,13 +9,15 @@ class ElementStore extends CollectionStore {
     [Actions.UPDATE_ELEMENT]: 'setElement',
     [Actions.UPDATE_ELEMENT_LIST]: 'setList',
     [Actions.DELETE_ELEMENT]: 'deleteElement',
-    [Actions.SELECT_ELEMENT]: 'selectElement'
+    [Actions.SELECT_ELEMENT]: 'selectElement',
+    [Actions.SELECT_SCREEN]: 'selectScreen'
   }
 
   constructor(context){
     super(context);
 
     this.selectedElement = null;
+    this.selectedScreen = null;
   }
 
   getElement(id){
@@ -24,7 +26,6 @@ class ElementStore extends CollectionStore {
 
   setElement(payload){
     this.set(payload.id, payload);
-    this.emitChange();
   }
 
   deleteElement(id){
@@ -43,29 +44,12 @@ class ElementStore extends CollectionStore {
 
   setList(payload){
     this.data = this.data.withMutations(data => {
-      this.setElementTree(data, payload);
+      payload.forEach(item => {
+        data.set(item.id, Map(item));
+      });
     });
 
     this.emitChange();
-  }
-
-  setElementTree(data, elements){
-    elements.forEach(item => {
-      let id = item.id;
-      let map = Map(item);
-      /*
-      let children = Set(data.elements.map(child => {
-        if (child.elements){
-          this.setElementTree(data, child.elements);
-        }
-
-        return child.id;
-      }));
-
-      map = map.set('elements', children);*/
-
-      data.set(id, map);
-    });
   }
 
   getSelectedElement(){
@@ -73,7 +57,22 @@ class ElementStore extends CollectionStore {
   }
 
   selectElement(id){
+    if (this.selectedElement === id) return;
+
     this.selectedElement = id;
+    this.emitChange();
+  }
+
+  getSelectedScreen(){
+    return this.selectedScreen;
+  }
+
+  selectScreen(id){
+    if (this.selectedScreen === id) return;
+
+    this.selectedScreen = id;
+    this.selectedElement = null;
+
     this.emitChange();
   }
 }

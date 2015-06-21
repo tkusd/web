@@ -1,5 +1,6 @@
 @import "nib"
 @import "../common"
+@import "../button"
 
 .modal
   position: fixed
@@ -28,9 +29,41 @@
   width: 500px
   margin: auto
   background: #fff
-  padding: 20px
-  border-radius: 3px
+  padding: padding-medium 24px
+  border-radius: 5px
   box-shadow: 1px 3px 20px rgba(0, 0, 0, 0.2)
+  color: color-text-black
+  position: relative
 
 .modal__title
   margin: 0
+  font-weight: 300
+  font-size: 1.5em
+
+.modal__btn-close
+  position: absolute
+  right: 0
+  top: 0
+  background: none
+  border: none
+  color: color-divider
+  font-size: 20px
+  padding: 12px 16px
+  outline: none
+  &:hover
+    color: color-error
+
+.modal__content
+  line-height: line-height
+
+.modal__btn-group
+  text-align: right
+
+.modal__btn
+  @extend $button-borderless
+
+.modal__btn--danger
+  @extend $button-danger
+
+.modal__btn--primary
+  @extend $button-primary

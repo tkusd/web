@@ -5,12 +5,13 @@ import fs from 'graceful-fs';
 import {checkToken} from '../actions/TokenAction';
 import {loadCurrentUser} from '../actions/UserAction';
 import AppStore from '../stores/AppStore';
+import LocaleStore from '../stores/LocaleStore';
 import {Container} from '../flux';
 import Router from 'react-router';
 import routes from '../routes';
 
 import app from '../app';
-import HtmlDocument from '../components/HtmlDocument';
+import HtmlDocument from './HtmlDocument';
 
 const STATS_PATH = path.join(__dirname, '../../public/build/webpack-stats.json');
 
@@ -49,6 +50,7 @@ function renderMarkup(context, Root){
 
 function render(req, res, next){
   const context = app.createContext();
+  const lang = req.locale;
 
   // Read webpack stats
   readStats(req).then(() => {
@@ -61,9 +63,17 @@ function render(req, res, next){
     return context.executeAction(loadCurrentUser);
   }).then(() => {
     const appStore = context.getStore(AppStore);
+    const localeStore = context.getStore(LocaleStore);
 
     appStore.setFirstRender(false);
     appStore.setCSRFToken(req.csrfToken());
+
+    localeStore.setData('en', require('../../locales/en'));
+
+    if (lang !== 'en'){
+      localeStore.setLanguage(lang);
+      localeStore.setData(lang, require('../../locales/' + lang));
+    }
 
     let router = Router.create({
       routes: routes(context),
@@ -82,8 +92,7 @@ function render(req, res, next){
           context,
           state: exposed,
           markup,
-          script: webpackStats.script,
-          style: webpackStats.style
+          stats: webpackStats
         }));
 
         res.status(appStore.getStatusCode());

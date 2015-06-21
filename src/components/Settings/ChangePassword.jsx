@@ -1,6 +1,7 @@
 import React from 'react';
-import {Input} from '../form';
+import {Form, Input} from '../form';
 import {updateUser} from '../../actions/UserAction';
+import Translation from '../i18n/Translation';
 
 class ChangePassword extends React.Component {
   static contextTypes = {
@@ -33,15 +34,13 @@ class ChangePassword extends React.Component {
     let {error} = this.state;
 
     return (
-      <form
-        className="form"
-        onSubmit={this.handleSubmit}>
-        {error && !error.field && <div className="form-error">{error.message}</div>}
+      <Form onSubmit={this.handleSubmit}>
+        {error && !error.field && <div className="settings__form-error">{error.message}</div>}
         <Input
           id="password-old"
           name="old_password"
           ref="old_password"
-          label="Current password"
+          label={<Translation id="settings.current_password"/>}
           type="password"
           minLength={6}
           maxLength={50}/>
@@ -49,12 +48,14 @@ class ChangePassword extends React.Component {
           id="password-new"
           name="password"
           ref="password"
-          label="New password"
+          label={<Translation id="settings.new_password"/>}
           type="password"
           minLength={6}
           maxLength={50}/>
-        <button type="submit">Change password</button>
-      </form>
+        <button type="submit" className="settings__button--primary">
+          <Translation id="settings.change_password"/>
+        </button>
+      </Form>
     );
   }
 

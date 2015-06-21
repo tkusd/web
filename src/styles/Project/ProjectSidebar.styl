@@ -1,0 +1,41 @@
+@import "nib"
+@import "../common"
+
+tab-width = 60px
+
+.project-sidebar
+  position: absolute
+  top: 0
+  bottom: 0
+  left: 0
+  width: 20%
+  background: color-background
+  .tab-host__tabs
+    position: absolute
+    top: 0
+    left: 0
+    bottom: 0
+    width: tab-width
+    box-shadow: -10px 0 10px -10px rgba(0, 0, 0, 0.2) inset
+  .tab-host__content
+    position: absolute
+    top: 0
+    left: tab-width
+    right: 0
+    bottom: 0
+    background: color-project-sidebar
+  .tab-host__tab
+    width: tab-width
+    height: @width
+    font-size: 24px
+    line-height: @height
+    text-align: center
+    display: block
+    color: #999
+    cursor: pointer
+    &.active
+      color: #fff
+      background: color-project-sidebar
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2)
+    &:hover
+      color: #fff

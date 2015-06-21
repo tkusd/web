@@ -1,0 +1,18 @@
+@import "nib"
+@import "../common"
+@import "../button"
+
+.home-header
+  clearfix()
+  padding: 48px 0
+  font-size: 1.2em
+
+.home-header__right
+  float: right
+  margin-right: padding-medium * -1
+
+.home-header__link
+  @extend $button-borderless-dark
+
+.home-header__link--primary
+  @extend $button-borderless-dark-primary

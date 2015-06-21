@@ -1,6 +1,6 @@
 import React from 'react';
 import {Modal} from '../modal';
-import {Input} from '../form';
+import {Form, Input} from '../form';
 import {createElement} from '../../actions/ElementAction';
 
 class NewScreenModal extends React.Component {
@@ -28,21 +28,26 @@ class NewScreenModal extends React.Component {
 
   render(){
     let {error} = this.state;
+    const {context, closePortal} = this.props;
+    const {__} = context;
 
     return (
-      <Modal title="New screen" onDismiss={this.props.closePortal}>
-        <form onSubmit={this.handleSubmit}>
-          {error && !error.field && <div className="form-error">{error.message}</div>}
+      <Modal title={__('project.new_screen')} onDismiss={closePortal}>
+        <Form onSubmit={this.handleSubmit}>
+          {error && !error.field && <div>{error.message}</div>}
           <Input
             id="new-screen-name"
             name="name"
             ref="name"
-            label="Name"
+            label={__('common.name')}
             type="text"
             required
             maxLength={255}/>
-          <button type="submit">Create</button>
-        </form>
+          <div className="modal__btn-group">
+            <a className="modal__btn" onClick={closePortal}>{__('common.cancel')}</a>
+            <button type="submit" className="modal__btn--primary">{__('common.create')}</button>
+          </div>
+        </Form>
       </Modal>
     );
   }

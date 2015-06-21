@@ -1,0 +1,21 @@
+@import "nib"
+@import "../common"
+@import "../button"
+
+.profile-data
+  text-align: center
+
+.profile-data__avatar
+  width: 150px
+  height: @width
+  border-radius: 50%
+  margin: 0 auto
+  display: block
+
+.profile-data__name
+  font-weight: 300
+
+.profile-data__edit-link
+  @extend $button-borderless-dark
+  i
+    padding-right: 0.5em

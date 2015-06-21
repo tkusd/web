@@ -40,7 +40,7 @@ export function getProject(id){
 }
 
 export function getFullProject(id){
-  return api(`projects/${id}/full`, {
+  return api(`projects/${id}/full?flat`, {
     method: 'get'
   }, this)
     .then(filterError)

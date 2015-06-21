@@ -7,24 +7,15 @@ const STATS_FILENAME = 'webpack-stats.json';
 function writeStats(stats){
   let publicPath = this.options.output.publicPath;
   let json = stats.toJson();
+  let chunks = json.assetsByChunkName;
+  let content = {};
 
-  function getChunks(name, ext){
-    ext = ext || 'js';
-    var chunk = json.assetsByChunkName[name];
+  Object.keys(chunks).forEach(key => {
+    let assets = chunks[key];
+    if (!Array.isArray(assets)) assets = [assets];
 
-    if (!Array.isArray(chunk)){
-      chunk = [chunk];
-    }
-
-    return chunk
-      .filter(chunk => pathFn.extname(chunk) === '.' + ext)
-      .map(chunk => publicPath + chunk);
-  }
-
-  let content = {
-    script: getChunks('main', 'js'),
-    style: getChunks('main', 'css')
-  };
+    content[key] = assets.map(asset => publicPath + asset);
+  });
 
   mkdirs(this.options.output.path);
   fs.writeFileSync(pathFn.join(this.options.output.path, STATS_FILENAME), JSON.stringify(content));

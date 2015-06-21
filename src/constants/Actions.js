@@ -18,5 +18,6 @@ export default keyMirror({
   UPDATE_ELEMENT_LIST: null,
   DELETE_ELEMENT: null,
 
-  SELECT_ELEMENT: null
+  SELECT_ELEMENT: null,
+  SELECT_SCREEN: null
 });

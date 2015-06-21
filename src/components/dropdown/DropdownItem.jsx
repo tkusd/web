@@ -1,5 +1,6 @@
 import React from 'react';
-import {assign} from 'lodash';
+import cx from 'classnames';
+import {assign, omit} from 'lodash';
 
 if (process.env.BROWSER){
   require('../../styles/dropdown/DropdownItem.styl');
@@ -7,19 +8,23 @@ if (process.env.BROWSER){
 
 class DropdownItem extends React.Component {
   static propTypes = {
-    className: React.PropTypes.string
+    divider: React.PropTypes.bool
   }
 
   static defaultProps = {
-    className: ''
+    divider: false
   }
 
   render(){
-    let {className} = this.props;
-    if (className) className += ' ';
-    className += 'dropdown-item';
+    let props = assign({
+      className: ''
+    }, omit(this.props, 'children', 'divider'));
 
-    let props = assign({}, this.props, {className});
+    props.className = cx(props.className, 'dropdown-item');
+
+    if (this.props.divider){
+      props.className = cx(props.className, 'dropdown-item--divider');
+    }
 
     return React.DOM.li(props, this.props.children);
   }

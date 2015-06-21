@@ -1,8 +1,15 @@
 import React from 'react';
 
+if (process.env.BROWSER){
+  require('../../styles/Project/Palette.styl');
+}
+
 class Palette extends React.Component {
   static propTypes = {
-    title: React.PropTypes.string
+    title: React.PropTypes.oneOfType([
+      React.PropTypes.string,
+      React.PropTypes.element
+    ])
   }
 
   render(){

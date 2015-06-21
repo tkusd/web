@@ -1,5 +1,5 @@
 import Actions from '../constants/Actions';
-import {api, internal} from '../utils/request';
+import {api} from '../utils/request';
 import TokenStore from '../stores/TokenStore';
 import {parseJSON, dispatchEvent, filterError} from './common';
 
@@ -32,21 +32,20 @@ export function updateUser(id, payload){
     .then(dispatchEvent(this, Actions.UPDATE_USER));
 }
 
-export function deleteData(){
+export function deleteUser(id){
   const tokenStore = this.getStore(TokenStore);
-  if (!tokenStore.isLoggedIn()) return Promise.reject(new Error('User has not logged in'));
 
-  const id = tokenStore.getUserID();
+  return api('users/' + id, {
+    method: 'delete'
+  }, this)
+    .then(filterError)
+    .then(() => {
+      this.dispatch(Actions.DELETE_USER, id);
 
-  return internal('users', {
-    method: 'delete',
-    body: {
-      id: id
-    }
-  }, this).then(() => {
-    this.dispatch(Actions.DELETE_USER, id);
-    this.dispatch(Actions.DELETE_TOKEN);
-  });
+      if (tokenStore.getUserID() === id){
+        this.dispatch(Actions.DELETE_TOKEN);
+      }
+    });
 }
 
 export function loadCurrentUser(){

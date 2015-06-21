@@ -1,21 +1,25 @@
 import React from 'react';
 import Palette from './Palette';
-import connectToStores from '../../utils/connectToStores';
-import ComponentStore from '../../stores/ComponentStore';
-import Component from './Component';
+import ComponentItem from './ComponentItem';
+import Translation from '../i18n/Translation';
 
-@connectToStores([ComponentStore], (stores, props) => ({
-  components: stores.ComponentStore.getData()
-}))
 class ComponentPalette extends React.Component {
+  static propTypes = {
+    components: React.PropTypes.object.isRequired
+  }
+
   render(){
-    const {components} = this.state;
+    const {components} = this.props;
+
+    let list = components
+      .filter(item => !item.get('hide'))
+      .map((item, i) => (
+        <ComponentItem {...this.props} component={item} key={i}/>
+      )).toArray();
 
     return (
-      <Palette title="Components">
-        {components.map((item, i) => (
-          <Component component={item} key={i}/>
-        )).toArray()}
+      <Palette title={<Translation id="project.components"/>}>
+        {list}
       </Palette>
     );
   }

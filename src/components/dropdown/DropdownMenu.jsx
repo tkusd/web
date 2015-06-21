@@ -8,24 +8,19 @@ if (process.env.BROWSER){
 
 class DropdownMenu extends React.Component {
   static propTypes = {
-    className: React.PropTypes.string,
     position: React.PropTypes.oneOf(['left', 'right'])
   }
 
   static defaultProps = {
-    className: '',
     position: 'left'
   }
 
   render(){
-    let {className} = this.props;
-    if (className) className += ' ';
-    className += cx('dropdown-menu', {
-      'dropdown-menu--left': this.props.position === 'left',
-      'dropdown-menu--right': this.props.position === 'right'
-    });
+    let props = assign({
+      className: ''
+    }, omit(this.props, 'children', 'position'));
 
-    let props = assign({}, omit(this.props, 'position'), {className});
+    props.className = cx(props.className, 'dropdown-menu', 'dropdown-menu--' + this.props.position);
 
     return React.DOM.ul(props, this.props.children);
   }

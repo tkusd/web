@@ -2,10 +2,25 @@
 @import "../common"
 
 .dropdown-item
-  padding: 5px 20px
   line-height: 1.4
-  &:hover
-    background: color-border
+  white-space: nowrap
+  color: color-text-black
+  padding: 5px 20px
   a
     text-decoration: none
-    color: color-default
+    color: inherit
+    display: block
+    margin: -5px -20px
+    padding: 5px 20px
+    cursor: pointer
+    &:hover
+      background: color-divider
+  i
+    width: font-size-base
+    text-align: center
+    margin-right: padding-small
+
+.dropdown-item--divider
+  margin: 5px 0
+  border-top: 1px solid color-divider
+  padding: 0

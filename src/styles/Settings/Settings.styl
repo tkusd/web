@@ -1,0 +1,53 @@
+@import "nib"
+@import "../common"
+@import "../button"
+
+section-title-width = 250px
+
+.settings
+  margin: 0 auto
+  max-width: content-width
+  padding: padding-large padding-medium
+
+.settings__content
+  background: #fff
+  border-radius: 5px
+  color: color-text-black
+
+.settings__title
+  font-weight: 300
+  margin: 0
+  padding: 0 padding-medium padding-medium
+
+.settings__section
+  clearfix()
+  padding: 0 padding-medium
+  margin-left: section-title-width
+
+.settings__section-title
+  float: left
+  margin: 0
+  margin-left: section-title-width * -1
+  padding: padding-large padding-medium
+  font-weight: 300
+
+.settings__section-content
+  width: 100%
+  float: left
+  padding: padding-large padding-medium
+
+.settings__button
+  @extend $button
+
+.settings__button--primary
+  @extend $button-primary
+
+.settings__button--danger
+  @extend $button-danger
+
+.settings__form-error
+  background: color-error
+  color: #fff
+  border-radius: 5px
+  margin-bottom: padding-medium
+  padding: 12px

@@ -1,19 +1,21 @@
 import React from 'react';
-import Element from './Element';
+import ElementItem from './ElementItem';
 
 class ElementList extends React.Component {
   static propTypes = {
     elements: React.PropTypes.object.isRequired,
-    selectedElement: React.PropTypes.string
+    selectedElement: React.PropTypes.string,
+    parent: React.PropTypes.string.isRequired
   }
 
   render(){
-    const {elements, selectedElement} = this.props;
-    let list = [];
+    const {elements, parent, selectedElement} = this.props;
 
-    elements.forEach(item => {
-      list.push(<Element key={item.get('id')} element={item} selectedElement={selectedElement}/>);
-    });
+    const list = elements
+      .filter(item => item.get('element_id') === parent)
+      .map((item, id) => (
+        <ElementItem key={id} elements={elements} element={item} selectedElement={selectedElement}/>
+      )).toArray();
 
     return (
       <ul className="element-list">{list}</ul>

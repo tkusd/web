@@ -1,9 +1,11 @@
 import React from 'react';
-import {Input} from '../form';
+import {Link} from 'react-router';
+import {Form, Input} from '../form';
 import {createUser} from '../../actions/UserAction';
 import {setPageTitle} from '../../actions/AppAction';
 import {login} from '../../actions/TokenAction';
 import TokenStore from '../../stores/TokenStore';
+import Translation from '../i18n/Translation';
 
 class Signup extends React.Component {
   static contextTypes = {
@@ -43,15 +45,16 @@ class Signup extends React.Component {
     let {error} = this.state;
 
     return (
-      <form
-        className="form"
-        onSubmit={this.handleSubmit}>
-        {error && !error.field && <div className="form-error">{error.message}</div>}
+      <Form onSubmit={this.handleSubmit}>
+        <h1 className="login-container__title">
+          <Translation id="common.signup"/>
+        </h1>
+        {error && !error.field && <div className="login-container__error">{error.message}</div>}
         <Input
           id="signup-name"
           name="name"
           ref="name"
-          label="Name"
+          label={<Translation id="common.name"/>}
           type="text"
           required
           maxLength={100}/>
@@ -59,20 +62,29 @@ class Signup extends React.Component {
           id="signup-email"
           name="email"
           ref="email"
-          label="Email"
+          label={<Translation id="common.email"/>}
           type="email"
           required/>
         <Input
           id="signup-password"
           name="password"
           ref="password"
-          label="Password"
+          label={<Translation id="common.password"/>}
           type="password"
           required
           minLength={6}
           maxLength={50}/>
-        <button type="submit" className="btn">Sign up</button>
-      </form>
+        <button type="submit" className="login-container__button">
+          <Translation id="common.signup"/>
+        </button>
+        <div className="login-container__link-group">
+          <Translation id="login.login_link_hint"/>
+          {' '}
+          <Link to="login" className="login-container__link">
+            <Translation id="common.login"/>
+          </Link>
+        </div>
+      </Form>
     );
   }
 

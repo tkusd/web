@@ -1,22 +1,27 @@
 import React from 'react';
 import Palette from './Palette';
-import Portal from 'react-portal';
-import NewScreenModal from './NewScreenModal';
 import ElementList from './ElementList';
 
 class ElementPalette extends React.Component {
   static propTypes = {
     project: React.PropTypes.object.isRequired,
     elements: React.PropTypes.object.isRequired,
-    selectedElement: React.PropTypes.string
+    selectedElement: React.PropTypes.string,
+    selectedScreen: React.PropTypes.string
   }
 
   render(){
-    return (
-      <Palette title="Elements">
-        <ElementList {...this.props}/>
-      </Palette>
-    );
+    const {elements, selectedElement, selectedScreen} = this.props;
+
+    if (selectedScreen){
+      return (
+        <Palette title="Elements">
+          <ElementList elements={elements} selectedElement={selectedElement} parent={selectedScreen}/>
+        </Palette>
+      );
+    } else {
+      return <div>Please select a screen</div>;
+    }
   }
 }
 

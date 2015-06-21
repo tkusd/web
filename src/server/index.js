@@ -8,6 +8,12 @@ import csurf from 'csurf';
 import serveStatic from 'serve-static';
 import errorhandler from 'errorhandler';
 import minimist from 'minimist';
+import locale from 'locale';
+import fs from 'graceful-fs';
+
+const localeDir = path.join(__dirname, '../../locales');
+const locales = fs.readdirSync(localeDir);
+locale.Locale.default = 'en';
 
 // Create a server
 const server = express();
@@ -24,6 +30,7 @@ server.use(cookieSession({
 }));
 server.use(compression());
 server.use(csurf());
+server.use(locale(locales));
 
 if (PRODUCTION){
   // On production, use the public directory for static files

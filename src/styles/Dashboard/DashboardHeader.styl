@@ -1,0 +1,50 @@
+@import "nib"
+@import "../common"
+@import "../button"
+
+$dashboard-link
+  margin: 8px 0
+
+.dashboard-header
+  clearfix()
+  position: absolute
+  top: 0
+  left: 0
+  right: 0
+  height: dashboard-header-height
+  background: linear-gradient(rgba(#000, 0.5) 0%, rgba(#000, 0.1) 40%, transparent 80%)
+  z-index: 1
+
+.dashboard-header__left
+  float: left
+
+.dashboard-header__right
+  float: right
+  padding-right: 15px
+
+.dashboard-header__link
+  @extend $button-borderless-dark
+  @extend $dashboard-link
+
+.dashboard-header__link--primary
+  @extend $button-borderless-dark-primary
+  @extend $dashboard-link
+
+.dashboard-header__avatar
+  clearfix()
+  color: color-text
+  height: 32px
+  margin: (dashboard-header-height - @height) * 0.5 0
+  cursor: pointer
+  img
+    border-radius: 4px
+    width: @height
+    height: @height
+    float: left
+  i
+    float: left
+    line-height: @height
+    padding-left: padding-small
+
+.dashboard-header__dropdown-name
+  color: color-secondary-text

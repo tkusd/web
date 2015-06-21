@@ -1,33 +1,31 @@
 import React from 'react';
-import {deleteData} from '../../actions/UserAction';
+import Translation from '../i18n/Translation';
+import Portal from 'react-portal';
+import DeleteUserModal from './DeleteUserModal';
 
 class DeleteUser extends React.Component {
   static contextTypes = {
     executeAction: React.PropTypes.func.isRequired,
-    router: React.PropTypes.func.isRequired
+    router: React.PropTypes.func.isRequired,
+    __: React.PropTypes.func.isRequired
   }
 
-  constructor(props, context){
-    super(props, context);
-
-    this.handleSubmit = this.handleSubmit.bind(this);
+  static propTypes = {
+    user: React.PropTypes.object.isRequired
   }
 
   render(){
-    return (
-      <form onSubmit={this.handleSubmit}>
-        <button type="submit">Delete my account</button>
-      </form>
+    let btn = (
+      <button className="settings__button--danger">
+        <Translation id="settings.delete_account"/>
+      </button>
     );
-  }
 
-  handleSubmit(e){
-    e.preventDefault();
-    if (!confirm('Are you sure?')) return;
-
-    this.context.executeAction(deleteData).then(() => {
-      this.context.router.transitionTo('home');
-    });
+    return (
+      <Portal openByClickOn={btn} closeOnEsc={true}>
+        <DeleteUserModal context={this.context} user={this.props.user}/>
+      </Portal>
+    );
   }
 }
 

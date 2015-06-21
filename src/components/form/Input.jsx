@@ -5,13 +5,20 @@ import * as validators from './validators';
 import {List} from 'immutable';
 import pureRender from '../../utils/pureRender';
 
+if (process.env.BROWSER){
+  require('../../styles/form/Input.styl');
+}
+
 function noop(){}
 
 @pureRender
 class Input extends React.Component {
   static propTypes = {
     name: React.PropTypes.string.isRequired,
-    label: React.PropTypes.string,
+    label: React.PropTypes.oneOfType([
+      React.PropTypes.string,
+      React.PropTypes.element
+    ]),
     validator: React.PropTypes.arrayOf(React.PropTypes.func),
     transform: React.PropTypes.arrayOf(React.PropTypes.func),
     onChange: React.PropTypes.func,
@@ -60,12 +67,20 @@ class Input extends React.Component {
     this.setValue(this.props.initialValue || '');
   }
 
-  render(){
-    let dirty = this.isDirty();
+  componentWillUpdate(nextProps){
+    if (nextProps.initialValue !== this.props.initialValue){
+      this.setValue(nextProps.initialValue || '');
+    }
+  }
 
+  render(){
+    const {label, id} = this.props;
+    let dirty = this.isDirty();
+    let error = this.getError();
     let className = cx('input__group', {
       dirty: dirty,
-      pristine: !dirty
+      pristine: !dirty,
+      invalid: error
     });
 
     let props = assign({
@@ -79,9 +94,9 @@ class Input extends React.Component {
 
     return (
       <div className={className}>
-        {this.props.label && <label htmlFor={this.props.id} className="input__label">{this.props.label}</label>}
+        {label && <label htmlFor={id} className="input__label">{label}</label>}
         {input}
-        {this.getError() && <span className="input_error">{this.getError()}</span>}
+        {error && <span className="input__error">{error}</span>}
       </div>
     );
   }
@@ -89,6 +104,10 @@ class Input extends React.Component {
   handleChange(e){
     let data = this.setValue(e.target.value);
     this.props.onChange(data);
+
+    this.setState({
+      dirty: true
+    });
   }
 
   checkData(data){
@@ -104,8 +123,7 @@ class Input extends React.Component {
 
   setValue(data){
     let {value, error} = this.checkData(data);
-    let dirty = true;
-    let newData = {value, error, dirty};
+    let newData = {value, error};
 
     this.setState(newData);
     return newData;
@@ -120,7 +138,7 @@ class Input extends React.Component {
   }
 
   reset(){
-    let {value, error} = this.checkData('');
+    let {value, error} = this.checkData(this.props.initialValue);
     let dirty = false;
 
     this.setState({value, error, dirty});

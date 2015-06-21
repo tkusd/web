@@ -11,19 +11,23 @@ export default merge({}, config, {
     chunkFilename: '[id]-[chunkhash].js'
   },
   module: {
-    loaders: [
+    loaders: config.module.loaders.concat([
       {
         test: /\.jsx?$/,
         loaders: ['babel'],
         exclude: /node_modules/
       },
       {
+        test: /\.css$/,
+        loader: ExtractTextPlugin.extract('style', 'css!postcss')
+      },
+      {
         test: /\.styl$/,
-        loader: ExtractTextPlugin.extract('style-loader', 'css-loader!postcss-loader!stylus-loader')
+        loader: ExtractTextPlugin.extract('style', 'css!postcss!stylus')
       }
-    ]
+    ])
   },
-  plugins: [
+  plugins: config.plugins.concat([
     // extract css files
     new ExtractTextPlugin('[name]-[chunkhash].css', {
       allChunks: true
@@ -50,5 +54,5 @@ export default merge({}, config, {
     function(){
       this.plugin('done', writeStats);
     }
-  ]
+  ])
 });

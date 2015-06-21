@@ -1,60 +1,79 @@
 import React from 'react';
 import cx from 'classnames';
-import {assign} from 'lodash';
+import {assign, omit} from 'lodash';
 
 if (process.env.BROWSER){
   require('../../styles/dropdown/Dropdown.styl');
 }
 
 class Dropdown extends React.Component {
-  static propTypes = {
-    className: React.PropTypes.string,
-    mode: React.PropTypes.oneOf(['hover', 'click'])
-  }
-
-  static defaultProps = {
-    className: '',
-    mode: 'click'
-  }
-
   constructor(props, context){
     super(props, context);
 
     this.state = {
-      isOpen: false
+      opened: false
     };
+
+    this.handleClick = this.handleClick.bind(this);
+    this.handleDocumentClick = this.handleDocumentClick.bind(this);
+    this.handleDocumentKeydown = this.handleDocumentKeydown.bind(this);
   }
 
   render(){
-    let {className} = this.props;
-    if (className) className += ' ';
-    className += cx('dropdown', {
-      'dropdown--open': this.state.isOpen,
-      'dropdown--hover': this.props.mode === 'hover'
-    });
+    let props = assign({
+      className: '',
+      onClick: this.handleClick
+    }, omit(this.props, 'children'));
 
-    let props = assign({}, this.props, {className});
+    props.className = cx(props.className, 'dropdown');
 
-    return React.DOM.div(props, this.props.children);
+    if (this.state.opened){
+      props.className = cx(props.className, 'dropdown--open');
+    }
+
+    return <div ref="dropdown" {...props}>{this.props.children}</div>;
+  }
+
+  handleClick(e){
+    e.preventDefault();
+    this.toggle();
   }
 
   open(){
-    this.setState({
-      isOpen: true
-    });
+    this.setState({opened: true});
+
+    if (process.env.BROWSER){
+      document.addEventListener('click', this.handleDocumentClick);
+      document.addEventListener('keydown', this.handleDocumentKeydown);
+    }
   }
 
   close(){
-    this.setState({
-      isOpen: false
-    });
+    this.setState({opened: false});
+
+    if (process.env.BROWSER){
+      document.removeEventListener('click', this.handleDocumentClick);
+      document.removeEventListener('keydown', this.handleDocumentKeydown);
+    }
   }
 
   toggle(){
-    if (this.state.isOpen){
+    if (this.state.opened){
       this.close();
     } else {
       this.open();
+    }
+  }
+
+  handleDocumentClick(e){
+    e.preventDefault();
+    e.stopPropagation();
+    this.close();
+  }
+
+  handleDocumentKeydown(e){
+    if (e.keyCode === 27){
+      this.close();
     }
   }
 }

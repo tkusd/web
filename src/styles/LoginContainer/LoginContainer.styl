@@ -1,0 +1,40 @@
+@import "nib"
+@import "../common"
+@import "../button"
+
+login-container-width = 450px
+
+.login-container
+  width: login-container-width
+  background: #fff
+  border-radius: 5px
+  margin: 150px auto
+  padding: padding-large
+  color: color-text-black
+
+.login-container__title
+  margin: 0
+  text-align: center
+  font-weight: 300
+
+.login-container__button
+  @extend $button-primary
+  width: 100%
+  font-size: 1.4em
+
+.login-container__error
+  background: color-error
+  color: #fff
+  text-align: center
+  padding: 12px
+  border-radius: 5px
+  margin: padding-medium 0
+
+.login-container__link-group
+  padding-top: padding-medium
+  text-align: center
+
+.login-container__link
+  color: color-secondary-text
+  &:hover
+    color: color-accent

@@ -1,5 +1,6 @@
 import React from 'react';
 import pureRender from '../../utils/pureRender';
+import FontAwesome from '../common/FontAwesome';
 
 if (process.env.BROWSER){
   require('../../styles/modal/Modal.styl');
@@ -8,7 +9,10 @@ if (process.env.BROWSER){
 @pureRender
 class Modal extends React.Component {
   static propTypes = {
-    title: React.PropTypes.string,
+    title: React.PropTypes.oneOfType([
+      React.PropTypes.string,
+      React.PropTypes.element
+    ]),
     onDismiss: React.PropTypes.func
   }
 
@@ -26,7 +30,9 @@ class Modal extends React.Component {
           <div className="modal__dialog">
             <header className="modal__header">
               <h3 className="modal__title">{this.props.title}</h3>
-              <button className="modal__btn-close" onClick={this.handleCloseBtnClick}>Close</button>
+              <button className="modal__btn-close" onClick={this.handleCloseBtnClick}>
+                <FontAwesome icon="times"/>
+              </button>
             </header>
             <div className="modal__content">{this.props.children}</div>
           </div>

@@ -1,27 +1,50 @@
 import React from 'react';
-import {DragDropContext} from 'react-dnd';
-import HTML5Backend from 'react-dnd/modules/backends/HTML5';
-import ElementPalette from './ElementPalette';
-import ComponentPalette from './ComponentPalette';
-//import Screen from './Screen';
-import ScreenPalette from './ScreenPalette';
+import connectToStores from '../../utils/connectToStores';
+import ProjectStore from '../../stores/ProjectStore';
+import ElementStore from '../../stores/ElementStore';
+import ComponentStore from '../../stores/ComponentStore';
+import AppStore from '../../stores/AppStore';
+import {getFullProject} from '../../actions/ProjectAction';
+import {setPageTitle, setStatusCode} from '../../actions/AppAction';
+import {selectElement} from '../../actions/ElementAction';
+import Project from './Project';
+import NotFound from '../NotFound';
+import pureRender from '../../utils/pureRender';
 
-@DragDropContext(HTML5Backend)
+@connectToStores([ProjectStore, ElementStore, ComponentStore], (stores, props) => ({
+  project: stores.ProjectStore.getProject(props.params.id),
+  elements: stores.ElementStore.getElementsOfProject(props.params.id),
+  selectedElement: stores.ElementStore.getSelectedElement(),
+  selectedScreen: stores.ElementStore.getSelectedScreen(),
+  components: stores.ComponentStore.getList()
+}))
+@pureRender
 class ProjectContainer extends React.Component {
-  static propTypes = {
-    project: React.PropTypes.object.isRequired,
-    elements: React.PropTypes.object.isRequired,
-    selectedElement: React.PropTypes.string
+  static onEnter(transition, params, query){
+    if (this.context.getStore(AppStore).isFirstRender()){
+      return Promise.resolve();
+    }
+
+    return this.context.executeAction(getFullProject, params.id).then(project => {
+      this.context.executeAction(setPageTitle, project.title);
+    }).catch(err => {
+      console.error(err);
+
+      this.context.executeAction(setPageTitle, 'Not found');
+      this.context.executeAction(setStatusCode, 404);
+    });
+  }
+
+  static onLeave(transition){
+    this.context.executeAction(selectElement, null);
   }
 
   render(){
-    return (
-      <div id="project">
-        <ScreenPalette {...this.props}/>
-        <ElementPalette {...this.props}/>
-        <ComponentPalette {...this.props}/>
-      </div>
-    );
+    if (this.state.project){
+      return <Project {...this.state}/>;
+    } else {
+      return <NotFound/>;
+    }
   }
 }
 

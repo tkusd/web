@@ -1,6 +1,7 @@
 import React from 'react';
-import {Input} from '../form';
+import {Form, Input} from '../form';
 import {updateUser} from '../../actions/UserAction';
+import Translation from '../i18n/Translation';
 
 class ProfileForm extends React.Component {
   static contextTypes = {
@@ -34,15 +35,13 @@ class ProfileForm extends React.Component {
     let {error} = this.state;
 
     return (
-      <form
-        className="form"
-        onSubmit={this.handleSubmit}>
-        {error && !error.field && <div className="form-error">{error.message}</div>}
+      <Form onSubmit={this.handleSubmit}>
+        {error && !error.field && <div className="settings__form-error">{error.message}</div>}
         <Input
           id="profile-name"
           name="name"
           ref="name"
-          label="Name"
+          label={<Translation id="common.name"/>}
           type="text"
           initialValue={user.get('name')}
           required
@@ -51,12 +50,14 @@ class ProfileForm extends React.Component {
           id="profile-email"
           name="email"
           ref="email"
-          label="Email"
+          label={<Translation id="common.email"/>}
           type="email"
           initialValue={user.get('email')}
           required/>
-        <button type="submit" className="btn">Update</button>
-      </form>
+        <button type="submit" className="settings__button--primary">
+          <Translation id="common.update"/>
+        </button>
+      </Form>
     );
   }
 

@@ -1,0 +1,17 @@
+@import "nib"
+@import "../common"
+
+.screen-item
+  padding: padding-small padding-medium
+  user-select: none
+  cursor: default
+
+.screen-item--selected
+  background: lighten(color-project-sidebar, 5%)
+
+.screen-item__name
+  font-weight: normal
+  line-height: 1
+  white-space: nowrap
+  overflow: hidden
+  text-overflow: ellipsis

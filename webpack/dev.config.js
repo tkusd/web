@@ -22,22 +22,26 @@ export default merge({}, config, {
     ], config.entry.main)
   },
   module: {
-    loaders: [
+    loaders: config.module.loaders.concat([
       {
         test: /\.jsx?$/,
         loaders: ['react-hot', 'babel'],
         exclude: /node_modules/
       },
       {
+        test: /\.css$/,
+        loader: 'style!css!postcss'
+      },
+      {
         test: /\.styl$/,
-        loader: 'style-loader!css-loader!postcss-loader!stylus-loader'
+        loader: 'style!css!postcss!stylus'
       }
-    ]
+    ])
   },
   output: {
     publicPath: `http://${WEBPACK_HOST}:${WEBPACK_PORT}/build/`
   },
-  plugins: [
+  plugins: config.plugins.concat([
     // hot reload
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoErrorsPlugin(),
@@ -61,5 +65,5 @@ export default merge({}, config, {
     function(){
       this.plugin('done', writeStats);
     }
-  ]
+  ])
 });

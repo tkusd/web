@@ -1,0 +1,45 @@
+@import "nib"
+@import "../common"
+
+.input__group
+  padding: padding-medium 0
+  margin: padding-medium 0
+  position: relative
+
+.input__label
+  font-size: 0.9em
+  color: color-secondary-text
+  position: absolute
+  top: 0
+  left: 0
+  width: 100%
+
+.input
+  background: none
+  border: none
+  box-shadow: none
+  border-bottom: 2px solid color-divider
+  width: 100%
+  color: inherit
+  font-family: inherit
+  font-size: inherit
+  padding: padding-small 0
+  outline: none
+  transition: 0.2s
+  &:focus
+    border-bottom-color: color-accent
+  .invalid.dirty &
+  .submitted .invalid &
+    border-bottom-color: color-error
+
+.input__error
+  display: none
+  color: color-error
+  font-size: 0.9em
+  position: absolute
+  bottom: -4px
+  left: 0
+  width: 100%
+  .dirty &
+  .submitted &
+    display: block

@@ -1,7 +1,6 @@
 import keyMirror from 'keymirror';
 
 export default keyMirror({
-  COMPONENT: null,
-  ELEMENT: null,
-  SCREEN: null
+  CONTAINER: null,
+  NON_CONTAINER: null
 });

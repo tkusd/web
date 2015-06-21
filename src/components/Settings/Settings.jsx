@@ -6,10 +6,18 @@ import ProfileForm from './ProfileForm';
 import DeleteUser from './DeleteUser';
 import ChangePassword from './ChangePassword';
 import connectToStores from '../../utils/connectToStores';
+import pureRender from '../../utils/pureRender';
+import Translation from '../i18n/Translation';
+import NotFound from '../NotFound';
+
+if (process.env.BROWSER){
+  require('../../styles/Settings/Settings.styl');
+}
 
 @connectToStores([UserStore], (stores, props) => ({
   user: stores.UserStore.getCurrentUser()
 }))
+@pureRender
 class Settings extends React.Component {
   static onEnter(transition, params, query){
     const tokenStore = this.context.getStore(TokenStore);
@@ -22,18 +30,44 @@ class Settings extends React.Component {
   }
 
   render(){
-    let {user} = this.state;
+    const {user} = this.state;
 
     if (user){
       return (
-        <div>
-          <ProfileForm user={user}/>
-          <ChangePassword user={user}/>
-          <DeleteUser user={user}/>
+        <div className="settings">
+          <h1 className="settings__title">
+            <Translation id="common.settings"/>
+          </h1>
+          <div className="settings__content">
+            <section className="settings__section">
+              <h2 className="settings__section-title">
+                <Translation id="settings.profile"/>
+              </h2>
+              <div className="settings__section-content">
+                <ProfileForm user={user}/>
+              </div>
+            </section>
+            <section className="settings__section">
+              <h2 className="settings__section-title">
+                <Translation id="settings.change_password"/>
+              </h2>
+              <div className="settings__section-content">
+                <ChangePassword user={user}/>
+              </div>
+            </section>
+            <section className="settings__section">
+              <h2 className="settings__section-title">
+                <Translation id="settings.delete_account"/>
+              </h2>
+              <div className="settings__section-content">
+                <DeleteUser user={user}/>
+              </div>
+            </section>
+          </div>
         </div>
       );
     } else {
-      return <div>You have not logged in yet.</div>;
+      return <NotFound/>;
     }
   }
 }

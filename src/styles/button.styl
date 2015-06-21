@@ -1,21 +1,51 @@
 @import "nib"
-@import "../common"
+@import "./common"
 
 $button
-  color: color-default
-  text-decoration: none
   display: inline-block
-  background: #fff
-  border-radius: 3px
-  border: 1px solid color-border
-  text-align: center
-  vertical-align: middle
+  border: none
+  border-radius: 5px
+  padding: 10px 16px
+  line-height: 1
+  background: color-divider
+  text-decoration: none
   user-select: none
   cursor: pointer
-  padding: 6px 12px
+  outline: none
+  &:hover
+    background: darken(color-divider, 10%)
 
-$button-cyan
+$button-primary
   @extend $button
-  background: color-cyan
+  background: color-accent
   color: #fff
-  border-color: darken(color-cyan, 10%)
+  &:hover
+    background: darken(color-accent, 10%)
+
+$button-danger
+  @extend $button
+  background: color-error
+  color: #fff
+  &:hover
+    background: darken(color-error, 10%)
+
+$button-borderless
+  @extend $button
+  background: none
+  &:hover
+    background: color-divider
+
+$button-borderless-dark
+  @extend $button
+  background: none
+  color: color-text
+  &:hover
+    background: lighten(color-background, 10%)
+    color: color-highlight
+
+$button-borderless-dark-primary
+  @extend $button-borderless-dark
+  color: color-accent
+  &:hover
+    background: color-accent
+    color: #fff

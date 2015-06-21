@@ -7,11 +7,17 @@ import UserStore from '../../stores/UserStore';
 import AppStore from '../../stores/AppStore';
 import connectToStores from '../../utils/connectToStores';
 import NotFound from '../NotFound';
+import pureRender from '../../utils/pureRender';
+
+if (process.env.BROWSER){
+  require('../../styles/Profile/Profile.styl');
+}
 
 @connectToStores([UserStore], (stores, props) => ({
   user: stores.UserStore.getUser(props.params.id),
   currentUser: stores.UserStore.getCurrentUser()
 }))
+@pureRender
 class Profile extends React.Component {
   static onEnter(transition, params, query){
     if (this.context.getStore(AppStore).isFirstRender()) {
@@ -49,7 +55,7 @@ class Profile extends React.Component {
 
     if (user){
       return (
-        <div>
+        <div className="profile">
           <ProfileData user={user} currentUser={currentUser}/>
           <ProjectList user={user} currentUser={currentUser} params={this.props.params}/>
         </div>

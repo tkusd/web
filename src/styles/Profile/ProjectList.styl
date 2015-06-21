@@ -1,0 +1,54 @@
+@import "nib"
+@import "../common"
+@import "../button"
+
+.project-list
+  padding: padding-large 0
+
+.project-list__header
+  clearfix()
+  padding: 0 padding-medium 0.5em
+
+.project-list__title
+  font-weight: 300
+  float: left
+  margin: 0
+  padding-bottom: padding-small
+
+.project-list__portal
+  float: right
+  margin: 0 -16px
+
+.project-list__new-project-btn
+  @extend $button-borderless
+  color: color-accent
+  &:hover
+    background: color-accent
+    color: #fff
+  i
+    padding-right: 0.5em
+
+.project-list__content
+  background: #fff
+  border-radius: 5px
+  color: color-text-black
+
+.project-list__list
+  list-style: none
+  margin: 0
+  padding: 0 padding-medium
+
+.project-list__item
+  border-bottom: 1px solid color-divider
+  &:last-child
+    border-bottom: none
+
+.project-list__item-link
+  color: inherit
+  text-decoration: none
+  display: block
+  padding: padding-medium padding-small
+
+.project-list__empty
+  padding: padding-medium
+  text-align: center

@@ -1,8 +1,10 @@
 import React from 'react';
-import {Input} from '../form';
+import {Link} from 'react-router';
+import {Form, Input} from '../form';
 import TokenStore from '../../stores/TokenStore';
 import {login} from '../../actions/TokenAction';
 import {setPageTitle} from '../../actions/AppAction';
+import Translation from '../i18n/Translation';
 
 class Login extends React.Component {
   static contextTypes = {
@@ -42,28 +44,38 @@ class Login extends React.Component {
     let {error} = this.state;
 
     return (
-      <form
-        className="form"
-        onSubmit={this.handleSubmit}>
-        {error && !error.field && <div className="form-error">{error.message}</div>}
+      <Form onSubmit={this.handleSubmit}>
+        <h1 className="login-container__title">
+          <Translation id="common.login"/>
+        </h1>
+        {error && !error.field && <div className="login-container__error">{error.message}</div>}
         <Input
           id="login-email"
           name="email"
           ref="email"
-          label="Email"
+          label={<Translation id="common.email"/>}
           type="email"
           required/>
         <Input
           id="login-password"
           name="password"
           ref="password"
-          label="Password"
+          label={<Translation id="common.password"/>}
           type="password"
           required
           minLength={6}
           maxLength={50}/>
-        <button type="submit" className="btn">Log in</button>
-      </form>
+        <button type="submit" className="login-container__button">
+          <Translation id="common.login"/>
+        </button>
+        <div className="login-container__link-group">
+          <Translation id="login.signup_link_hint"/>
+          {' '}
+          <Link to="signup" className="login-container__link">
+            <Translation id="common.signup"/>
+          </Link>
+        </div>
+      </Form>
     );
   }
 
