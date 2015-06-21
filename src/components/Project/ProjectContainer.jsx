@@ -6,7 +6,7 @@ import ComponentStore from '../../stores/ComponentStore';
 import AppStore from '../../stores/AppStore';
 import {getFullProject} from '../../actions/ProjectAction';
 import {setPageTitle, setStatusCode} from '../../actions/AppAction';
-import {selectElement} from '../../actions/ElementAction';
+import {selectElement, selectScreen} from '../../actions/ElementAction';
 import Project from './Project';
 import NotFound from '../NotFound';
 import pureRender from '../../utils/pureRender';
@@ -37,6 +37,7 @@ class ProjectContainer extends React.Component {
 
   static onLeave(transition){
     this.context.executeAction(selectElement, null);
+    this.context.executeAction(selectScreen, null);
   }
 
   render(){
