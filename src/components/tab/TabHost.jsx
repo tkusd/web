@@ -25,12 +25,12 @@ class TabHost extends React.Component {
 
   render(){
     const {currentIndex} = this.state;
-    const {children, className} = this.props;
+    const {children} = this.props;
     let tabs = [];
     let tabContent = [];
 
     React.Children.forEach(children, child => {
-      if (child.type !== TabPane) return;
+      if (!child || child.type !== TabPane) return;
 
       let i = tabs.length;
       let className = cx('tab-host__tab', {
@@ -43,8 +43,10 @@ class TabHost extends React.Component {
       tabContent.push(child.props.children);
     });
 
+    let className = cx(this.props.className, 'tab-host');
+
     return (
-      <div className={cx(className, 'tab-host')}>
+      <div className={className}>
         <div className="tab-host__tabs">{tabs}</div>
         <div className="tab-host__content">{tabContent[currentIndex]}</div>
       </div>

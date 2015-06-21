@@ -37,10 +37,12 @@ class Profile extends React.Component {
 
       return ProjectList.onEnter.call(this, transition, params, query);
     }).catch(err => {
-      console.error(err);
-
-      this.context.executeAction(setPageTitle, 'Not found');
-      this.context.executeAction(setStatusCode, 404);
+      if (err.response && err.response.status === 404){
+        this.context.executeAction(setPageTitle, 'Not found');
+        this.context.executeAction(setStatusCode, 404);
+      } else {
+        throw err;
+      }
     });
   }
 

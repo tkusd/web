@@ -8,5 +8,6 @@ module.exports = {
   input: 'Input',
   link: 'Link',
   image: 'Image',
-  list: 'List'
+  list: 'List',
+  no_screens: 'No screens'
 };

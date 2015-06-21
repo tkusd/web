@@ -51,6 +51,7 @@ function renderMarkup(context, Root){
 function render(req, res, next){
   const context = app.createContext();
   const lang = req.locale;
+  let isError = false;
 
   // Read webpack stats
   readStats(req).then(() => {
@@ -82,10 +83,15 @@ function render(req, res, next){
         let path = options.to ? router.makePath(options.to, options.params, options.query) : '/';
         res.redirect(path);
       },
-      onError: next
+      onError: err => {
+        isError = true;
+        next(err);
+      }
     });
 
     router.run((Root, state) => {
+      if (isError) return;
+
       renderMarkup(context, Root).then(markup => {
         let exposed = 'window.$STATE=' + serialize(context.dehydrate()) + ';';
         let html = React.renderToStaticMarkup(React.createElement(HtmlDocument, {

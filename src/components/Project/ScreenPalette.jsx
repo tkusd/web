@@ -19,32 +19,52 @@ class ScreenPalette extends React.Component {
   static propTypes = {
     project: React.PropTypes.object.isRequired,
     elements: React.PropTypes.object.isRequired,
-    selectedScreen: React.PropTypes.string
+    selectedScreen: React.PropTypes.string,
+    editable: React.PropTypes.bool.isRequired
   }
 
   render(){
     const {elements, selectedScreen, project} = this.props;
+
+    let screens;
+
+    if (elements.count()){
+      screens = elements
+        .filter(item => !item.get('element_id'))
+        .map((item, id) => (
+          <ScreenItem key={id} element={item} selectedScreen={selectedScreen}/>
+        )).toArray();
+    } else {
+      screens = (
+        <div className="screen-palette__empty">
+          <Translation id="project.no_screens"/>
+        </div>
+      );
+    }
+    return (
+      <Palette title={<Translation id="project.screens"/>}>
+        {screens}
+        {this.renderPortal()}
+      </Palette>
+    );
+  }
+
+  renderPortal(){
+    const {project, editable} = this.props;
+    if (!editable) return;
+
     let btn = (
       <div className="screen-palette__new-screen">
         <FontAwesome icon="plus"/>
       </div>
     );
 
-    const screens = elements
-      .filter(item => !item.get('element_id'))
-      .map((item, id) => (
-        <ScreenItem key={id} element={item} selectedScreen={selectedScreen}/>
-      )).toArray();
-
     return (
-      <Palette title={<Translation id="project.screens"/>}>
-        {screens}
-        <div className="screen-palette__new-screen-wrap">
-          <Portal openByClickOn={btn} closeOnEsc={true}>
-            <NewScreenModal context={this.context} project={project}/>
-          </Portal>
-        </div>
-      </Palette>
+      <div className="screen-palette__new-screen-wrap">
+        <Portal openByClickOn={btn} closeOnEsc={true}>
+          <NewScreenModal context={this.context} project={project}/>
+        </Portal>
+      </div>
     );
   }
 }

@@ -16,7 +16,8 @@ class Project extends React.Component {
     elements: React.PropTypes.object.isRequired,
     components: React.PropTypes.object.isRequired,
     selectedElement: React.PropTypes.string,
-    selectedScreen: React.PropTypes.string
+    selectedScreen: React.PropTypes.string,
+    editable: React.PropTypes.bool.isRequired
   }
 
   render(){

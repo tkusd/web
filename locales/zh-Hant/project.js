@@ -8,5 +8,6 @@ module.exports = {
   input: '輸入框',
   link: '連結',
   image: '圖片',
-  list: '清單'
+  list: '清單',
+  no_screens: '沒有螢幕'
 };
