@@ -14,7 +14,19 @@ function writeStats(stats){
     let assets = chunks[key];
     if (!Array.isArray(assets)) assets = [assets];
 
-    content[key] = assets.map(asset => publicPath + asset);
+    let chunkContent = {};
+
+    assets.forEach(asset => {
+      let extname = pathFn.extname(asset).substring(1);
+
+      if (!chunkContent.hasOwnProperty(extname)){
+        chunkContent[extname] = [];
+      }
+
+      chunkContent[extname].push(publicPath + asset);
+    });
+
+    content[key] = chunkContent;
   });
 
   mkdirs(this.options.output.path);

@@ -2,7 +2,6 @@ import config from './config';
 import {merge} from 'lodash';
 import webpack from 'webpack';
 import notifyStats from './utils/notify-stats';
-import writeStats from './utils/write-stats';
 import minimist from 'minimist';
 
 const argv = minimist(process.argv.slice(2));
@@ -61,9 +60,6 @@ export default merge({}, config, {
     // stats
     function(){
       this.plugin('done', notifyStats);
-    },
-    function(){
-      this.plugin('done', writeStats);
     }
   ])
 });

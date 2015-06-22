@@ -1,4 +1,5 @@
 import path from 'path';
+import writeStats from './utils/write-stats';
 
 const assetPath = path.join(__dirname, '../public/build');
 
@@ -26,19 +27,19 @@ export default {
     loaders: [
       {
         test: /\.woff2?(\?v=\d+\.\d+\.\d+)?$/,
-        loader: 'url?limit=10000&mimetype=application/font-woff'
+        loader: 'url?limit=10000&mimetype=application/font-woff&name=[name]-[hash:8].[ext]'
       },
       {
         test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
-        loader: 'url?limit=10000&mimetype=application/octet-stream'
+        loader: 'url?limit=10000&mimetype=application/octet-stream&name=[name]-[hash:8].[ext]'
       },
       {
         test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
-        loader: 'file'
+        loader: 'file?name=[name]-[hash:8].[ext]'
       },
       {
         test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
-        loader: 'url?limit=10000&mimetype=image/svg+xml'
+        loader: 'url?limit=10000&mimetype=image/svg+xml&name=[name]-[hash:8].[ext]'
       },
       {
         test: /\.json$/,
@@ -46,7 +47,11 @@ export default {
       }
     ]
   },
-  plugins: [],
+  plugins: [
+    function(){
+      this.plugin('done', writeStats);
+    }
+  ],
   progress: true,
   stylus: {
     use: [

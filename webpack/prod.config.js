@@ -2,13 +2,12 @@ import config from './config';
 import {merge} from 'lodash';
 import webpack from 'webpack';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
-import writeStats from './utils/write-stats';
 
 export default merge({}, config, {
   devtool: 'source-map',
   output: {
-    filename: '[name]-[chunkhash].js',
-    chunkFilename: '[id]-[chunkhash].js'
+    filename: '[name]-[hash:8].js',
+    chunkFilename: '[name]-[id]-[chunkhash:8].js'
   },
   module: {
     loaders: config.module.loaders.concat([
@@ -29,7 +28,7 @@ export default merge({}, config, {
   },
   plugins: config.plugins.concat([
     // extract css files
-    new ExtractTextPlugin('[name]-[chunkhash].css', {
+    new ExtractTextPlugin('[name]-[contenthash:8].css', {
       allChunks: true
     }),
 
@@ -48,11 +47,6 @@ export default merge({}, config, {
       compress: {
         warnings: false
       }
-    }),
-
-    // stats
-    function(){
-      this.plugin('done', writeStats);
-    }
+    })
   ])
 });

@@ -1,13 +1,6 @@
 import React from 'react';
 import AppStore from '../stores/AppStore';
 import LocaleStore from '../stores/LocaleStore';
-import path from 'path';
-
-function filterExtname(extname){
-  return function(item){
-    return path.extname(item) === '.' + extname;
-  };
-}
 
 class HtmlDocument extends React.Component {
   static propTypes = {
@@ -23,8 +16,8 @@ class HtmlDocument extends React.Component {
     const localeStore = context.getStore(LocaleStore);
     const lang = localeStore.getLanguage();
 
-    let style = stats.main.filter(filterExtname('css'));
-    let script = stats.main.filter(filterExtname('js'));
+    let style = stats.main.css || [];
+    let script = stats.main.js || [];
 
     // Web font
     style.push('//fonts.googleapis.com/css?family=Lato:400,300,700');
