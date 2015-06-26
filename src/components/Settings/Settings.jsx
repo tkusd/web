@@ -5,8 +5,8 @@ import {setPageTitle} from '../../actions/AppAction';
 import ProfileForm from './ProfileForm';
 import DeleteUser from './DeleteUser';
 import ChangePassword from './ChangePassword';
-import connectToStores from '../../utils/connectToStores';
-import pureRender from '../../utils/pureRender';
+import connectToStores from '../../decorators/connectToStores';
+import pureRender from '../../decorators/pureRender';
 import Translation from '../i18n/Translation';
 import NotFound from '../NotFound';
 

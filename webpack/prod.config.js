@@ -7,7 +7,7 @@ export default merge({}, config, {
   devtool: 'source-map',
   output: {
     filename: '[name]-[hash:8].js',
-    chunkFilename: '[name]-[id]-[chunkhash:8].js'
+    chunkFilename: '[name]-[chunkhash:8].js'
   },
   module: {
     loaders: config.module.loaders.concat([

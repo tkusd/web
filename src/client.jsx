@@ -42,16 +42,8 @@ localeStore.setData('en', require('../locales/en'));
 if (lang === 'en'){
   render();
 } else {
-  require([`../locales/${lang}/index.js`], locale => {
+  require(`!!promise?global!../locales/${lang}`)().then(locale => {
     localeStore.setData(lang, locale);
     render();
   });
-  /*
-  // Load other languages
-  const loadLocale = require(`bundle?lazy!../locales/${lang}/index.js`);
-
-  loadLocale(locale => {
-    localeStore.setData(lang, locale);
-    render();
-  });*/
 }

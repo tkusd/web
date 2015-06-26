@@ -6,15 +6,12 @@ function getTranslations(context, lang){
   if (!lang) lang = localeStore.getLanguage();
 
   const locales = localeStore.getData(lang);
-  const engLocales = localeStore.getData('en');
 
   return (id, ...args) => {
     let str;
 
-    if (locales.has(id)){
+    if (locales && locales.has(id)){
       str = locales.get(id);
-    } else if (lang !== 'en' && engLocales.has(id)){
-      str = engLocales.get(id);
     } else {
       return id;
     }

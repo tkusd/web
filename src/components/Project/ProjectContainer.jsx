@@ -1,5 +1,5 @@
 import React from 'react';
-import connectToStores from '../../utils/connectToStores';
+import connectToStores from '../../decorators/connectToStores';
 import ProjectStore from '../../stores/ProjectStore';
 import ElementStore from '../../stores/ElementStore';
 import ComponentStore from '../../stores/ComponentStore';
@@ -10,7 +10,7 @@ import {setPageTitle, setStatusCode} from '../../actions/AppAction';
 import {selectElement, selectScreen} from '../../actions/ElementAction';
 import Project from './Project';
 import NotFound from '../NotFound';
-import pureRender from '../../utils/pureRender';
+import pureRender from '../../decorators/pureRender';
 import {assign} from 'lodash';
 
 @connectToStores([ProjectStore, ElementStore, ComponentStore, UserStore], (stores, props) => ({

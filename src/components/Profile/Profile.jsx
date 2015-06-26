@@ -5,9 +5,9 @@ import {setPageTitle, setStatusCode} from '../../actions/AppAction';
 import {getUser} from '../../actions/UserAction';
 import UserStore from '../../stores/UserStore';
 import AppStore from '../../stores/AppStore';
-import connectToStores from '../../utils/connectToStores';
+import connectToStores from '../../decorators/connectToStores';
 import NotFound from '../NotFound';
-import pureRender from '../../utils/pureRender';
+import pureRender from '../../decorators/pureRender';
 
 if (process.env.BROWSER){
   require('../../styles/Profile/Profile.styl');

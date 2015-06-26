@@ -2,6 +2,10 @@ import React from 'react';
 import AppStore from '../stores/AppStore';
 import LocaleStore from '../stores/LocaleStore';
 
+function filterExist(item){
+  return item != null;
+}
+
 class HtmlDocument extends React.Component {
   static propTypes = {
     context: React.PropTypes.object.isRequired,
@@ -16,11 +20,15 @@ class HtmlDocument extends React.Component {
     const localeStore = context.getStore(LocaleStore);
     const lang = localeStore.getLanguage();
 
-    let style = stats.main.css || [];
-    let script = stats.main.js || [];
+    let style = [].concat(
+      stats.main.css,
+      '//fonts.googleapis.com/css?family=Lato:400,300,700'
+    ).filter(filterExist);
 
-    // Web font
-    style.push('//fonts.googleapis.com/css?family=Lato:400,300,700');
+    let script = [].concat(
+      stats['common.js'].js,
+      stats.main.js
+    ).filter(filterExist);
 
     return (
       <html lang={lang}>

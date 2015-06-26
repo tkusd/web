@@ -12,7 +12,10 @@ import locale from 'locale';
 import fs from 'graceful-fs';
 
 const localeDir = path.join(__dirname, '../../locales');
-const locales = fs.readdirSync(localeDir);
+const locales = fs.readdirSync(localeDir).map(lang => {
+  const extname = path.extname(lang);
+  return path.basename(lang, extname);
+});
 locale.Locale.default = 'en';
 
 // Create a server

@@ -1,5 +1,5 @@
 import React from 'react';
-import pureRender from '../../utils/pureRender';
+import pureRender from '../../decorators/pureRender';
 import FontAwesome from '../common/FontAwesome';
 
 if (process.env.BROWSER){

@@ -7,6 +7,7 @@ new WebpackDevServer(webpack(config), {
   contentBase: path.join(__dirname, '../public'),
   publicPath: config.output.publicPath,
   hot: true,
+  historyApiFallback: true,
   quiet: true,
   stats: {
     colors: true

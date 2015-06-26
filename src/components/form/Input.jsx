@@ -3,7 +3,7 @@ import cx from 'classnames';
 import {assign, omit} from 'lodash';
 import * as validators from './validators';
 import {List} from 'immutable';
-import pureRender from '../../utils/pureRender';
+import pureRender from '../../decorators/pureRender';
 
 if (process.env.BROWSER){
   require('../../styles/form/Input.styl');

@@ -2,7 +2,7 @@ import React from 'react';
 import AppStore from '../../stores/AppStore';
 import LocaleStore from '../../stores/LocaleStore';
 import {RouteHandler} from 'react-router';
-import connectToStores from '../../utils/connectToStores';
+import connectToStores from '../../decorators/connectToStores';
 import getTranslations from '../../utils/getTranslations';
 
 if (process.env.BROWSER){

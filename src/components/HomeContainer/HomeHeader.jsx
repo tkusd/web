@@ -1,8 +1,8 @@
 import React from 'react';
 import {Link} from 'react-router';
 import UserStore from '../../stores/UserStore';
-import connectToStores from '../../utils/connectToStores';
-import pureRender from '../../utils/pureRender';
+import connectToStores from '../../decorators/connectToStores';
+import pureRender from '../../decorators/pureRender';
 import Translation from '../i18n/Translation';
 
 if (process.env.BROWSER){

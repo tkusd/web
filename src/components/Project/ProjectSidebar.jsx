@@ -2,7 +2,7 @@ import React from 'react';
 import ScreenPalette from './ScreenPalette';
 import ComponentPalette from './ComponentPalette';
 import SettingPalette from './SettingPalette';
-import pureRender from '../../utils/pureRender';
+import pureRender from '../../decorators/pureRender';
 import FontAwesome from '../common/FontAwesome';
 import {TabHost, TabPane} from '../tab';
 

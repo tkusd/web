@@ -1,7 +1,7 @@
 import React from 'react';
 import TabPane from './TabPane';
 import cx from 'classnames';
-import pureRender from '../../utils/pureRender';
+import pureRender from '../../decorators/pureRender';
 
 @pureRender
 class TabHost extends React.Component {

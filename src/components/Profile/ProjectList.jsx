@@ -1,12 +1,12 @@
 import React from 'react';
-import connectToStores from '../../utils/connectToStores';
+import connectToStores from '../../decorators/connectToStores';
 import ProjectStore from '../../stores/ProjectStore';
 import AppStore from '../../stores/AppStore';
 import {getProjectList} from '../../actions/ProjectAction';
 import NewProjectModal from './NewProjectModal';
 import Portal from 'react-portal';
 import {Link} from 'react-router';
-import pureRender from '../../utils/pureRender';
+import pureRender from '../../decorators/pureRender';
 import Translation from '../i18n/Translation';
 import FontAwesome from '../common/FontAwesome';
 

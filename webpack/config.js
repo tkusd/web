@@ -1,16 +1,19 @@
 import path from 'path';
+import webpack from 'webpack';
 import writeStats from './utils/write-stats';
 
 const assetPath = path.join(__dirname, '../public/build');
 
+let entry = {
+  main: ['./src/client']
+};
+
 export default {
-  entry: {
-    main: ['./src/client']
-  },
+  entry: entry,
   output: {
     path: assetPath,
     filename: '[name].js',
-    chunkFilename: '[id].js',
+    chunkFilename: '[name].js',
     publicPath: '/build/'
   },
   resolve: {
@@ -48,6 +51,8 @@ export default {
     ]
   },
   plugins: [
+    new webpack.optimize.CommonsChunkPlugin('common.js'),
+
     function(){
       this.plugin('done', writeStats);
     }
