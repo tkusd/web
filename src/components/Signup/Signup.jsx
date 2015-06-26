@@ -51,7 +51,6 @@ class Signup extends React.Component {
         </h1>
         {error && !error.field && <div className="login-container__error">{error.message}</div>}
         <Input
-          id="signup-name"
           name="name"
           ref="name"
           label={<Translation id="common.name"/>}
@@ -59,14 +58,12 @@ class Signup extends React.Component {
           required
           maxLength={100}/>
         <Input
-          id="signup-email"
           name="email"
           ref="email"
           label={<Translation id="common.email"/>}
           type="email"
           required/>
         <Input
-          id="signup-password"
           name="password"
           ref="password"
           label={<Translation id="common.password"/>}

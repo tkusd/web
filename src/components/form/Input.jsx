@@ -9,6 +9,8 @@ if (process.env.BROWSER){
   require('../../styles/form/Input.styl');
 }
 
+let inputID = 0;
+
 function noop(){}
 
 @pureRender
@@ -45,7 +47,8 @@ class Input extends React.Component {
       error: null,
       dirty: false,
       validator: List(this.props.validator),
-      transform: List(this.props.transform)
+      transform: List(this.props.transform),
+      id: inputID++
     };
 
     if (this.props.required){
@@ -74,28 +77,32 @@ class Input extends React.Component {
   }
 
   render(){
-    const {label, id} = this.props;
+    let {label, id} = this.props;
     let dirty = this.isDirty();
     let error = this.getError();
-    let className = cx('input__group', {
+    let className = cx('input', {
       dirty: dirty,
       pristine: !dirty,
-      invalid: error
-    });
+      invalid: error,
+      valid: !error
+    }, this.props.className);
+
+    if (!id){
+      id = 'input-' + this.state.id;
+    }
 
     let props = assign({
-      className: 'input'
-    }, this.props, {
+      className: 'input__field'
+    }, omit(this.props, 'className', 'transform', 'validator', 'label'), {
       onChange: this.handleChange,
-      value: this.getValue()
+      value: this.getValue(),
+      id: id
     });
-
-    let input = React.DOM.input(omit(props, 'transform', 'validator'));
 
     return (
       <div className={className}>
         {label && <label htmlFor={id} className="input__label">{label}</label>}
-        {input}
+        {props.type === 'textarea' ? React.DOM.textarea(props) : React.DOM.input(props)}
         {error && <span className="input__error">{error}</span>}
       </div>
     );

@@ -37,7 +37,6 @@ class NewProjectModal extends React.Component {
         <Form onSubmit={this.handleSubmit}>
           {error && !error.field && <div>{error.message}</div>}
           <Input
-            id="new-project-title"
             name="title"
             ref="title"
             label={__('common.title')}

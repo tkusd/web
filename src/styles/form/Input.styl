@@ -1,7 +1,7 @@
 @import "nib"
 @import "../common"
 
-.input__group
+.input
   padding: padding-medium 0
   margin: padding-medium 0
   position: relative
@@ -14,19 +14,22 @@
   left: 0
   width: 100%
 
-.input
+.input__field
   background: none
   border: none
   box-shadow: none
   border-bottom: 2px solid color-divider
   width: 100%
+  max-width: 100%
   color: inherit
   font-family: inherit
   font-size: inherit
-  padding: padding-small 0
+  padding-bottom: padding-small
+  margin: padding-small 0
   outline: none
   transition: 0.2s
-  &:focus
+  .pristine &:focus
+  .valid &:focus
     border-bottom-color: color-accent
   .invalid.dirty &
   .submitted .invalid &

@@ -50,14 +50,12 @@ class Login extends React.Component {
         </h1>
         {error && !error.field && <div className="login-container__error">{error.message}</div>}
         <Input
-          id="login-email"
           name="email"
           ref="email"
           label={<Translation id="common.email"/>}
           type="email"
           required/>
         <Input
-          id="login-password"
           name="password"
           ref="password"
           label={<Translation id="common.password"/>}

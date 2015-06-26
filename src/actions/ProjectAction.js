@@ -67,7 +67,6 @@ export function deleteProject(id){
     method: 'delete'
   }, this)
     .then(filterError)
-    .then(parseJSON)
     .then(() => {
       this.dispatch(Actions.DELETE_PROJECT, id);
     });

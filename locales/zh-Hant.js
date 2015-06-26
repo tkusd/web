@@ -49,7 +49,10 @@ module.exports = _.merge({}, require('./en'), {
     link: '連結',
     image: '圖片',
     list: '清單',
-    no_screens: '沒有螢幕'
+    no_screens: '沒有螢幕',
+    description: '描述',
+    delete_project: '刪除專案',
+    delete_project_prompt: '您確定要刪除此專案嗎？'
   },
   settings: {
     profile: '個人資料',

@@ -42,10 +42,12 @@ class ScreenPalette extends React.Component {
       );
     }
     return (
-      <Palette title={<Translation id="project.screens"/>}>
-        {screens}
+      <div className="screen-palette">
+        <Palette title={<Translation id="project.screens"/>}>
+          {screens}
+        </Palette>
         {this.renderPortal()}
-      </Palette>
+      </div>
     );
   }
 

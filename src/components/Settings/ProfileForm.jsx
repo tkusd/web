@@ -38,7 +38,6 @@ class ProfileForm extends React.Component {
       <Form onSubmit={this.handleSubmit}>
         {error && !error.field && <div className="settings__form-error">{error.message}</div>}
         <Input
-          id="profile-name"
           name="name"
           ref="name"
           label={<Translation id="common.name"/>}
@@ -47,7 +46,6 @@ class ProfileForm extends React.Component {
           required
           maxLength={100}/>
         <Input
-          id="profile-email"
           name="email"
           ref="email"
           label={<Translation id="common.email"/>}

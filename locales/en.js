@@ -47,7 +47,10 @@ module.exports = {
     link: 'Link',
     image: 'Image',
     list: 'List',
-    no_screens: 'No screens'
+    no_screens: 'No screens',
+    description: 'Description',
+    delete_project: 'Delete project',
+    delete_project_prompt: 'Are you sure you want to delete this project?'
   },
   settings: {
     profile: 'Profile',

@@ -29,9 +29,9 @@ class Form extends React.Component {
       className: ''
     }, omit(this.props, 'children', 'onSubmit'));
 
-    if (this.state.submitted){
-      props.className = cx(props.className, 'submitted');
-    }
+    props.className = cx(props.className, {
+      submitted: this.state.submitted
+    });
 
     return React.DOM.form(props, this.props.children);
   }

@@ -1,0 +1,17 @@
+@import "nib"
+@import "../common"
+@import "../button"
+
+.setting-palette
+  padding: 0 padding-medium
+  .input__field
+    border-bottom-color: lighten(color-project-sidebar, 20%)
+
+.setting-palette__save
+  @extend $button-primary
+
+.setting-palette__delete
+  @extend $button-danger
+
+.setting-palette__btn-wrap
+  margin: padding-medium 0

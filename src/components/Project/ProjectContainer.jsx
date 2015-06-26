@@ -23,6 +23,10 @@ import {assign} from 'lodash';
 }))
 @pureRender
 class ProjectContainer extends React.Component {
+  static contextTypes = {
+    executeAction: React.PropTypes.func.isRequired
+  }
+
   static onEnter(transition, params, query){
     if (this.context.getStore(AppStore).isFirstRender()){
       return Promise.resolve();
@@ -43,6 +47,11 @@ class ProjectContainer extends React.Component {
   static onLeave(transition){
     this.context.executeAction(selectElement, null);
     this.context.executeAction(selectScreen, null);
+  }
+
+  componentDidUpdate(){
+    const {project} = this.state;
+    this.context.executeAction(setPageTitle, project.get('title'));
   }
 
   render(){

@@ -20,7 +20,11 @@ class ElementPalette extends React.Component {
         </Palette>
       );
     } else {
-      return <div>Please select a screen</div>;
+      return (
+        <Palette title="Elements">
+          Please select a screen.
+        </Palette>
+      );
     }
   }
 }

@@ -37,7 +37,6 @@ class ChangePassword extends React.Component {
       <Form onSubmit={this.handleSubmit}>
         {error && !error.field && <div className="settings__form-error">{error.message}</div>}
         <Input
-          id="password-old"
           name="old_password"
           ref="old_password"
           label={<Translation id="settings.current_password"/>}
@@ -45,7 +44,6 @@ class ChangePassword extends React.Component {
           minLength={6}
           maxLength={50}/>
         <Input
-          id="password-new"
           name="password"
           ref="password"
           label={<Translation id="settings.new_password"/>}
