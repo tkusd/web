@@ -31,7 +31,7 @@
     "react-dnd": "^1.1.1",
     "react-portal": "^0.5.1",
     "react-pure-render": "^1.0.1",
-    "react-router": "https://github.com/tommy351/react-router.git#postinstall-build",
+    "react-router": "tommy351/react-router#postinstall-build",
     "serialize-javascript": "^1.0.0",
     "serve-static": "^1.9.3",
     "sprintf-js": "^1.0.2",

@@ -41,6 +41,7 @@ class ScreenPalette extends React.Component {
         </div>
       );
     }
+
     return (
       <div className="screen-palette">
         <Palette title={<Translation id="project.screens"/>}>

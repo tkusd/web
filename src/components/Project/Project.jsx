@@ -21,13 +21,22 @@ class Project extends React.Component {
   }
 
   render(){
-    const {elements, selectedScreen} = this.props;
-
     return (
       <div className="project">
-        {selectedScreen && <Canvas {...this.props} element={elements.get(selectedScreen)}/>}
+        {this.renderCanvas()}
         <ProjectSidebar {...this.props}/>
         <ElementSidebar {...this.props}/>
+      </div>
+    );
+  }
+
+  renderCanvas(){
+    const {elements, selectedScreen} = this.props;
+    if (!selectedScreen) return;
+
+    return (
+      <div className="project__canvas-wrap">
+        <Canvas {...this.props} element={elements.get(selectedScreen)}/>
       </div>
     );
   }

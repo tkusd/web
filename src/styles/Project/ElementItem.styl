@@ -1,0 +1,27 @@
+@import "nib"
+@import "../common"
+
+.element-item__content
+  clearfix()
+  position: relative
+  user-select: none
+  cursor: default
+  .element-item--selected > &
+    background: lighten(color-project-sidebar, 5%)
+
+.element-item__toggle
+  width: 20px
+  position: absolute
+  top: 0
+  left: 0
+  bottom: 0
+  line-height: 28px
+  text-align: center
+
+.element-item__name
+  line-height: 1
+  white-space: nowrap
+  overflow: hidden
+  text-overflow: ellipsis
+  padding: padding-small 0 padding-small 20px
+  display: block

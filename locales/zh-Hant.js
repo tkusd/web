@@ -52,7 +52,10 @@ module.exports = _.merge({}, require('./en'), {
     no_screens: '沒有螢幕',
     description: '描述',
     delete_project: '刪除專案',
-    delete_project_prompt: '您確定要刪除此專案嗎？'
+    delete_project_prompt: '您確定要刪除此專案嗎？',
+    elements: '元素',
+    select_screen_hint: '請選擇螢幕。',
+    attributes: '屬性'
   },
   settings: {
     profile: '個人資料',

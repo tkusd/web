@@ -6,6 +6,7 @@ import Immutable from 'immutable';
 import {updateProject} from '../../actions/ProjectAction';
 import Portal from 'react-portal';
 import DeleteProjectModal from './DeleteProjectModal';
+import ProjectStore from '../../stores/ProjectStore';
 
 if (process.env.BROWSER){
   require('../../styles/Project/SettingPalette.styl');
@@ -15,7 +16,8 @@ class SettingPalette extends React.Component {
   static contextTypes = {
     executeAction: React.PropTypes.func.isRequired,
     __: React.PropTypes.func.isRequired,
-    router: React.PropTypes.func.isRequired
+    router: React.PropTypes.func.isRequired,
+    getStore: React.PropTypes.func.isRequired
   }
 
   static propTypes = {
@@ -34,10 +36,6 @@ class SettingPalette extends React.Component {
   }
 
   componentDidUpdate(prevProps){
-    if (!Immutable.is(this.props.project, prevProps.project)){
-      this.setState({project: this.props.project});
-    }
-
     let {error} = this.state;
 
     if (error && error.field){
@@ -97,16 +95,20 @@ class SettingPalette extends React.Component {
 
     const {title, description} = this.refs;
     const {project} = this.props;
+    const id = project.get('id');
 
     if (title.getError() || description.getError()){
       return;
     }
 
-    this.context.executeAction(updateProject, project.get('id'), {
+    this.context.executeAction(updateProject, id, {
       title: title.getValue(),
       description: description.getValue()
     }).then(() => {
-      this.setState({error: null});
+      this.setState({
+        error: null,
+        project: this.context.getStore(ProjectStore).get(id)
+      });
     }).catch(err => {
       this.setState({error: err.body || err});
     });

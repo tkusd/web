@@ -50,7 +50,10 @@ module.exports = {
     no_screens: 'No screens',
     description: 'Description',
     delete_project: 'Delete project',
-    delete_project_prompt: 'Are you sure you want to delete this project?'
+    delete_project_prompt: 'Are you sure you want to delete this project?',
+    elements: 'Elements',
+    select_screen_hint: 'Please select a screen.',
+    attributes: 'Attributes'
   },
   settings: {
     profile: 'Profile',
