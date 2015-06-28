@@ -3,6 +3,7 @@ import {DragDropContext} from 'react-dnd';
 import HTML5Backend from 'react-dnd/modules/backends/HTML5';
 import ProjectSidebar from './ProjectSidebar';
 import {RouteHandler} from 'react-router';
+import ProjectHeader from './ProjectHeader';
 
 if (process.env.BROWSER){
   require('../../styles/Project/Project.styl');
@@ -23,6 +24,7 @@ class Project extends React.Component {
   render(){
     return (
       <div className="project">
+        <ProjectHeader {...this.props}/>
         <ProjectSidebar {...this.props}/>
         <RouteHandler {...this.props}/>
       </div>

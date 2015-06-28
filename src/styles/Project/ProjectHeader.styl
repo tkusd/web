@@ -1,0 +1,33 @@
+@import "nib"
+@import "../common"
+
+.project-header
+  position: absolute
+  top: dashboard-header-height * -1
+  left: 0
+  right: 0
+  width: 500px
+  height: dashboard-header-height
+  line-height: @height
+  text-align: center
+  z-index: 1
+  margin: 0 auto
+
+.project-header__title
+  margin: 0 auto
+  font-size: 1em
+  white-space: nowrap
+  overflow: hidden
+  text-overflow: ellipsis
+
+.project-header__owner
+  color: color-accent
+  text-decoration: none
+  &:hover
+    text-decoration: underline
+
+.project-header__divider
+  padding: 0 0.5em
+
+.project-header__icon
+  padding-right: 0.5em

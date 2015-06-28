@@ -1,5 +1,6 @@
 import React from 'react';
 import cx from 'classnames';
+import {omit} from 'lodash';
 
 if (process.env.BROWSER){
   require('font-awesome/css/font-awesome.css');
@@ -7,8 +8,10 @@ if (process.env.BROWSER){
 
 class FontAwesome extends React.Component {
   render(){
-    let className = cx('fa', 'fa-' + this.props.icon);
-    return <i className={className}/>;
+    let props = omit(this.props, 'icon');
+    props.className = cx('fa', 'fa-' + this.props.icon, props.className);
+
+    return <i {...props}/>;
   }
 }
 
