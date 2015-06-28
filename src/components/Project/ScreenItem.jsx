@@ -23,7 +23,8 @@ class ScreenItem extends React.Component {
 
   static propTypes = {
     element: React.PropTypes.object.isRequired,
-    selectedScreen: React.PropTypes.string
+    selectedScreen: React.PropTypes.string,
+    editable: React.PropTypes.bool.isRequired
   }
 
   constructor(props, context){
@@ -46,12 +47,6 @@ class ScreenItem extends React.Component {
       'screen-item--selected': selectedScreen === element.get('id')
     });
 
-    let deleteBtn = (
-      <a>
-        <Translation id="common.delete"/>
-      </a>
-    );
-
     return (
       <div className={className}>
         <InlineInput
@@ -62,30 +57,44 @@ class ScreenItem extends React.Component {
           maxLength={255}
           onSubmit={this.handleRenameSubmit}>
           <Link to="screen" params={params} className="screen-item__name">{element.get('name')}</Link>
-          <Dropdown className="screen-item__dropdown">
-            <button className="screen-item__more-btn">
-              <FontAwesome icon="ellipsis-v"/>
-            </button>
-            <DropdownMenu position="fixed">
-              <DropdownItem>
-                <a onClick={this.setMainScreen}>
-                  <Translation id="project.set_as_main_screen"/>
-                </a>
-              </DropdownItem>
-              <DropdownItem>
-                <a onClick={this.rename}>
-                  <Translation id="common.rename"/>
-                </a>
-              </DropdownItem>
-              <DropdownItem>
-                <Portal openByClickOn={deleteBtn} closeOnEsc={true}>
-                  <DeleteScreenModal {...this.props} context={this.context}/>
-                </Portal>
-              </DropdownItem>
-            </DropdownMenu>
-          </Dropdown>
+          {this.renderMenu()}
         </InlineInput>
       </div>
+    );
+  }
+
+  renderMenu(){
+    if (!this.props.editable) return;
+
+    let deleteBtn = (
+      <a>
+        <Translation id="common.delete"/>
+      </a>
+    );
+
+    return (
+      <Dropdown className="screen-item__dropdown">
+        <button className="screen-item__more-btn">
+          <FontAwesome icon="ellipsis-v"/>
+        </button>
+        <DropdownMenu position="fixed">
+          <DropdownItem>
+            <a onClick={this.setMainScreen}>
+              <Translation id="project.set_as_main_screen"/>
+            </a>
+          </DropdownItem>
+          <DropdownItem>
+            <a onClick={this.rename}>
+              <Translation id="common.rename"/>
+            </a>
+          </DropdownItem>
+          <DropdownItem>
+            <Portal openByClickOn={deleteBtn} closeOnEsc={true}>
+              <DeleteScreenModal {...this.props} context={this.context}/>
+            </Portal>
+          </DropdownItem>
+        </DropdownMenu>
+      </Dropdown>
     );
   }
 

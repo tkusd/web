@@ -25,7 +25,7 @@ class ScreenPalette extends React.Component {
   }
 
   render(){
-    const {elements, selectedScreen, project} = this.props;
+    const {elements, selectedScreen, project, editable} = this.props;
 
     let screens;
 
@@ -33,7 +33,7 @@ class ScreenPalette extends React.Component {
       screens = elements
         .filter(item => !item.get('element_id'))
         .map((item, id) => (
-          <ScreenItem key={id} element={item} selectedScreen={selectedScreen}/>
+          <ScreenItem key={id} element={item} selectedScreen={selectedScreen} editable={editable}/>
         )).toArray();
     } else {
       screens = (
