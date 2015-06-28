@@ -11,7 +11,8 @@ const COMPONENTS = {
   [ElementTypes.text]: {
     attributes: {
       text: {
-        type: 'text'
+        type: 'text',
+        initialValue: 'Text'
       }
     }
   },

@@ -19,6 +19,20 @@ class Dropdown extends React.Component {
     this.handleDocumentKeydown = this.handleDocumentKeydown.bind(this);
   }
 
+  componentDidMount(){
+    if (process.env.BROWSER){
+      document.addEventListener('click', this.handleDocumentClick);
+      document.addEventListener('keydown', this.handleDocumentKeydown);
+    }
+  }
+
+  componentWillUnmount(){
+    if (process.env.BROWSER){
+      document.removeEventListener('click', this.handleDocumentClick);
+      document.removeEventListener('keydown', this.handleDocumentKeydown);
+    }
+  }
+
   render(){
     let props = assign({
       className: '',
@@ -39,20 +53,10 @@ class Dropdown extends React.Component {
 
   open(){
     this.setState({opened: true});
-
-    if (process.env.BROWSER){
-      document.addEventListener('click', this.handleDocumentClick);
-      document.addEventListener('keydown', this.handleDocumentKeydown);
-    }
   }
 
   close(){
     this.setState({opened: false});
-
-    if (process.env.BROWSER){
-      document.removeEventListener('click', this.handleDocumentClick);
-      document.removeEventListener('keydown', this.handleDocumentKeydown);
-    }
   }
 
   toggle(){
@@ -64,12 +68,26 @@ class Dropdown extends React.Component {
   }
 
   handleDocumentClick(e){
+    if (!this.state.opened) return;
+
+    const dropdown = React.findDOMNode(this.refs.dropdown);
+    let element = e.target;
+
+    if (element === dropdown) return;
+
+    while (element){
+      if (element === dropdown) return;
+      element = element.parentNode;
+    }
+
     e.preventDefault();
     e.stopPropagation();
     this.close();
   }
 
   handleDocumentKeydown(e){
+    if (!this.state.opened) return;
+
     if (e.keyCode === 27){
       this.close();
     }

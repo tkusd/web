@@ -2,7 +2,6 @@ import React from 'react';
 import {DropTarget} from 'react-dnd';
 import cx from 'classnames';
 import ItemTypes from '../../constants/ItemTypes';
-import {merge} from 'lodash';
 import ElementTypes from '../../constants/ElementTypes';
 
 if (process.env.BROWSER){
@@ -50,6 +49,29 @@ class Canvas extends React.Component {
     canDrop: React.PropTypes.bool.isRequired
   }
 
+  constructor(props, context){
+    super(props, context);
+
+    this.state = {
+      coverStyle: {}
+    };
+
+    this.handleWindowResize = this.handleWindowResize.bind(this);
+  }
+
+  componentDidMount(){
+    if (process.env.BROWSER){
+      this.updateCoverStyle();
+      window.addEventListener('resize', this.handleWindowResize);
+    }
+  }
+
+  componentWillUnmount(){
+    if (process.env.BROWSER){
+      window.removeEventListener('resize', this.handleWindowResize);
+    }
+  }
+
   render(){
     const {
       connectDropTarget,
@@ -60,18 +82,19 @@ class Canvas extends React.Component {
     } = this.props;
 
     const node = this.renderNode();
-    const id = element.get('id');
-    // const component = this.getComponent();
     const isActive = canDrop && isOver;
 
-    node.props.style = element.get('styles');
-    node.props.children = merge(node.props.children || [], this.renderChildren());
-    node.props.className = cx(node.props.className, 'canvas__' + element.get('type'), {
-      'canvas--selected': selectedElement === id,
+    let className = cx('canvas', {
+      'canvas--selected': selectedElement === element.get('id'),
       'canvas--active': isActive
     });
 
-    return connectDropTarget(node);
+    return connectDropTarget(
+      <div className={className}>
+        {node}
+        <div className="canvas__cover" style={this.state.coverStyle}/>
+      </div>
+    );
   }
 
   getComponent(){
@@ -93,31 +116,57 @@ class Canvas extends React.Component {
   renderNode(){
     const {element} = this.props;
 
+    let props = {
+      style: element.get('styles'),
+      className: 'canvas__' + element.get('type'),
+      ref: 'node'
+    };
+
+    let children = this.renderChildren();
+
     switch (element.get('type')){
       case ElementTypes.screen:
-        return <div/>;
+        return <div {...props}>{children}</div>;
 
       case ElementTypes.text:
-        return <span/>;
+        return <span {...props}>{element.get('attributes').text}</span>;
 
       case ElementTypes.layout:
-        return <div/>;
+        return <div {...props}>{children}</div>;
 
       case ElementTypes.button:
-        return <button/>;
+        return <button {...props}>{children}</button>;
 
       case ElementTypes.input:
-        return <input/>;
+        return <input {...props}/>;
 
       case ElementTypes.link:
-        return <a/>;
+        return <a {...props}>{children}</a>;
 
       case ElementTypes.image:
-        return <img/>;
+        return <img {...props}/>;
 
       case ElementTypes.list:
-        return <ul/>;
+        return <ul {...props}/>;
     }
+  }
+
+  handleWindowResize(){
+    requestAnimationFrame(this.updateCoverStyle.bind(this));
+  }
+
+  updateCoverStyle(){
+    const {node} = this.refs;
+    const rect = React.findDOMNode(node).getBoundingClientRect();
+
+    this.setState({
+      coverStyle: {
+        top: rect.top,
+        left: rect.left,
+        width: rect.width,
+        height: rect.height
+      }
+    });
   }
 }
 
