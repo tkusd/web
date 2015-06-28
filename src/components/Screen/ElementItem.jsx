@@ -5,7 +5,7 @@ import {selectElement} from '../../actions/ElementAction';
 import FontAwesome from '../common/FontAwesome';
 
 if (process.env.BROWSER){
-  require('../../styles/Project/ElementItem.styl');
+  require('../../styles/Screen/ElementItem.styl');
 }
 
 class ElementItem extends React.Component {

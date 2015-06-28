@@ -14,7 +14,7 @@ if (process.env.BROWSER){
 }
 
 @connectToStores([UserStore], (stores, props) => ({
-  user: stores.UserStore.getUser(props.params.id),
+  user: stores.UserStore.getUser(props.params.userID),
   currentUser: stores.UserStore.getCurrentUser()
 }))
 @pureRender
@@ -26,13 +26,13 @@ class Profile extends React.Component {
 
     const currentUser = this.context.getStore(UserStore).getCurrentUser();
 
-    if (currentUser && currentUser.get('id') === params.id){
+    if (currentUser && currentUser.get('id') === params.userID){
       this.context.executeAction(setPageTitle, currentUser.get('name'));
 
       return ProjectList.onEnter.call(this, transition, params, query);
     }
 
-    return this.context.executeAction(getUser, params.id).then(user => {
+    return this.context.executeAction(getUser, params.userID).then(user => {
       this.context.executeAction(setPageTitle, user.name);
 
       return ProjectList.onEnter.call(this, transition, params, query);
@@ -47,7 +47,7 @@ class Profile extends React.Component {
   }
 
   componentDidUpdate(prevProps){
-    if (this.props.params.id !== prevProps.params.id){
+    if (this.props.params.userID !== prevProps.params.userID){
       this.updateState();
     }
   }

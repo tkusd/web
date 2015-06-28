@@ -93,16 +93,33 @@ class Input extends React.Component {
 
     let props = assign({
       className: 'input__field'
-    }, omit(this.props, 'className', 'transform', 'validator', 'label'), {
+    }, omit(this.props, 'className', 'transform', 'validator', 'label', 'children'), {
       onChange: this.handleChange,
       value: this.getValue(),
-      id: id
+      id: id,
+      ref: 'input'
     });
+
+    let element;
+
+    if (props.type === 'select'){
+      element = (
+        <div className="input__select">
+          <select {...omit(props, 'type')}>
+            {this.props.children}
+          </select>
+        </div>
+      );
+    } else if (props.type === 'textarea'){
+      element = <textarea {...omit(props, 'type')}/>;
+    } else {
+      element = <input {...props}/>;
+    }
 
     return (
       <div className={className}>
         {label && <label htmlFor={id} className="input__label">{label}</label>}
-        {props.type === 'textarea' ? React.DOM.textarea(props) : React.DOM.input(props)}
+        {element}
         {error && <span className="input__error">{error}</span>}
       </div>
     );
@@ -177,6 +194,14 @@ class Input extends React.Component {
 
   isPristine(){
     return !this.isDirty();
+  }
+
+  focus(){
+    React.findDOMNode(this.refs.input).focus();
+  }
+
+  blur(){
+    React.findDOMNode(this.refs.input).blur();
   }
 }
 

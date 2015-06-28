@@ -11,6 +11,7 @@ import Project from './components/Project';
 import NotFound from './components/NotFound';
 import Dashboard from './components/Dashboard';
 import LoginContainer from './components/LoginContainer';
+import Screen from './components/Screen';
 
 function bindHook(hook, context){
   return function(){
@@ -51,8 +52,10 @@ export default function(context){
       </Route>
       <Route handler={Dashboard}>
         <Route name="settings" handler={Settings}/>
-        <Route name="profile" path="/users/:id" handler={Profile}/>
-        <Route name="project" path="/projects/:id" handler={Project}/>
+        <Route name="profile" path="/users/:userID" handler={Profile}/>
+        <Route name="project" path="/projects/:projectID" handler={Project}>
+          <Route name="screen" path="screens/:screenID" handler={Screen}/>
+        </Route>
       </Route>
       <NotFoundRoute handler={NotFound}/>
     </Route>

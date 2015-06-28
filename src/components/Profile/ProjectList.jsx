@@ -15,7 +15,7 @@ if (process.env.BROWSER){
 }
 
 @connectToStores([ProjectStore], (stores, props) => ({
-  projects: stores.ProjectStore.getList(props.params.id).sort((a, b) => {
+  projects: stores.ProjectStore.getList(props.params.userID).sort((a, b) => {
     // Sort by created date
     return new Date(b.get('created_at')).getTime() - new Date(a.get('created_at')).getTime();
   })
@@ -39,7 +39,7 @@ class ProjectList extends React.Component {
       return Promise.resolve();
     }
 
-    return this.context.executeAction(getProjectList, params.id);
+    return this.context.executeAction(getProjectList, params.userID);
   }
 
   render(){
@@ -83,13 +83,21 @@ class ProjectList extends React.Component {
     if (projects.count()){
       return (
         <ul className="project-list__list">
-          {projects.map((item, key) => (
-            <li className="project-list__item" key={key}>
-              <Link className="project-list__item-link" to="project" params={{id: key}}>
-                <strong>{item.get('title')}</strong>
-              </Link>
-            </li>
-          )).toArray()}
+          {projects.map((item, key) => {
+            let linkParams = {
+              projectID: key,
+              screenID: item.get('main_screen')
+            };
+            let linkTo = linkParams.screenID ? 'screen' : 'project';
+
+            return (
+              <li className="project-list__item" key={key}>
+                <Link className="project-list__item-link" to={linkTo} params={linkParams}>
+                  <strong>{item.get('title')}</strong>
+                </Link>
+              </li>
+            );
+          }).toArray()}
         </ul>
       );
     } else {

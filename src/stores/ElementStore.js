@@ -9,15 +9,13 @@ class ElementStore extends CollectionStore {
     [Actions.UPDATE_ELEMENT]: 'setElement',
     [Actions.UPDATE_ELEMENT_LIST]: 'setList',
     [Actions.DELETE_ELEMENT]: 'deleteElement',
-    [Actions.SELECT_ELEMENT]: 'selectElement',
-    [Actions.SELECT_SCREEN]: 'selectScreen'
+    [Actions.SELECT_ELEMENT]: 'selectElement'
   }
 
   constructor(context){
     super(context);
 
     this.selectedElement = null;
-    this.selectedScreen = null;
   }
 
   getElement(id){
@@ -60,19 +58,6 @@ class ElementStore extends CollectionStore {
     if (this.selectedElement === id) return;
 
     this.selectedElement = id;
-    this.emitChange();
-  }
-
-  getSelectedScreen(){
-    return this.selectedScreen;
-  }
-
-  selectScreen(id){
-    if (this.selectedScreen === id) return;
-
-    this.selectedScreen = id;
-    this.selectedElement = null;
-
     this.emitChange();
   }
 }

@@ -19,7 +19,7 @@
     border-width: 8px
     border-color: transparent transparent @background
     top: @border-width * -2
-  .dropdown--open &
+  .dropdown--active &
     display: block
 
 .dropdown-menu--left
@@ -31,3 +31,8 @@
   right: 0
   &:before
     right: 16px
+
+.dropdown-menu--fixed
+  position: fixed
+  &:before
+    left: 16px

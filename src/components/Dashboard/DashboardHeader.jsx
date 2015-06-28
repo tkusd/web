@@ -36,7 +36,7 @@ class DashboardHeader extends React.Component {
       return (
         <header className="dashboard-header">
           <div className="dashboard-header__left">
-            <Link to="profile" params={{id: currentUser.get('id')}} className="dashboard-header__link">
+            <Link to="profile" params={{userID: currentUser.get('id')}} className="dashboard-header__link">
               <Translation id="dashboard.projects"/>
             </Link>
             <Link to="settings" className="dashboard-header__link">
@@ -54,7 +54,7 @@ class DashboardHeader extends React.Component {
                   <strong className="dashboard-header__dropdown-name">{currentUser.get('name')}</strong>
                 </DropdownItem>
                 <DropdownItem>
-                  <Link to="profile" params={{id: currentUser.get('id')}}>
+                  <Link to="profile" params={{userID: currentUser.get('id')}}>
                     <FontAwesome icon="user"/><Translation id="dashboard.profile"/>
                   </Link>
                 </DropdownItem>

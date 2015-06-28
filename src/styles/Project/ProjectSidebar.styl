@@ -1,14 +1,14 @@
 @import "nib"
 @import "../common"
 
-tab-width = 60px
+tab-width = 48px
 
 .project-sidebar
   position: absolute
   top: 0
   bottom: 0
   left: 0
-  width: 20%
+  width: project-sidebar-width
   background: color-background
   .tab-host__tabs
     position: absolute
@@ -27,7 +27,7 @@ tab-width = 60px
   .tab-host__tab
     width: tab-width
     height: @width
-    font-size: 24px
+    font-size: 20px
     line-height: @height
     text-align: center
     display: block

@@ -25,11 +25,9 @@ class Dropdown extends React.Component {
       onClick: this.handleClick
     }, omit(this.props, 'children'));
 
-    props.className = cx(props.className, 'dropdown');
-
-    if (this.state.opened){
-      props.className = cx(props.className, 'dropdown--open');
-    }
+    props.className = cx('dropdown', {
+      'dropdown--active': this.state.opened
+    }, props.className);
 
     return <div ref="dropdown" {...props}>{this.props.children}</div>;
   }

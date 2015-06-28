@@ -3,7 +3,7 @@ import AttributePalette from './AttributePalette';
 import ElementPalette from './ElementPalette';
 
 if (process.env.BROWSER){
-  require('../../styles/Project/ElementSidebar.styl');
+  require('../../styles/Screen/ElementSidebar.styl');
 }
 
 class ElementSidebar extends React.Component {

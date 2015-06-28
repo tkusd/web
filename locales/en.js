@@ -16,7 +16,8 @@ module.exports = {
     on: 'On',
     off: 'Off',
     yes: 'Yes',
-    no: 'no'
+    no: 'no',
+    rename: 'Rename'
   },
   dashboard: {
     projects: 'Projects',
@@ -53,7 +54,25 @@ module.exports = {
     delete_project_prompt: 'Are you sure you want to delete this project?',
     elements: 'Elements',
     select_screen_hint: 'Please select a screen.',
-    attributes: 'Attributes'
+    attributes: 'Attributes',
+    select_element_hint: 'Please select a element.',
+    top: 'Top',
+    bottom: 'Bottom',
+    left: 'Left',
+    right: 'Right',
+    width: 'Width',
+    height: 'Height',
+    position: 'Position',
+    style: 'Style',
+    opacity: 'Opacity',
+    default: 'Default',
+    position_relative: 'Relative',
+    position_absolute: 'Absolute',
+    position_fixed: 'Fixed',
+    delete_screen: 'Delete screen',
+    delete_screen_prompt: 'Are you sure you want to delete this screen?',
+    set_as_main_screen: 'Set as main screen',
+    no_elements: 'No elements.'
   },
   settings: {
     profile: 'Profile',

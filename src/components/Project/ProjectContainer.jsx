@@ -5,19 +5,19 @@ import ElementStore from '../../stores/ElementStore';
 import ComponentStore from '../../stores/ComponentStore';
 import UserStore from '../../stores/UserStore';
 import AppStore from '../../stores/AppStore';
+import RouteStore from '../../stores/RouteStore';
 import {getFullProject} from '../../actions/ProjectAction';
 import {setPageTitle, setStatusCode} from '../../actions/AppAction';
-import {selectElement, selectScreen} from '../../actions/ElementAction';
 import Project from './Project';
 import NotFound from '../NotFound';
 import pureRender from '../../decorators/pureRender';
 import {assign} from 'lodash';
 
-@connectToStores([ProjectStore, ElementStore, ComponentStore, UserStore], (stores, props) => ({
-  project: stores.ProjectStore.getProject(props.params.id),
-  elements: stores.ElementStore.getElementsOfProject(props.params.id),
+@connectToStores([ProjectStore, ElementStore, ComponentStore, UserStore, RouteStore], (stores, props) => ({
+  project: stores.ProjectStore.getProject(props.params.projectID),
+  elements: stores.ElementStore.getElementsOfProject(props.params.projectID),
   selectedElement: stores.ElementStore.getSelectedElement(),
-  selectedScreen: stores.ElementStore.getSelectedScreen(),
+  selectedScreen: stores.RouteStore.getParams().screenID,
   components: stores.ComponentStore.getList(),
   currentUser: stores.UserStore.getCurrentUser()
 }))
@@ -32,8 +32,17 @@ class ProjectContainer extends React.Component {
       return Promise.resolve();
     }
 
-    return this.context.executeAction(getFullProject, params.id).then(project => {
+    return this.context.executeAction(getFullProject, params.projectID, {depth: 1}).then(project => {
       this.context.executeAction(setPageTitle, project.title);
+
+      if (!params.screenID){
+        if (project.main_screen){
+          transition.redirect('screen', {
+            projectID: project.id,
+            screenID: project.main_screen
+          });
+        }
+      }
     }).catch(err => {
       if (err.response && err.response.status === 404){
         this.context.executeAction(setPageTitle, 'Not found');
@@ -42,16 +51,6 @@ class ProjectContainer extends React.Component {
         throw err;
       }
     });
-  }
-
-  static onLeave(transition){
-    this.context.executeAction(selectElement, null);
-    this.context.executeAction(selectScreen, null);
-  }
-
-  componentDidUpdate(){
-    const {project} = this.state;
-    this.context.executeAction(setPageTitle, project.get('title'));
   }
 
   render(){

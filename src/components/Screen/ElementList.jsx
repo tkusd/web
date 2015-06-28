@@ -2,7 +2,7 @@ import React from 'react';
 import ElementItem from './ElementItem';
 
 if (process.env.BROWSER){
-  require('../../styles/Project/ElementList.styl');
+  require('../../styles/Screen/ElementList.styl');
 }
 
 class ElementList extends React.Component {

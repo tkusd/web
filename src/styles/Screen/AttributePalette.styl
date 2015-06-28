@@ -1,0 +1,47 @@
+@import "nib"
+@import "../common"
+@import "../button"
+
+.attribute-palette
+  padding: 0 padding-medium
+  .input__field
+    border-bottom-color: lighten(color-project-sidebar, 20%)
+
+.attribute-palette__btn-wrap
+  margin: padding-medium 0
+
+.attribute-palette__save
+  @extend $button-primary
+
+.attribute-palette__empty
+  text-align: center
+  padding: padding-medium
+
+.attribute-palette__section
+  position: relative
+
+.attribute-palette__section-title
+  border-top: 1px solid color-divider
+  padding-top: 1em
+  margin: 2em 0 1em
+
+.attribute-palette__half-wrap
+  clearfix()
+  margin: 0 padding-small * -1
+
+.attribute-palette__half
+  width: 50%
+  float: left
+  padding: 0 padding-small
+  .input__label
+    position: absolute
+    text-align: center
+    bottom: 0
+    left: 0
+    right: 0
+    padding: 0
+
+.attribute-palette__half-center
+  @extend .attribute-palette__half
+  margin: 0 auto
+  float: none

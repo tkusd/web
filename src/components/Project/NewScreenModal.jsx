@@ -55,18 +55,22 @@ class NewScreenModal extends React.Component {
   handleSubmit(e){
     e.preventDefault();
 
-    let {name} = this.refs;
-    let {context} = this.props;
+    const {name} = this.refs;
+    const {context, project} = this.props;
 
     if (name.getError()){
       return;
     }
 
-    context.executeAction(createElement, this.props.project.id, {
+    context.executeAction(createElement, project.get('id'), {
       name: name.getValue(),
       type: 'screen'
     }).then(element => {
       this.props.closePortal();
+      context.router.transitionTo('screen', {
+        projectID: project.get('id'),
+        screenID: element.id
+      });
     }, err => {
       this.setState({error: err.body || err});
     });

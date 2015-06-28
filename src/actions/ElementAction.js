@@ -1,6 +1,8 @@
 import Actions from '../constants/Actions';
 import {api} from '../utils/request';
 import {parseJSON, dispatchEvent, filterError} from './common';
+import {assign} from 'lodash';
+import qs from 'querystring';
 
 export function createElement(projectID, payload){
   return api(`projects/${projectID}/elements`, {
@@ -20,6 +22,28 @@ export function createChildElement(parent, payload){
     .then(filterError)
     .then(parseJSON)
     .then(dispatchEvent(this, Actions.UPDATE_ELEMENT));
+}
+
+export function getElement(id){
+  return api('elements/' + id, {
+    method: 'get'
+  }, this)
+    .then(filterError)
+    .then(parseJSON)
+    .then(dispatchEvent(this, Actions.UPDATE_ELEMENT));
+}
+
+export function getChildElements(id, options){
+  options = assign({
+    flat: true
+  }, options);
+
+  return api(`elements/${id}/elements?${qs.stringify(options)}`, {
+    method: 'get'
+  }, this)
+    .then(filterError)
+    .then(parseJSON)
+    .then(dispatchEvent(this, Actions.UPDATE_ELEMENT_LIST));
 }
 
 export function updateElement(id, payload){
@@ -45,8 +69,4 @@ export function deleteElement(id, payload){
 
 export function selectElement(id){
   this.dispatch(Actions.SELECT_ELEMENT, id);
-}
-
-export function selectScreen(id){
-  this.dispatch(Actions.SELECT_SCREEN, id);
 }

@@ -9,5 +9,6 @@ app.registerStore(require('./stores/ProjectStore'));
 app.registerStore(require('./stores/ElementStore'));
 app.registerStore(require('./stores/ComponentStore'));
 app.registerStore(require('./stores/LocaleStore'));
+app.registerStore(require('./stores/RouteStore'));
 
 export default app;

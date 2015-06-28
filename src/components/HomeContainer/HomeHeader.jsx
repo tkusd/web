@@ -30,7 +30,7 @@ class HomeHeader extends React.Component {
         <div>
           <Link
             to="profile"
-            params={{id: currentUser.get('id')}}
+            params={{userID: currentUser.get('id')}}
             className="home-header__link--primary">
             <Translation id="home.my_projects"/>
           </Link>

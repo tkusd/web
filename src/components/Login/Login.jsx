@@ -16,7 +16,7 @@ class Login extends React.Component {
     const tokenStore = this.context.getStore(TokenStore);
 
     if (tokenStore.isLoggedIn()){
-      transition.redirect('profile', {id: tokenStore.getUserID()});
+      transition.redirect('profile', {userID: tokenStore.getUserID()});
     } else {
       this.context.executeAction(setPageTitle, 'Log in');
     }
@@ -91,7 +91,7 @@ class Login extends React.Component {
       password: password.getValue()
     }).then(token => {
       this.setState({error: null});
-      this.context.router.transitionTo('profile', {id: token.user_id});
+      this.context.router.transitionTo('profile', {userID: token.user_id});
     }, err => {
       this.setState({error: err.body || err});
     });

@@ -1,11 +1,11 @@
 import React from 'react';
 import {Modal} from '../modal';
 import {Form} from '../form';
-import {deleteProject} from '../../actions/ProjectAction';
+import {deleteElement} from '../../actions/ElementAction';
 
-class DeleteProjectModal extends React.Component {
+class DeleteScreenModal extends React.Component {
   static propTypes = {
-    project: React.PropTypes.object.isRequired,
+    element: React.PropTypes.object.isRequired,
     context: React.PropTypes.object.isRequired
   }
 
@@ -20,9 +20,9 @@ class DeleteProjectModal extends React.Component {
     const {__} = context;
 
     return (
-      <Modal title={__('project.delete_project')} onDismiss={closePortal}>
+      <Modal title={__('project.delete_screen')} onDismiss={closePortal}>
         <Form onSubmit={this.handleSubmit}>
-          <p>{__('project.delete_project_prompt')}</p>
+          <p>{__('project.delete_screen_prompt')}</p>
           <div className="modal__btn-group">
             <a className="modal__btn" onClick={closePortal}>{__('common.cancel')}</a>
             <button className="modal__btn--danger" type="submit">{__('common.delete')}</button>
@@ -35,12 +35,12 @@ class DeleteProjectModal extends React.Component {
   handleSubmit(e){
     e.preventDefault();
 
-    const {project, context} = this.props;
+    const {element, context} = this.props;
 
-    context.executeAction(deleteProject, project.get('id')).then(() => {
-      context.router.transitionTo('profile', {userID: project.get('user_id')});
-    });
+    // Redirect to the project page before deleting the element to avoid errors
+    context.router.transitionTo('project', {projectID: element.get('project_id')});
+    context.executeAction(deleteElement, element.get('id'));
   }
 }
 
-export default DeleteProjectModal;
+export default DeleteScreenModal;

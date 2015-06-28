@@ -6,6 +6,7 @@ import {checkToken} from '../actions/TokenAction';
 import {loadCurrentUser} from '../actions/UserAction';
 import AppStore from '../stores/AppStore';
 import LocaleStore from '../stores/LocaleStore';
+import RouteStore from '../stores/RouteStore';
 import {Container} from '../flux';
 import Router from 'react-router';
 import routes from '../routes';
@@ -65,6 +66,7 @@ function render(req, res, next){
   }).then(() => {
     const appStore = context.getStore(AppStore);
     const localeStore = context.getStore(LocaleStore);
+    const routeStore = context.getStore(RouteStore);
 
     appStore.setFirstRender(false);
     appStore.setCSRFToken(req.csrfToken());
@@ -91,6 +93,8 @@ function render(req, res, next){
 
     router.run((Root, state) => {
       if (isError) return;
+
+      routeStore.setState(state);
 
       renderMarkup(context, Root).then(markup => {
         let exposed = 'window.$STATE=' + serialize(context.dehydrate()) + ';';

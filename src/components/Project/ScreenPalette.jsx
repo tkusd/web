@@ -13,7 +13,8 @@ if (process.env.BROWSER){
 class ScreenPalette extends React.Component {
   static contextTypes = {
     executeAction: React.PropTypes.func.isRequired,
-    __: React.PropTypes.func.isRequired
+    __: React.PropTypes.func.isRequired,
+    router: React.PropTypes.func.isRequired
   }
 
   static propTypes = {

@@ -2,8 +2,7 @@ import React from 'react';
 import {DragDropContext} from 'react-dnd';
 import HTML5Backend from 'react-dnd/modules/backends/HTML5';
 import ProjectSidebar from './ProjectSidebar';
-import ElementSidebar from './ElementSidebar';
-import Canvas from './Canvas';
+import {RouteHandler} from 'react-router';
 
 if (process.env.BROWSER){
   require('../../styles/Project/Project.styl');
@@ -17,26 +16,15 @@ class Project extends React.Component {
     components: React.PropTypes.object.isRequired,
     selectedElement: React.PropTypes.string,
     selectedScreen: React.PropTypes.string,
-    editable: React.PropTypes.bool.isRequired
+    editable: React.PropTypes.bool.isRequired,
+    currentUser: React.PropTypes.object.isRequired
   }
 
   render(){
     return (
       <div className="project">
-        {this.renderCanvas()}
         <ProjectSidebar {...this.props}/>
-        <ElementSidebar {...this.props}/>
-      </div>
-    );
-  }
-
-  renderCanvas(){
-    const {elements, selectedScreen} = this.props;
-    if (!selectedScreen) return;
-
-    return (
-      <div className="project__canvas-wrap">
-        <Canvas {...this.props} element={elements.get(selectedScreen)}/>
+        <RouteHandler {...this.props}/>
       </div>
     );
   }

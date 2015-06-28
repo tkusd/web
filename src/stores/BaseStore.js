@@ -26,6 +26,14 @@ class BaseStore extends EventEmitter {
     this._hasChanged = true;
     this.emit(CHANGE_EVENT, ...args);
   }
+
+  dehydrate(){
+    return {};
+  }
+
+  rehydrate(){
+    //
+  }
 }
 
 export default BaseStore;

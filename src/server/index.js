@@ -10,6 +10,7 @@ import errorhandler from 'errorhandler';
 import minimist from 'minimist';
 import locale from 'locale';
 import fs from 'graceful-fs';
+import {fork} from 'child_process';
 
 const localeDir = path.join(__dirname, '../../locales');
 const locales = fs.readdirSync(localeDir).map(lang => {
@@ -44,7 +45,7 @@ if (PRODUCTION){
   }));
 } else {
   // On development, serve the static files from the webpack dev server.
-  require('../../webpack/server');
+  fork(require.resolve('./webpack'));
 }
 
 // Internal API

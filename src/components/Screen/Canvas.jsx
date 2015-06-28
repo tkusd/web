@@ -5,6 +5,10 @@ import ItemTypes from '../../constants/ItemTypes';
 import {merge} from 'lodash';
 import ElementTypes from '../../constants/ElementTypes';
 
+if (process.env.BROWSER){
+  require('../../styles/Screen/Canvas.styl');
+}
+
 function getComponentType(props){
   const {element, components} = props;
 
@@ -57,12 +61,12 @@ class Canvas extends React.Component {
 
     const node = this.renderNode();
     const id = element.get('id');
-    const component = this.getComponent();
+    // const component = this.getComponent();
     const isActive = canDrop && isOver;
 
-    node.props.style = merge(node.props.style || {}, component.get('styles'), element.get('styles'));
+    node.props.style = element.get('styles');
     node.props.children = merge(node.props.children || [], this.renderChildren());
-    node.props.className = (node.props.className ? node.props.className + ' ' : '') + cx({
+    node.props.className = cx(node.props.className, 'canvas__' + element.get('type'), {
       'canvas--selected': selectedElement === id,
       'canvas--active': isActive
     });

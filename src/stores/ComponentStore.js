@@ -4,51 +4,43 @@ import ElementTypes from '../constants/ElementTypes';
 
 const COMPONENTS = {
   [ElementTypes.screen]: {
-    // name: 'Screen',
     hide: true,
-    container: true,
-    styles: {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      margin: 'auto',
-      width: 360,
-      height: 640,
-      background: '#fff'
-    }
+    container: true
   },
 
   [ElementTypes.text]: {
-    // name: 'Text'
+    attributes: {
+      text: {
+        type: 'text'
+      }
+    }
   },
 
   [ElementTypes.layout]: {
-    // name: 'Layout',
     container: true
   },
 
   [ElementTypes.button]: {
-    // name: 'Button',
     container: true
   },
 
   [ElementTypes.input]: {
-    // name: 'Input'
+    attributes: {
+      type: {
+        label: 'Type',
+        type: 'text'
+      }
+    }
   },
 
   [ElementTypes.link]: {
-    // name: 'Link',
     container: true
   },
 
   [ElementTypes.image]: {
-    // name: 'Image'
   },
 
   [ElementTypes.list]: {
-    // name: 'List'
   }
 };
 

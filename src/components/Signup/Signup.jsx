@@ -17,7 +17,7 @@ class Signup extends React.Component {
     const tokenStore = this.context.getStore(TokenStore);
 
     if (tokenStore.isLoggedIn()){
-      transition.redirect('profile', {id: tokenStore.getUserID()});
+      transition.redirect('profile', {userID: tokenStore.getUserID()});
     } else {
       this.context.executeAction(setPageTitle, 'Sign up');
     }
@@ -113,7 +113,7 @@ class Signup extends React.Component {
       email: email.getValue(),
       password: password.getValue()
     }).then(token => {
-      this.context.router.transitionTo('profile', user);
+      this.context.router.transitionTo('profile', {userID: user.id});
     }, () => {
       // Let users login by themselves if token create failed
       this.context.router.transitionTo('login');

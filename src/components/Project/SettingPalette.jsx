@@ -83,7 +83,7 @@ class SettingPalette extends React.Component {
             </div>
           </Form>
           <Portal openByClickOn={deleteBtn} closeOnEsc={true}>
-            <DeleteProjectModal context={this.context} project={project}/>
+            <DeleteProjectModal {...this.props} context={this.context}/>
           </Portal>
         </div>
       </Palette>

@@ -1,10 +1,10 @@
 import React from 'react';
-import Palette from './Palette';
+import Palette from '../Project/Palette';
 import ElementList from './ElementList';
 import Translation from '../i18n/Translation';
 
 if (process.env.BROWSER){
-  require('../../styles/Project/ElementPalette.styl');
+  require('../../styles/Screen/ElementPalette.styl');
 }
 
 class ElementPalette extends React.Component {
@@ -21,7 +21,17 @@ class ElementPalette extends React.Component {
     let content;
 
     if (selectedScreen){
-      content = <ElementList elements={elements} selectedElement={selectedElement} parent={selectedScreen}/>;
+      const elementCount = elements.filter(item => item.get('element_id') === selectedScreen).count();
+
+      if (elementCount){
+        content = <ElementList elements={elements} selectedElement={selectedElement} parent={selectedScreen}/>;
+      } else {
+        content = (
+          <div className="element-palette__empty">
+            <Translation id="project.no_elements"/>
+          </div>
+        );
+      }
     } else {
       content = (
         <div className="element-palette__empty">

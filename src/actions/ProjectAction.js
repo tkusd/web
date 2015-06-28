@@ -39,8 +39,12 @@ export function getProject(id){
     .then(dispatchEvent(this, Actions.UPDATE_PROJECT));
 }
 
-export function getFullProject(id){
-  return api(`projects/${id}/full?flat`, {
+export function getFullProject(id, options){
+  options = assign({
+    flat: true
+  }, options);
+
+  return api(`projects/${id}/full?${qs.stringify(options)}`, {
     method: 'get'
   }, this)
     .then(filterError)

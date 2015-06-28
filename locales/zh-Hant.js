@@ -18,7 +18,8 @@ module.exports = _.merge({}, require('./en'), {
     on: '開',
     off: '關',
     yes: '是',
-    no: '否'
+    no: '否',
+    rename: '重新命名'
   },
   dashboard: {
     projects: '專案',
@@ -55,7 +56,25 @@ module.exports = _.merge({}, require('./en'), {
     delete_project_prompt: '您確定要刪除此專案嗎？',
     elements: '元素',
     select_screen_hint: '請選擇螢幕。',
-    attributes: '屬性'
+    attributes: '屬性',
+    select_element_hint: '請選擇元素。',
+    top: '上',
+    bottom: '下',
+    left: '左',
+    right: '右',
+    width: '長度',
+    height: '寬度',
+    position: '位置',
+    style: '樣式',
+    opacity: '透明度',
+    default: '預設',
+    position_relative: '相對',
+    position_absolute: '絕對',
+    position_fixed: '固定',
+    delete_screen: '刪除螢幕',
+    delete_screen_prompt: '您確定要刪除此螢幕嗎？',
+    set_as_main_screen: '設為主螢幕',
+    no_elements: '沒有元素。'
   },
   settings: {
     profile: '個人資料',

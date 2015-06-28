@@ -2,17 +2,14 @@
 @import "../common"
 
 .input
-  padding: padding-medium 0
-  margin: padding-medium 0
+  padding-bottom: padding-medium + 4px
   position: relative
 
 .input__label
   font-size: 0.9em
   color: color-secondary-text
-  position: absolute
-  top: 0
-  left: 0
-  width: 100%
+  display: block
+  padding: padding-small 0
 
 .input__field
   background: none
@@ -25,9 +22,10 @@
   font-family: inherit
   font-size: inherit
   padding-bottom: padding-small
-  margin: padding-small 0
   outline: none
   transition: border-bottom 0.2s
+  border-radius: 0
+  appearance: initial
   .pristine &:focus
   .valid &:focus
     border-bottom-color: color-accent
@@ -40,9 +38,21 @@
   color: color-error
   font-size: 0.9em
   position: absolute
-  bottom: -4px
+  bottom: 0
   left: 0
   width: 100%
   .dirty &
   .submitted &
     display: block
+
+.input__select
+  position: relative
+  &:before
+    content: ""
+    position: absolute
+    top: 50%
+    right: 0
+    border-style: solid
+    border-color: color-divider transparent transparent
+    border-width: 5px
+    margin-top: @border-width * -2

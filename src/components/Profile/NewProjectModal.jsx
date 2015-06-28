@@ -66,7 +66,7 @@ class NewProjectModal extends React.Component {
       title: title.getValue()
     }).then(project => {
       this.setState({error: null});
-      context.router.transitionTo('project', project);
+      context.router.transitionTo('project', {projectID: project.id});
     }, err => {
       this.setState({error: err.body || err});
     });
