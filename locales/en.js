@@ -72,7 +72,8 @@ module.exports = {
     delete_screen: 'Delete screen',
     delete_screen_prompt: 'Are you sure you want to delete this screen?',
     set_as_main_screen: 'Set as main screen',
-    no_elements: 'No elements.'
+    no_elements: 'No elements.',
+    share: 'Share'
   },
   settings: {
     profile: 'Profile',

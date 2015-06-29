@@ -38,7 +38,7 @@ class TabHost extends React.Component {
       });
 
       tabs.push(
-        <a className={className} onClick={this.switchTab.bind(this, i)} key={i}>{child.props.tab}</a>
+        <a className={className} onClick={this.switchTab.bind(this, i)} key={i} title={child.props.title}>{child.props.tab}</a>
       );
       tabContent.push(child.props.children);
     });

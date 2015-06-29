@@ -74,7 +74,8 @@ module.exports = _.merge({}, require('./en'), {
     delete_screen: '刪除螢幕',
     delete_screen_prompt: '您確定要刪除此螢幕嗎？',
     set_as_main_screen: '設為主螢幕',
-    no_elements: '沒有元素。'
+    no_elements: '沒有元素。',
+    share: '分享'
   },
   settings: {
     profile: '個人資料',
