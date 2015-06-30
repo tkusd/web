@@ -5,10 +5,12 @@ import ElementTypes from '../constants/ElementTypes';
 const COMPONENTS = {
   [ElementTypes.screen]: {
     hide: true,
-    container: true
+    container: true,
+    resizable: false
   },
 
   [ElementTypes.text]: {
+    resizable: true,
     attributes: {
       text: {
         type: 'text',
@@ -18,30 +20,40 @@ const COMPONENTS = {
   },
 
   [ElementTypes.layout]: {
-    container: true
+    container: true,
+    resizable: true
   },
 
   [ElementTypes.button]: {
-    container: true
+    container: true,
+    resizable: true
   },
 
   [ElementTypes.input]: {
+    resizable: true
+  },
+
+  [ElementTypes.link]: {
+    container: true,
+    resizable: true,
     attributes: {
-      type: {
-        label: 'Type',
+      href: {
         type: 'text'
       }
     }
   },
 
-  [ElementTypes.link]: {
-    container: true
-  },
-
   [ElementTypes.image]: {
+    resizable: true,
+    attributes: {
+      src: {
+        type: 'text'
+      }
+    }
   },
 
   [ElementTypes.list]: {
+    resizable: true
   }
 };
 

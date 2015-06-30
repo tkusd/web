@@ -77,7 +77,7 @@ class ComponentItem extends React.Component {
       <div className={className}>
         <Translation id={'project.' + component.get('type')}/>
       </div>
-    );
+    , 'copy');
   }
 }
 

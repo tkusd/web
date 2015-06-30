@@ -78,9 +78,11 @@ class Canvas extends React.Component {
       canDrop,
       isOver,
       selectedElement,
-      element
+      element,
+      components
     } = this.props;
 
+    const component = components.get(element.get('type'));
     const node = this.renderNode();
     const isActive = canDrop && isOver;
 
@@ -92,7 +94,20 @@ class Canvas extends React.Component {
     return connectDropTarget(
       <div className={className}>
         {node}
-        <div className="canvas__cover" style={this.state.coverStyle}/>
+        <div className="canvas__cover" style={this.state.coverStyle}>
+          {component.get('resizable') && (
+            <div>
+              <div className="canvas__cover-n"/>
+              <div className="canvas__cover-ne"/>
+              <div className="canvas__cover-e"/>
+              <div className="canvas__cover-se"/>
+              <div className="canvas__cover-s"/>
+              <div className="canvas__cover-sw"/>
+              <div className="canvas__cover-w"/>
+              <div className="canvas__cover-nw"/>
+            </div>
+          )}
+        </div>
       </div>
     );
   }
@@ -129,7 +144,7 @@ class Canvas extends React.Component {
         return <div {...props}>{children}</div>;
 
       case ElementTypes.text:
-        return <span {...props}>{element.get('attributes').text}</span>;
+        return <div {...props}>{element.get('attributes').text}</div>;
 
       case ElementTypes.layout:
         return <div {...props}>{children}</div>;
@@ -167,6 +182,10 @@ class Canvas extends React.Component {
         height: rect.height
       }
     });
+  }
+
+  handleNodeResize(deltaWidth, deltaHeight){
+    //
   }
 }
 

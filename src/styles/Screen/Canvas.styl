@@ -1,12 +1,82 @@
 @import "nib"
 @import "../common"
 
+resize-area-size = 4px
+
 .canvas__cover
   position: fixed
+  display: none
   .canvas--active > &
     background: rgba(color-accent, 0.5)
+    display: block
   .canvas--selected > &
     border: 1px solid color-accent
+    display: block
+
+$canvas-cover-resize-area
+  position: absolute
+
+.canvas__cover-n
+  @extend $canvas-cover-resize-area
+  top: resize-area-size * -0.5
+  left: resize-area-size
+  right: resize-area-size
+  height: resize-area-size
+  cursor: n-resize
+
+.canvas__cover-e
+  @extend $canvas-cover-resize-area
+  top: resize-area-size
+  right: resize-area-size * -0.5
+  bottom: resize-area-size
+  width: resize-area-size
+  cursor: e-resize
+
+.canvas__cover-s
+  @extend $canvas-cover-resize-area
+  bottom: resize-area-size * -0.5
+  left: resize-area-size
+  right: resize-area-size
+  height: resize-area-size
+  cursor: s-resize
+
+.canvas__cover-w
+  @extend $canvas-cover-resize-area
+  top: resize-area-size
+  left: resize-area-size * -0.5
+  bottom: resize-area-size
+  width: resize-area-size
+  cursor: w-resize
+
+$canvas-cover-resize-corner
+  @extend $canvas-cover-resize-area
+  width: resize-area-size
+  height: resize-area-size
+  background: color-accent
+
+.canvas__cover-ne
+  @extend $canvas-cover-resize-corner
+  top: resize-area-size * -0.5
+  right: resize-area-size * -0.5
+  cursor: ne-resize
+
+.canvas__cover-se
+  @extend $canvas-cover-resize-corner
+  bottom: resize-area-size * -0.5
+  right: resize-area-size * -0.5
+  cursor: se-resize
+
+.canvas__cover-sw
+  @extend $canvas-cover-resize-corner
+  bottom: resize-area-size * -0.5
+  left: resize-area-size * -0.5
+  cursor: sw-resize
+
+.canvas__cover-nw
+  @extend $canvas-cover-resize-corner
+  top: resize-area-size * -0.5
+  left: resize-area-size * -0.5
+  cursor: nw-resize
 
 .canvas__screen
   position: absolute
@@ -21,3 +91,4 @@
 
 .canvas__text
   color: #000
+  display: inline
