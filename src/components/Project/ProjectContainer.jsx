@@ -1,11 +1,5 @@
 import React from 'react';
 import connectToStores from '../../decorators/connectToStores';
-import ProjectStore from '../../stores/ProjectStore';
-import ElementStore from '../../stores/ElementStore';
-import ComponentStore from '../../stores/ComponentStore';
-import UserStore from '../../stores/UserStore';
-import AppStore from '../../stores/AppStore';
-import RouteStore from '../../stores/RouteStore';
 import {getFullProject} from '../../actions/ProjectAction';
 import {setPageTitle, setStatusCode} from '../../actions/AppAction';
 import Project from './Project';
@@ -13,7 +7,7 @@ import NotFound from '../NotFound';
 import pureRender from '../../decorators/pureRender';
 import {assign} from 'lodash';
 
-@connectToStores([ProjectStore, ElementStore, ComponentStore, UserStore, RouteStore], (stores, props) => ({
+@connectToStores(['ProjectStore', 'ElementStore', 'ComponentStore', 'UserStore', 'RouteStore'], (stores, props) => ({
   project: stores.ProjectStore.getProject(props.params.projectID),
   elements: stores.ElementStore.getElementsOfProject(props.params.projectID),
   selectedElement: stores.ElementStore.getSelectedElement(),
@@ -28,7 +22,9 @@ class ProjectContainer extends React.Component {
   }
 
   static onEnter(transition, params, query){
-    if (this.context.getStore(AppStore).isFirstRender()){
+    const {AppStore} = this.context.getStore();
+
+    if (AppStore.isFirstRender()){
       return Promise.resolve();
     }
 

@@ -1,11 +1,8 @@
 import CollectionStore from './CollectionStore';
 import Actions from '../constants/Actions';
 import {Map} from 'immutable';
-import ElementStore from './ElementStore';
 
 class ProjectStore extends CollectionStore {
-  static storeName = 'ProjectStore'
-
   static handlers = {
     [Actions.UPDATE_PROJECT]: 'setProject',
     [Actions.UPDATE_PROJECT_LIST]: 'setList',
@@ -29,10 +26,10 @@ class ProjectStore extends CollectionStore {
   deleteProject(id){
     if (!this.has(id)) return;
 
-    const elementStore = this.context.getStore(ElementStore);
+    const {ElementStore} = this.context.getStore();
 
     this.remove(id);
-    elementStore.deleteElementsOfProject(id);
+    ElementStore.deleteElementsOfProject(id);
   }
 
   deleteProjectsOfUser(id){

@@ -27,7 +27,7 @@ function connectToStores(stores, getter){
 
       componentDidMount(){
         stores.forEach(store => {
-          this.context.getStore(store).addChangeListener(this.updateState);
+          this.context.getStore()[store].addChangeListener(this.updateState);
         });
 
         if (typeof super.componentDidMount === 'function'){
@@ -37,7 +37,7 @@ function connectToStores(stores, getter){
 
       componentWillUnmount(){
         stores.forEach(store => {
-          this.context.getStore(store).removeChangeListener(this.updateState);
+          this.context.getStore()[store].removeChangeListener(this.updateState);
         });
 
         if (typeof super.componentWillUnmount === 'function'){
@@ -45,12 +45,11 @@ function connectToStores(stores, getter){
         }
       }
 
-      getStateFromStores(props=this.props){
+      getStateFromStores(props = this.props){
         let storeInstances = {};
 
         stores.forEach(store => {
-          let storeName = store.storeName || store.name || store;
-          storeInstances[storeName] = this.context.getStore(store);
+          storeInstances[store] = this.context.getStore()[store];
         });
 
         return getter(storeInstances, props);

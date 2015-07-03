@@ -4,17 +4,12 @@ import React from 'react';
 import app from './app';
 import Router from 'react-router';
 import routes from './routes';
-import AppStore from './stores/AppStore';
-import LocaleStore from './stores/LocaleStore';
-import RouteStore from './stores/RouteStore';
 import {Container} from './flux';
 
 const root = document.getElementById('root');
 const context = app.rehydrate(window.$STATE);
-const appStore = context.getStore(AppStore);
-const localeStore = context.getStore(LocaleStore);
-const routeStore = context.getStore(RouteStore);
-const lang = localeStore.getLanguage();
+const {AppStore, LocaleStore, RouteStore} = context.getStore();
+const lang = LocaleStore.getLanguage();
 
 const router = Router.create({
   routes: routes(context),
@@ -26,7 +21,7 @@ const router = Router.create({
 
 function render(){
   router.run((Root, state) => {
-    routeStore.setState(state);
+    RouteStore.setState(state);
 
     React.render(
       <Container context={context}>
@@ -34,20 +29,20 @@ function render(){
       </Container>
     , root);
 
-    if (appStore.isFirstRender()){
-      appStore.setFirstRender(false);
+    if (AppStore.isFirstRender()){
+      AppStore.setFirstRender(false);
     }
   });
 }
 
 // Load English
-localeStore.setData('en', require('../locales/en'));
+LocaleStore.setData('en', require('../locales/en'));
 
 if (lang === 'en'){
   render();
 } else {
   require(`!!promise?global!../locales/${lang}`)().then(locale => {
-    localeStore.setData(lang, locale);
+    LocaleStore.setData(lang, locale);
     render();
   });
 }

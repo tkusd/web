@@ -1,6 +1,5 @@
 import Actions from '../constants/Actions';
 import {api} from '../utils/request';
-import TokenStore from '../stores/TokenStore';
 import {parseJSON, dispatchEvent, filterError} from './common';
 
 export function getUser(id){
@@ -33,7 +32,7 @@ export function updateUser(id, payload){
 }
 
 export function deleteUser(id){
-  const tokenStore = this.getStore(TokenStore);
+  const {TokenStore} = this.getStore();
 
   return api('users/' + id, {
     method: 'delete'
@@ -42,15 +41,15 @@ export function deleteUser(id){
     .then(() => {
       this.dispatch(Actions.DELETE_USER, id);
 
-      if (tokenStore.getUserID() === id){
+      if (TokenStore.getUserID() === id){
         this.dispatch(Actions.DELETE_TOKEN);
       }
     });
 }
 
 export function loadCurrentUser(){
-  const tokenStore = this.getStore(TokenStore);
-  if (!tokenStore.isLoggedIn()) return Promise.resolve();
+  const {TokenStore} = this.getStore();
+  if (!TokenStore.isLoggedIn()) return Promise.resolve();
 
-  return getUser.call(this, tokenStore.getUserID());
+  return getUser.call(this, TokenStore.getUserID());
 }

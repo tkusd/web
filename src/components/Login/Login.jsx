@@ -1,7 +1,6 @@
 import React from 'react';
 import {Link} from 'react-router';
 import {Form, Input} from '../form';
-import TokenStore from '../../stores/TokenStore';
 import {login} from '../../actions/TokenAction';
 import {setPageTitle} from '../../actions/AppAction';
 import Translation from '../i18n/Translation';
@@ -13,10 +12,10 @@ class Login extends React.Component {
   }
 
   static onEnter(transition, params, query){
-    const tokenStore = this.context.getStore(TokenStore);
+    const {TokenStore} = this.context.getStore();
 
-    if (tokenStore.isLoggedIn()){
-      transition.redirect('profile', {userID: tokenStore.getUserID()});
+    if (TokenStore.isLoggedIn()){
+      transition.redirect('profile', {userID: TokenStore.getUserID()});
     } else {
       this.context.executeAction(setPageTitle, 'Log in');
     }

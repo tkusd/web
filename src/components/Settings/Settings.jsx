@@ -1,6 +1,4 @@
 import React from 'react';
-import TokenStore from '../../stores/TokenStore';
-import UserStore from '../../stores/UserStore';
 import {setPageTitle} from '../../actions/AppAction';
 import ProfileForm from './ProfileForm';
 import DeleteUser from './DeleteUser';
@@ -14,15 +12,15 @@ if (process.env.BROWSER){
   require('../../styles/Settings/Settings.styl');
 }
 
-@connectToStores([UserStore], (stores, props) => ({
+@connectToStores(['UserStore'], (stores, props) => ({
   user: stores.UserStore.getCurrentUser()
 }))
 @pureRender
 class Settings extends React.Component {
   static onEnter(transition, params, query){
-    const tokenStore = this.context.getStore(TokenStore);
+    const {TokenStore} = this.context.getStore();
 
-    if (tokenStore.isLoggedIn()){
+    if (TokenStore.isLoggedIn()){
       this.context.executeAction(setPageTitle, 'Settings');
     } else {
       transition.redirect('login');

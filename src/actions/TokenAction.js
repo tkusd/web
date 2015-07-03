@@ -1,6 +1,5 @@
 import Actions from '../constants/Actions';
 import {api, internal} from '../utils/request';
-import TokenStore from '../stores/TokenStore';
 import {loadCurrentUser} from './UserAction';
 import {parseJSON, dispatchEvent, filterError} from './common';
 
@@ -41,12 +40,12 @@ export function login(payload){
 }
 
 export function logout(){
-  const tokenStore = this.getStore(TokenStore);
-  if (!tokenStore.isLoggedIn()) return Promise.resolve();
+  const {TokenStore} = this.getStore();
+  if (!TokenStore.isLoggedIn()) return Promise.resolve();
 
-  const id = tokenStore.getUserID();
+  const id = TokenStore.getUserID();
 
-  return deleteToken.call(this, tokenStore.getToken()).then(() => {
+  return deleteToken.call(this, TokenStore.getToken()).then(() => {
     this.dispatch(Actions.DELETE_USER, id);
   });
 }

@@ -58,8 +58,6 @@ const COMPONENTS = {
 };
 
 class ComponentStore extends BaseStore {
-  static storeName = 'ComponentStore'
-
   constructor(context){
     super(context);
 

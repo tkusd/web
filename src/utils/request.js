@@ -1,7 +1,5 @@
 import fetch_ from 'isomorphic-fetch';
 import {merge} from 'lodash';
-import AppStore from '../stores/AppStore';
-import TokenStore from '../stores/TokenStore';
 
 // Fix "Illegal invocation" error in Chrome
 // https://github.com/matthew-andrews/isomorphic-fetch/pull/20
@@ -32,10 +30,10 @@ export function api(url, options, context){
   options.mode = 'cors';
 
   if (context){
-    const tokenStore = context.getStore(TokenStore);
+    const {TokenStore} = context.getStore();
 
-    if (tokenStore.isLoggedIn()){
-      options.headers.Authorization = 'Bearer ' + tokenStore.getToken();
+    if (TokenStore.isLoggedIn()){
+      options.headers.Authorization = 'Bearer ' + TokenStore.getToken();
     }
   }
 
@@ -45,8 +43,8 @@ export function api(url, options, context){
 export function internal(url, options, context){
   options = setupRequestOptions(options);
 
-  const appStore = context.getStore(AppStore);
-  options.headers['X-CSRF-Token'] = appStore.getCSRFToken();
+  const {AppStore} = context.getStore();
+  options.headers['X-CSRF-Token'] = AppStore.getCSRFToken();
   options.credentials = 'include';
 
   return fetch(INTERNAL_BASE + url, options)
@@ -55,7 +53,7 @@ export function internal(url, options, context){
       let csrfToken = res.headers.get('X-CSRF-Token');
 
       if (csrfToken){
-        appStore.setCSRFToken(csrfToken);
+        AppStore.setCSRFToken(csrfToken);
       }
 
       return res;

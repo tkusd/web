@@ -3,8 +3,6 @@ import ProfileData from './ProfileData';
 import ProjectList from './ProjectList';
 import {setPageTitle, setStatusCode} from '../../actions/AppAction';
 import {getUser} from '../../actions/UserAction';
-import UserStore from '../../stores/UserStore';
-import AppStore from '../../stores/AppStore';
 import connectToStores from '../../decorators/connectToStores';
 import NotFound from '../NotFound';
 import pureRender from '../../decorators/pureRender';
@@ -13,18 +11,20 @@ if (process.env.BROWSER){
   require('../../styles/Profile/Profile.styl');
 }
 
-@connectToStores([UserStore], (stores, props) => ({
+@connectToStores(['UserStore'], (stores, props) => ({
   user: stores.UserStore.getUser(props.params.userID),
   currentUser: stores.UserStore.getCurrentUser()
 }))
 @pureRender
 class Profile extends React.Component {
   static onEnter(transition, params, query){
-    if (this.context.getStore(AppStore).isFirstRender()) {
+    const {AppStore, UserStore} = this.context.getStore();
+
+    if (AppStore.isFirstRender()) {
       return Promise.resolve();
     }
 
-    const currentUser = this.context.getStore(UserStore).getCurrentUser();
+    const currentUser = UserStore.getCurrentUser();
 
     if (currentUser && currentUser.get('id') === params.userID){
       this.context.executeAction(setPageTitle, currentUser.get('name'));
@@ -45,12 +45,12 @@ class Profile extends React.Component {
       }
     });
   }
-
+/*
   componentDidUpdate(prevProps){
     if (this.props.params.userID !== prevProps.params.userID){
       this.updateState();
     }
-  }
+  }*/
 
   render(){
     let {user, currentUser} = this.state;

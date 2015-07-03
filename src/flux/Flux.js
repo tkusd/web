@@ -1,16 +1,12 @@
 import Context from './Context';
 
 class Flux {
-  constructor(options={}){
-    this.stores = [];
+  constructor(stores = {}){
+    this.stores = stores;
   }
 
   createContext(){
     return new Context(this);
-  }
-
-  registerStore(store){
-    this.stores.push(store);
   }
 
   dehydrate(context){

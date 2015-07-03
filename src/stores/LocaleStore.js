@@ -12,8 +12,6 @@ function toMap(data, payload, prefix=''){
 }
 
 class LocaleStore extends BaseStore {
-  static storeName = 'LocaleStore'
-
   constructor(context){
     super(context);
 

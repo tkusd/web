@@ -1,19 +1,17 @@
 import React from 'react';
-import serialize from 'serialize-javascript';
 import path from 'path';
 import fs from 'graceful-fs';
 import {checkToken} from '../actions/TokenAction';
 import {loadCurrentUser} from '../actions/UserAction';
-import AppStore from '../stores/AppStore';
-import LocaleStore from '../stores/LocaleStore';
-import RouteStore from '../stores/RouteStore';
 import {Container} from '../flux';
 import Router from 'react-router';
 import routes from '../routes';
 
 import app from '../app';
 import HtmlDocument from './HtmlDocument';
+import promisify from '../utils/promisify';
 
+const readFile = promisify(fs.readFile);
 const STATS_PATH = path.join(__dirname, '../../public/build/webpack-stats.json');
 
 let webpackStats;
@@ -23,26 +21,21 @@ function readStats(req){
     return Promise.resolve(webpackStats);
   }
 
-  return new Promise((resolve, reject) => {
-    fs.readFile(STATS_PATH, 'utf8', (err, content) => {
-      if (err) return reject(err);
-
-      webpackStats = JSON.parse(content);
-      resolve(webpackStats);
-    });
+  return readFile(STATS_PATH, 'utf8').then(content => {
+    webpackStats = JSON.parse(content);
   });
 }
 
 function renderMarkup(context, Root){
   return new Promise((resolve, reject) => {
     try {
-      let result = React.renderToString(React.createElement(
+      let markup = React.renderToString(React.createElement(
         Container,
         {context},
         React.createFactory(Root)()
       ));
 
-      resolve(result);
+      resolve(markup);
     } catch (err){
       reject(err);
     }
@@ -64,18 +57,16 @@ function render(req, res, next){
     // Load current user
     return context.executeAction(loadCurrentUser);
   }).then(() => {
-    const appStore = context.getStore(AppStore);
-    const localeStore = context.getStore(LocaleStore);
-    const routeStore = context.getStore(RouteStore);
+    const {AppStore, LocaleStore, RouteStore} = context.getStore();
 
-    appStore.setFirstRender(false);
-    appStore.setCSRFToken(req.csrfToken());
+    AppStore.setFirstRender(false);
+    AppStore.setCSRFToken(req.csrfToken());
 
-    localeStore.setData('en', require('../../locales/en'));
+    LocaleStore.setData('en', require('../../locales/en'));
 
     if (lang !== 'en'){
-      localeStore.setLanguage(lang);
-      localeStore.setData(lang, require('../../locales/' + lang));
+      LocaleStore.setLanguage(lang);
+      LocaleStore.setData(lang, require('../../locales/' + lang));
     }
 
     let router = Router.create({
@@ -94,18 +85,16 @@ function render(req, res, next){
     router.run((Root, state) => {
       if (isError) return;
 
-      routeStore.setState(state);
+      RouteStore.setState(state);
 
       renderMarkup(context, Root).then(markup => {
-        let exposed = 'window.$STATE=' + serialize(context.dehydrate()) + ';';
         let html = React.renderToStaticMarkup(React.createElement(HtmlDocument, {
           context,
-          state: exposed,
           markup,
           stats: webpackStats
         }));
 
-        res.status(appStore.getStatusCode());
+        res.status(AppStore.getStatusCode());
         res.send('<!DOCTYPE html>' + html);
       }).catch(next);
     });

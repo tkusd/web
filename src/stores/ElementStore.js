@@ -3,8 +3,6 @@ import Actions from '../constants/Actions';
 import {Map} from 'immutable';
 
 class ElementStore extends CollectionStore {
-  static storeName = 'ElementStore'
-
   static handlers = {
     [Actions.UPDATE_ELEMENT]: 'setElement',
     [Actions.UPDATE_ELEMENT_LIST]: 'setList',

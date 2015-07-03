@@ -1,5 +1,4 @@
 import React from 'react';
-import UserStore from '../../stores/UserStore';
 import connectToStores from '../../decorators/connectToStores';
 import pureRender from '../../decorators/pureRender';
 import Gravatar from '../common/Gravatar';
@@ -13,13 +12,12 @@ if (process.env.BROWSER){
   require('../../styles/Dashboard/DashboardHeader.styl');
 }
 
-@connectToStores([UserStore], (stores, props) => ({
+@connectToStores(['UserStore'], (stores, props) => ({
   currentUser: stores.UserStore.getCurrentUser()
 }))
 @pureRender
 class DashboardHeader extends React.Component {
   static contextTypes = {
-    executeAction: React.PropTypes.func.isRequired,
     router: React.PropTypes.func.isRequired
   }
 

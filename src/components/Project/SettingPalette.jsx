@@ -6,7 +6,6 @@ import Immutable from 'immutable';
 import {updateProject} from '../../actions/ProjectAction';
 import Portal from 'react-portal';
 import DeleteProjectModal from './DeleteProjectModal';
-import ProjectStore from '../../stores/ProjectStore';
 
 if (process.env.BROWSER){
   require('../../styles/Project/SettingPalette.styl');
@@ -105,9 +104,11 @@ class SettingPalette extends React.Component {
       title: title.getValue(),
       description: description.getValue()
     }).then(() => {
+      const {ProjectStore} = this.context.getStore();
+
       this.setState({
         error: null,
-        project: this.context.getStore(ProjectStore).get(id)
+        project: ProjectStore.get(id)
       });
     }).catch(err => {
       this.setState({error: err.body || err});

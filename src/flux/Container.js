@@ -1,9 +1,11 @@
 import React from 'react';
+import cloneWithProps from 'react/lib/cloneWithProps';
 import contextTypes from './contextTypes';
+import Context from './Context';
 
 class Container extends React.Component {
   static propTypes = {
-    context: React.PropTypes.object.isRequired
+    context: React.PropTypes.instanceOf(Context).isRequired
   }
 
   static childContextTypes = contextTypes
@@ -19,7 +21,7 @@ class Container extends React.Component {
   }
 
   render(){
-    return React.createElement(this.props.children.type, {
+    return cloneWithProps(this.props.children, {
       context: this.props.context
     });
   }

@@ -1,7 +1,5 @@
 import React from 'react';
 import connectToStores from '../../decorators/connectToStores';
-import ProjectStore from '../../stores/ProjectStore';
-import AppStore from '../../stores/AppStore';
 import {getProjectList} from '../../actions/ProjectAction';
 import NewProjectModal from './NewProjectModal';
 import Portal from 'react-portal';
@@ -14,7 +12,7 @@ if (process.env.BROWSER){
   require('../../styles/Profile/ProjectList.styl');
 }
 
-@connectToStores([ProjectStore], (stores, props) => ({
+@connectToStores(['ProjectStore'], (stores, props) => ({
   projects: stores.ProjectStore.getList(props.params.userID).sort((a, b) => {
     // Sort by created date
     return new Date(b.get('created_at')).getTime() - new Date(a.get('created_at')).getTime();
@@ -35,7 +33,9 @@ class ProjectList extends React.Component {
   }
 
   static onEnter(transition, params, query){
-    if (this.context.getStore(AppStore).isFirstRender()){
+    const {AppStore} = this.context.getStore();
+
+    if (AppStore.isFirstRender()){
       return Promise.resolve();
     }
 

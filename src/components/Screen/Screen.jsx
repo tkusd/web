@@ -1,7 +1,6 @@
 import React from 'react';
 import Canvas from './Canvas';
 import ElementSidebar from './ElementSidebar';
-import AppStore from '../../stores/AppStore';
 import {getChildElements, selectElement} from '../../actions/ElementAction';
 
 if (process.env.BROWSER){
@@ -19,7 +18,9 @@ class Screen extends React.Component {
   }
 
   static onEnter(transition, params, query){
-    if (this.context.getStore(AppStore).isFirstRender()){
+    const {AppStore} = this.context.getStore();
+
+    if (AppStore.isFirstRender()){
       return Promise.resolve();
     }
 

@@ -1,11 +1,10 @@
 import {vsprintf} from 'sprintf-js';
-import LocaleStore from '../stores/LocaleStore';
 
 function getTranslations(context, lang){
-  const localeStore = context.getStore(LocaleStore);
-  if (!lang) lang = localeStore.getLanguage();
+  const {LocaleStore} = context.getStore();
+  if (!lang) lang = LocaleStore.getLanguage();
 
-  const locales = localeStore.getData(lang);
+  const locales = LocaleStore.getData(lang);
 
   return (id, ...args) => {
     let str;

@@ -1,6 +1,5 @@
 import React from 'react';
 import {Link} from 'react-router';
-import UserStore from '../../stores/UserStore';
 import connectToStores from '../../decorators/connectToStores';
 import pureRender from '../../decorators/pureRender';
 import Translation from '../i18n/Translation';
@@ -9,7 +8,7 @@ if (process.env.BROWSER){
   require('../../styles/HomeContainer/HomeHeader.styl');
 }
 
-@connectToStores([UserStore], (stores, props) => ({
+@connectToStores(['UserStore'], (stores, props) => ({
   currentUser: stores.UserStore.getCurrentUser()
 }))
 @pureRender

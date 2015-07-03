@@ -3,19 +3,19 @@ class Context {
     this.stores = {};
     this.handlers = {};
 
-    flux.stores.forEach(Store => {
-      let storeName = Store.storeName || Store.name || Store;
-      let store = this.stores[storeName] = new Store(this);
+    Object.keys(flux.stores).forEach(storeKey => {
+      const Store = flux.stores[storeKey];
+      const store = this.stores[storeKey] = new Store(this);
 
       if (Store.handlers){
-        Object.keys(Store.handlers).forEach(key => {
-          let handler = store[Store.handlers[key]];
+        Object.keys(Store.handlers).forEach(handlerKey => {
+          const handler = store[Store.handlers[handlerKey]];
 
           if (typeof handler !== 'function'){
-            throw new TypeError('handler must be a function');
+            throw new TypeError(`${storeKey}.${handlerKey} is not a function`);
           }
 
-          this.handlers[key] = handler.bind(store);
+          this.handlers[handlerKey] = handler.bind(store);
         });
       }
     });
@@ -43,8 +43,7 @@ class Context {
   }
 
   getStore(store){
-    let storeName = store.storeName || store.name || store;
-    return this.stores[storeName];
+    return this.stores;
   }
 
   dispatch(action, ...args){
@@ -52,10 +51,11 @@ class Context {
       throw new TypeError('action must be a string');
     }
 
-    let handler = this.handlers[action];
+
+    const handler = this.handlers[action];
 
     if (!handler){
-      throw new TypeError('handler not found');
+      throw new TypeError(`No handlers for the action ${action}`);
     }
 
     return handler(...args);

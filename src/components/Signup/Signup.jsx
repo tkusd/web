@@ -4,7 +4,6 @@ import {Form, Input} from '../form';
 import {createUser} from '../../actions/UserAction';
 import {setPageTitle} from '../../actions/AppAction';
 import {login} from '../../actions/TokenAction';
-import TokenStore from '../../stores/TokenStore';
 import Translation from '../i18n/Translation';
 
 class Signup extends React.Component {
@@ -14,10 +13,10 @@ class Signup extends React.Component {
   }
 
   static onEnter(transition, params, query){
-    const tokenStore = this.context.getStore(TokenStore);
+    const {TokenStore} = this.context.getStore();
 
-    if (tokenStore.isLoggedIn()){
-      transition.redirect('profile', {userID: tokenStore.getUserID()});
+    if (TokenStore.isLoggedIn()){
+      transition.redirect('profile', {userID: TokenStore.getUserID()});
     } else {
       this.context.executeAction(setPageTitle, 'Sign up');
     }
