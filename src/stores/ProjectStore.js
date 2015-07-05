@@ -4,9 +4,9 @@ import {Map} from 'immutable';
 
 class ProjectStore extends CollectionStore {
   static handlers = {
-    [Actions.UPDATE_PROJECT]: 'setProject',
-    [Actions.UPDATE_PROJECT_LIST]: 'setList',
-    [Actions.DELETE_PROJECT]: 'deleteProject'
+    setProject: Actions.UPDATE_PROJECT,
+    setList: Actions.UPDATE_PROJECT_LIST,
+    deleteProject: Actions.DELETE_PROJECT
   }
 
   constructor(context){

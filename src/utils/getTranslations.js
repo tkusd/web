@@ -1,7 +1,7 @@
 import {vsprintf} from 'sprintf-js';
 
-function getTranslations(context, lang){
-  const {LocaleStore} = context.getStore();
+function getTranslations(flux, lang){
+  const {LocaleStore} = flux.getStore();
   if (!lang) lang = LocaleStore.getLanguage();
 
   const locales = LocaleStore.getData(lang);

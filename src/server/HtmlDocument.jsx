@@ -1,18 +1,19 @@
 import React from 'react';
 import serialize from 'serialize-javascript';
+import {Flux} from '../flux';
 
 class HtmlDocument extends React.Component {
   static propTypes = {
-    context: React.PropTypes.object.isRequired,
+    flux: React.PropTypes.instanceOf(Flux).isRequired,
     markup: React.PropTypes.string.isRequired,
     stats: React.PropTypes.object.isRequired
   }
 
   render(){
-    const {context, markup, stats} = this.props;
-    const {AppStore, LocaleStore} = context.getStore();
+    const {flux, markup, stats} = this.props;
+    const {AppStore, LocaleStore} = flux.getStore();
     const lang = LocaleStore.getLanguage();
-    const dehydratedState = 'window.$STATE=' + serialize(context.dehydrate());
+    const dehydratedState = 'window.$STATE=' + serialize(flux.dehydrate());
 
     let style = [].concat(
       stats.main.css,

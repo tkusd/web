@@ -1,9 +1,11 @@
 import React from 'react';
-import {setPageTitle} from '../../actions/AppAction';
+import * as AppAction from '../../actions/AppAction';
+import bindActions from '../../utils/bindActions';
 
 class Home extends React.Component {
-  static onEnter(transition, params, query){
-    this.context.executeAction(setPageTitle, 'App Studio');
+  static onEnter(state, transition){
+    const {setPageTitle} = bindActions(AppAction, this);
+    setPageTitle('App Studio');
   }
 
   render(){

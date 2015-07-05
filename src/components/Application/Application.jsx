@@ -1,7 +1,8 @@
 import React from 'react';
-import {RouteHandler} from 'react-router';
 import connectToStores from '../../decorators/connectToStores';
 import getTranslations from '../../utils/getTranslations';
+import {Flux} from '../../flux';
+import {ModalContainer} from '../modal';
 
 if (process.env.BROWSER){
   require('../../styles/Application/Application.styl');
@@ -12,7 +13,7 @@ if (process.env.BROWSER){
 }))
 class Application extends React.Component {
   static contextTypes = {
-    getStore: React.PropTypes.func.isRequired
+    flux: React.PropTypes.instanceOf(Flux).isRequired
   }
 
   static childContextTypes = {
@@ -21,7 +22,7 @@ class Application extends React.Component {
 
   getChildContext(){
     return {
-      __: getTranslations(this.context)
+      __: getTranslations(this.context.flux)
     };
   }
 
@@ -30,7 +31,12 @@ class Application extends React.Component {
   }
 
   render(){
-    return <RouteHandler/>;
+    return (
+      <div>
+        {this.props.children}
+        <ModalContainer/>
+      </div>
+    );
   }
 }
 

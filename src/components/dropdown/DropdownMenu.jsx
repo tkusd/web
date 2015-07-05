@@ -26,14 +26,14 @@ class DropdownMenu extends React.Component {
   }
 
   componentDidMount(){
-    if (process.env.BROWSER && this.props.position === 'fixed'){
+    if (this.props.position === 'fixed'){
       this.updatePosition();
       window.addEventListener('resize', this.handleWindowResize);
     }
   }
 
   componentWillUnmount(){
-    if (process.env.BROWSER && this.props.position === 'fixed'){
+    if (this.props.position === 'fixed'){
       window.removeEventListener('resize', this.handleWindowResize);
     }
   }
@@ -66,7 +66,7 @@ class DropdownMenu extends React.Component {
   }
 
   updatePosition(){
-    const menu = React.findDOMNode(this.refs.menu);
+    const {menu} = this.refs;
     const menuRect = menu.getBoundingClientRect();
     const parent = menu.parentNode;
     const parentRect = parent.getBoundingClientRect();

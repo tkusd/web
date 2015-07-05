@@ -33,7 +33,7 @@ class Form extends React.Component {
       submitted: this.state.submitted
     });
 
-    return React.DOM.form(props, this.props.children);
+    return <form {...props}>{this.props.children}</form>;
   }
 
   handleSubmit(e){

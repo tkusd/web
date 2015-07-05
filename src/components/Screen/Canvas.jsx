@@ -60,16 +60,12 @@ class Canvas extends React.Component {
   }
 
   componentDidMount(){
-    if (process.env.BROWSER){
-      this.updateCoverStyle();
-      window.addEventListener('resize', this.handleWindowResize);
-    }
+    this.updateCoverStyle();
+    window.addEventListener('resize', this.handleWindowResize);
   }
 
   componentWillUnmount(){
-    if (process.env.BROWSER){
-      window.removeEventListener('resize', this.handleWindowResize);
-    }
+    window.removeEventListener('resize', this.handleWindowResize);
   }
 
   render(){
@@ -171,8 +167,7 @@ class Canvas extends React.Component {
   }
 
   updateCoverStyle(){
-    const {node} = this.refs;
-    const rect = React.findDOMNode(node).getBoundingClientRect();
+    const rect = this.refs.node.getBoundingClientRect();
 
     this.setState({
       coverStyle: {

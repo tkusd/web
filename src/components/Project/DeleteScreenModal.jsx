@@ -1,12 +1,18 @@
 import React from 'react';
 import {Modal} from '../modal';
 import {Form} from '../form';
-import {deleteElement} from '../../actions/ElementAction';
+import * as ElementAction from '../../actions/ElementAction';
+import bindActions from '../../utils/bindActions';
+import Translation from '../i18n/Translation';
 
 class DeleteScreenModal extends React.Component {
+  static contextTypes = {
+    flux: React.PropTypes.object.isRequired,
+    router: React.PropTypes.object.isRequired
+  }
+
   static propTypes = {
-    element: React.PropTypes.object.isRequired,
-    context: React.PropTypes.object.isRequired
+    element: React.PropTypes.object.isRequired
   }
 
   constructor(props, context){
@@ -16,16 +22,21 @@ class DeleteScreenModal extends React.Component {
   }
 
   render(){
-    const {context, closePortal} = this.props;
-    const {__} = context;
+    const {closeModal} = this.props;
 
     return (
-      <Modal title={__('project.delete_screen')} onDismiss={closePortal}>
+      <Modal title={<Translation id="project.delete_screen"/>} onDismiss={closeModal}>
         <Form onSubmit={this.handleSubmit}>
-          <p>{__('project.delete_screen_prompt')}</p>
+          <p>
+            <Translation id="project.delete_screen_prompt"/>
+          </p>
           <div className="modal__btn-group">
-            <a className="modal__btn" onClick={closePortal}>{__('common.cancel')}</a>
-            <button className="modal__btn--danger" type="submit">{__('common.delete')}</button>
+            <a className="modal__btn" onClick={closeModal}>
+              <Translation id="common.cancel"/>
+            </a>
+            <button className="modal__btn--danger" type="submit">
+              <Translation id="common.delete"/>
+            </button>
           </div>
         </Form>
       </Modal>
@@ -35,11 +46,12 @@ class DeleteScreenModal extends React.Component {
   handleSubmit(e){
     e.preventDefault();
 
-    const {element, context} = this.props;
+    const {element} = this.props;
+    const {deleteElement} = bindActions(ElementAction, this.context.flux);
 
     // Redirect to the project page before deleting the element to avoid errors
-    context.router.transitionTo('project', {projectID: element.get('project_id')});
-    context.executeAction(deleteElement, element.get('id'));
+    this.context.router.transitionTo('/projects/' + element.get('project_id'));
+    deleteElement(element.get('id'));
   }
 }
 

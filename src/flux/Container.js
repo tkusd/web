@@ -1,29 +1,24 @@
 import React from 'react';
-import cloneWithProps from 'react/lib/cloneWithProps';
-import contextTypes from './contextTypes';
-import Context from './Context';
+import Flux from './Flux';
+
+const fluxType = React.PropTypes.instanceOf(Flux);
 
 class Container extends React.Component {
   static propTypes = {
-    context: React.PropTypes.instanceOf(Context).isRequired
+    flux: fluxType.isRequired
   }
 
-  static childContextTypes = contextTypes
+  static childContextTypes = {
+    flux: fluxType
+  }
 
   getChildContext(){
-    let {context} = this.props;
-
-    return {
-      executeAction: context.executeAction.bind(context),
-      getStore: context.getStore.bind(context),
-      dispatch: context.dispatch.bind(context)
-    };
+    const {flux} = this.props;
+    return {flux};
   }
 
   render(){
-    return cloneWithProps(this.props.children, {
-      context: this.props.context
-    });
+    return this.props.children;
   }
 }
 

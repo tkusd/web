@@ -1,12 +1,18 @@
 import React from 'react';
 import {Modal} from '../modal';
 import {Form, Input} from '../form';
-import {createProject} from '../../actions/ProjectAction';
+import * as ProjectAction from '../../actions/ProjectAction';
+import Translation from '../i18n/Translation';
+import bindActions from '../../utils/bindActions';
 
 class NewProjectModal extends React.Component {
+  static contextTypes = {
+    flux: React.PropTypes.object.isRequired,
+    router: React.PropTypes.object.isRequired
+  }
+
   static propTypes = {
-    user: React.PropTypes.object.isRequired,
-    context: React.PropTypes.object.isRequired
+    user: React.PropTypes.object.isRequired
   }
 
   constructor(props, context){
@@ -20,7 +26,7 @@ class NewProjectModal extends React.Component {
   }
 
   componentDidUpdate(){
-    let {error} = this.state;
+    const {error} = this.state;
 
     if (error && error.field){
       this.refs[error.field].setError(error.message);
@@ -28,24 +34,27 @@ class NewProjectModal extends React.Component {
   }
 
   render(){
-    let {error} = this.state;
-    const {context, closePortal} = this.props;
-    const {__} = context;
+    const {error} = this.state;
+    const {trigger, closeModal} = this.props;
 
     return (
-      <Modal title={__('profile.new_project')} onDismiss={closePortal}>
+      <Modal title={<Translation id="profile.new_project"/>} onDismiss={closeModal}>
         <Form onSubmit={this.handleSubmit}>
           {error && !error.field && <div>{error.message}</div>}
           <Input
             name="title"
             ref="title"
-            label={__('common.title')}
+            label={<Translation id="common.title"/>}
             type="text"
             required
             maxLength={255}/>
           <div className="modal__btn-group">
-            <a className="modal__btn" onClick={closePortal}>{__('common.cancel')}</a>
-            <button className="modal__btn--primary" type="submit">{__('common.create')}</button>
+            <a className="modal__btn" onClick={closeModal}>
+              <Translation id="common.cancel"/>
+            </a>
+            <button className="modal__btn--primary" type="submit">
+              <Translation id="common.create"/>
+            </button>
           </div>
         </Form>
       </Modal>
@@ -56,17 +65,17 @@ class NewProjectModal extends React.Component {
     e.preventDefault();
 
     const {title} = this.refs;
-    const {context} = this.props;
+    const {createProject} = bindActions(ProjectAction, this.context.flux);
 
     if (title.getError()){
       return;
     }
 
-    context.executeAction(createProject, this.props.user.get('id'), {
+    createProject(this.props.user.get('id'), {
       title: title.getValue()
     }).then(project => {
       this.setState({error: null});
-      context.router.transitionTo('project', {projectID: project.id});
+      this.context.router.transitionTo('/projects' + project.id);
     }, err => {
       this.setState({error: err.body || err});
     });

@@ -1,5 +1,4 @@
 import React from 'react';
-import {RouteHandler} from 'react-router';
 import HomeHeader from './HomeHeader';
 
 if (process.env.BROWSER){
@@ -12,7 +11,7 @@ class HomeContainer extends React.Component {
       <div className="home-container">
         <div className="home-container__inner">
           <HomeHeader/>
-          <RouteHandler/>
+          {this.props.children}
         </div>
       </div>
     );

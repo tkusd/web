@@ -1,5 +1,5 @@
 import React from 'react';
-import Portal from 'react-portal';
+import {ModalPortal} from '../modal';
 import Palette from './Palette';
 import NewScreenModal from './NewScreenModal';
 import ScreenItem from './ScreenItem';
@@ -12,9 +12,9 @@ if (process.env.BROWSER){
 
 class ScreenPalette extends React.Component {
   static contextTypes = {
-    executeAction: React.PropTypes.func.isRequired,
+    flux: React.PropTypes.object.isRequired,
     __: React.PropTypes.func.isRequired,
-    router: React.PropTypes.func.isRequired
+    router: React.PropTypes.object.isRequired
   }
 
   static propTypes = {
@@ -64,11 +64,9 @@ class ScreenPalette extends React.Component {
     );
 
     return (
-      <div className="screen-palette__new-screen-wrap">
-        <Portal openByClickOn={btn} closeOnEsc={true}>
-          <NewScreenModal context={this.context} project={project}/>
-        </Portal>
-      </div>
+      <ModalPortal trigger={btn}>
+        <NewScreenModal project={project}/>
+      </ModalPortal>
     );
   }
 }

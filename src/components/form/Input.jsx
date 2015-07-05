@@ -126,7 +126,7 @@ class Input extends React.Component {
   }
 
   handleChange(e){
-    let data = this.setValue(e.target.value);
+    let data = this.setValue(e.currentTarget.value);
     this.props.onChange(data);
 
     this.setState({
@@ -197,11 +197,11 @@ class Input extends React.Component {
   }
 
   focus(){
-    React.findDOMNode(this.refs.input).focus();
+    this.refs.input.focus();
   }
 
   blur(){
-    React.findDOMNode(this.refs.input).blur();
+    this.refs.input.blur();
   }
 }
 

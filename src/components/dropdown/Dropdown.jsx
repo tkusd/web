@@ -20,17 +20,13 @@ class Dropdown extends React.Component {
   }
 
   componentDidMount(){
-    if (process.env.BROWSER){
-      document.addEventListener('click', this.handleDocumentClick);
-      document.addEventListener('keydown', this.handleDocumentKeydown);
-    }
+    document.addEventListener('click', this.handleDocumentClick);
+    document.addEventListener('keydown', this.handleDocumentKeydown);
   }
 
   componentWillUnmount(){
-    if (process.env.BROWSER){
-      document.removeEventListener('click', this.handleDocumentClick);
-      document.removeEventListener('keydown', this.handleDocumentKeydown);
-    }
+    document.removeEventListener('click', this.handleDocumentClick);
+    document.removeEventListener('keydown', this.handleDocumentKeydown);
   }
 
   render(){
@@ -70,7 +66,7 @@ class Dropdown extends React.Component {
   handleDocumentClick(e){
     if (!this.state.opened) return;
 
-    const dropdown = React.findDOMNode(this.refs.dropdown);
+    const dropdown = this.refs.dropdown;
     let element = e.target;
 
     if (element === dropdown) return;

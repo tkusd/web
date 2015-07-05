@@ -1,6 +1,6 @@
 import React from 'react';
 import qs from 'querystring';
-import {assign, omit} from 'lodash';
+import {omit} from 'lodash';
 
 class Gravatar extends React.Component {
   static propTypes = {
@@ -21,9 +21,7 @@ class Gravatar extends React.Component {
       d: this.props.default
     });
 
-    let props = assign({}, omit(this.props, 'size', 'default'), {src});
-
-    return React.DOM.img(props, this.props.children);
+    return <img src={src} {...omit(this.props, 'size', 'default')}/>;
   }
 }
 

@@ -1,10 +1,13 @@
 import React from 'react';
-import {setPageTitle, setStatusCode} from '../../actions/AppAction';
+import * as AppAction from '../../actions/AppAction';
+import bindActions from '../../utils/bindActions';
 
 class NotFound extends React.Component {
-  static onEnter(transition, params, query){
-    this.context.executeAction(setPageTitle, 'Not found');
-    this.context.executeAction(setStatusCode, 404);
+  static onEnter(state, transition){
+    const {setPageTitle, setStatusCode} = bindActions(AppAction, this);
+
+    setPageTitle('Not found');
+    setStatusCode(404);
   }
 
   render(){

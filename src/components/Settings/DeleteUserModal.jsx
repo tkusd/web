@@ -1,12 +1,18 @@
 import React from 'react';
-import {deleteUser} from '../../actions/UserAction';
+import * as UserAction from '../../actions/UserAction';
 import {Modal} from '../modal';
 import {Form} from '../form';
+import bindActions from '../../utils/bindActions';
+import Translation from '../i18n/Translation';
 
 class DeleteUserModal extends React.Component {
+  static contextTypes = {
+    flux: React.PropTypes.object.isRequired,
+    router: React.PropTypes.object.isRequired
+  }
+
   static propTypes = {
-    user: React.PropTypes.object.isRequired,
-    context: React.PropTypes.object.isRequired
+    user: React.PropTypes.object.isRequired
   }
 
   constructor(props, context){
@@ -16,16 +22,21 @@ class DeleteUserModal extends React.Component {
   }
 
   render(){
-    const {closePortal, context} = this.props;
-    const {__} = context;
+    const {closeModal} = this.props;
 
     return (
-      <Modal title={__('settings.delete_account')} onDismiss={closePortal}>
+      <Modal title={<Translation id="settings.delete_account"/>} onDismiss={closeModal}>
         <Form onSubmit={this.handleSubmit}>
-          <p>{__('settings.delete_account_prompt')}</p>
+          <p>
+            <Translation id="settings.delete_account_prompt"/>
+          </p>
           <div className="modal__btn-group">
-            <a className="modal__btn" onClick={closePortal}>{__('common.cancel')}</a>
-            <button className="modal__btn--danger" type="submit">{__('common.delete')}</button>
+            <a className="modal__btn" onClick={closeModal}>
+              <Translation id="common.cancel"/>
+            </a>
+            <button className="modal__btn--danger" type="submit">
+              <Translation id="common.delete"/>
+            </button>
           </div>
         </Form>
       </Modal>
@@ -35,10 +46,11 @@ class DeleteUserModal extends React.Component {
   handleSubmit(e){
     e.preventDefault();
 
-    const {user, context} = this.props;
+    const {user} = this.props;
+    const {deleteUser} = bindActions(UserAction, this.context.flux);
 
-    context.executeAction(deleteUser, user.get('id')).then(() => {
-      context.router.transitionTo('home');
+    deleteUser(user.get('id')).then(() => {
+      this.context.router.transitionTo('/');
     });
   }
 }

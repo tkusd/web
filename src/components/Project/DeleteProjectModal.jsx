@@ -1,12 +1,18 @@
 import React from 'react';
 import {Modal} from '../modal';
 import {Form} from '../form';
-import {deleteProject} from '../../actions/ProjectAction';
+import * as ProjectAction from '../../actions/ProjectAction';
+import bindActions from '../../utils/bindActions';
+import Translation from '../i18n/Translation';
 
 class DeleteProjectModal extends React.Component {
+  static contextTypes = {
+    flux: React.PropTypes.object.isRequired,
+    router: React.PropTypes.object.isRequired
+  }
+
   static propTypes = {
-    project: React.PropTypes.object.isRequired,
-    context: React.PropTypes.object.isRequired
+    project: React.PropTypes.object.isRequired
   }
 
   constructor(props, context){
@@ -16,16 +22,21 @@ class DeleteProjectModal extends React.Component {
   }
 
   render(){
-    const {context, closePortal} = this.props;
-    const {__} = context;
+    const {closeModal} = this.props;
 
     return (
-      <Modal title={__('project.delete_project')} onDismiss={closePortal}>
+      <Modal title={<Translation id="project.delete_project"/>} onDismiss={closeModal}>
         <Form onSubmit={this.handleSubmit}>
-          <p>{__('project.delete_project_prompt')}</p>
+          <p>
+            <Translation id="project.delete_project_prompt"/>
+          </p>
           <div className="modal__btn-group">
-            <a className="modal__btn" onClick={closePortal}>{__('common.cancel')}</a>
-            <button className="modal__btn--danger" type="submit">{__('common.delete')}</button>
+            <a className="modal__btn" onClick={closeModal}>
+              <Translation id="common.cancel"/>
+            </a>
+            <button className="modal__btn--danger" type="submit">
+              <Translation id="common.delete"/>
+            </button>
           </div>
         </Form>
       </Modal>
@@ -35,10 +46,11 @@ class DeleteProjectModal extends React.Component {
   handleSubmit(e){
     e.preventDefault();
 
-    const {project, context} = this.props;
+    const {project} = this.props;
+    const {deleteProject} = bindActions(ProjectAction, this.context.flux);
 
-    context.executeAction(deleteProject, project.get('id')).then(() => {
-      context.router.transitionTo('profile', {userID: project.get('user_id')});
+    deleteProject(project.get('id')).then(() => {
+      this.context.router.transitionTo('/users/' + project.get('user_id'));
     });
   }
 }

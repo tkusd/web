@@ -3,8 +3,8 @@ import Actions from '../constants/Actions';
 
 class AppStore extends BaseStore {
   static handlers = {
-    [Actions.SET_PAGE_TITLE]: 'setPageTitle',
-    [Actions.SET_STATUS_CODE]: 'setStatusCode'
+    setPageTitle: Actions.SET_PAGE_TITLE,
+    setStatusCode: Actions.SET_STATUS_CODE
   }
 
   constructor(context){

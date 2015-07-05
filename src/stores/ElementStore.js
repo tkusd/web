@@ -4,10 +4,10 @@ import {Map} from 'immutable';
 
 class ElementStore extends CollectionStore {
   static handlers = {
-    [Actions.UPDATE_ELEMENT]: 'setElement',
-    [Actions.UPDATE_ELEMENT_LIST]: 'setList',
-    [Actions.DELETE_ELEMENT]: 'deleteElement',
-    [Actions.SELECT_ELEMENT]: 'selectElement'
+    setElement: Actions.UPDATE_ELEMENT,
+    setList: Actions.UPDATE_ELEMENT_LIST,
+    deleteElement: Actions.DELETE_ELEMENT,
+    selectElement: Actions.SELECT_ELEMENT
   }
 
   constructor(context){

@@ -18,7 +18,7 @@ class ProjectHeader extends React.Component {
       <header className="project-header">
         <h1 className="project-header__title">
           <FontAwesome className="project-header__icon" icon={project.get('is_private') ? 'lock' : 'globe'}/>
-          <Link className="project-header__owner" to="profile" params={{userID: project.get('owner').id}}>{project.get('owner').name}</Link>
+          <Link className="project-header__owner" to={`/users/${project.get('owner').id}`}>{project.get('owner').name}</Link>
           <span className="project-header__divider">/</span>
           <span>{project.get('title')}</span>
         </h1>

@@ -1,23 +1,25 @@
 import React from 'react';
 import {Link} from 'react-router';
 import {Form, Input} from '../form';
-import {login} from '../../actions/TokenAction';
-import {setPageTitle} from '../../actions/AppAction';
+import * as TokenAction from '../../actions/TokenAction';
+import bindActions from '../../utils/bindActions';
+import * as AppAction from '../../actions/AppAction';
 import Translation from '../i18n/Translation';
 
 class Login extends React.Component {
   static contextTypes = {
-    executeAction: React.PropTypes.func.isRequired,
-    router: React.PropTypes.func.isRequired
+    flux: React.PropTypes.object.isRequired,
+    router: React.PropTypes.object.isRequired
   }
 
-  static onEnter(transition, params, query){
-    const {TokenStore} = this.context.getStore();
+  static onEnter(state, transition){
+    const {TokenStore} = this.getStore();
+    const {setPageTitle} = bindActions(AppAction, this);
 
     if (TokenStore.isLoggedIn()){
-      transition.redirect('profile', {userID: TokenStore.getUserID()});
+      transition.to('/users/' + TokenStore.getUserID());
     } else {
-      this.context.executeAction(setPageTitle, 'Log in');
+      setPageTitle('Log in');
     }
   }
 
@@ -68,7 +70,7 @@ class Login extends React.Component {
         <div className="login-container__link-group">
           <Translation id="login.signup_link_hint"/>
           {' '}
-          <Link to="signup" className="login-container__link">
+          <Link to="/signup" className="login-container__link">
             <Translation id="common.signup"/>
           </Link>
         </div>
@@ -80,18 +82,19 @@ class Login extends React.Component {
     e.preventDefault();
 
     const {email, password} = this.refs;
+    const {login} = bindActions(TokenAction, this.context.flux);
 
     if (email.getError() || password.getError()){
       return;
     }
 
-    this.context.executeAction(login, {
+    login({
       email: email.getValue(),
       password: password.getValue()
     }).then(token => {
       this.setState({error: null});
-      this.context.router.transitionTo('profile', {userID: token.user_id});
-    }, err => {
+      this.context.router.transitionTo('/users/' + token.user_id);
+    }).catch(err => {
       this.setState({error: err.body || err});
     });
   }

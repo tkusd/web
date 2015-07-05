@@ -3,12 +3,13 @@ import cx from 'classnames';
 import {Link} from 'react-router';
 import {Dropdown, DropdownMenu, DropdownItem} from '../dropdown';
 import FontAwesome from '../common/FontAwesome';
-import {updateProject} from '../../actions/ProjectAction';
-import {updateElement} from '../../actions/ElementAction';
-import Portal from 'react-portal';
+import * as ProjectAction from '../../actions/ProjectAction';
+import * as ElementAction from '../../actions/ElementAction';
+import {ModalPortal} from '../modal';
 import DeleteScreenModal from './DeleteScreenModal';
 import Translation from '../i18n/Translation';
 import {InlineInput} from '../form';
+import bindActions from '../../utils/bindActions';
 
 if (process.env.BROWSER){
   require('../../styles/Project/ScreenItem.styl');
@@ -16,8 +17,8 @@ if (process.env.BROWSER){
 
 class ScreenItem extends React.Component {
   static contextTypes = {
-    executeAction: React.PropTypes.func.isRequired,
-    router: React.PropTypes.func.isRequired,
+    flux: React.PropTypes.object.isRequired,
+    router: React.PropTypes.object.isRequired,
     __: React.PropTypes.func.isRequired
   }
 
@@ -37,12 +38,6 @@ class ScreenItem extends React.Component {
 
   render(){
     const {element, selectedScreen} = this.props;
-
-    let params = {
-      projectID: element.get('project_id'),
-      screenID: element.get('id')
-    };
-
     let className = cx('screen-item', {
       'screen-item--selected': selectedScreen === element.get('id')
     });
@@ -56,7 +51,7 @@ class ScreenItem extends React.Component {
           required
           maxLength={255}
           onSubmit={this.handleRenameSubmit}>
-          <Link to="screen" params={params} className="screen-item__name">{element.get('name')}</Link>
+          <Link to={`/projects/${element.get('project_id')}/screens/${element.get('id')}`} className="screen-item__name">{element.get('name')}</Link>
           {this.renderMenu()}
         </InlineInput>
       </div>
@@ -89,9 +84,9 @@ class ScreenItem extends React.Component {
             </a>
           </DropdownItem>
           <DropdownItem>
-            <Portal openByClickOn={deleteBtn} closeOnEsc={true}>
-              <DeleteScreenModal {...this.props} context={this.context}/>
-            </Portal>
+            <ModalPortal trigger={deleteBtn}>
+              <DeleteScreenModal {...this.props}/>
+            </ModalPortal>
           </DropdownItem>
         </DropdownMenu>
       </Dropdown>
@@ -106,10 +101,11 @@ class ScreenItem extends React.Component {
   handleRenameSubmit(){
     const {input} = this.refs;
     const {element} = this.props;
+    const {updateElement} = bindActions(ElementAction, this.context.flux);
 
     if (input.getError() || input.getValue() === element.get('name')) return;
 
-    this.context.executeAction(updateElement, element.get('id'), {
+    updateElement(element.get('id'), {
       name: input.getValue()
     }).then(() => {
       input.stopInput();
@@ -120,8 +116,9 @@ class ScreenItem extends React.Component {
     e.preventDefault();
 
     const {element} = this.props;
+    const {updateProject} = bindActions(ProjectAction, this.context.flux);
 
-    this.context.executeAction(updateProject, element.get('project_id'), {
+    updateProject(element.get('project_id'), {
       main_screen: element.get('id')
     });
   }

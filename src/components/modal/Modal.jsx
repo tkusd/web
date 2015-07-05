@@ -1,12 +1,10 @@
 import React from 'react';
-import pureRender from '../../decorators/pureRender';
 import FontAwesome from '../common/FontAwesome';
 
 if (process.env.BROWSER){
   require('../../styles/modal/Modal.styl');
 }
 
-@pureRender
 class Modal extends React.Component {
   static propTypes = {
     title: React.PropTypes.oneOfType([
@@ -19,18 +17,18 @@ class Modal extends React.Component {
   constructor(props, context){
     super(props, context);
 
-    this.handleCloseBtnClick = this.handleCloseBtnClick.bind(this);
+    this.dismiss = this.dismiss.bind(this);
   }
 
   render(){
     return (
       <div className="modal">
-        <div className="modal__back" onClick={this.handleCloseBtnClick}></div>
+        <div className="modal__back" onClick={this.dismiss}></div>
         <div className="modal__container">
           <div className="modal__dialog">
             <header className="modal__header">
               <h3 className="modal__title">{this.props.title}</h3>
-              <button className="modal__btn-close" onClick={this.handleCloseBtnClick}>
+              <button className="modal__btn-close" onClick={this.dismiss}>
                 <FontAwesome icon="times"/>
               </button>
             </header>
@@ -41,7 +39,7 @@ class Modal extends React.Component {
     );
   }
 
-  handleCloseBtnClick(e){
+  dismiss(e){
     e.preventDefault();
 
     if (typeof this.props.onDismiss === 'function'){

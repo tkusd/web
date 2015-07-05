@@ -1,8 +1,9 @@
 import React from 'react';
 import Palette from '../Project/Palette';
 import {Form, Input} from '../form';
-import {updateElement} from '../../actions/ElementAction';
+import * as ElementAction from '../../actions/ElementAction';
 import Translation from '../i18n/Translation';
+import bindActions from '../../utils/bindActions';
 
 if (process.env.BROWSER){
   require('../../styles/Screen/AttributePalette.styl');
@@ -10,7 +11,7 @@ if (process.env.BROWSER){
 
 class AttributePalette extends React.Component {
   static contextTypes = {
-    executeAction: React.PropTypes.func.isRequired
+    flux: React.PropTypes.object.isRequired
   }
 
   static propTypes = {
@@ -187,8 +188,9 @@ class AttributePalette extends React.Component {
     } = this.refs;
 
     const {selectedElement} = this.props;
+    const {updateElement} = bindActions(ElementAction, this.context.flux);
 
-    this.context.executeAction(updateElement, selectedElement, {
+    updateElement(selectedElement, {
       styles: {
         //
       }

@@ -71,6 +71,10 @@ class ComponentStore extends BaseStore {
     this.data = Map(data);
   }
 
+  shouldDehydrate(){
+    return false;
+  }
+
   get(id){
     return this.data.get(id);
   }

@@ -4,9 +4,9 @@
   "private": true,
   "main": "index",
   "scripts": {
-    "start": "NODE_ENV=production node index",
+    "build": "webpack --stats --progress",
     "dev": "NODE_ENV=development node index",
-    "build": "webpack --stats --progress"
+    "start": "NODE_ENV=production node index"
   },
   "author": "Tommy Chen <tommy351@gmail.com> (http://zespia.tw)",
   "dependencies": {
@@ -27,11 +27,11 @@
     "lodash": "^3.8.0",
     "morgan": "^1.5.3",
     "normalize.css": "^3.0.3",
-    "react": "^0.13.3",
+    "react": "^0.14.0-beta1",
     "react-dnd": "^1.1.1",
-    "react-portal": "^0.5.1",
+    "react-dom": "^0.14.0-beta1",
     "react-pure-render": "^1.0.1",
-    "react-router": "tommy351/react-router#postinstall-build",
+    "react-router": "^1.0.0-beta3",
     "serialize-javascript": "^1.0.0",
     "serve-static": "^1.9.3",
     "sprintf-js": "^1.0.2",

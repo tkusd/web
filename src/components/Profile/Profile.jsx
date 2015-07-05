@@ -1,8 +1,9 @@
 import React from 'react';
 import ProfileData from './ProfileData';
 import ProjectList from './ProjectList';
-import {setPageTitle, setStatusCode} from '../../actions/AppAction';
-import {getUser} from '../../actions/UserAction';
+import * as AppAction from '../../actions/AppAction';
+import * as UserAction from '../../actions/UserAction';
+import bindActions from '../../utils/bindActions';
 import connectToStores from '../../decorators/connectToStores';
 import NotFound from '../NotFound';
 import pureRender from '../../decorators/pureRender';
@@ -17,29 +18,29 @@ if (process.env.BROWSER){
 }))
 @pureRender
 class Profile extends React.Component {
-  static onEnter(transition, params, query){
-    const {AppStore, UserStore} = this.context.getStore();
+  static onEnter(state, transition){
+    const {AppStore, UserStore} = this.getStore();
+    const {setPageTitle, setStatusCode} = bindActions(AppAction, this);
+    const {getUser} = bindActions(UserAction, this);
 
-    if (AppStore.isFirstRender()) {
-      return Promise.resolve();
-    }
+    if (AppStore.isFirstRender()) return;
 
     const currentUser = UserStore.getCurrentUser();
 
-    if (currentUser && currentUser.get('id') === params.userID){
-      this.context.executeAction(setPageTitle, currentUser.get('name'));
+    if (currentUser && currentUser.get('id') === state.params.userID){
+      setPageTitle(currentUser.get('name'));
 
-      return ProjectList.onEnter.call(this, transition, params, query);
+      return ProjectList.onEnter.call(this, state, transition);
     }
 
-    return this.context.executeAction(getUser, params.userID).then(user => {
-      this.context.executeAction(setPageTitle, user.name);
+    return getUser(state.params.userID).then(user => {
+      this.executeAction(setPageTitle, user.name);
 
-      return ProjectList.onEnter.call(this, transition, params, query);
+      return ProjectList.onEnter.call(this, state, transition);
     }).catch(err => {
       if (err.response && err.response.status === 404){
-        this.context.executeAction(setPageTitle, 'Not found');
-        this.context.executeAction(setStatusCode, 404);
+        setPageTitle('Not found');
+        setStatusCode(404);
       } else {
         throw err;
       }
@@ -53,7 +54,7 @@ class Profile extends React.Component {
   }*/
 
   render(){
-    let {user, currentUser} = this.state;
+    const {user, currentUser} = this.state;
 
     if (user){
       return (

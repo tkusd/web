@@ -28,8 +28,7 @@ class HomeHeader extends React.Component {
       return (
         <div>
           <Link
-            to="profile"
-            params={{userID: currentUser.get('id')}}
+            to={`/users/${currentUser.get('id')}`}
             className="home-header__link--primary">
             <Translation id="home.my_projects"/>
           </Link>
@@ -38,10 +37,10 @@ class HomeHeader extends React.Component {
     } else {
       return (
         <div>
-          <Link to="signup" className="home-header__link--primary">
+          <Link to="/signup" className="home-header__link--primary">
             <Translation id="common.signup"/>
           </Link>
-          <Link to="login" className="home-header__link">
+          <Link to="/login" className="home-header__link">
             <Translation id="common.login"/>
           </Link>
         </div>

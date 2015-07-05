@@ -1,11 +1,12 @@
 import React from 'react';
 import {Form, Input} from '../form';
-import {updateUser} from '../../actions/UserAction';
+import * as UserAction from '../../actions/UserAction';
 import Translation from '../i18n/Translation';
+import bindActions from '../../utils/bindActions';
 
 class ChangePassword extends React.Component {
   static contextTypes = {
-    executeAction: React.PropTypes.func.isRequired
+    flux: React.PropTypes.object.isRequired
   }
 
   static propTypes = {
@@ -62,12 +63,13 @@ class ChangePassword extends React.Component {
 
     const {old_password, password} = this.refs;
     const {user} = this.props;
+    const {updateUser} = bindActions(UserAction, this.context.flux);
 
     if (old_password.getError() || password.getError()){
       return;
     }
 
-    this.context.executeAction(updateUser, user.get('id'), {
+    updateUser(user.get('id'), {
       old_password: old_password.getValue(),
       password: password.getValue()
     }).then(() => {

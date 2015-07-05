@@ -1,8 +1,8 @@
 import React from 'react';
+import cloneWithProps from 'react/lib/cloneWithProps';
 import {DragDropContext} from 'react-dnd';
 import HTML5Backend from 'react-dnd/modules/backends/HTML5';
 import ProjectSidebar from './ProjectSidebar';
-import {RouteHandler} from 'react-router';
 import ProjectHeader from './ProjectHeader';
 
 if (process.env.BROWSER){
@@ -26,7 +26,7 @@ class Project extends React.Component {
       <div className="project">
         <ProjectHeader {...this.props}/>
         <ProjectSidebar {...this.props}/>
-        <RouteHandler {...this.props}/>
+        {this.props.children && cloneWithProps(this.props.children, this.props)}
       </div>
     );
   }

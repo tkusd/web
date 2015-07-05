@@ -1,6 +1,7 @@
 import Actions from '../constants/Actions';
 import {api, internal} from '../utils/request';
-import {loadCurrentUser} from './UserAction';
+import * as UserAction from './UserAction';
+import bindActions from '../utils/bindActions';
 import {parseJSON, dispatchEvent, filterError} from './common';
 
 export function createToken(payload){
@@ -34,8 +35,10 @@ export function deleteToken(id){
 }
 
 export function login(payload){
+  const {loadCurrentUser} = bindActions(UserAction, this);
+
   return createToken.call(this, payload).then(data => {
-    return this.executeAction(loadCurrentUser).then(() => data);
+    return loadCurrentUser().then(() => data);
   });
 }
 

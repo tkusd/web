@@ -3,8 +3,8 @@ import Actions from '../constants/Actions';
 
 class TokenStore extends BaseStore {
   static handlers = {
-    [Actions.UPDATE_TOKEN]: 'setData',
-    [Actions.DELETE_TOKEN]: 'deleteData'
+    setData: Actions.UPDATE_TOKEN,
+    deleteData: Actions.DELETE_TOKEN
   }
 
   constructor(context){

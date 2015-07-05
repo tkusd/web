@@ -1,5 +1,4 @@
 import React from 'react';
-import {RouteHandler} from 'react-router';
 import DashboardHeader from './DashboardHeader';
 
 if (process.env.BROWSER){
@@ -12,7 +11,7 @@ class Dashboard extends React.Component {
       <div className="dashboard">
         <DashboardHeader/>
         <div className="dashboard__content">
-          <RouteHandler/>
+          {this.props.children}
         </div>
       </div>
     );

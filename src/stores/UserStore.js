@@ -3,8 +3,8 @@ import Actions from '../constants/Actions';
 
 class UserStore extends CollectionStore {
   static handlers = {
-    [Actions.UPDATE_USER]: 'setUser',
-    [Actions.DELETE_USER]: 'deleteUser'
+    setUser: Actions.UPDATE_USER,
+    deleteUser: Actions.DELETE_USER
   }
 
   getUser(id){

@@ -3,9 +3,10 @@ import Palette from './Palette';
 import Translation from '../i18n/Translation';
 import {Form, Input} from '../form';
 import Immutable from 'immutable';
-import {updateProject} from '../../actions/ProjectAction';
-import Portal from 'react-portal';
+import * as ProjectAction from '../../actions/ProjectAction';
+import {ModalPortal} from '../modal';
 import DeleteProjectModal from './DeleteProjectModal';
+import bindActions from '../../utils/bindActions';
 
 if (process.env.BROWSER){
   require('../../styles/Project/SettingPalette.styl');
@@ -13,10 +14,9 @@ if (process.env.BROWSER){
 
 class SettingPalette extends React.Component {
   static contextTypes = {
-    executeAction: React.PropTypes.func.isRequired,
+    flux: React.PropTypes.object.isRequired,
     __: React.PropTypes.func.isRequired,
-    router: React.PropTypes.func.isRequired,
-    getStore: React.PropTypes.func.isRequired
+    router: React.PropTypes.object.isRequired
   }
 
   static propTypes = {
@@ -81,9 +81,9 @@ class SettingPalette extends React.Component {
               </button>
             </div>
           </Form>
-          <Portal openByClickOn={deleteBtn} closeOnEsc={true}>
-            <DeleteProjectModal {...this.props} context={this.context}/>
-          </Portal>
+          <ModalPortal trigger={deleteBtn}>
+            <DeleteProjectModal {...this.props}/>
+          </ModalPortal>
         </div>
       </Palette>
     );
@@ -95,16 +95,17 @@ class SettingPalette extends React.Component {
     const {title, description} = this.refs;
     const {project} = this.props;
     const id = project.get('id');
+    const {updateProject} = bindActions(ProjectAction, this.context.flux);
 
     if (title.getError() || description.getError()){
       return;
     }
 
-    this.context.executeAction(updateProject, id, {
+    updateProject(id, {
       title: title.getValue(),
       description: description.getValue()
     }).then(() => {
-      const {ProjectStore} = this.context.getStore();
+      const {ProjectStore} = this.context.flux.getStore();
 
       this.setState({
         error: null,

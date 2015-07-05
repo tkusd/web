@@ -6,7 +6,8 @@ import {Link} from 'react-router';
 import Translation from '../i18n/Translation';
 import FontAwesome from '../common/FontAwesome';
 import {Dropdown, DropdownMenu, DropdownItem} from '../dropdown';
-import {logout} from '../../actions/TokenAction';
+import bindActions from '../../utils/bindActions';
+import * as TokenAction from '../../actions/TokenAction';
 
 if (process.env.BROWSER){
   require('../../styles/Dashboard/DashboardHeader.styl');
@@ -18,7 +19,8 @@ if (process.env.BROWSER){
 @pureRender
 class DashboardHeader extends React.Component {
   static contextTypes = {
-    router: React.PropTypes.func.isRequired
+    flux: React.PropTypes.object.isRequired,
+    router: React.PropTypes.object.isRequired
   }
 
   constructor(props, context){
@@ -34,10 +36,10 @@ class DashboardHeader extends React.Component {
       return (
         <header className="dashboard-header">
           <div className="dashboard-header__left">
-            <Link to="profile" params={{userID: currentUser.get('id')}} className="dashboard-header__link">
+            <Link to={`/users/${currentUser.get('id')}`} className="dashboard-header__link">
               <Translation id="dashboard.projects"/>
             </Link>
-            <Link to="settings" className="dashboard-header__link">
+            <Link to="/settings" className="dashboard-header__link">
               <Translation id="dashboard.account"/>
             </Link>
           </div>
@@ -52,12 +54,12 @@ class DashboardHeader extends React.Component {
                   <strong className="dashboard-header__dropdown-name">{currentUser.get('name')}</strong>
                 </DropdownItem>
                 <DropdownItem>
-                  <Link to="profile" params={{userID: currentUser.get('id')}}>
+                  <Link to={`/users/${currentUser.get('id')}`}>
                     <FontAwesome icon="user"/><Translation id="dashboard.profile"/>
                   </Link>
                 </DropdownItem>
                 <DropdownItem>
-                  <Link to="settings">
+                  <Link to="/settings">
                     <FontAwesome icon="cog"/><Translation id="common.settings"/>
                   </Link>
                 </DropdownItem>
@@ -77,10 +79,10 @@ class DashboardHeader extends React.Component {
         <header className="dashboard-header">
           <div className="dashboard-header__left"></div>
           <div className="dashboard-header__right">
-            <Link to="signup" className="dashboard-header__link--primary">
+            <Link to="/signup" className="dashboard-header__link--primary">
               <Translation id="common.signup"/>
             </Link>
-            <Link to="login" className="dashboard-header__link">
+            <Link to="/login" className="dashboard-header__link">
               <Translation id="common.login"/>
             </Link>
           </div>
@@ -92,8 +94,10 @@ class DashboardHeader extends React.Component {
   logout(e){
     e.preventDefault();
 
-    this.context.executeAction(logout).then(() => {
-      this.context.router.transitionTo('home');
+    const {logout} = bindActions(TokenAction, this.context.flux);
+
+    logout().then(() => {
+      this.context.router.transitionTo('/');
     });
   }
 }

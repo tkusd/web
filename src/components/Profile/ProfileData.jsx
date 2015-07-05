@@ -22,7 +22,7 @@ class ProfileData extends React.Component {
         <Gravatar src={user.get('avatar')} size={150} className="profile-data__avatar"/>
         <h1 className="profile-data__name">{user.get('name')}</h1>
         {currentUser && user.get('id') === currentUser.get('id') && (
-          <Link to="settings" className="profile-data__edit-link">
+          <Link to="/settings" className="profile-data__edit-link">
             <FontAwesome icon="pencil"/><Translation id="profile.edit_profile"/>
           </Link>
         )}

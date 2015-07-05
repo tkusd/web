@@ -26,7 +26,7 @@ class DropdownItem extends React.Component {
       props.className = cx(props.className, 'dropdown-item--divider');
     }
 
-    return React.DOM.li(props, this.props.children);
+    return <li {...props}>{this.props.children}</li>;
   }
 }
 

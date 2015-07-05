@@ -1,24 +1,26 @@
 import React from 'react';
 import {Link} from 'react-router';
 import {Form, Input} from '../form';
-import {createUser} from '../../actions/UserAction';
-import {setPageTitle} from '../../actions/AppAction';
-import {login} from '../../actions/TokenAction';
+import * as UserAction from '../../actions/UserAction';
+import * as AppAction from '../../actions/AppAction';
+import * as TokenAction from '../../actions/TokenAction';
 import Translation from '../i18n/Translation';
+import bindActions from '../../utils/bindActions';
 
 class Signup extends React.Component {
   static contextTypes = {
-    executeAction: React.PropTypes.func.isRequired,
-    router: React.PropTypes.func.isRequired
+    flux: React.PropTypes.object.isRequired,
+    router: React.PropTypes.object.isRequired
   }
 
-  static onEnter(transition, params, query){
-    const {TokenStore} = this.context.getStore();
+  static onEnter(state, transition){
+    const {TokenStore} = this.getStore();
+    const {setPageTitle} = bindActions(AppAction, this);
 
     if (TokenStore.isLoggedIn()){
-      transition.redirect('profile', {userID: TokenStore.getUserID()});
+      transition.to('/users/' + TokenStore.getUserID());
     } else {
-      this.context.executeAction(setPageTitle, 'Sign up');
+      setPageTitle('Sign up');
     }
   }
 
@@ -76,7 +78,7 @@ class Signup extends React.Component {
         <div className="login-container__link-group">
           <Translation id="login.login_link_hint"/>
           {' '}
-          <Link to="login" className="login-container__link">
+          <Link to="/login" className="login-container__link">
             <Translation id="common.login"/>
           </Link>
         </div>
@@ -88,12 +90,13 @@ class Signup extends React.Component {
     e.preventDefault();
 
     const {name, email, password} = this.refs;
+    const {createUser} = bindActions(UserAction, this);
 
     if (name.getError() || email.getError() || password.getError()){
       return;
     }
 
-    this.context.executeAction(createUser, {
+    createUser({
       name: name.getValue(),
       email: email.getValue(),
       password: password.getValue()
@@ -107,15 +110,16 @@ class Signup extends React.Component {
 
   createToken(user){
     let {email, password} = this.refs;
+    const {login} = bindActions(TokenAction, this);
 
-    this.context.executeAction(login, {
+    login({
       email: email.getValue(),
       password: password.getValue()
     }).then(token => {
-      this.context.router.transitionTo('profile', {userID: user.id});
+      this.context.router.transitionTo('/users/' + user.id);
     }, () => {
       // Let users login by themselves if token create failed
-      this.context.router.transitionTo('login');
+      this.context.router.transitionTo('/login');
     });
   }
 }

@@ -3,7 +3,8 @@ import {DragSource} from 'react-dnd';
 import ItemTypes from '../../constants/ItemTypes';
 import Translation from '../i18n/Translation';
 import cx from 'classnames';
-import {createChildElement} from '../../actions/ElementAction';
+import * as ElementAction from '../../actions/ElementAction';
+import bindActions from '../../utils/bindActions';
 
 if (process.env.BROWSER){
   require('../../styles/Project/ComponentItem.styl');
@@ -28,7 +29,7 @@ const spec = {
     return props.component.toObject();
   },
 
-  endDrag(props, monitor, {context}){
+  endDrag(props, monitor, component){
     if (!monitor.didDrop()) return;
 
     const item = monitor.getItem();
@@ -37,9 +38,10 @@ const spec = {
 
     const initialAttributes = collectInitialProps(item.attributes);
     const initialStyles = collectInitialProps(item.styles);
+    const {createChildElement} = bindActions(ElementAction, component.context.flux);
 
-    context.executeAction(createChildElement, dropResult.id, {
-      name: context.__('project.' + item.type),
+    createChildElement(dropResult.id, {
+      name: component.context.__('project.' + item.type),
       type: item.type,
       attributes: initialAttributes,
       styles: initialStyles
@@ -53,7 +55,7 @@ const spec = {
 }))
 class ComponentItem extends React.Component {
   static contextTypes = {
-    executeAction: React.PropTypes.func.isRequired,
+    flux: React.PropTypes.object.isRequired,
     __: React.PropTypes.func.isRequired
   }
 

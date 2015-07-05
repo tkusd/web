@@ -1,12 +1,13 @@
 import React from 'react';
 import connectToStores from '../../decorators/connectToStores';
-import {getProjectList} from '../../actions/ProjectAction';
+import * as ProjectAction from '../../actions/ProjectAction';
+import {ModalPortal} from '../modal';
 import NewProjectModal from './NewProjectModal';
-import Portal from 'react-portal';
 import {Link} from 'react-router';
 import pureRender from '../../decorators/pureRender';
 import Translation from '../i18n/Translation';
 import FontAwesome from '../common/FontAwesome';
+import bindActions from '../../utils/bindActions';
 
 if (process.env.BROWSER){
   require('../../styles/Profile/ProjectList.styl');
@@ -21,8 +22,8 @@ if (process.env.BROWSER){
 @pureRender
 class ProjectList extends React.Component {
   static contextTypes = {
-    executeAction: React.PropTypes.func.isRequired,
-    router: React.PropTypes.func.isRequired,
+    flux: React.PropTypes.object.isRequired,
+    router: React.PropTypes.object.isRequired,
     __: React.PropTypes.func.isRequired
   }
 
@@ -32,14 +33,15 @@ class ProjectList extends React.Component {
     params: React.PropTypes.object.isRequired
   }
 
-  static onEnter(transition, params, query){
-    const {AppStore} = this.context.getStore();
+  static onEnter(state, transition){
+    const {AppStore} = this.getStore();
+    const {getProjectList} = bindActions(ProjectAction, this);
 
     if (AppStore.isFirstRender()){
       return Promise.resolve();
     }
 
-    return this.context.executeAction(getProjectList, params.userID);
+    return getProjectList(state.params.userID);
   }
 
   render(){
@@ -69,11 +71,9 @@ class ProjectList extends React.Component {
     );
 
     return (
-      <div className="project-list__portal">
-        <Portal openByClickOn={btn} closeOnEsc={true}>
-          <NewProjectModal context={this.context} user={user}/>
-        </Portal>
-      </div>
+      <ModalPortal trigger={btn}>
+        <NewProjectModal user={user}/>
+      </ModalPortal>
     );
   }
 
@@ -84,15 +84,15 @@ class ProjectList extends React.Component {
       return (
         <ul className="project-list__list">
           {projects.map((item, key) => {
-            let linkParams = {
-              projectID: key,
-              screenID: item.get('main_screen')
-            };
-            let linkTo = linkParams.screenID ? 'screen' : 'project';
+            let linkTo = '/projects/' + key;
+
+            if (item.get('main_screen')){
+              linkTo += '/screens/' + item.get('main_screen');
+            }
 
             return (
               <li className="project-list__item" key={key}>
-                <Link className="project-list__item-link" to={linkTo} params={linkParams}>
+                <Link className="project-list__item-link" to={linkTo}>
                   <strong>{item.get('title')}</strong>
                 </Link>
               </li>

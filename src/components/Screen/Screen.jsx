@@ -1,13 +1,18 @@
 import React from 'react';
 import Canvas from './Canvas';
 import ElementSidebar from './ElementSidebar';
-import {getChildElements, selectElement} from '../../actions/ElementAction';
+import * as ElementAction from '../../actions/ElementAction';
+import bindActions from '../../utils/bindActions';
 
 if (process.env.BROWSER){
   require('../../styles/Screen/Screen.styl');
 }
 
 class Screen extends React.Component {
+  static contextTypes = {
+    flux: React.PropTypes.object.isRequired
+  }
+
   static propTypes = {
     project: React.PropTypes.object.isRequired,
     elements: React.PropTypes.object.isRequired,
@@ -17,31 +22,29 @@ class Screen extends React.Component {
     editable: React.PropTypes.bool.isRequired
   }
 
-  static onEnter(transition, params, query){
-    const {AppStore} = this.context.getStore();
+  static onEnter(state, transition){
+    const {AppStore} = this.getStore();
+    const {getChildElements} = bindActions(ElementAction, this);
 
     if (AppStore.isFirstRender()){
       return Promise.resolve();
     }
 
-    return this.context.executeAction(getChildElements, params.screenID).catch(err => {
+    return getChildElements(state.params.screenID).catch(err => {
       if (err.response && err.response.status === 404){
-        transition.redirect('project', {
-          projectID: params.projectID
-        });
+        transition.to('/projects/' + state.params.projectID);
       } else {
         throw err;
       }
     });
   }
 
-  static onLeave(){
-    this.context.executeAction(selectElement, null);
+  componentWillUnmount(){
+    const {selectElement} = bindActions(ElementAction, this.context.flux);
+    selectElement(null);
   }
 
   render(){
-    const {elements, selectedScreen} = this.props;
-
     return (
       <div className="screen">
         {this.renderCanvas()}

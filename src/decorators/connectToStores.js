@@ -1,5 +1,6 @@
 import React from 'react';
 import {assign} from 'lodash';
+import {Flux} from '../flux';
 
 function connectToStores(stores, getter){
   if (!Array.isArray(stores)){
@@ -13,7 +14,7 @@ function connectToStores(stores, getter){
   return function(Component){
     return class extends Component {
       static contextTypes = assign({
-        getStore: React.PropTypes.func.isRequired
+        flux: React.PropTypes.instanceOf(Flux).isRequired
       }, Component.contextTypes)
 
       static displayName = Component.displayName || Component.name || 'StoreConnector'
@@ -26,8 +27,10 @@ function connectToStores(stores, getter){
       }
 
       componentDidMount(){
+        const {flux} = this.context;
+
         stores.forEach(store => {
-          this.context.getStore()[store].addChangeListener(this.updateState);
+          flux.getStore()[store].addChangeListener(this.updateState);
         });
 
         if (typeof super.componentDidMount === 'function'){
@@ -36,8 +39,10 @@ function connectToStores(stores, getter){
       }
 
       componentWillUnmount(){
+        const {flux} = this.context;
+
         stores.forEach(store => {
-          this.context.getStore()[store].removeChangeListener(this.updateState);
+          flux.getStore()[store].removeChangeListener(this.updateState);
         });
 
         if (typeof super.componentWillUnmount === 'function'){
@@ -46,13 +51,8 @@ function connectToStores(stores, getter){
       }
 
       getStateFromStores(props = this.props){
-        let storeInstances = {};
-
-        stores.forEach(store => {
-          storeInstances[store] = this.context.getStore()[store];
-        });
-
-        return getter(storeInstances, props);
+        const {flux} = this.context;
+        return getter(flux.getStore(), props);
       }
 
       updateState(){

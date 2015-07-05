@@ -1,5 +1,5 @@
 import React from 'react';
-import {setPageTitle} from '../../actions/AppAction';
+import * as AppAction from '../../actions/AppAction';
 import ProfileForm from './ProfileForm';
 import DeleteUser from './DeleteUser';
 import ChangePassword from './ChangePassword';
@@ -7,6 +7,7 @@ import connectToStores from '../../decorators/connectToStores';
 import pureRender from '../../decorators/pureRender';
 import Translation from '../i18n/Translation';
 import NotFound from '../NotFound';
+import bindActions from '../../utils/bindActions';
 
 if (process.env.BROWSER){
   require('../../styles/Settings/Settings.styl');
@@ -17,13 +18,14 @@ if (process.env.BROWSER){
 }))
 @pureRender
 class Settings extends React.Component {
-  static onEnter(transition, params, query){
-    const {TokenStore} = this.context.getStore();
+  static onEnter(state, transition){
+    const {TokenStore} = this.getStore();
+    const {setPageTitle} = bindActions(AppAction, this);
 
     if (TokenStore.isLoggedIn()){
-      this.context.executeAction(setPageTitle, 'Settings');
+      setPageTitle('Settings');
     } else {
-      transition.redirect('login');
+      transition.to('/login');
     }
   }
 

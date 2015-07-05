@@ -1,11 +1,12 @@
 import React from 'react';
 import {Form, Input} from '../form';
-import {updateUser} from '../../actions/UserAction';
+import * as UserAction from '../../actions/UserAction';
 import Translation from '../i18n/Translation';
+import bindActions from '../../utils/bindActions';
 
 class ProfileForm extends React.Component {
   static contextTypes = {
-    executeAction: React.PropTypes.func.isRequired
+    flux: React.PropTypes.object.isRequired
   }
 
   static propTypes = {
@@ -64,12 +65,13 @@ class ProfileForm extends React.Component {
 
     const {name, email} = this.refs;
     const {user} = this.props;
+    const {updateUser} = bindActions(UserAction, this.context.flux);
 
     if (name.getError() || email.getError()){
       return;
     }
 
-    this.context.executeAction(updateUser, user.get('id'), {
+    updateUser(user.get('id'), {
       name: name.getValue(),
       email: email.getValue()
     }).then(() => {

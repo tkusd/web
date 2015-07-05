@@ -1,10 +1,11 @@
 import React from 'react';
 import ElementList from './ElementList';
 import cx from 'classnames';
-import {selectElement, deleteElement} from '../../actions/ElementAction';
+import * as ElementAction from '../../actions/ElementAction';
 import FontAwesome from '../common/FontAwesome';
 import {Dropdown, DropdownMenu, DropdownItem} from '../dropdown';
 import Translation from '../i18n/Translation';
+import bindActions from '../../utils/bindActions';
 
 if (process.env.BROWSER){
   require('../../styles/Screen/ElementItem.styl');
@@ -12,7 +13,7 @@ if (process.env.BROWSER){
 
 class ElementItem extends React.Component {
   static contextTypes = {
-    executeAction: React.PropTypes.func.isRequired
+    flux: React.PropTypes.object.isRequired
   }
 
   static propTypes = {
@@ -81,8 +82,9 @@ class ElementItem extends React.Component {
     e.preventDefault();
 
     const {element} = this.props;
+    const {selectElement} = bindActions(ElementAction, this.context.flux);
 
-    this.context.executeAction(selectElement, element.get('id'));
+    selectElement(element.get('id'));
 
     if (!this.state.expanded){
       this.expandList();
@@ -117,9 +119,10 @@ class ElementItem extends React.Component {
     e.preventDefault();
 
     const {element} = this.props;
+    const {selectElement, deleteElement} = bindActions(ElementAction, this.context.flux);
 
-    this.context.executeAction(selectElement, null);
-    this.context.executeAction(deleteElement, element.get('id'));
+    selectElement(null);
+    deleteElement(element.get('id'));
   }
 }
 

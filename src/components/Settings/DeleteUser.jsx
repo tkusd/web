@@ -1,15 +1,9 @@
 import React from 'react';
 import Translation from '../i18n/Translation';
-import Portal from 'react-portal';
+import {ModalPortal} from '../modal';
 import DeleteUserModal from './DeleteUserModal';
 
 class DeleteUser extends React.Component {
-  static contextTypes = {
-    executeAction: React.PropTypes.func.isRequired,
-    router: React.PropTypes.func.isRequired,
-    __: React.PropTypes.func.isRequired
-  }
-
   static propTypes = {
     user: React.PropTypes.object.isRequired
   }
@@ -22,9 +16,9 @@ class DeleteUser extends React.Component {
     );
 
     return (
-      <Portal openByClickOn={btn} closeOnEsc={true}>
-        <DeleteUserModal context={this.context} user={this.props.user}/>
-      </Portal>
+      <ModalPortal trigger={btn}>
+        <DeleteUserModal user={this.props.user}/>
+      </ModalPortal>
     );
   }
 }

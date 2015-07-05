@@ -1,9 +1,16 @@
 import React from 'react';
 import {Modal} from '../modal';
 import {Form, Input} from '../form';
-import {createElement} from '../../actions/ElementAction';
+import * as ElementAction from '../../actions/ElementAction';
+import bindActions from '../../utils/bindActions';
+import Translation from '../i18n/Translation';
 
 class NewScreenModal extends React.Component {
+  static contextTypes = {
+    flux: React.PropTypes.object.isRequired,
+    router: React.PropTypes.object.isRequired
+  }
+
   static propTypes = {
     project: React.PropTypes.object.isRequired
   }
@@ -27,25 +34,28 @@ class NewScreenModal extends React.Component {
   }
 
   render(){
-    let {error} = this.state;
-    const {context, closePortal} = this.props;
-    const {__} = context;
+    const {error} = this.state;
+    const {closeModal} = this.props;
 
     return (
-      <Modal title={__('project.new_screen')} onDismiss={closePortal}>
+      <Modal title={<Translation id="project.new_screen"/>} onDismiss={closeModal}>
         <Form onSubmit={this.handleSubmit}>
           {error && !error.field && <div>{error.message}</div>}
           <Input
             id="new-screen-name"
             name="name"
             ref="name"
-            label={__('common.name')}
+            label={<Translation id="common.name"/>}
             type="text"
             required
             maxLength={255}/>
           <div className="modal__btn-group">
-            <a className="modal__btn" onClick={closePortal}>{__('common.cancel')}</a>
-            <button type="submit" className="modal__btn--primary">{__('common.create')}</button>
+            <a className="modal__btn" onClick={closeModal}>
+              <Translation id="common.cancel"/>
+            </a>
+            <button type="submit" className="modal__btn--primary">
+              <Translation id="common.create"/>
+            </button>
           </div>
         </Form>
       </Modal>
@@ -56,21 +66,19 @@ class NewScreenModal extends React.Component {
     e.preventDefault();
 
     const {name} = this.refs;
-    const {context, project} = this.props;
+    const {project} = this.props;
+    const {createElement} = bindActions(ElementAction, this.context.flux);
 
     if (name.getError()){
       return;
     }
 
-    context.executeAction(createElement, project.get('id'), {
+    createElement(project.get('id'), {
       name: name.getValue(),
       type: 'screen'
     }).then(element => {
-      this.props.closePortal();
-      context.router.transitionTo('screen', {
-        projectID: project.get('id'),
-        screenID: element.id
-      });
+      this.props.closeModal();
+      this.context.router.transitionTo(`/projects/${project.get('id')}/screens/${element.id}`);
     }, err => {
       this.setState({error: err.body || err});
     });
