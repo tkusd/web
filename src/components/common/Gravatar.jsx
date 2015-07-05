@@ -21,7 +21,7 @@ class Gravatar extends React.Component {
       d: this.props.default
     });
 
-    return <img src={src} {...omit(this.props, 'size', 'default')}/>;
+    return <img src={src} {...omit(this.props, 'src', 'size', 'default')}/>;
   }
 }
 
