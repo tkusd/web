@@ -1,6 +1,7 @@
 import React from 'react';
 import cx from 'classnames';
 import {assign, omit} from 'lodash';
+import DropdownMenu from './DropdownMenu';
 
 if (process.env.BROWSER){
   require('../../styles/dropdown/Dropdown.styl');
@@ -11,7 +12,7 @@ class Dropdown extends React.Component {
     super(props, context);
 
     this.state = {
-      opened: false
+      active: false
     };
 
     this.handleClick = this.handleClick.bind(this);
@@ -36,10 +37,20 @@ class Dropdown extends React.Component {
     }, omit(this.props, 'children'));
 
     props.className = cx('dropdown', {
-      'dropdown--active': this.state.opened
+      'dropdown--active': this.isActive()
     }, props.className);
 
-    return <div ref="dropdown" {...props}>{this.props.children}</div>;
+    let children = [];
+
+    React.Children.forEach(this.props.children, item => {
+      if (item.type === DropdownMenu){
+        if (this.isActive()) children.push(item);
+      } else {
+        children.push(item);
+      }
+    });
+
+    return <div ref="dropdown" {...props}>{children}</div>;
   }
 
   handleClick(e){
@@ -47,16 +58,22 @@ class Dropdown extends React.Component {
     this.toggle();
   }
 
+  isActive(){
+    return this.state.active;
+  }
+
   open(){
-    this.setState({opened: true});
+    if (this.isActive()) return;
+    this.setState({active: true});
   }
 
   close(){
-    this.setState({opened: false});
+    if (!this.isActive()) return;
+    this.setState({active: false});
   }
 
   toggle(){
-    if (this.state.opened){
+    if (this.isActive()){
       this.close();
     } else {
       this.open();
@@ -64,7 +81,7 @@ class Dropdown extends React.Component {
   }
 
   handleDocumentClick(e){
-    if (!this.state.opened) return;
+    if (!this.isActive()) return;
 
     const dropdown = this.refs.dropdown;
     let element = e.target;
@@ -82,9 +99,7 @@ class Dropdown extends React.Component {
   }
 
   handleDocumentKeydown(e){
-    if (!this.state.opened) return;
-
-    if (e.keyCode === 27){
+    if (e.keyCode === 27 && this.isActive()){
       this.close();
     }
   }

@@ -64,7 +64,7 @@ class DropdownMenu extends React.Component {
   }
 
   handleWindowResize(){
-    requestAnimationFrame(this.updatePosition.bind(this));
+    this.updatePosition();
   }
 
   updatePosition(){
