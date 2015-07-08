@@ -3,10 +3,13 @@ import {DropTarget} from 'react-dnd';
 import cx from 'classnames';
 import ItemTypes from '../../constants/ItemTypes';
 import ElementTypes from '../../constants/ElementTypes';
+import {assign, throttle} from 'lodash';
 
 if (process.env.BROWSER){
   require('../../styles/Screen/Canvas.styl');
 }
+
+const THROTTLE_DELAY = 150;
 
 function getComponentType(props){
   const {element, components} = props;
@@ -37,6 +40,10 @@ const spec = {
   canDrop: monitor.canDrop()
 }))
 class Canvas extends React.Component {
+  static contextTypes = {
+    updateElement: React.PropTypes.func.isRequired
+  }
+
   static propTypes = {
     elements: React.PropTypes.object.isRequired,
     element: React.PropTypes.object.isRequired,
@@ -53,19 +60,25 @@ class Canvas extends React.Component {
     super(props, context);
 
     this.state = {
-      coverStyle: {}
+      maskStyle: {}
     };
 
-    this.handleWindowResize = this.handleWindowResize.bind(this);
+    this.handleWindowResize = throttle(this.handleWindowResize.bind(this), THROTTLE_DELAY, {
+      leading: true
+    });
   }
 
   componentDidMount(){
-    this.updateCoverStyle();
+    this.updateMaskStyle();
     window.addEventListener('resize', this.handleWindowResize);
   }
 
   componentWillUnmount(){
     window.removeEventListener('resize', this.handleWindowResize);
+  }
+
+  componentWillReceiveProps(){
+    this.updateMaskStyle();
   }
 
   render(){
@@ -90,17 +103,17 @@ class Canvas extends React.Component {
     return connectDropTarget(
       <div className={className}>
         {node}
-        <div className="canvas__cover" style={this.state.coverStyle}>
+        <div className="canvas__mask" style={this.state.maskStyle}>
           {component.get('resizable') && (
             <div>
-              <div className="canvas__cover-n"/>
-              <div className="canvas__cover-ne"/>
-              <div className="canvas__cover-e"/>
-              <div className="canvas__cover-se"/>
-              <div className="canvas__cover-s"/>
-              <div className="canvas__cover-sw"/>
-              <div className="canvas__cover-w"/>
-              <div className="canvas__cover-nw"/>
+              <div className="canvas__mask-n"/>
+              <div className="canvas__mask-ne"/>
+              <div className="canvas__mask-e"/>
+              <div className="canvas__mask-se"/>
+              <div className="canvas__mask-s"/>
+              <div className="canvas__mask-sw"/>
+              <div className="canvas__mask-w"/>
+              <div className="canvas__mask-nw"/>
             </div>
           )}
         </div>
@@ -128,7 +141,9 @@ class Canvas extends React.Component {
     const {element} = this.props;
 
     let props = {
-      style: element.get('styles'),
+      // It's kinda weird that the style can't be mutated and I have to clone
+      // the object to do it.
+      style: assign({}, element.get('styles')),
       className: 'canvas__' + element.get('type'),
       ref: 'node'
     };
@@ -163,14 +178,14 @@ class Canvas extends React.Component {
   }
 
   handleWindowResize(){
-    requestAnimationFrame(this.updateCoverStyle.bind(this));
+    requestAnimationFrame(this.updateMaskStyle.bind(this));
   }
 
-  updateCoverStyle(){
+  updateMaskStyle(){
     const rect = this.refs.node.getBoundingClientRect();
 
     this.setState({
-      coverStyle: {
+      maskStyle: {
         top: rect.top,
         left: rect.left,
         width: rect.width,

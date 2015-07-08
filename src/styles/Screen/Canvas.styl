@@ -3,7 +3,10 @@
 
 resize-area-size = 4px
 
-.canvas__cover
+.canvas
+  overflow: hidden
+
+.canvas__mask
   position: fixed
   display: none
   .canvas--active > &
@@ -13,67 +16,67 @@ resize-area-size = 4px
     border: 1px solid color-accent
     display: block
 
-$canvas-cover-resize-area
+$canvas-mask-resize-area
   position: absolute
 
-.canvas__cover-n
-  @extend $canvas-cover-resize-area
+.canvas__mask-n
+  @extend $canvas-mask-resize-area
   top: resize-area-size * -0.5
   left: resize-area-size
   right: resize-area-size
   height: resize-area-size
   cursor: n-resize
 
-.canvas__cover-e
-  @extend $canvas-cover-resize-area
+.canvas__mask-e
+  @extend $canvas-mask-resize-area
   top: resize-area-size
   right: resize-area-size * -0.5
   bottom: resize-area-size
   width: resize-area-size
   cursor: e-resize
 
-.canvas__cover-s
-  @extend $canvas-cover-resize-area
+.canvas__mask-s
+  @extend $canvas-mask-resize-area
   bottom: resize-area-size * -0.5
   left: resize-area-size
   right: resize-area-size
   height: resize-area-size
   cursor: s-resize
 
-.canvas__cover-w
-  @extend $canvas-cover-resize-area
+.canvas__mask-w
+  @extend $canvas-mask-resize-area
   top: resize-area-size
   left: resize-area-size * -0.5
   bottom: resize-area-size
   width: resize-area-size
   cursor: w-resize
 
-$canvas-cover-resize-corner
-  @extend $canvas-cover-resize-area
+$canvas-mask-resize-corner
+  @extend $canvas-mask-resize-area
   width: resize-area-size
   height: resize-area-size
   background: color-accent
 
-.canvas__cover-ne
-  @extend $canvas-cover-resize-corner
+.canvas__mask-ne
+  @extend $canvas-mask-resize-corner
   top: resize-area-size * -0.5
   right: resize-area-size * -0.5
   cursor: ne-resize
 
-.canvas__cover-se
-  @extend $canvas-cover-resize-corner
+.canvas__mask-se
+  @extend $canvas-mask-resize-corner
   bottom: resize-area-size * -0.5
   right: resize-area-size * -0.5
   cursor: se-resize
 
-.canvas__cover-sw
-  @extend $canvas-cover-resize-corner
+.canvas__mask-sw
+  @extend $canvas-mask-resize-corner
   bottom: resize-area-size * -0.5
   left: resize-area-size * -0.5
   cursor: sw-resize
 
-.canvas__cover-nw
-  @extend $canvas-cover-resize-corner
+.canvas__mask-nw
+  @extend $canvas-mask-resize-corner
   top: resize-area-size * -0.5
   left: resize-area-size * -0.5
   cursor: nw-resize
@@ -91,4 +94,3 @@ $canvas-cover-resize-corner
 
 .canvas__text
   color: #000
-  display: inline

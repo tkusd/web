@@ -2,6 +2,7 @@ import React from 'react';
 import cx from 'classnames';
 import {assign, omit} from 'lodash';
 import * as validators from './validators';
+import * as transform from './transform';
 import {List} from 'immutable';
 import pureRender from '../../decorators/pureRender';
 
@@ -54,6 +55,10 @@ class Input extends React.Component {
 
     if (this.props.type === 'email'){
       state.validator = state.validator.push(validators.email());
+    }
+
+    if (this.props.type === 'number'){
+      state.transform = state.transform.push(transform.toNumber);
     }
 
     if (this.props.minLength || this.props.maxLength){

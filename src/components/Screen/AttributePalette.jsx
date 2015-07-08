@@ -1,9 +1,7 @@
 import React from 'react';
 import Palette from '../Project/Palette';
 import {Form, Input} from '../form';
-import * as ElementAction from '../../actions/ElementAction';
 import Translation from '../i18n/Translation';
-import bindActions from '../../utils/bindActions';
 
 if (process.env.BROWSER){
   require('../../styles/Screen/AttributePalette.styl');
@@ -11,7 +9,8 @@ if (process.env.BROWSER){
 
 class AttributePalette extends React.Component {
   static contextTypes = {
-    flux: React.PropTypes.object.isRequired
+    flux: React.PropTypes.object.isRequired,
+    updateElement: React.PropTypes.func.isRequired
   }
 
   static propTypes = {
@@ -28,8 +27,6 @@ class AttributePalette extends React.Component {
     this.state = {
       element: elements.get(selectedElement)
     };
-
-    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   componentDidUpdate(prevProps){
@@ -49,6 +46,7 @@ class AttributePalette extends React.Component {
   render(){
     return (
       <Palette title={<Translation id="project.attributes"/>}>
+        {this.renderForm()}
       </Palette>
     );
   }
@@ -64,6 +62,77 @@ class AttributePalette extends React.Component {
       );
     }
 
+    return (
+      <Form className="attribute-palette">
+        <Input
+          name="width"
+          type="number"
+          label="Width"
+          initialValue={element.get('styles').width}
+          min={0}
+          onChange={this.handleInputChange.bind(this, 'styles.width')}/>
+        <Input
+          name="height"
+          type="number"
+          label="Height"
+          initialValue={element.get('styles').height}
+          min={0}
+          onChange={this.handleInputChange.bind(this, 'styles.height')}/>
+        <Input
+          name="marginLeft"
+          type="number"
+          label="Margin (left)"
+          initialValue={element.get('styles').marginLeft}
+          onChange={this.handleInputChange.bind(this, 'styles.marginLeft')}/>
+        <Input
+          name="marginRight"
+          type="number"
+          label="Margin (right)"
+          initialValue={element.get('styles').marginRight}
+          onChange={this.handleInputChange.bind(this, 'styles.marginRight')}/>
+        <Input
+          name="marginTop"
+          type="number"
+          label="Margin (top)"
+          initialValue={element.get('styles').marginTop}
+          onChange={this.handleInputChange.bind(this, 'styles.marginTop')}/>
+        <Input
+          name="marginBottom"
+          type="number"
+          label="Margin (bottom)"
+          initialValue={element.get('styles').marginBottom}
+          onChange={this.handleInputChange.bind(this, 'styles.marginBottom')}/>
+        <Input
+          name="paddingLeft"
+          type="number"
+          label="Padding (left)"
+          initialValue={element.get('styles').paddingLeft}
+          min={0}
+          onChange={this.handleInputChange.bind(this, 'styles.paddingLeft')}/>
+        <Input
+          name="paddingRight"
+          type="number"
+          label="Padding (right)"
+          initialValue={element.get('styles').paddingRight}
+          min={0}
+          onChange={this.handleInputChange.bind(this, 'styles.paddingRight')}/>
+        <Input
+          name="paddingTop"
+          type="number"
+          label="Padding (top)"
+          initialValue={element.get('styles').paddingTop}
+          min={0}
+          onChange={this.handleInputChange.bind(this, 'styles.paddingTop')}/>
+        <Input
+          name="paddingBottom"
+          type="number"
+          label="Padding (bottom)"
+          initialValue={element.get('styles').paddingBottom}
+          min={0}
+          onChange={this.handleInputChange.bind(this, 'styles.paddingBottom')}/>
+      </Form>
+    );
+/*
     return (
       <Form className="attribute-palette" onSubmit={this.handleSubmit}>
         <section className="attribute-palette__section">
@@ -166,48 +235,23 @@ class AttributePalette extends React.Component {
           </button>
         </div>
       </Form>
-    );
+    );*/
+  }
+
+  handleInputChange(key, data){
+    if (data.error) return;
+
+    const {element} = this.state;
+    const split = key.split('.');
+    let obj = element.get(split[0]);
+    obj[split[1]] = data.value;
+    let newElement = element.set(split[0], obj);
+
+    this.context.updateElement(this.props.selectedElement, newElement);
   }
 
   handleSubmit(e){
     e.preventDefault();
-
-    const {
-      width,
-      height,
-      position,
-      top,
-      left,
-      right,
-      bottom,
-      opacity
-    } = this.refs;
-
-    const {selectedElement} = this.props;
-    const {updateElement} = bindActions(ElementAction, this.context.flux);
-
-    updateElement(selectedElement, {
-      styles: {
-        //
-      }
-    }).then(element => {
-      //
-    });
-
-
-/*
-    const {name} = this.refs;
-    const {selectedElement} = this.props;
-
-    if (name.getError()) return;
-
-    this.context.executeAction(updateElement, selectedElement, {
-      name: name.getValue()
-    }).then(() => {
-      this.setState({error: null});
-    }).catch(err => {
-      this.setState({error: err.body || err});
-    });*/
   }
 }
 

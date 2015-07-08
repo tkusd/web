@@ -3,6 +3,7 @@ import connectToStores from '../../decorators/connectToStores';
 import * as ElementAction from '../../actions/ElementAction';
 import bindActions from '../../utils/bindActions';
 import Screen from './Screen';
+import pureRender from '../../decorators/pureRender';
 
 @connectToStores(['ElementStore', 'ComponentStore', 'ProjectStore'], (stores, props) => ({
   elements: stores.ElementStore.getElementsOfProject(props.params.projectID),
@@ -10,6 +11,7 @@ import Screen from './Screen';
   editable: stores.ProjectStore.isEditable(props.params.projectID),
   selectedElement: stores.ElementStore.getSelectedElement()
 }))
+@pureRender
 class ScreenContainer extends React.Component {
   static onEnter(state, transition){
     const {AppStore} = this.getStore();

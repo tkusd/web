@@ -1,10 +1,12 @@
 import React from 'react';
 import cx from 'classnames';
-import {assign, omit} from 'lodash';
+import {assign, omit, throttle} from 'lodash';
 
 if (process.env.BROWSER){
   require('../../styles/dropdown/DropdownMenu.styl');
 }
+
+const THROTTLE_DELAY = 150;
 
 class DropdownMenu extends React.Component {
   static propTypes = {
@@ -22,7 +24,7 @@ class DropdownMenu extends React.Component {
       offset: {}
     };
 
-    this.handleWindowResize = this.handleWindowResize.bind(this);
+    this.handleWindowResize = throttle(this.handleWindowResize.bind(this), THROTTLE_DELAY);
   }
 
   componentDidMount(){
