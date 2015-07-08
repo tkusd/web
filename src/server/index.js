@@ -50,6 +50,7 @@ if (PRODUCTION){
 
 // Internal API
 server.use('/_api', require('./api'));
+server.get('/logout', require('./logout'));
 
 // Render the app server-side and send it as response.
 server.get('/*', require('./render'));

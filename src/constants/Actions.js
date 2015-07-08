@@ -21,5 +21,6 @@ export default keyMirror({
   SELECT_ELEMENT: null,
 
   OPEN_MODAL: null,
-  CLOSE_MODAL: null
+  CLOSE_MODAL: null,
+  KILL_MODAL: null
 });

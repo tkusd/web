@@ -1,13 +1,10 @@
-import shouldPureComponentUpdate from 'react-pure-render/function';
+import Immutable from 'immutable';
 
-function pureRender(Component){
+export default function pureRender(Component) {
   return class extends Component {
-    static displayName = Component.displayName || Component.name || 'PureRenderComponent'
-
-    shouldComponentUpdate(nextProps, nextState, nextContext){
-      return shouldPureComponentUpdate.call(this, nextProps, nextState, nextContext);
+    shouldComponentUpdate(nextProps, nextState, nextContext) {
+      // TODO: Ignore context temporarily
+      return !Immutable.is(this.props, nextProps) || !Immutable.is(this.state, nextState);
     }
   };
 }
-
-export default pureRender;

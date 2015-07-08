@@ -49,7 +49,6 @@ class AttributePalette extends React.Component {
   render(){
     return (
       <Palette title={<Translation id="project.attributes"/>}>
-        {this.renderForm()}
       </Palette>
     );
   }
@@ -67,7 +66,6 @@ class AttributePalette extends React.Component {
 
     return (
       <Form className="attribute-palette" onSubmit={this.handleSubmit}>
-        {/* Section: Size */}
         <section className="attribute-palette__section">
           <div className="attribute-palette__half-wrap">
             <div className="attribute-palette__half">
@@ -90,7 +88,6 @@ class AttributePalette extends React.Component {
             </div>
           </div>
         </section>
-        {/* Section: Position */}
         <section className="attribute-palette__section">
           <h4 className="attribute-palette__section-title">
             <Translation id="project.position"/>
@@ -152,7 +149,6 @@ class AttributePalette extends React.Component {
             </div>
           </div>
         </section>
-        {/* Section: Style */}
         <section className="attribute-palette__section">
           <h4 className="attribute-palette__section-title">
             <Translation id="project.style"/>

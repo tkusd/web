@@ -5,22 +5,16 @@ import * as AppAction from '../../actions/AppAction';
 import Project from './Project';
 import NotFound from '../NotFound';
 import pureRender from '../../decorators/pureRender';
-import {assign} from 'lodash';
 import bindActions from '../../utils/bindActions';
 
-@connectToStores(['ProjectStore', 'ElementStore', 'ComponentStore', 'UserStore'], (stores, props) => ({
+@connectToStores(['ProjectStore', 'ElementStore', 'ComponentStore'], (stores, props) => ({
   project: stores.ProjectStore.getProject(props.params.projectID),
   elements: stores.ElementStore.getElementsOfProject(props.params.projectID),
-  selectedElement: stores.ElementStore.getSelectedElement(),
   components: stores.ComponentStore.getList(),
-  currentUser: stores.UserStore.getCurrentUser()
+  editable: stores.ProjectStore.isEditable(props.params.projectID)
 }))
 @pureRender
 class ProjectContainer extends React.Component {
-  static contextTypes = {
-    flux: React.PropTypes.object.isRequired
-  }
-
   static onEnter(state, transition){
     const {AppStore} = this.getStore();
     const {getFullProject} = bindActions(ProjectAction, this);
@@ -48,14 +42,11 @@ class ProjectContainer extends React.Component {
 
   render(){
     if (this.state.project){
-      const {currentUser, project} = this.state;
-
-      let state = assign({
-        editable: currentUser ? currentUser.get('id') === project.get('user_id') : false,
-        selectedScreen: this.props.params.screenID
-      }, this.state);
-
-      return <Project {...state} children={this.props.children}/>;
+      return (
+        <Project {...this.state} selectedScreen={this.props.params.screenID}>
+          {this.props.children}
+        </Project>
+      );
     } else {
       return <NotFound/>;
     }

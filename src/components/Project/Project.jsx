@@ -1,5 +1,4 @@
 import React from 'react';
-import cloneWithProps from 'react/lib/cloneWithProps';
 import {DragDropContext} from 'react-dnd';
 import HTML5Backend from 'react-dnd/modules/backends/HTML5';
 import ProjectSidebar from './ProjectSidebar';
@@ -15,10 +14,8 @@ class Project extends React.Component {
     project: React.PropTypes.object.isRequired,
     elements: React.PropTypes.object.isRequired,
     components: React.PropTypes.object.isRequired,
-    selectedElement: React.PropTypes.string,
     selectedScreen: React.PropTypes.string,
-    editable: React.PropTypes.bool.isRequired,
-    currentUser: React.PropTypes.object.isRequired
+    editable: React.PropTypes.bool.isRequired
   }
 
   render(){
@@ -26,7 +23,7 @@ class Project extends React.Component {
       <div className="project">
         <ProjectHeader {...this.props}/>
         <ProjectSidebar {...this.props}/>
-        {this.props.children && cloneWithProps(this.props.children, this.props)}
+        {this.props.children}
       </div>
     );
   }

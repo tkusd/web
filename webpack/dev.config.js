@@ -24,7 +24,7 @@ export default merge({}, config, {
     loaders: config.module.loaders.concat([
       {
         test: /\.jsx?$/,
-        loaders: ['react-hot', 'babel'],
+        loaders: ['react-hot', 'babel?cacheDirectory'],
         exclude: /node_modules/
       },
       {

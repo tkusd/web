@@ -34,8 +34,7 @@ class Profile extends React.Component {
     }
 
     return getUser(state.params.userID).then(user => {
-      this.executeAction(setPageTitle, user.name);
-
+      setPageTitle(user.name);
       return ProjectList.onEnter.call(this, state, transition);
     }).catch(err => {
       if (err.response && err.response.status === 404){

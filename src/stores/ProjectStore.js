@@ -49,6 +49,17 @@ class ProjectStore extends CollectionStore {
 
     this.emitChange();
   }
+
+  isEditable(id){
+    const project = this.getProject(id);
+    if (!project) return false;
+
+    const {UserStore} = this.context.getStore();
+    const currentUser = UserStore.getCurrentUser();
+    if (!currentUser) return false;
+
+    return currentUser.get('id') === project.get('user_id');
+  }
 }
 
 export default ProjectStore;

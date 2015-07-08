@@ -7,3 +7,7 @@ export function openModal(id, modal){
 export function closeModal(id){
   this.dispatch(Actions.CLOSE_MODAL, id);
 }
+
+export function killModal(id){
+  this.dispatch(Actions.KILL_MODAL, id);
+}

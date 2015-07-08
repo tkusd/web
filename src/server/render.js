@@ -59,8 +59,14 @@ function render(req, res, next){
     Router.run(routes(flux), location, (err, initialState, transition) => {
       if (err) return next(err);
 
-      if (transition.isCancelled && transition.redirectInfo){
-        return res.redirect(transition.redirectInfo.pathname);
+      if (transition.isCancelled){
+        if (transition.redirectInfo){
+          res.redirect(transition.redirectInfo.pathname);
+        } else {
+          next(transition.abortReason);
+        }
+
+        return;
       }
 
       let markup = ReactDOM.renderToString(

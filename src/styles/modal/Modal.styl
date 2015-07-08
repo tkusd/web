@@ -10,6 +10,13 @@
   height: 100%
   z-index: 1000
   display: table
+  transform: translateX(100%)
+  transition: opacity 0.2s
+  opacity: 0
+
+.modal--active
+  transform: translateX(0)
+  opacity: 1
 
 .modal__back
   position: absolute

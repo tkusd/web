@@ -9,7 +9,6 @@ if (process.env.BROWSER){
 
 class ElementPalette extends React.Component {
   static propTypes = {
-    project: React.PropTypes.object.isRequired,
     elements: React.PropTypes.object.isRequired,
     selectedElement: React.PropTypes.string,
     selectedScreen: React.PropTypes.string

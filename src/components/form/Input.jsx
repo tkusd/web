@@ -9,8 +9,6 @@ if (process.env.BROWSER){
   require('../../styles/form/Input.styl');
 }
 
-let inputID = 0;
-
 function noop(){}
 
 @pureRender
@@ -47,8 +45,7 @@ class Input extends React.Component {
       error: null,
       dirty: false,
       validator: List(this.props.validator),
-      transform: List(this.props.transform),
-      id: inputID++
+      transform: List(this.props.transform)
     };
 
     if (this.props.required){
@@ -77,7 +74,7 @@ class Input extends React.Component {
   }
 
   render(){
-    let {label, id} = this.props;
+    let {label} = this.props;
     let dirty = this.isDirty();
     let error = this.getError();
     let className = cx('input', {
@@ -87,16 +84,11 @@ class Input extends React.Component {
       valid: !error
     }, this.props.className);
 
-    if (!id){
-      id = 'input-' + this.state.id;
-    }
-
     let props = assign({
       className: 'input__field'
     }, omit(this.props, 'className', 'transform', 'validator', 'label', 'children'), {
       onChange: this.handleChange,
       value: this.getValue(),
-      id: id,
       ref: 'input'
     });
 
@@ -118,8 +110,10 @@ class Input extends React.Component {
 
     return (
       <div className={className}>
-        {label && <label htmlFor={id} className="input__label">{label}</label>}
-        {element}
+        <label>
+          {label && <span className="input__label">{label}</span>}
+          {element}
+        </label>
         {error && <span className="input__error">{error}</span>}
       </div>
     );

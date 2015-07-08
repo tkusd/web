@@ -3,11 +3,6 @@ import {api} from '../utils/request';
 
 const app = express();
 
-function refreshCSRFToken(req, res, next){
-  res.header('X-CSRF-Token', req.csrfToken());
-  next();
-}
-
 function proxy(res){
   return function(response){
     let contentType = response.headers.get('Content-Type');
@@ -22,7 +17,19 @@ function proxy(res){
   };
 }
 
-app.post('/tokens', refreshCSRFToken, (req, res, next) => {
+app.use((req, res, next) => {
+  res.header('X-CSRF-Token', req.csrfToken());
+  next();
+});
+
+app.post('/tokens', (req, res, next) => {
+  if (req.session.token){
+    return res.status(400).send({
+      error: 2000,
+      message: 'You have already logged in.'
+    });
+  }
+
   api('tokens', {
     method: 'post',
     body: req.body
@@ -45,8 +52,15 @@ app.post('/tokens', refreshCSRFToken, (req, res, next) => {
   .catch(next);
 });
 
-app.delete('/tokens', refreshCSRFToken, (req, res, next) => {
+app.delete('/tokens', (req, res, next) => {
   let {token} = req.session;
+
+  if (!token){
+    return res.status(400).send({
+      error: 2001,
+      message: 'You have not logged in yet.'
+    });
+  }
 
   api('tokens/' + req.body.id, {
     method: 'delete'

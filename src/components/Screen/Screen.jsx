@@ -14,29 +14,19 @@ class Screen extends React.Component {
   }
 
   static propTypes = {
-    project: React.PropTypes.object.isRequired,
     elements: React.PropTypes.object.isRequired,
     components: React.PropTypes.object.isRequired,
+    editable: React.PropTypes.bool.isRequired,
     selectedElement: React.PropTypes.string,
-    selectedScreen: React.PropTypes.string,
-    editable: React.PropTypes.bool.isRequired
+    selectedScreen: React.PropTypes.string.isRequired
   }
 
-  static onEnter(state, transition){
-    const {AppStore} = this.getStore();
-    const {getChildElements} = bindActions(ElementAction, this);
+  constructor(props, context){
+    super(props, context);
 
-    if (AppStore.isFirstRender()){
-      return Promise.resolve();
-    }
-
-    return getChildElements(state.params.screenID).catch(err => {
-      if (err.response && err.response.status === 404){
-        transition.to('/projects/' + state.params.projectID);
-      } else {
-        throw err;
-      }
-    });
+    this.state = {
+      //
+    };
   }
 
   componentWillUnmount(){
@@ -55,7 +45,6 @@ class Screen extends React.Component {
 
   renderCanvas(){
     const {elements, selectedScreen} = this.props;
-    if (!selectedScreen) return;
 
     return (
       <div className="screen__canvas">

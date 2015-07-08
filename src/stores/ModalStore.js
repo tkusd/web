@@ -5,7 +5,8 @@ import {OrderedMap} from 'immutable';
 class ModalStore extends BaseStore {
   static handlers = {
     openModal: Actions.OPEN_MODAL,
-    closeModal: Actions.CLOSE_MODAL
+    closeModal: Actions.CLOSE_MODAL,
+    killModal: Actions.KILL_MODAL
   }
 
   constructor(context){
@@ -26,6 +27,10 @@ class ModalStore extends BaseStore {
   closeModal(id){
     this.list = this.list.remove(id);
     this.emitChange();
+  }
+
+  killModal(id){
+    //
   }
 
   shouldDehydrate(){

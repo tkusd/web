@@ -1,1 +1,1 @@
-export default from './Screen';
+export default from './ScreenContainer';

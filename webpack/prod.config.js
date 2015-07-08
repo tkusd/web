@@ -13,7 +13,7 @@ export default merge({}, config, {
     loaders: config.module.loaders.concat([
       {
         test: /\.jsx?$/,
-        loaders: ['babel'],
+        loaders: ['babel?cacheDirectory'],
         exclude: /node_modules/
       },
       {

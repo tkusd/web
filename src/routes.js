@@ -52,6 +52,10 @@ export default function(context){
         ]
       },
       {
+        path: '/logout',
+        ...r(require('./components/Logout'))
+      },
+      {
         path: '*',
         ...r(require('./components/NotFound'))
       }

@@ -1,5 +1,6 @@
 import React from 'react';
 import FontAwesome from '../common/FontAwesome';
+import cx from 'classnames';
 
 if (process.env.BROWSER){
   require('../../styles/modal/Modal.styl');
@@ -17,12 +18,28 @@ class Modal extends React.Component {
   constructor(props, context){
     super(props, context);
 
+    this.state = {
+      active: false
+    };
+
     this.dismiss = this.dismiss.bind(this);
   }
 
+  componentDidMount(){
+    setTimeout(() => {
+      this.setState({
+        active: true
+      });
+    }, 0);
+  }
+
   render(){
+    let className = cx('modal', {
+      'modal--active': this.state.active
+    });
+
     return (
-      <div className="modal">
+      <div className={className}>
         <div className="modal__back" onClick={this.dismiss}></div>
         <div className="modal__container">
           <div className="modal__dialog">

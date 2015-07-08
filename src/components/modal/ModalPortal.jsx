@@ -18,8 +18,7 @@ class ModalPortal extends React.Component {
     super(props, context);
 
     this.state = {
-      active: false,
-      id: modalID++
+      id: -1
     };
 
     this.handleTriggerClick = this.handleTriggerClick.bind(this);
@@ -32,7 +31,7 @@ class ModalPortal extends React.Component {
 
   componentWillUnmount(){
     document.removeEventListener('keydown', this.handleKeyDown);
-    this.close();
+    if (this.isActive()) this.close();
   }
 
   render(){
@@ -45,36 +44,39 @@ class ModalPortal extends React.Component {
     }
   }
 
-  open(){
-    if (this.state.active) return;
+  isActive(){
+    return this.state.id > -1;
+  }
 
+  open(){
+    if (this.isActive()) return;
+
+    const id = modalID++;
     const {openModal} = bindActions(ModalAction, this.context.flux);
 
-    this.setState({
-      active: true
-    });
+    this.setState({id});
 
     let modal = cloneWithProps(this.props.children, {
       closeModal: this.close.bind(this)
     });
 
-    openModal(this.state.id, modal);
+    openModal(id, modal);
   }
 
   close(){
-    if (!this.state.active) return;
+    if (!this.isActive()) return;
 
     const {closeModal} = bindActions(ModalAction, this.context.flux);
 
     this.setState({
-      active: false
+      id: -1
     });
 
     closeModal(this.state.id);
   }
 
   toggle(){
-    if (this.state.active){
+    if (this.isActive()){
       this.close();
     } else {
       this.open();
@@ -82,7 +84,7 @@ class ModalPortal extends React.Component {
   }
 
   handleKeyDown(e){
-    if (e.keyCode === 27 && this.state.active){
+    if (e.keyCode === 27 && this.isActive()){
       this.close();
     }
   }

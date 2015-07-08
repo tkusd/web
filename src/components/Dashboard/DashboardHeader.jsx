@@ -6,8 +6,6 @@ import {Link} from 'react-router';
 import Translation from '../i18n/Translation';
 import FontAwesome from '../common/FontAwesome';
 import {Dropdown, DropdownMenu, DropdownItem} from '../dropdown';
-import bindActions from '../../utils/bindActions';
-import * as TokenAction from '../../actions/TokenAction';
 
 if (process.env.BROWSER){
   require('../../styles/Dashboard/DashboardHeader.styl');
@@ -18,17 +16,6 @@ if (process.env.BROWSER){
 }))
 @pureRender
 class DashboardHeader extends React.Component {
-  static contextTypes = {
-    flux: React.PropTypes.object.isRequired,
-    router: React.PropTypes.object.isRequired
-  }
-
-  constructor(props, context){
-    super(props, context);
-
-    this.logout = this.logout.bind(this);
-  }
-
   render(){
     const {currentUser} = this.state;
 
@@ -65,9 +52,9 @@ class DashboardHeader extends React.Component {
                 </DropdownItem>
                 <DropdownItem divider/>
                 <DropdownItem>
-                  <a onClick={this.logout}>
+                  <Link to="/logout">
                     <FontAwesome icon="sign-out"/><Translation id="common.logout"/>
-                  </a>
+                  </Link>
                 </DropdownItem>
               </DropdownMenu>
             </Dropdown>
@@ -89,16 +76,6 @@ class DashboardHeader extends React.Component {
         </header>
       );
     }
-  }
-
-  logout(e){
-    e.preventDefault();
-
-    const {logout} = bindActions(TokenAction, this.context.flux);
-
-    logout().then(() => {
-      this.context.router.transitionTo('/');
-    });
   }
 }
 
