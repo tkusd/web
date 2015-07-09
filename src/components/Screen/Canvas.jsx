@@ -4,6 +4,7 @@ import ItemTypes from '../../constants/ItemTypes';
 import ElementTypes from '../../constants/ElementTypes';
 import assign from 'lodash/object/assign';
 import throttle from 'lodash/function/throttle';
+import Immutable from 'immutable';
 
 if (process.env.BROWSER){
   require('../../styles/Screen/Canvas.styl');
@@ -37,7 +38,9 @@ const spec = {
 
 @DropTarget(getComponentType, spec, (connect, monitor) => ({
   connectDropTarget: connect.dropTarget(),
-  isOver: monitor.isOver(),
+  isOver: monitor.isOver({
+    shallow: true
+  }),
   canDrop: monitor.canDrop()
 }))
 class Canvas extends React.Component {
@@ -75,18 +78,35 @@ class Canvas extends React.Component {
     window.removeEventListener('resize', this.handleWindowResize);
   }
 
+  componentWillReceiveProps(nextProps){
+    // Update the mask style if the active element is changed
+    if (this.props.activeElement !== nextProps.activeElement){
+      this.updateMaskStyle();
+    }
+  }
+
+  componentDidUpdate(prevProps){
+    // Update the mask style if the element data is changed
+    if (this.isElementActive() && !Immutable.is(this.props.elements, prevProps.elements)){
+      this.updateMaskStyle();
+    }
+  }
+
+  isElementActive(){
+    const {element, activeElement} = this.props;
+    return activeElement === element.get('id');
+  }
+
   render(){
     const {
       connectDropTarget,
       isOver,
-      canDrop,
-      activeElement,
-      element
+      canDrop
     } = this.props;
 
     const node = this.renderNode();
     const isDragOver = isOver && canDrop;
-    const isActive = activeElement === element.get('id');
+    const isActive = this.isElementActive();
 
     return connectDropTarget(
       <div className="canvas">
