@@ -19,7 +19,8 @@ class ElementItem extends React.Component {
   static propTypes = {
     elements: React.PropTypes.object.isRequired,
     element: React.PropTypes.object.isRequired,
-    selectedElement: React.PropTypes.string
+    activeElement: React.PropTypes.string,
+    selectElement: React.PropTypes.func.isRequired
   }
 
   constructor(props, context){
@@ -36,7 +37,7 @@ class ElementItem extends React.Component {
   }
 
   render(){
-    const {elements, element, selectedElement} = this.props;
+    const {elements, element, activeElement, selectElement} = this.props;
     const {expanded} = this.state;
 
     const id = element.get('id');
@@ -44,7 +45,7 @@ class ElementItem extends React.Component {
     const hasChildren = children.count() > 0;
 
     let classname = cx('element-item', {
-      'element-item--selected': selectedElement === element.get('id'),
+      'element-item--selected': activeElement === element.get('id'),
       'element-item--expanded': expanded
     });
 
@@ -73,7 +74,13 @@ class ElementItem extends React.Component {
             </DropdownMenu>
           </Dropdown>
         </div>
-        {expanded && <ElementList elements={elements} selectedElement={selectedElement} parent={id}/>}
+        {expanded && (
+          <ElementList
+            elements={elements}
+            activeElement={activeElement}
+            parent={id}
+            selectElement={selectElement}/>
+        )}
       </li>
     );
   }
@@ -81,8 +88,7 @@ class ElementItem extends React.Component {
   handleClick(e){
     e.preventDefault();
 
-    const {element} = this.props;
-    const {selectElement} = bindActions(ElementAction, this.context.flux);
+    const {element, selectElement} = this.props;
 
     selectElement(element.get('id'));
 
@@ -118,8 +124,8 @@ class ElementItem extends React.Component {
   deleteElement(e){
     e.preventDefault();
 
-    const {element} = this.props;
-    const {selectElement, deleteElement} = bindActions(ElementAction, this.context.flux);
+    const {element, selectElement} = this.props;
+    const {deleteElement} = bindActions(ElementAction, this.context.flux);
 
     selectElement(null);
     deleteElement(element.get('id'));

@@ -3,7 +3,7 @@ import Canvas from './Canvas';
 import ElementSidebar from './ElementSidebar';
 import * as ElementAction from '../../actions/ElementAction';
 import bindActions from '../../utils/bindActions';
-import {debounce} from 'lodash';
+import debounce from 'lodash/function/debounce';
 import ScreenToolbar from './ScreenToolbar';
 
 if (process.env.BROWSER){
@@ -21,12 +21,7 @@ class Screen extends React.Component {
     elements: React.PropTypes.object.isRequired,
     components: React.PropTypes.object.isRequired,
     editable: React.PropTypes.bool.isRequired,
-    selectedElement: React.PropTypes.string,
     selectedScreen: React.PropTypes.string.isRequired
-  }
-
-  static childContextTypes = {
-    updateElement: React.PropTypes.func.isRequired
   }
 
   constructor(props, context){
@@ -34,21 +29,13 @@ class Screen extends React.Component {
 
     this.state = {
       elements: this.props.elements,
-      updating: false
+      updating: false,
+      activeElement: this.props.selectedScreen
     };
 
     this.commitElementChange = debounce(this.commitElementChange.bind(this), DEBOUNCE_DELAY);
-  }
-
-  getChildContext(){
-    return {
-      updateElement: this.updateElement.bind(this)
-    };
-  }
-
-  componentWillUnmount(){
-    const {selectElement} = bindActions(ElementAction, this.context.flux);
-    selectElement(null);
+    this.updateElement = this.updateElement.bind(this);
+    this.selectElement = this.selectElement.bind(this);
   }
 
   componentWillReceiveProps(props){
@@ -58,35 +45,28 @@ class Screen extends React.Component {
   }
 
   render(){
+    const {elements, updating, activeCanvas, activeElement} = this.state;
+    const {selectedScreen, editable} = this.props;
+
     return (
       <div className="screen">
-        {this.renderCanvas()}
-        {this.renderSidebar()}
-        {this.renderToolbar()}
+        <div className="screen__canvas">
+          <Canvas {...this.props}
+            elements={elements}
+            element={elements.get(selectedScreen)}
+            activeElement={activeElement}
+            selectElement={this.selectElement}/>
+        </div>
+        {editable && (
+          <ElementSidebar {...this.props}
+            elements={elements}
+            updateElement={this.updateElement}
+            activeElement={activeElement}
+            selectElement={this.selectElement}/>
+        )}
+        <ScreenToolbar {...this.props} updating={updating}/>
       </div>
     );
-  }
-
-  renderCanvas(){
-    const {selectedScreen} = this.props;
-    const {elements} = this.state;
-
-    return (
-      <div className="screen__canvas">
-        <Canvas {...this.props} elements={elements} element={elements.get(selectedScreen)}/>
-      </div>
-    );
-  }
-
-  renderSidebar(){
-    const {editable} = this.props;
-    if (!editable) return;
-
-    return <ElementSidebar {...this.props} elements={this.state.elements}/>;
-  }
-
-  renderToolbar(){
-    return <ScreenToolbar {...this.props} updating={this.state.updating}/>;
   }
 
   updateElement(id, data){
@@ -115,6 +95,10 @@ class Screen extends React.Component {
       console.error(err);
       this.setState({updating: false});
     });
+  }
+
+  selectElement(id){
+    this.setState({activeElement: id});
   }
 }
 

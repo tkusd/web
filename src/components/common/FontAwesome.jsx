@@ -1,6 +1,6 @@
 import React from 'react';
 import cx from 'classnames';
-import {omit} from 'lodash';
+import omit from 'lodash/object/omit';
 
 if (process.env.BROWSER){
   require('font-awesome/css/font-awesome.css');

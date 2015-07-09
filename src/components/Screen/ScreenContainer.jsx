@@ -8,8 +8,7 @@ import pureRender from '../../decorators/pureRender';
 @connectToStores(['ElementStore', 'ComponentStore', 'ProjectStore'], (stores, props) => ({
   elements: stores.ElementStore.getElementsOfProject(props.params.projectID),
   components: stores.ComponentStore.getList(),
-  editable: stores.ProjectStore.isEditable(props.params.projectID),
-  selectedElement: stores.ElementStore.getSelectedElement()
+  editable: stores.ProjectStore.isEditable(props.params.projectID)
 }))
 @pureRender
 class ScreenContainer extends React.Component {

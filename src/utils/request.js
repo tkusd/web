@@ -1,5 +1,5 @@
 import fetch_ from 'isomorphic-fetch';
-import {merge} from 'lodash';
+import merge from 'lodash/object/merge';
 
 // Fix "Illegal invocation" error in Chrome
 // https://github.com/matthew-andrews/isomorphic-fetch/pull/20

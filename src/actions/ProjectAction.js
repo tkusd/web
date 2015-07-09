@@ -1,7 +1,8 @@
 import Actions from '../constants/Actions';
 import {api} from '../utils/request';
 import {parseJSON, dispatchEvent, filterError} from './common';
-import {assign, omit} from 'lodash';
+import assign from 'lodash/object/assign';
+import omit from 'lodash/object/omit';
 import qs from 'querystring';
 
 export function getProjectList(userID, options){

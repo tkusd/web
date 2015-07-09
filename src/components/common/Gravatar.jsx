@@ -1,6 +1,6 @@
 import React from 'react';
 import qs from 'querystring';
-import {omit} from 'lodash';
+import omit from 'lodash/object/omit';
 
 class Gravatar extends React.Component {
   static propTypes = {

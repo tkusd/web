@@ -6,14 +6,7 @@ class ElementStore extends CollectionStore {
   static handlers = {
     setElement: Actions.UPDATE_ELEMENT,
     setList: Actions.UPDATE_ELEMENT_LIST,
-    deleteElement: Actions.DELETE_ELEMENT,
-    selectElement: Actions.SELECT_ELEMENT
-  }
-
-  constructor(context){
-    super(context);
-
-    this.selectedElement = null;
+    deleteElement: Actions.DELETE_ELEMENT
   }
 
   getElement(id){
@@ -45,17 +38,6 @@ class ElementStore extends CollectionStore {
       });
     });
 
-    this.emitChange();
-  }
-
-  getSelectedElement(){
-    return this.selectedElement;
-  }
-
-  selectElement(id){
-    if (this.selectedElement === id) return;
-
-    this.selectedElement = id;
     this.emitChange();
   }
 }

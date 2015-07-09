@@ -8,17 +8,23 @@ if (process.env.BROWSER){
 class ElementList extends React.Component {
   static propTypes = {
     elements: React.PropTypes.object.isRequired,
-    selectedElement: React.PropTypes.string,
-    parent: React.PropTypes.string.isRequired
+    activeElement: React.PropTypes.string,
+    parent: React.PropTypes.string.isRequired,
+    selectElement: React.PropTypes.func.isRequired
   }
 
   render(){
-    const {elements, parent, selectedElement} = this.props;
+    const {elements, parent, activeElement, selectElement} = this.props;
 
     const list = elements
       .filter(item => item.get('element_id') === parent)
       .map((item, id) => (
-        <ElementItem key={id} elements={elements} element={item} selectedElement={selectedElement}/>
+        <ElementItem
+          key={id}
+          elements={elements}
+          element={item}
+          activeElement={activeElement}
+          selectElement={selectElement}/>
       )).toArray();
 
     return (

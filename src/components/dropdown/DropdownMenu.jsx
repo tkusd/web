@@ -1,6 +1,8 @@
 import React from 'react';
 import cx from 'classnames';
-import {assign, omit, throttle} from 'lodash';
+import assign from 'lodash/object/assign';
+import omit from 'lodash/object/omit';
+import throttle from 'lodash/function/throttle';
 
 if (process.env.BROWSER){
   require('../../styles/dropdown/DropdownMenu.styl');

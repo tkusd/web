@@ -1,7 +1,7 @@
 import Actions from '../constants/Actions';
 import {api} from '../utils/request';
 import {parseJSON, dispatchEvent, filterError} from './common';
-import {assign} from 'lodash';
+import assign from 'lodash/object/assign';
 import qs from 'querystring';
 
 export function createElement(projectID, payload){
@@ -65,8 +65,4 @@ export function deleteElement(id, payload){
     .then(() => {
       this.dispatch(Actions.DELETE_ELEMENT, id);
     });
-}
-
-export function selectElement(id){
-  this.dispatch(Actions.SELECT_ELEMENT, id);
 }

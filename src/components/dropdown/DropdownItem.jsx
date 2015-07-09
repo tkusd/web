@@ -1,6 +1,7 @@
 import React from 'react';
 import cx from 'classnames';
-import {assign, omit} from 'lodash';
+import assign from 'lodash/object/assign';
+import omit from 'lodash/object/omit';
 
 if (process.env.BROWSER){
   require('../../styles/dropdown/DropdownItem.styl');

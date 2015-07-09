@@ -1,15 +1,16 @@
 import React from 'react';
 import {DropTarget} from 'react-dnd';
-import cx from 'classnames';
 import ItemTypes from '../../constants/ItemTypes';
 import ElementTypes from '../../constants/ElementTypes';
-import {assign, throttle} from 'lodash';
+import assign from 'lodash/object/assign';
+import throttle from 'lodash/function/throttle';
 
 if (process.env.BROWSER){
   require('../../styles/Screen/Canvas.styl');
 }
 
-const THROTTLE_DELAY = 150;
+const THROTTLE_DELAY = 100;
+const RESIZE_AREA_SIZE = 4;
 
 function getComponentType(props){
   const {element, components} = props;
@@ -40,15 +41,12 @@ const spec = {
   canDrop: monitor.canDrop()
 }))
 class Canvas extends React.Component {
-  static contextTypes = {
-    updateElement: React.PropTypes.func.isRequired
-  }
-
   static propTypes = {
     elements: React.PropTypes.object.isRequired,
     element: React.PropTypes.object.isRequired,
-    selectedElement: React.PropTypes.string,
+    activeElement: React.PropTypes.string,
     components: React.PropTypes.object.isRequired,
+    selectElement: React.PropTypes.func.isRequired,
 
     // React DnD
     connectDropTarget: React.PropTypes.func.isRequired,
@@ -60,7 +58,7 @@ class Canvas extends React.Component {
     super(props, context);
 
     this.state = {
-      maskStyle: {}
+      rect: {}
     };
 
     this.handleWindowResize = throttle(this.handleWindowResize.bind(this), THROTTLE_DELAY, {
@@ -73,51 +71,107 @@ class Canvas extends React.Component {
     window.addEventListener('resize', this.handleWindowResize);
   }
 
-  componentWillUnmount(){
+  componeentWillUnmount(){
     window.removeEventListener('resize', this.handleWindowResize);
-  }
-
-  componentWillReceiveProps(){
-    this.updateMaskStyle();
   }
 
   render(){
     const {
       connectDropTarget,
-      canDrop,
       isOver,
-      selectedElement,
-      element,
-      components
+      canDrop,
+      activeElement,
+      element
     } = this.props;
 
-    const component = components.get(element.get('type'));
     const node = this.renderNode();
-    const isActive = canDrop && isOver;
-
-    let className = cx('canvas', {
-      'canvas--selected': selectedElement === element.get('id'),
-      'canvas--active': isActive
-    });
+    const isDragOver = isOver && canDrop;
+    const isActive = activeElement === element.get('id');
 
     return connectDropTarget(
-      <div className={className}>
+      <div className="canvas">
         {node}
-        <div className="canvas__mask" style={this.state.maskStyle}>
-          {component.get('resizable') && (
-            <div>
-              <div className="canvas__mask-n"/>
-              <div className="canvas__mask-ne"/>
-              <div className="canvas__mask-e"/>
-              <div className="canvas__mask-se"/>
-              <div className="canvas__mask-s"/>
-              <div className="canvas__mask-sw"/>
-              <div className="canvas__mask-w"/>
-              <div className="canvas__mask-nw"/>
-            </div>
-          )}
-        </div>
+        {isActive && this.renderResizeArea()}
+        {isDragOver && this.renderDragOverMask()}
       </div>
+    );
+  }
+
+  renderResizeArea(){
+    const {rect} = this.state;
+
+    return (
+      <div className="canvas__resize-area">
+        <div className="canvas__resize-n"
+          style={{
+            top: rect.top - RESIZE_AREA_SIZE / 2,
+            left: rect.left,
+            width: rect.width,
+            height: RESIZE_AREA_SIZE
+          }}/>
+        <div className="canvas__resize-e"
+          style={{
+            top: rect.top,
+            left: rect.right - RESIZE_AREA_SIZE / 2,
+            width: RESIZE_AREA_SIZE,
+            height: rect.height
+          }}/>
+        <div className="canvas__resize-s"
+          style={{
+            top: rect.bottom - RESIZE_AREA_SIZE / 2,
+            left: rect.left,
+            width: rect.width,
+            height: RESIZE_AREA_SIZE
+          }}/>
+        <div className="canvas__resize-w"
+          style={{
+            top: rect.top,
+            left: rect.left - RESIZE_AREA_SIZE / 2,
+            width: RESIZE_AREA_SIZE,
+            height: rect.height
+          }}/>
+        <div className="canvas__resize-ne"
+          style={{
+            top: rect.top - RESIZE_AREA_SIZE / 2,
+            left: rect.right - RESIZE_AREA_SIZE / 2,
+            width: RESIZE_AREA_SIZE,
+            height: RESIZE_AREA_SIZE
+          }}/>
+        <div className="canvas__resize-se"
+          style={{
+            top: rect.bottom - RESIZE_AREA_SIZE / 2,
+            left: rect.right - RESIZE_AREA_SIZE / 2,
+            width: RESIZE_AREA_SIZE,
+            height: RESIZE_AREA_SIZE
+          }}/>
+        <div className="canvas__resize-sw"
+          style={{
+            top: rect.bottom - RESIZE_AREA_SIZE / 2,
+            left: rect.left - RESIZE_AREA_SIZE / 2,
+            width: RESIZE_AREA_SIZE,
+            height: RESIZE_AREA_SIZE
+          }}/>
+        <div className="canvas__resize-nw"
+          style={{
+            top: rect.top - RESIZE_AREA_SIZE / 2,
+            left: rect.left - RESIZE_AREA_SIZE / 2,
+            width: RESIZE_AREA_SIZE,
+            height: RESIZE_AREA_SIZE
+          }}/>
+      </div>
+    );
+  }
+
+  renderDragOverMask(){
+    const {rect} = this.state;
+
+    return (
+      <div className="canvas__mask" style={{
+          top: rect.top,
+          left: rect.left,
+          width: rect.width,
+          height: rect.height
+        }}/>
     );
   }
 
@@ -145,7 +199,8 @@ class Canvas extends React.Component {
       // the object to do it.
       style: assign({}, element.get('styles')),
       className: 'canvas__' + element.get('type'),
-      ref: 'node'
+      ref: 'node',
+      onClick: this.handleNodeClick.bind(this)
     };
 
     let children = this.renderChildren();
@@ -177,25 +232,25 @@ class Canvas extends React.Component {
     }
   }
 
+  handleNodeClick(e){
+    e.preventDefault();
+    e.stopPropagation();
+
+    const {activeElement, element, selectElement} = this.props;
+
+    if (activeElement !== element.get('id')){
+      selectElement(element.get('id'));
+    }
+  }
+
   handleWindowResize(){
-    requestAnimationFrame(this.updateMaskStyle.bind(this));
+    this.updateMaskStyle();
   }
 
   updateMaskStyle(){
-    const rect = this.refs.node.getBoundingClientRect();
-
     this.setState({
-      maskStyle: {
-        top: rect.top,
-        left: rect.left,
-        width: rect.width,
-        height: rect.height
-      }
+      rect: this.refs.node.getBoundingClientRect()
     });
-  }
-
-  handleNodeResize(deltaWidth, deltaHeight){
-    //
   }
 }
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import {assign} from 'lodash';
+import assign from 'lodash/object/assign';
 import {Flux} from '../flux';
 
 function connectToStores(stores, getter){

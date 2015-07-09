@@ -25,7 +25,7 @@ class ScreenPalette extends React.Component {
   }
 
   render(){
-    const {elements, selectedScreen, project, editable} = this.props;
+    const {elements, selectedScreen, editable} = this.props;
 
     let screens;
 

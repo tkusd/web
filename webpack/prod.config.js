@@ -1,5 +1,5 @@
 import config from './config';
-import {merge} from 'lodash';
+import merge from 'lodash/object/merge';
 import webpack from 'webpack';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
 

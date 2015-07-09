@@ -1,6 +1,6 @@
-var _ = require('lodash');
+var merge = require('lodash/object/merge');
 
-module.exports = _.merge({}, require('./en'), {
+module.exports = merge({}, require('./en'), {
   common: {
     ok: '確定',
     cancel: '取消',

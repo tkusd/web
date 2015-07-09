@@ -1,85 +1,53 @@
 @import "nib"
 @import "../common"
 
-resize-area-size = 4px
-
-.canvas
-  overflow: hidden
-
-.canvas__mask
+$canvas-resize-area
   position: fixed
-  display: none
-  .canvas--active > &
-    background: rgba(color-accent, 0.5)
-    display: block
-  .canvas--selected > &
-    border: 1px solid color-accent
-    display: block
 
-$canvas-mask-resize-area
-  position: absolute
-
-.canvas__mask-n
-  @extend $canvas-mask-resize-area
-  top: resize-area-size * -0.5
-  left: resize-area-size
-  right: resize-area-size
-  height: resize-area-size
+.canvas__resize-n
+  @extend $canvas-resize-area
   cursor: n-resize
+  border-top: 2px solid color-accent
 
-.canvas__mask-e
-  @extend $canvas-mask-resize-area
-  top: resize-area-size
-  right: resize-area-size * -0.5
-  bottom: resize-area-size
-  width: resize-area-size
+.canvas__resize-e
+  @extend $canvas-resize-area
   cursor: e-resize
+  border-right: 2px solid color-accent
 
-.canvas__mask-s
-  @extend $canvas-mask-resize-area
-  bottom: resize-area-size * -0.5
-  left: resize-area-size
-  right: resize-area-size
-  height: resize-area-size
+.canvas__resize-s
+  @extend $canvas-resize-area
   cursor: s-resize
+  border-bottom: 2px solid color-accent
 
-.canvas__mask-w
-  @extend $canvas-mask-resize-area
-  top: resize-area-size
-  left: resize-area-size * -0.5
-  bottom: resize-area-size
-  width: resize-area-size
+.canvas__resize-w
+  @extend $canvas-resize-area
   cursor: w-resize
+  border-left: 2px solid color-accent
 
-$canvas-mask-resize-corner
-  @extend $canvas-mask-resize-area
-  width: resize-area-size
-  height: resize-area-size
+$canvas-resize-corner
+  @extend $canvas-resize-area
   background: color-accent
 
-.canvas__mask-ne
-  @extend $canvas-mask-resize-corner
-  top: resize-area-size * -0.5
-  right: resize-area-size * -0.5
+.canvas__resize-ne
+  @extend $canvas-resize-corner
   cursor: ne-resize
 
-.canvas__mask-se
-  @extend $canvas-mask-resize-corner
-  bottom: resize-area-size * -0.5
-  right: resize-area-size * -0.5
+.canvas__resize-se
+  @extend $canvas-resize-corner
   cursor: se-resize
 
-.canvas__mask-sw
-  @extend $canvas-mask-resize-corner
-  bottom: resize-area-size * -0.5
-  left: resize-area-size * -0.5
+.canvas__resize-sw
+  @extend $canvas-resize-corner
   cursor: sw-resize
 
-.canvas__mask-nw
-  @extend $canvas-mask-resize-corner
-  top: resize-area-size * -0.5
-  left: resize-area-size * -0.5
+.canvas__resize-nw
+  @extend $canvas-resize-corner
   cursor: nw-resize
+
+.canvas__mask
+  background: color-accent
+  opacity: 0.5
+  position: fixed
 
 .canvas__screen
   position: absolute

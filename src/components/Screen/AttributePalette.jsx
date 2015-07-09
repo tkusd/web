@@ -9,32 +9,32 @@ if (process.env.BROWSER){
 
 class AttributePalette extends React.Component {
   static contextTypes = {
-    flux: React.PropTypes.object.isRequired,
-    updateElement: React.PropTypes.func.isRequired
+    flux: React.PropTypes.object.isRequired
   }
 
   static propTypes = {
     components: React.PropTypes.object.isRequired,
     elements: React.PropTypes.object.isRequired,
-    selectedElement: React.PropTypes.string
+    activeElement: React.PropTypes.string,
+    updateElement: React.PropTypes.func.isRequired
   }
 
   constructor(props, context){
     super(props, context);
 
-    const {elements, selectedElement} = this.props;
+    const {elements, activeElement} = this.props;
 
     this.state = {
-      element: elements.get(selectedElement)
+      element: elements.get(activeElement)
     };
   }
 
   componentDidUpdate(prevProps){
-    const {elements, selectedElement} = this.props;
+    const {elements, activeElement} = this.props;
 
-    if (selectedElement !== prevProps.selectedElement){
+    if (activeElement !== prevProps.activeElement){
       this.setState({
-        element: elements.get(selectedElement)
+        element: elements.get(activeElement)
       });
 
       Object.keys(this.refs).forEach(key => {
@@ -247,7 +247,7 @@ class AttributePalette extends React.Component {
     obj[split[1]] = data.value;
     let newElement = element.set(split[0], obj);
 
-    this.context.updateElement(this.props.selectedElement, newElement);
+    this.props.updateElement(this.props.activeElement, newElement);
   }
 
   handleSubmit(e){

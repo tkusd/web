@@ -1,7 +1,8 @@
 import React from 'react';
 import Input from './Input';
 import Form from './Form';
-import {omit} from 'lodash';
+import omit from 'lodash/object/omit';
+
 function noop(){}
 
 class InlineInput extends React.Component {

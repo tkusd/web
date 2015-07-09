@@ -1,5 +1,5 @@
 import config from './config';
-import {merge} from 'lodash';
+import merge from 'lodash/object/merge';
 import webpack from 'webpack';
 import notifyStats from './utils/notify-stats';
 import minimist from 'minimist';

@@ -18,8 +18,6 @@ export default keyMirror({
   UPDATE_ELEMENT_LIST: null,
   DELETE_ELEMENT: null,
 
-  SELECT_ELEMENT: null,
-
   OPEN_MODAL: null,
   CLOSE_MODAL: null,
   KILL_MODAL: null

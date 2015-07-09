@@ -35,7 +35,7 @@ class NewProjectModal extends React.Component {
 
   render(){
     const {error} = this.state;
-    const {trigger, closeModal} = this.props;
+    const {closeModal} = this.props;
 
     return (
       <Modal title={<Translation id="profile.new_project"/>} onDismiss={closeModal}>
