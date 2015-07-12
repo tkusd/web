@@ -5,6 +5,7 @@ import * as ElementAction from '../../actions/ElementAction';
 import bindActions from '../../utils/bindActions';
 import debounce from 'lodash/function/debounce';
 import ScreenToolbar from './ScreenToolbar';
+import Immutable from 'immutable';
 
 if (process.env.BROWSER){
   require('../../styles/Screen/Screen.styl');
@@ -31,7 +32,8 @@ class Screen extends React.Component {
     this.state = {
       elements: this.props.elements,
       updating: false,
-      activeElement: null
+      activeElement: null,
+      changed: false
     };
 
     this.commitElementChange = debounce(this.commitElementChange.bind(this), DEBOUNCE_DELAY);
@@ -53,7 +55,7 @@ class Screen extends React.Component {
   }
 
   render(){
-    const {elements, updating, activeElement} = this.state;
+    const {elements, updating, activeElement, changed} = this.state;
     const {selectedScreen, editable} = this.props;
 
     return (
@@ -72,21 +74,26 @@ class Screen extends React.Component {
             activeElement={activeElement}
             selectElement={this.selectElement}/>
         )}
-        <ScreenToolbar {...this.props} updating={updating}/>
+        <ScreenToolbar {...this.props} updating={updating} changed={changed}/>
       </div>
     );
   }
 
   updateElement(id, data){
+    let newElements = this.state.elements.set(id, data);
+
     this.setState({
-      elements: this.state.elements.set(id, data)
+      elements: newElements,
+      changed: !Immutable.is(this.props.elements, newElements)
     });
 
-    this.commitElementChange(id);
+    setTimeout(() => {
+      this.commitElementChange(id);
+    }, 0);
   }
 
   commitElementChange(id){
-    if (this.state.updating) return;
+    if (this.state.updating || !this.state.changed) return;
 
     const {updateElement} = bindActions(ElementAction, this.context.flux);
     const element = this.state.elements.get(id);
@@ -94,11 +101,14 @@ class Screen extends React.Component {
     this.setState({updating: true});
 
     updateElement(id, {
-      attributes: element.get('attributes'),
-      styles: element.get('styles'),
+      attributes: element.get('attributes').toObject(),
+      styles: element.get('styles').toObject(),
       name: element.get('name')
     }).then(() => {
-      this.setState({updating: false});
+      this.setState({
+        updating: false,
+        changed: false
+      });
     }).catch(err => {
       console.error(err);
       this.setState({updating: false});

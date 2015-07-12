@@ -1,6 +1,13 @@
 import CollectionStore from './CollectionStore';
 import Actions from '../constants/Actions';
-import {Map} from 'immutable';
+import Immutable from 'immutable';
+
+function fromElementObject(key, value){
+  if (!key) return value.toMap();
+
+  let isIndexed = Immutable.Iterable.isIndexed(value);
+  return isIndexed ? value.toList() : value.toMap();
+}
 
 class ElementStore extends CollectionStore {
   static handlers = {
@@ -14,7 +21,9 @@ class ElementStore extends CollectionStore {
   }
 
   setElement(payload){
-    this.set(payload.id, payload);
+    let map = Immutable.fromJS(payload, fromElementObject);
+    this.data = this.data.set(payload.id, map);
+    this.emitChange();
   }
 
   deleteElement(id){
@@ -46,11 +55,21 @@ class ElementStore extends CollectionStore {
   setList(payload){
     this.data = this.data.withMutations(data => {
       payload.forEach(item => {
-        data.set(item.id, Map(item));
+        let map = Immutable.fromJS(item, fromElementObject);
+        data.set(item.id, map);
       });
     });
 
     this.emitChange();
+  }
+
+  rehydrate(state){
+    this.data = this.data.withMutations(function(data){
+      state.data.forEach(item => {
+        let map = Immutable.fromJS(item, fromElementObject);
+        data.set(item.id, map);
+      });
+    });
   }
 }
 

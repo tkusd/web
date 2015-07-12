@@ -1,6 +1,6 @@
 import React from 'react';
 import Palette from '../Project/Palette';
-import {LayoutBox, SizeInput} from '../form';
+import {LayoutBox, SizeInput, ColorPicker} from '../form';
 import Translation from '../i18n/Translation';
 import AttributeSection from './AttributeSection';
 
@@ -31,19 +31,9 @@ class AttributePalette extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const {activeElement} = this.props;
-
-    if (activeElement !== nextProps.activeElement) {
-      this.setState({
-        element: nextProps.elements.get(nextProps.activeElement)
-      });
-
-      setTimeout(() => {
-        Object.keys(this.refs).forEach(key => {
-          this.refs[key].reset();
-        });
-      }, 0);
-    }
+    this.setState({
+      element: nextProps.elements.get(nextProps.activeElement)
+    });
   }
 
   render(){
@@ -77,6 +67,7 @@ class AttributePalette extends React.Component {
 
   renderDimensionSection(){
     const {element} = this.state;
+    const styles = element.get('styles');
 
     return (
       <AttributeSection title="Dimensions">
@@ -84,13 +75,13 @@ class AttributePalette extends React.Component {
           <div className="attribute-palette__half">
             <SizeInput
               label="Width"
-              value={element.get('styles').width}
+              value={styles.get('width')}
               onChange={this.handleInputChange.bind(this, 'styles.width')}/>
           </div>
           <div className="attribute-palette__half">
             <SizeInput
               label="Height"
-              value={element.get('styles').height}
+              value={styles.get('height')}
               onChange={this.handleInputChange.bind(this, 'styles.height')}/>
           </div>
         </div>
@@ -100,15 +91,16 @@ class AttributePalette extends React.Component {
 
   renderMarginSection(){
     const {element} = this.state;
+    const styles = element.get('styles');
 
     return (
       <AttributeSection title="Margin">
         <LayoutBox
           value={{
-            top: element.get('styles').marginTop,
-            left: element.get('styles').marginLeft,
-            right: element.get('styles').marginRight,
-            bottom: element.get('styles').marginBottom
+            top: styles.get('marginTop'),
+            left: styles.get('marginLeft'),
+            right: styles.get('marginRight'),
+            bottom: styles.get('marginBottom')
           }}
           onChange={this.handleBoxChange.bind(this, 'styles.margin')}/>
       </AttributeSection>
@@ -117,15 +109,16 @@ class AttributePalette extends React.Component {
 
   renderPaddingSection(){
     const {element} = this.state;
+    const styles = element.get('styles');
 
     return (
       <AttributeSection title="Padding">
         <LayoutBox
           value={{
-            top: element.get('styles').paddingTop,
-            left: element.get('styles').paddingLeft,
-            right: element.get('styles').paddingRight,
-            bottom: element.get('styles').paddingBottom
+            top: styles.get('paddingTop'),
+            left: styles.get('paddingLeft'),
+            right: styles.get('paddingRight'),
+            bottom: styles.get('paddingBottom')
           }}
           onChange={this.handleBoxChange.bind(this, 'styles.padding')}/>
       </AttributeSection>
@@ -134,13 +127,28 @@ class AttributePalette extends React.Component {
 
   renderTypographySection(){
     const {element} = this.state;
+    const styles = element.get('styles');
 
     return (
       <AttributeSection title="Typography">
-        <SizeInput
-          label="Size"
-          value={element.get('styles').fontSize}
-          onChange={this.handleInputChange.bind(this, 'styles.fontSize')}/>
+        <div className="attribute-palette__half-wrap">
+          <div className="attribute-palette__half">
+            <SizeInput
+              label="Size"
+              value={styles.get('fontSize')}
+              onChange={this.handleInputChange.bind(this, 'styles.fontSize')}/>
+          </div>
+          <div className="attribute-palette__half">
+            <SizeInput
+              label="Line height"
+              value={styles.get('lineHeight')}
+              onChange={this.handleInputChange.bind(this, 'styles.lineHeight')}/>
+          </div>
+        </div>
+        <ColorPicker
+          label="Color"
+          value={styles.get('color')}
+          onChange={this.handleInputChange.bind(this, 'styles.color')}/>
       </AttributeSection>
     );
   }
@@ -148,8 +156,7 @@ class AttributePalette extends React.Component {
   handleInputChange(key, data) {
     const {element} = this.state;
     const split = key.split('.');
-    let obj = element.get(split[0]);
-    obj[split[1]] = data;
+    let obj = element.get(split[0]).set(split[1], data);
     let newElement = element.set(split[0], obj);
 
     this.props.updateElement(this.props.activeElement, newElement);
@@ -161,7 +168,7 @@ class AttributePalette extends React.Component {
     let obj = element.get(split[0]);
 
     Object.keys(data).forEach(key => {
-      obj[split[1] + key[0].toUpperCase() + key.substring(1)] = data[key];
+      obj = obj.set(split[1] + key[0].toUpperCase() + key.substring(1), data[key]);
     });
 
     let newElement = element.set(split[0], obj);

@@ -2,7 +2,6 @@ import React from 'react';
 import {DropTarget} from 'react-dnd';
 import ItemTypes from '../../constants/ItemTypes';
 import ElementTypes from '../../constants/ElementTypes';
-import assign from 'lodash/object/assign';
 import throttle from 'lodash/function/throttle';
 import Immutable from 'immutable';
 
@@ -215,9 +214,7 @@ class Canvas extends React.Component {
     const {element} = this.props;
 
     let props = {
-      // It's kinda weird that the style can't be mutated and I have to clone
-      // the object to do it.
-      style: assign({}, element.get('styles')),
+      style: element.get('styles').toObject(),
       className: 'canvas__' + element.get('type'),
       ref: 'node',
       onClick: this.handleNodeClick.bind(this)
@@ -230,7 +227,7 @@ class Canvas extends React.Component {
         return <div {...props}>{children}</div>;
 
       case ElementTypes.text:
-        return <div {...props}>{element.get('attributes').text}</div>;
+        return <div {...props}>{element.get('attributes').get('text')}</div>;
 
       case ElementTypes.layout:
         return <div {...props}>{children}</div>;

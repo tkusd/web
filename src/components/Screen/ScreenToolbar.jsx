@@ -8,7 +8,8 @@ if (process.env.BROWSER){
 class ScreenToolbar extends React.Component {
   static propTypes = {
     editable: React.PropTypes.bool.isRequired,
-    updating: React.PropTypes.bool.isRequired
+    updating: React.PropTypes.bool.isRequired,
+    changed: React.PropTypes.bool.isRequired
   }
 
   render(){
@@ -20,16 +21,24 @@ class ScreenToolbar extends React.Component {
   }
 
   renderStatus(){
-    const {editable, updating} = this.props;
+    const {editable, updating, changed} = this.props;
     if (!editable) return;
+
+    let status = 'Saved';
+
+    if (updating){
+      status = (
+        <span>
+          <FontAwesome icon="spinner" spin/>Saving...
+        </span>
+      );
+    } else if (changed){
+      status = 'Unsaved';
+    }
 
     return (
       <div className="screen-toolbar__status">
-        {updating ? (
-          <span>
-            <FontAwesome icon="spinner" spin/>Saving...
-          </span>
-        ) : 'Saved'}
+        {status}
       </div>
     );
   }

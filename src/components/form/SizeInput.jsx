@@ -1,6 +1,6 @@
 import React from 'react';
-import throttle from 'lodash/function/throttle';
 import cx from 'classnames';
+import NumberInput from './NumberInput';
 
 if (process.env.BROWSER){
   require('../../styles/form/SizeInput.styl');
@@ -8,11 +8,7 @@ if (process.env.BROWSER){
 
 function noop(){}
 
-const THROTTLE_DELAY = 50;
-
-const PIXEL_REGEX = /^(\d+)px$/;
-const EM_REGEX = /^(\d+)em$/;
-const PERCENT_REGEX = /^(\d+)%$/;
+const UNIT_REGEX = /^(\d+)(px|pt|em|%)$/;
 
 class SizeInput extends React.Component {
   static propTypes = {
@@ -37,9 +33,6 @@ class SizeInput extends React.Component {
 
     this.state = this.parseRawValue(this.props.value != null ? this.props.value : this.props.initialValue);
     this.handleInputChange = this.handleInputChange.bind(this);
-    this.handleInputKeyDown = throttle(this.handleInputKeyDown.bind(this), THROTTLE_DELAY, {
-      leading: true
-    });
     this.handleSelectChange = this.handleSelectChange.bind(this);
   }
 
@@ -59,15 +52,10 @@ class SizeInput extends React.Component {
 
     if (value === 'auto'){
       data.unit = 'auto';
-    } else if (PIXEL_REGEX.test(value)){
-      data.value = Number(value.match(PIXEL_REGEX)[1]);
-      data.unit = 'px';
-    } else if (EM_REGEX.test(value)){
-      data.value = Number(value.match(EM_REGEX)[1]);
-      data.unit = 'em';
-    } else if (PERCENT_REGEX.test(value)){
-      data.value = Number(value.match(PERCENT_REGEX)[1]);
-      data.unit = '%';
+    } else if (UNIT_REGEX.test(value)){
+      let match = value.match(UNIT_REGEX);
+      data.value = Number(match[1]);
+      data.unit = match[2];
     }
 
     return data;
@@ -84,11 +72,10 @@ class SizeInput extends React.Component {
         <label>
           {label && <span className="size-input__label">{label}</span>}
           <div className="size-input__field">
-            <input
+            <NumberInput
               className="size-input__value"
               value={this.state.value}
               onChange={this.handleInputChange}
-              onKeyDown={this.handleInputKeyDown}
               min={this.props.min}
               max={this.props.max}/>
             <select
@@ -98,6 +85,7 @@ class SizeInput extends React.Component {
               <option value=""></option>
               <option value="auto">auto</option>
               <option value="px">px</option>
+              <option value="pt">pt</option>
               <option value="em">em</option>
               <option value="%">%</option>
             </select>
@@ -115,6 +103,8 @@ class SizeInput extends React.Component {
   getValue(){
     const {value, unit} = this.state;
 
+    if (!unit) return;
+
     if (this.isValueNeeded()){
       return value + unit;
     } else {
@@ -123,7 +113,6 @@ class SizeInput extends React.Component {
   }
 
   setValue(value){
-    const {min, max} = this.props;
     let newState = {};
 
     switch (typeof value){
@@ -140,11 +129,6 @@ class SizeInput extends React.Component {
         break;
     }
 
-    if (typeof newState.value === 'number'){
-      if (typeof min === 'number' && newState.value < min) newState.value = min;
-      if (typeof max === 'number' && newState.value > max) newState.value = max;
-    }
-
     this.setState(newState);
 
     setTimeout(() => {
@@ -152,42 +136,16 @@ class SizeInput extends React.Component {
     }, 0);
   }
 
-  handleInputChange(e){
+  handleInputChange(value){
     if (!this.isValueNeeded()) return;
 
-    this.setValue({
-      value: Number(e.currentTarget.value)
-    });
-  }
-
-  handleInputKeyDown(e){
-    if (!this.isValueNeeded()) return;
-
-    switch (e.keyCode){
-      case 38: // up
-        this.increase();
-        break;
-
-      case 40: // down
-        this.decrease();
-        break;
-    }
+    this.setValue({value});
   }
 
   handleSelectChange(e){
     this.setValue({
       unit: e.currentTarget.value
     });
-  }
-
-  increase(){
-    const {value} = this.state;
-    this.setValue({value: value ? value + 1 : 1});
-  }
-
-  decrease(){
-    const {value} = this.state;
-    this.setValue({value: value ? value - 1 : -1});
   }
 }
 
