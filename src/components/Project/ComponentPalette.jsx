@@ -12,7 +12,7 @@ class ComponentPalette extends React.Component {
     const {components} = this.props;
 
     let list = components
-      .filter(item => !item.get('hide'))
+      .filter(item => !item.get('hidden'))
       .map((item, i) => (
         <ComponentItem {...this.props} component={item} key={i}/>
       )).toArray();

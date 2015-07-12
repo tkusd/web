@@ -10,7 +10,8 @@ if (process.env.BROWSER){
   require('../../styles/Screen/Screen.styl');
 }
 
-const DEBOUNCE_DELAY = 2000;
+// Save automatically every 5 secs
+const DEBOUNCE_DELAY = 5000;
 
 class Screen extends React.Component {
   static contextTypes = {
@@ -30,7 +31,7 @@ class Screen extends React.Component {
     this.state = {
       elements: this.props.elements,
       updating: false,
-      activeElement: this.props.selectedScreen
+      activeElement: null
     };
 
     this.commitElementChange = debounce(this.commitElementChange.bind(this), DEBOUNCE_DELAY);
@@ -42,10 +43,17 @@ class Screen extends React.Component {
     this.setState({
       elements: props.elements
     });
+
+    // Reset the active element when the screen changed
+    if (this.props.selectedScreen !== props.selectedScreen){
+      this.setState({
+        activeElement: null
+      });
+    }
   }
 
   render(){
-    const {elements, updating, activeCanvas, activeElement} = this.state;
+    const {elements, updating, activeElement} = this.state;
     const {selectedScreen, editable} = this.props;
 
     return (

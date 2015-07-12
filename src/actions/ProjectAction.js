@@ -40,7 +40,7 @@ export function getProject(id){
     .then(dispatchEvent(this, Actions.UPDATE_PROJECT));
 }
 
-export function getFullProject(id, options){
+export function getFullProject(id, options = {}){
   options = assign({
     flat: true
   }, options);

@@ -2,14 +2,15 @@ import BaseStore from './BaseStore';
 import {Map} from 'immutable';
 import ElementTypes from '../constants/ElementTypes';
 
-const COMPONENTS = {
-  [ElementTypes.screen]: {
-    hide: true,
+const COMPONENTS = [
+  {
+    type: ElementTypes.screen,
+    hidden: true,
     container: true,
     resizable: false
   },
-
-  [ElementTypes.text]: {
+  {
+    type: ElementTypes.text,
     resizable: true,
     attributes: {
       text: {
@@ -18,32 +19,32 @@ const COMPONENTS = {
       }
     }
   },
-
-  [ElementTypes.layout]: {
+  {
+    type: ElementTypes.layout,
     container: true,
     resizable: true
   },
-
-  [ElementTypes.button]: {
+  {
+    type: ElementTypes.button,
     container: true,
     resizable: true
   },
-
-  [ElementTypes.input]: {
+  {
+    type: ElementTypes.input,
     resizable: true
   },
-
-  [ElementTypes.link]: {
-    container: true,
+  {
+    type: ElementTypes.link,
     resizable: true,
+    container: true,
     attributes: {
       href: {
         type: 'text'
       }
     }
   },
-
-  [ElementTypes.image]: {
+  {
+    type: ElementTypes.image,
     resizable: true,
     attributes: {
       src: {
@@ -51,24 +52,21 @@ const COMPONENTS = {
       }
     }
   },
-
-  [ElementTypes.list]: {
+  {
+    type: ElementTypes.list,
     resizable: true
   }
-};
+];
 
 class ComponentStore extends BaseStore {
   constructor(context){
     super(context);
 
-    let data = {};
-
-    Object.keys(COMPONENTS).forEach(type => {
-      data[type] = Map(COMPONENTS[type])
-        .set('type', type);
+    this.data = Map().withMutations(data => {
+      COMPONENTS.forEach(item => {
+        data.set(item.type, Map(item));
+      });
     });
-
-    this.data = Map(data);
   }
 
   shouldDehydrate(){

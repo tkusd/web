@@ -20,6 +20,8 @@ export function length(min, max, message){
   }
 
   return function length(input, value){
+    if (value == null) return;
+
     if (value.length < min || (max && value.length > max)){
       return message;
     }
@@ -36,4 +38,24 @@ export function url(message='URL is invalid'){
   return function url(input, value){
     if (!isURL(value)) return message;
   };
+}
+
+export function min(num, message) {
+  //
+}
+
+export var gte = min;
+
+export function max(num, message) {
+  //
+}
+
+export var lte = max;
+
+export function lt(num, message) {
+  //
+}
+
+export function gt(num, message) {
+  //
 }

@@ -1,0 +1,41 @@
+@import "nib"
+@import "../common"
+@import "./Input"
+
+unit-width = 30px
+
+.size-input
+  @extend .input
+
+.size-input__label
+  @extend .input__label
+
+.size-input__field
+  position: relative
+
+.size-input__value
+  @extend .input__field
+  display: none
+  &:focus
+    border-bottom-color: color-accent
+  .size-input--full &
+    display: block
+
+.size-input__unit
+  color: inherit
+  font-size: inherit
+  font-family: inherit
+  appearance: initial
+  outline: none
+  background: none
+  border: none
+  border-bottom: 2px solid color-divider
+  border-radius: 0
+  padding-bottom: padding-small
+  width: 100%
+  .size-input--full &
+    position: absolute
+    top: 0
+    right: 0
+    width: unit-width
+    border-bottom: none

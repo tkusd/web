@@ -28,7 +28,8 @@ class Input extends React.Component {
     type: React.PropTypes.string,
     minLength: React.PropTypes.number,
     maxLength: React.PropTypes.number,
-    initialValue: React.PropTypes.any
+    initialValue: React.PropTypes.any,
+    value: React.PropTypes.any
   }
 
   static defaultProps = {
@@ -70,12 +71,13 @@ class Input extends React.Component {
   }
 
   componentWillMount(){
-    this.setValue(this.props.initialValue || '');
+    this.setValue(this.props.value || this.props.initialValue);
   }
 
-  componentWillUpdate(nextProps){
-    if (nextProps.initialValue !== this.props.initialValue){
-      this.setValue(nextProps.initialValue || '');
+  componentWillReceiveProps(nextProps){
+    if (nextProps.hasOwnProperty('value')){
+      let newState = this.checkData(nextProps.value);
+      this.setValue(newState);
     }
   }
 

@@ -46,12 +46,14 @@ class DeleteScreenModal extends React.Component {
   handleSubmit(e){
     e.preventDefault();
 
-    const {element} = this.props;
+    const {element, closeModal} = this.props;
     const {deleteElement} = bindActions(ElementAction, this.context.flux);
 
     // Redirect to the project page before deleting the element to avoid errors
     this.context.router.transitionTo('/projects/' + element.get('project_id'));
-    deleteElement(element.get('id'));
+    deleteElement(element.get('id')).then(() => {
+      closeModal();
+    });
   }
 }
 

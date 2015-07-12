@@ -31,7 +31,7 @@ class ModalPortal extends React.Component {
 
   componentWillUnmount(){
     document.removeEventListener('keydown', this.handleKeyDown);
-    if (this.isActive()) this.close();
+    this.close();
   }
 
   render(){
@@ -68,11 +68,8 @@ class ModalPortal extends React.Component {
 
     const {closeModal} = bindActions(ModalAction, this.context.flux);
 
-    this.setState({
-      id: -1
-    });
-
     closeModal(this.state.id);
+    this.setState({id: -1});
   }
 
   toggle(){
@@ -91,6 +88,7 @@ class ModalPortal extends React.Component {
 
   handleTriggerClick(e){
     e.preventDefault();
+    e.stopPropagation();
     this.toggle();
   }
 }

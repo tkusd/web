@@ -1,8 +1,8 @@
 import Actions from '../constants/Actions';
 import {api} from '../utils/request';
 import {parseJSON, dispatchEvent, filterError} from './common';
-import assign from 'lodash/object/assign';
 import qs from 'querystring';
+import assign from 'lodash/object/assign';
 
 export function createElement(projectID, payload){
   return api(`projects/${projectID}/elements`, {

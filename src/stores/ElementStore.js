@@ -18,8 +18,18 @@ class ElementStore extends CollectionStore {
   }
 
   deleteElement(id){
-    this.remove(id);
-    // TODO: Remove all child elements
+    this.data = this.data.withMutations(data => {
+      this.deleteChildElement(data, id);
+    });
+
+    this.emitChange();
+  }
+
+  deleteChildElement(data, id){
+    data.remove(id);
+
+    data.filter(item => item.get('element_id') === id)
+      .forEach((item, id) => this.deleteChildElement(data, id));
   }
 
   deleteElementsOfProject(id){
@@ -28,7 +38,9 @@ class ElementStore extends CollectionStore {
   }
 
   getElementsOfProject(id){
-    return this.data.filter(item => item.get('project_id') === id);
+    return this.data
+      .filter(item => item.get('project_id') === id)
+      .sort((a, b) => a.get('order_id') - b.get('order_id'));
   }
 
   setList(payload){

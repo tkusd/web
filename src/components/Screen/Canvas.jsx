@@ -268,6 +268,8 @@ class Canvas extends React.Component {
   }
 
   updateMaskStyle(){
+    if (!this.refs.node) return;
+
     this.setState({
       rect: this.refs.node.getBoundingClientRect()
     });

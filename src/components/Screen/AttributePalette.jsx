@@ -1,7 +1,8 @@
 import React from 'react';
 import Palette from '../Project/Palette';
-import {Form, Input} from '../form';
+import {LayoutBox, SizeInput} from '../form';
 import Translation from '../i18n/Translation';
+import AttributeSection from './AttributeSection';
 
 if (process.env.BROWSER){
   require('../../styles/Screen/AttributePalette.styl');
@@ -29,17 +30,19 @@ class AttributePalette extends React.Component {
     };
   }
 
-  componentDidUpdate(prevProps){
-    const {elements, activeElement} = this.props;
+  componentWillReceiveProps(nextProps) {
+    const {activeElement} = this.props;
 
-    if (activeElement !== prevProps.activeElement){
+    if (activeElement !== nextProps.activeElement) {
       this.setState({
-        element: elements.get(activeElement)
+        element: nextProps.elements.get(nextProps.activeElement)
       });
 
-      Object.keys(this.refs).forEach(key => {
-        this.refs[key].reset();
-      });
+      setTimeout(() => {
+        Object.keys(this.refs).forEach(key => {
+          this.refs[key].reset();
+        });
+      }, 0);
     }
   }
 
@@ -63,195 +66,106 @@ class AttributePalette extends React.Component {
     }
 
     return (
-      <Form className="attribute-palette">
-        <Input
-          name="width"
-          type="number"
-          label="Width"
-          initialValue={element.get('styles').width}
-          min={0}
-          onChange={this.handleInputChange.bind(this, 'styles.width')}/>
-        <Input
-          name="height"
-          type="number"
-          label="Height"
-          initialValue={element.get('styles').height}
-          min={0}
-          onChange={this.handleInputChange.bind(this, 'styles.height')}/>
-        <Input
-          name="marginLeft"
-          type="number"
-          label="Margin (left)"
-          initialValue={element.get('styles').marginLeft}
-          onChange={this.handleInputChange.bind(this, 'styles.marginLeft')}/>
-        <Input
-          name="marginRight"
-          type="number"
-          label="Margin (right)"
-          initialValue={element.get('styles').marginRight}
-          onChange={this.handleInputChange.bind(this, 'styles.marginRight')}/>
-        <Input
-          name="marginTop"
-          type="number"
-          label="Margin (top)"
-          initialValue={element.get('styles').marginTop}
-          onChange={this.handleInputChange.bind(this, 'styles.marginTop')}/>
-        <Input
-          name="marginBottom"
-          type="number"
-          label="Margin (bottom)"
-          initialValue={element.get('styles').marginBottom}
-          onChange={this.handleInputChange.bind(this, 'styles.marginBottom')}/>
-        <Input
-          name="paddingLeft"
-          type="number"
-          label="Padding (left)"
-          initialValue={element.get('styles').paddingLeft}
-          min={0}
-          onChange={this.handleInputChange.bind(this, 'styles.paddingLeft')}/>
-        <Input
-          name="paddingRight"
-          type="number"
-          label="Padding (right)"
-          initialValue={element.get('styles').paddingRight}
-          min={0}
-          onChange={this.handleInputChange.bind(this, 'styles.paddingRight')}/>
-        <Input
-          name="paddingTop"
-          type="number"
-          label="Padding (top)"
-          initialValue={element.get('styles').paddingTop}
-          min={0}
-          onChange={this.handleInputChange.bind(this, 'styles.paddingTop')}/>
-        <Input
-          name="paddingBottom"
-          type="number"
-          label="Padding (bottom)"
-          initialValue={element.get('styles').paddingBottom}
-          min={0}
-          onChange={this.handleInputChange.bind(this, 'styles.paddingBottom')}/>
-      </Form>
+      <div className="attribute-palette">
+        {this.renderDimensionSection()}
+        {this.renderMarginSection()}
+        {this.renderPaddingSection()}
+        {this.renderTypographySection()}
+      </div>
     );
-/*
-    return (
-      <Form className="attribute-palette" onSubmit={this.handleSubmit}>
-        <section className="attribute-palette__section">
-          <div className="attribute-palette__half-wrap">
-            <div className="attribute-palette__half">
-              <Input
-                name="width"
-                type="number"
-                ref="width"
-                label={<Translation id="project.width"/>}
-                initialValue={element.get('styles').width}
-                min={0}/>
-            </div>
-            <div className="attribute-palette__half">
-              <Input
-                name="height"
-                type="number"
-                ref="height"
-                label={<Translation id="project.height"/>}
-                initialValue={element.get('styles').height}
-                min={0}/>
-            </div>
-          </div>
-        </section>
-        <section className="attribute-palette__section">
-          <h4 className="attribute-palette__section-title">
-            <Translation id="project.position"/>
-          </h4>
-          <Input
-            name="position"
-            type="select"
-            ref="position"
-            initialValue={element.get('styles').position}>
-            <option value="">
-              <Translation id="project.default"/>
-            </option>
-            <option value="relative">
-              <Translation id="project.position_relative"/>
-            </option>
-            <option value="absolute">
-              <Translation id="project.position_absolute"/>
-            </option>
-            <option value="fixed">
-              <Translation id="project.position_fixed"/>
-            </option>
-          </Input>
-          <div className="attribute-palette__half-wrap">
-            <div className="attribute-palette__half-center">
-              <Input
-                name="top"
-                type="number"
-                ref="top"
-                label={<Translation id="project.top"/>}
-                initialValue={element.get('styles').top}/>
-            </div>
-          </div>
-          <div className="attribute-palette__half-wrap">
-            <div className="attribute-palette__half">
-              <Input
-                name="left"
-                type="number"
-                ref="left"
-                label={<Translation id="project.left"/>}
-                initialValue={element.get('styles').left}/>
-            </div>
-            <div className="attribute-palette__half">
-              <Input
-                name="right"
-                type="number"
-                ref="right"
-                label={<Translation id="project.right"/>}
-                initialValue={element.get('styles').right}/>
-            </div>
-          </div>
-          <div className="attribute-palette__half-wrap">
-            <div className="attribute-palette__half-center">
-              <Input
-                name="bottom"
-                type="number"
-                ref="bottom"
-                label={<Translation id="project.bottom"/>}
-                initialValue={element.get('styles').bottom}/>
-            </div>
-          </div>
-        </section>
-        <section className="attribute-palette__section">
-          <h4 className="attribute-palette__section-title">
-            <Translation id="project.style"/>
-          </h4>
-          <Input
-            name="opacity"
-            type="text"
-            ref="opacity"
-            label={<Translation id="project.opacity"/>}
-            initialValue={element.get('opacity')}/>
-        </section>
-        <div className="attribute-palette__btn-wrap">
-          <button className="attribute-palette__save">
-            <Translation id="common.update"/>
-          </button>
-        </div>
-      </Form>
-    );*/
   }
 
-  handleInputChange(key, data){
-    if (data.error) return;
+  renderDimensionSection(){
+    const {element} = this.state;
 
+    return (
+      <AttributeSection title="Dimensions">
+        <div className="attribute-palette__half-wrap">
+          <div className="attribute-palette__half">
+            <SizeInput
+              label="Width"
+              value={element.get('styles').width}
+              onChange={this.handleInputChange.bind(this, 'styles.width')}/>
+          </div>
+          <div className="attribute-palette__half">
+            <SizeInput
+              label="Height"
+              value={element.get('styles').height}
+              onChange={this.handleInputChange.bind(this, 'styles.height')}/>
+          </div>
+        </div>
+      </AttributeSection>
+    );
+  }
+
+  renderMarginSection(){
+    const {element} = this.state;
+
+    return (
+      <AttributeSection title="Margin">
+        <LayoutBox
+          value={{
+            top: element.get('styles').marginTop,
+            left: element.get('styles').marginLeft,
+            right: element.get('styles').marginRight,
+            bottom: element.get('styles').marginBottom
+          }}
+          onChange={this.handleBoxChange.bind(this, 'styles.margin')}/>
+      </AttributeSection>
+    );
+  }
+
+  renderPaddingSection(){
+    const {element} = this.state;
+
+    return (
+      <AttributeSection title="Padding">
+        <LayoutBox
+          value={{
+            top: element.get('styles').paddingTop,
+            left: element.get('styles').paddingLeft,
+            right: element.get('styles').paddingRight,
+            bottom: element.get('styles').paddingBottom
+          }}
+          onChange={this.handleBoxChange.bind(this, 'styles.padding')}/>
+      </AttributeSection>
+    );
+  }
+
+  renderTypographySection(){
+    const {element} = this.state;
+
+    return (
+      <AttributeSection title="Typography">
+        <SizeInput
+          label="Size"
+          value={element.get('styles').fontSize}
+          onChange={this.handleInputChange.bind(this, 'styles.fontSize')}/>
+      </AttributeSection>
+    );
+  }
+
+  handleInputChange(key, data) {
     const {element} = this.state;
     const split = key.split('.');
     let obj = element.get(split[0]);
-    obj[split[1]] = data.value;
+    obj[split[1]] = data;
     let newElement = element.set(split[0], obj);
 
     this.props.updateElement(this.props.activeElement, newElement);
   }
 
-  handleSubmit(e){
-    e.preventDefault();
+  handleBoxChange(key, data){
+    const {element} = this.state;
+    const split = key.split('.');
+    let obj = element.get(split[0]);
+
+    Object.keys(data).forEach(key => {
+      obj[split[1] + key[0].toUpperCase() + key.substring(1)] = data[key];
+    });
+
+    let newElement = element.set(split[0], obj);
+    this.props.updateElement(this.props.activeElement, newElement);
   }
 }
 

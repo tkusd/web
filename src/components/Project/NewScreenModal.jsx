@@ -66,7 +66,7 @@ class NewScreenModal extends React.Component {
     e.preventDefault();
 
     const {name} = this.refs;
-    const {project} = this.props;
+    const {project, closeModal} = this.props;
     const {createElement} = bindActions(ElementAction, this.context.flux);
 
     if (name.getError()){
@@ -77,7 +77,7 @@ class NewScreenModal extends React.Component {
       name: name.getValue(),
       type: 'screen'
     }).then(element => {
-      this.props.closeModal();
+      closeModal();
       this.context.router.transitionTo(`/projects/${project.get('id')}/screens/${element.id}`);
     }, err => {
       this.setState({error: err.body || err});

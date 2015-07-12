@@ -1,0 +1,31 @@
+@import "nib"
+@import "../common"
+
+.layout-box
+  clearfix()
+
+$layout-box-input
+  width: 40%
+  margin: auto
+  .size-input__label
+    position: absolute
+    bottom: 0
+    left: 0
+    width: 100%
+    text-align: center
+    padding: 0
+
+.layout-box__top
+  @extend $layout-box-input
+
+.layout-box__left
+  @extend $layout-box-input
+  float: left
+
+.layout-box__right
+  @extend $layout-box-input
+  float: right
+
+.layout-box__bottom
+  @extend $layout-box-input
+  clear: both
