@@ -77,16 +77,8 @@ class Canvas extends React.Component {
     window.removeEventListener('resize', this.handleWindowResize);
   }
 
-  componentWillReceiveProps(nextProps){
-    // Update the mask style if the active element is changed
-    if (this.props.activeElement !== nextProps.activeElement){
-      this.updateMaskStyle();
-    }
-  }
-
   componentDidUpdate(prevProps){
-    // Update the mask style if the element data is changed
-    if (this.isElementActive() && !Immutable.is(this.props.elements, prevProps.elements)){
+    if (!Immutable.is(this.props.element, prevProps.element) || !Immutable.is(this.props.elements, prevProps.elements)){
       this.updateMaskStyle();
     }
   }
