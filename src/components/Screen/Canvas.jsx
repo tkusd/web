@@ -98,14 +98,21 @@ class Canvas extends React.Component {
     const node = this.renderNode();
     const isDragOver = isOver && canDrop;
     const isActive = this.isElementActive();
+    const componentType = getComponentType(this.props);
 
-    return connectDropTarget(
+    let result = (
       <div className="canvas">
         {node}
         {isActive && this.renderResizeArea()}
         {isDragOver && this.renderDragOverMask()}
       </div>
     );
+
+    if (componentType === ItemTypes.CONTAINER){
+      return connectDropTarget(result);
+    } else {
+      return result;
+    }
   }
 
   renderResizeArea(){

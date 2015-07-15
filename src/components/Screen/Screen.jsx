@@ -1,18 +1,12 @@
 import React from 'react';
 import Canvas from './Canvas';
 import ElementSidebar from './ElementSidebar';
-import * as ElementAction from '../../actions/ElementAction';
-import bindActions from '../../utils/bindActions';
-import debounce from 'lodash/function/debounce';
-import ScreenToolbar from './ScreenToolbar';
 import Immutable from 'immutable';
+import ScreenToolbar from './ScreenToolbar';
 
 if (process.env.BROWSER){
   require('../../styles/Screen/Screen.styl');
 }
-
-// Save automatically every 5 secs
-const DEBOUNCE_DELAY = 5000;
 
 class Screen extends React.Component {
   static contextTypes = {
@@ -23,7 +17,10 @@ class Screen extends React.Component {
     elements: React.PropTypes.object.isRequired,
     components: React.PropTypes.object.isRequired,
     editable: React.PropTypes.bool.isRequired,
-    selectedScreen: React.PropTypes.string.isRequired
+    selectedScreen: React.PropTypes.string.isRequired,
+    updateElement: React.PropTypes.func.isRequired,
+    hasUnsavedChanges: React.PropTypes.bool.isRequired,
+    isSavingChanges: React.PropTypes.bool.isRequired
   }
 
   constructor(props, context){
@@ -32,19 +29,19 @@ class Screen extends React.Component {
     this.state = {
       elements: this.props.elements,
       updating: false,
-      activeElement: null,
-      changed: false
+      activeElement: null
     };
 
-    this.commitElementChange = debounce(this.commitElementChange.bind(this), DEBOUNCE_DELAY);
-    this.updateElement = this.updateElement.bind(this);
     this.selectElement = this.selectElement.bind(this);
+    this.updateElement = this.updateElement.bind(this);
   }
 
   componentWillReceiveProps(props){
-    this.setState({
-      elements: props.elements
-    });
+    if (!Immutable.is(this.props.elements, props.elements)){
+      this.setState({
+        elements: props.elements
+      });
+    }
 
     // Reset the active element when the screen changed
     if (this.props.selectedScreen !== props.selectedScreen){
@@ -55,8 +52,8 @@ class Screen extends React.Component {
   }
 
   render(){
-    const {elements, updating, activeElement, changed} = this.state;
-    const {selectedScreen, editable} = this.props;
+    const {elements, activeElement} = this.state;
+    const {selectedScreen, editable, hasUnsavedChanges, isSavingChanges} = this.props;
 
     return (
       <div className="screen">
@@ -70,53 +67,25 @@ class Screen extends React.Component {
         {editable && (
           <ElementSidebar {...this.props}
             elements={elements}
-            updateElement={this.updateElement}
             activeElement={activeElement}
-            selectElement={this.selectElement}/>
+            selectElement={this.selectElement}
+            updateElement={this.updateElement}/>
         )}
-        <ScreenToolbar {...this.props} updating={updating} changed={changed}/>
+        {<ScreenToolbar {...this.props} updating={isSavingChanges} changed={hasUnsavedChanges}/>}
       </div>
     );
   }
 
-  updateElement(id, data){
-    let newElements = this.state.elements.set(id, data);
-
-    this.setState({
-      elements: newElements,
-      changed: !Immutable.is(this.props.elements, newElements)
-    });
-
-    setTimeout(() => {
-      this.commitElementChange(id);
-    }, 0);
-  }
-
-  commitElementChange(id){
-    if (this.state.updating || !this.state.changed) return;
-
-    const {updateElement} = bindActions(ElementAction, this.context.flux);
-    const element = this.state.elements.get(id);
-
-    this.setState({updating: true});
-
-    updateElement(id, {
-      attributes: element.get('attributes').toObject(),
-      styles: element.get('styles').toObject(),
-      name: element.get('name')
-    }).then(() => {
-      this.setState({
-        updating: false,
-        changed: false
-      });
-    }).catch(err => {
-      console.error(err);
-      this.setState({updating: false});
-    });
-  }
-
   selectElement(id){
     this.setState({activeElement: id});
+  }
+
+  updateElement(id, data){
+    this.setState({
+      elements: this.state.elements.set(id, data)
+    });
+
+    this.props.updateElement(id, data);
   }
 }
 
