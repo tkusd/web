@@ -6,18 +6,10 @@ import cookieSession from 'cookie-session';
 import morgan from 'morgan';
 import csurf from 'csurf';
 import serveStatic from 'serve-static';
-import errorhandler from 'errorhandler';
 import minimist from 'minimist';
-import locale from 'locale';
-import fs from 'graceful-fs';
 import {fork} from 'child_process';
 
-const localeDir = path.join(__dirname, '../../locales');
-const locales = fs.readdirSync(localeDir).map(lang => {
-  const extname = path.extname(lang);
-  return path.basename(lang, extname);
-});
-locale.Locale.default = 'en';
+require('./loadIntlPolyfill');
 
 // Create a server
 const server = express();
@@ -34,7 +26,7 @@ server.use(cookieSession({
 }));
 server.use(compression());
 server.use(csurf());
-server.use(locale(locales));
+// server.use(locale(locales));
 
 if (PRODUCTION){
   // On production, use the public directory for static files
@@ -55,7 +47,11 @@ server.get('/logout', require('./logout'));
 // Render the app server-side and send it as response.
 server.get('/*', require('./render'));
 
-server.use(errorhandler());
+server.use((err, req, res, next) => {
+  console.error('Error on request %s %s', req.method, req.url);
+  console.error(err.stack);
+  res.status(500).send('Server error');
+});
 
 server.listen(PORT, () => {
   console.log('Server listening on port %d', PORT);

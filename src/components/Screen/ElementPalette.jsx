@@ -1,7 +1,7 @@
 import React from 'react';
 import Palette from '../Project/Palette';
 import ElementList from './ElementList';
-import Translation from '../i18n/Translation';
+import {FormattedMessage} from '../intl';
 
 if (process.env.BROWSER){
   require('../../styles/Screen/ElementPalette.styl');
@@ -31,13 +31,13 @@ class ElementPalette extends React.Component {
     } else {
       content = (
         <div className="element-palette__empty">
-          <Translation id="project.no_elements"/>
+          <FormattedMessage message="project.no_elements"/>
         </div>
       );
     }
 
     return (
-      <Palette title={<Translation id="project.elements"/>}>
+      <Palette title={<FormattedMessage message="project.elements"/>}>
         {content}
       </Palette>
     );

@@ -1,10 +1,10 @@
 import React from 'react';
 import {DragSource} from 'react-dnd';
 import ItemTypes from '../../constants/ItemTypes';
-import Translation from '../i18n/Translation';
 import cx from 'classnames';
 import * as ElementAction from '../../actions/ElementAction';
 import bindActions from '../../utils/bindActions';
+import {FormattedMessage} from '../intl';
 
 if (process.env.BROWSER){
   require('../../styles/Project/ComponentItem.styl');
@@ -41,6 +41,7 @@ const spec = {
     const {createChildElement} = bindActions(ElementAction, component.context.flux);
 
     createChildElement(dropResult.id, {
+      // TODO: intl support
       name: component.context.__('project.' + item.type),
       type: item.type,
       attributes: initialAttributes,
@@ -55,8 +56,7 @@ const spec = {
 }))
 class ComponentItem extends React.Component {
   static contextTypes = {
-    flux: React.PropTypes.object.isRequired,
-    __: React.PropTypes.func.isRequired
+    flux: React.PropTypes.object.isRequired
   }
 
   static propTypes = {
@@ -77,7 +77,7 @@ class ComponentItem extends React.Component {
 
     return connectDragSource(
       <div className={className}>
-        <Translation id={'project.' + component.get('type')}/>
+        <FormattedMessage message={'project.' + component.get('type')}/>
       </div>
     , 'copy');
   }

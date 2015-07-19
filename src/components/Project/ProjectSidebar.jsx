@@ -13,25 +13,19 @@ if (process.env.BROWSER){
 
 @pureRender
 class ProjectSidebar extends React.Component {
-  static contextTypes = {
-    __: React.PropTypes.func.isRequired
-  }
-
   static propTypes = {
     editable: React.PropTypes.bool.isRequired
   }
 
   render(){
-    const {__} = this.context;
-
     return (
       <TabHost className="project-sidebar">
-        <TabPane tab={<FontAwesome icon="mobile"/>} title={__('project.screens')}>
+        <TabPane tab={<FontAwesome icon="mobile"/>}>
           <ScreenPalette {...this.props}/>
         </TabPane>
         {this.renderComponentPalette()}
         {this.renderSettingPalette()}
-        <TabPane tab={<FontAwesome icon="share-alt"/>} title={__('project.share')}>
+        <TabPane tab={<FontAwesome icon="share-alt"/>}>
           <SharePalette {...this.props}/>
         </TabPane>
       </TabHost>
@@ -41,10 +35,8 @@ class ProjectSidebar extends React.Component {
   renderComponentPalette(){
     if (!this.props.editable) return;
 
-    const {__} = this.context;
-
     return (
-      <TabPane tab={<FontAwesome icon="cube"/>} title={__('project.components')}>
+      <TabPane tab={<FontAwesome icon="cube"/>}>
         <ComponentPalette {...this.props}/>
       </TabPane>
     );
@@ -53,10 +45,8 @@ class ProjectSidebar extends React.Component {
   renderSettingPalette(){
     if (!this.props.editable) return;
 
-    const {__} = this.context;
-
     return (
-      <TabPane tab={<FontAwesome icon="cog"/>} title={__('common.settings')}>
+      <TabPane tab={<FontAwesome icon="cog"/>}>
         <SettingPalette {...this.props}/>
       </TabPane>
     );

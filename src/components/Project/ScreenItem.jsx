@@ -7,9 +7,9 @@ import * as ProjectAction from '../../actions/ProjectAction';
 import * as ElementAction from '../../actions/ElementAction';
 import {ModalPortal} from '../modal';
 import DeleteScreenModal from './DeleteScreenModal';
-import Translation from '../i18n/Translation';
 import {InlineInput} from '../form';
 import bindActions from '../../utils/bindActions';
+import {FormattedMessage} from '../intl';
 
 if (process.env.BROWSER){
   require('../../styles/Project/ScreenItem.styl');
@@ -18,8 +18,7 @@ if (process.env.BROWSER){
 class ScreenItem extends React.Component {
   static contextTypes = {
     flux: React.PropTypes.object.isRequired,
-    router: React.PropTypes.object.isRequired,
-    __: React.PropTypes.func.isRequired
+    router: React.PropTypes.object.isRequired
   }
 
   static propTypes = {
@@ -63,7 +62,7 @@ class ScreenItem extends React.Component {
 
     let deleteBtn = (
       <a>
-        <Translation id="common.delete"/>
+        <FormattedMessage message="common.delete"/>
       </a>
     );
 
@@ -75,12 +74,12 @@ class ScreenItem extends React.Component {
         <DropdownMenu position="fixed">
           <DropdownItem>
             <a onClick={this.setMainScreen}>
-              <Translation id="project.set_as_main_screen"/>
+              <FormattedMessage message="project.set_as_main_screen"/>
             </a>
           </DropdownItem>
           <DropdownItem>
             <a onClick={this.rename}>
-              <Translation id="common.rename"/>
+              <FormattedMessage message="common.rename"/>
             </a>
           </DropdownItem>
           <DropdownItem>

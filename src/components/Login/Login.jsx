@@ -4,7 +4,7 @@ import {Form, Input} from '../form';
 import * as TokenAction from '../../actions/TokenAction';
 import bindActions from '../../utils/bindActions';
 import * as AppAction from '../../actions/AppAction';
-import Translation from '../i18n/Translation';
+import {FormattedMessage} from '../intl';
 
 class Login extends React.Component {
   static contextTypes = {
@@ -47,31 +47,31 @@ class Login extends React.Component {
     return (
       <Form onSubmit={this.handleSubmit}>
         <h1 className="login-container__title">
-          <Translation id="common.login"/>
+          <FormattedMessage message="common.login"/>
         </h1>
         {error && !error.field && <div className="login-container__error">{error.message}</div>}
         <Input
           name="email"
           ref="email"
-          label={<Translation id="common.email"/>}
+          label={<FormattedMessage message="common.email"/>}
           type="email"
           required/>
         <Input
           name="password"
           ref="password"
-          label={<Translation id="common.password"/>}
+          label={<FormattedMessage message="common.password"/>}
           type="password"
           required
           minLength={6}
           maxLength={50}/>
         <button type="submit" className="login-container__button">
-          <Translation id="common.login"/>
+          <FormattedMessage message="common.login"/>
         </button>
         <div className="login-container__link-group">
-          <Translation id="login.signup_link_hint"/>
+          <FormattedMessage message="login.signup_link_hint"/>
           {' '}
           <Link to="/signup" className="login-container__link">
-            <Translation id="common.signup"/>
+            <FormattedMessage message="common.signup"/>
           </Link>
         </div>
       </Form>

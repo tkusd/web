@@ -1,8 +1,8 @@
 import React from 'react';
 import {Link} from 'react-router';
 import Gravatar from '../common/Gravatar';
-import Translation from '../i18n/Translation';
 import FontAwesome from '../common/FontAwesome';
+import {FormattedMessage} from '../intl';
 
 if (process.env.BROWSER){
   require('../../styles/Profile/ProfileData.styl');
@@ -23,7 +23,7 @@ class ProfileData extends React.Component {
         <h1 className="profile-data__name">{user.get('name')}</h1>
         {currentUser && user.get('id') === currentUser.get('id') && (
           <Link to="/settings" className="profile-data__edit-link">
-            <FontAwesome icon="pencil"/><Translation id="profile.edit_profile"/>
+            <FontAwesome icon="pencil"/><FormattedMessage message="profile.edit_profile"/>
           </Link>
         )}
       </div>

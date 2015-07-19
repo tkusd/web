@@ -1,11 +1,11 @@
 import React from 'react';
 import Palette from './Palette';
-import Translation from '../i18n/Translation';
+import {FormattedMessage} from '../intl';
 
 class SharePalette extends React.Component {
   render(){
     return (
-      <Palette title={<Translation id="project.share"/>}></Palette>
+      <Palette title={<FormattedMessage message="project.share"/>}></Palette>
     );
   }
 }

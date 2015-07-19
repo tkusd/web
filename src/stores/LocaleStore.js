@@ -1,36 +1,35 @@
 import BaseStore from './BaseStore';
-import {Map} from 'immutable';
-
-function toMap(data, payload, prefix=''){
-  Object.keys(payload).forEach(key => {
-    if (typeof payload[key] === 'object'){
-      toMap(data, payload[key], prefix + key + '.');
-    } else {
-      data.set(prefix + key, payload[key]);
-    }
-  });
-}
 
 class LocaleStore extends BaseStore {
   constructor(context){
     super(context);
 
-    this.data = {};
+    this.locales = [];
+    this.messages = {};
     this.language = 'en';
   }
 
-  getData(lang){
-    return this.data[lang];
+  getLocales(){
+    return this.locales;
   }
 
-  setData(lang, payload){
-    if (!this.data.hasOwnProperty(lang)) this.data[lang] = Map();
+  getMessages(){
+    return this.messages;
+  }
 
-    this.data[lang] = this.data[lang].withMutations(data => {
-      toMap(data, payload);
-    });
+  getMessage(key){
+    const split = key.split('.');
+    let message;
 
-    this.emitChange();
+    try {
+      message = split.reduce((messages, part) => messages[part], this.messages);
+    } finally {
+      if (message == null) {
+        throw new ReferenceError('Could not find Intl message: ' + key);
+      }
+    }
+
+    return message;
   }
 
   getLanguage(){
@@ -40,6 +39,11 @@ class LocaleStore extends BaseStore {
   setLanguage(lang){
     this.language = lang;
     this.emitChange();
+  }
+
+  setData(data){
+    this.locales = data.locales;
+    this.messages = data.messages;
   }
 
   dehydrate(){

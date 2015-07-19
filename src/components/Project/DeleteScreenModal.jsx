@@ -3,7 +3,7 @@ import {Modal} from '../modal';
 import {Form} from '../form';
 import * as ElementAction from '../../actions/ElementAction';
 import bindActions from '../../utils/bindActions';
-import Translation from '../i18n/Translation';
+import {FormattedMessage} from '../intl';
 
 class DeleteScreenModal extends React.Component {
   static contextTypes = {
@@ -25,17 +25,17 @@ class DeleteScreenModal extends React.Component {
     const {closeModal} = this.props;
 
     return (
-      <Modal title={<Translation id="project.delete_screen"/>} onDismiss={closeModal}>
+      <Modal title={<FormattedMessage message="project.delete_screen"/>} onDismiss={closeModal}>
         <Form onSubmit={this.handleSubmit}>
           <p>
-            <Translation id="project.delete_screen_prompt"/>
+            <FormattedMessage message="project.delete_screen_prompt"/>
           </p>
           <div className="modal__btn-group">
             <a className="modal__btn" onClick={closeModal}>
-              <Translation id="common.cancel"/>
+              <FormattedMessage message="common.cancel"/>
             </a>
             <button className="modal__btn--danger" type="submit">
-              <Translation id="common.delete"/>
+              <FormattedMessage message="common.delete"/>
             </button>
           </div>
         </Form>

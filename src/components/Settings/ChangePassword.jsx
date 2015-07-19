@@ -1,8 +1,8 @@
 import React from 'react';
 import {Form, Input} from '../form';
 import * as UserAction from '../../actions/UserAction';
-import Translation from '../i18n/Translation';
 import bindActions from '../../utils/bindActions';
+import {FormattedMessage} from '../intl';
 
 class ChangePassword extends React.Component {
   static contextTypes = {
@@ -40,19 +40,19 @@ class ChangePassword extends React.Component {
         <Input
           name="old_password"
           ref="old_password"
-          label={<Translation id="settings.current_password"/>}
+          label={<FormattedMessage message="settings.current_password"/>}
           type="password"
           minLength={6}
           maxLength={50}/>
         <Input
           name="password"
           ref="password"
-          label={<Translation id="settings.new_password"/>}
+          label={<FormattedMessage message="settings.new_password"/>}
           type="password"
           minLength={6}
           maxLength={50}/>
         <button type="submit" className="settings__button--primary">
-          <Translation id="settings.change_password"/>
+          <FormattedMessage message="settings.change_password"/>
         </button>
       </Form>
     );

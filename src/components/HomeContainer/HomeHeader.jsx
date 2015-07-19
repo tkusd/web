@@ -2,7 +2,7 @@ import React from 'react';
 import {Link} from 'react-router';
 import connectToStores from '../../decorators/connectToStores';
 import pureRender from '../../decorators/pureRender';
-import Translation from '../i18n/Translation';
+import {FormattedMessage} from '../intl';
 
 if (process.env.BROWSER){
   require('../../styles/HomeContainer/HomeHeader.styl');
@@ -30,7 +30,7 @@ class HomeHeader extends React.Component {
           <Link
             to={`/users/${currentUser.get('id')}`}
             className="home-header__link--primary">
-            <Translation id="home.my_projects"/>
+            <FormattedMessage message="home.my_projects"/>
           </Link>
         </div>
       );
@@ -38,10 +38,10 @@ class HomeHeader extends React.Component {
       return (
         <div>
           <Link to="/signup" className="home-header__link--primary">
-            <Translation id="common.signup"/>
+            <FormattedMessage message="common.signup"/>
           </Link>
           <Link to="/login" className="home-header__link">
-            <Translation id="common.login"/>
+            <FormattedMessage message="common.login"/>
           </Link>
         </div>
       );

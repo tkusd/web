@@ -1,8 +1,8 @@
 import React from 'react';
 import Palette from '../Project/Palette';
 import {LayoutBox, SizeInput, ColorPicker} from '../form';
-import Translation from '../i18n/Translation';
 import AttributeSection from './AttributeSection';
+import {FormattedMessage} from '../intl';
 
 if (process.env.BROWSER){
   require('../../styles/Screen/AttributePalette.styl');
@@ -38,7 +38,7 @@ class AttributePalette extends React.Component {
 
   render(){
     return (
-      <Palette title={<Translation id="project.attributes"/>}>
+      <Palette title={<FormattedMessage message="project.attributes"/>}>
         {this.renderForm()}
       </Palette>
     );
@@ -50,7 +50,7 @@ class AttributePalette extends React.Component {
     if (!element){
       return (
         <div className="attribute-palette__empty">
-          <Translation id="project.select_element_hint"/>
+          <FormattedMessage message="project.select_element_hint"/>
         </div>
       );
     }

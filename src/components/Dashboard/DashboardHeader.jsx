@@ -3,7 +3,7 @@ import connectToStores from '../../decorators/connectToStores';
 import pureRender from '../../decorators/pureRender';
 import Gravatar from '../common/Gravatar';
 import {Link} from 'react-router';
-import Translation from '../i18n/Translation';
+import {FormattedMessage} from '../intl';
 import FontAwesome from '../common/FontAwesome';
 import {Dropdown, DropdownMenu, DropdownItem} from '../dropdown';
 
@@ -24,10 +24,10 @@ class DashboardHeader extends React.Component {
         <header className="dashboard-header">
           <div className="dashboard-header__left">
             <Link to={`/users/${currentUser.get('id')}`} className="dashboard-header__link">
-              <Translation id="dashboard.projects"/>
+              <FormattedMessage message="dashboard.projects"/>
             </Link>
             <Link to="/settings" className="dashboard-header__link">
-              <Translation id="dashboard.account"/>
+              <FormattedMessage message="dashboard.account"/>
             </Link>
           </div>
           <div className="dashboard-header__right">
@@ -42,18 +42,18 @@ class DashboardHeader extends React.Component {
                 </DropdownItem>
                 <DropdownItem>
                   <Link to={`/users/${currentUser.get('id')}`}>
-                    <FontAwesome icon="user"/><Translation id="dashboard.profile"/>
+                    <FontAwesome icon="user"/><FormattedMessage message="dashboard.profile"/>
                   </Link>
                 </DropdownItem>
                 <DropdownItem>
                   <Link to="/settings">
-                    <FontAwesome icon="cog"/><Translation id="common.settings"/>
+                    <FontAwesome icon="cog"/><FormattedMessage message="common.settings"/>
                   </Link>
                 </DropdownItem>
                 <DropdownItem divider/>
                 <DropdownItem>
                   <Link to="/logout">
-                    <FontAwesome icon="sign-out"/><Translation id="common.logout"/>
+                    <FontAwesome icon="sign-out"/><FormattedMessage message="common.logout"/>
                   </Link>
                 </DropdownItem>
               </DropdownMenu>
@@ -67,10 +67,10 @@ class DashboardHeader extends React.Component {
           <div className="dashboard-header__left"></div>
           <div className="dashboard-header__right">
             <Link to="/signup" className="dashboard-header__link--primary">
-              <Translation id="common.signup"/>
+              <FormattedMessage message="common.signup"/>
             </Link>
             <Link to="/login" className="dashboard-header__link">
-              <Translation id="common.login"/>
+              <FormattedMessage message="common.login"/>
             </Link>
           </div>
         </header>

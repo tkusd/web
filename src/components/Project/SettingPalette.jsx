@@ -1,12 +1,12 @@
 import React from 'react';
 import Palette from './Palette';
-import Translation from '../i18n/Translation';
 import {Form, Input} from '../form';
 import Immutable from 'immutable';
 import * as ProjectAction from '../../actions/ProjectAction';
 import {ModalPortal} from '../modal';
 import DeleteProjectModal from './DeleteProjectModal';
 import bindActions from '../../utils/bindActions';
+import {FormattedMessage} from '../intl';
 
 if (process.env.BROWSER){
   require('../../styles/Project/SettingPalette.styl');
@@ -15,7 +15,6 @@ if (process.env.BROWSER){
 class SettingPalette extends React.Component {
   static contextTypes = {
     flux: React.PropTypes.object.isRequired,
-    __: React.PropTypes.func.isRequired,
     router: React.PropTypes.object.isRequired
   }
 
@@ -49,20 +48,20 @@ class SettingPalette extends React.Component {
     let deleteBtn = (
       <div className="setting-palette__btn-wrap">
         <button className="setting-palette__delete">
-          <Translation id="project.delete_project"/>
+          <FormattedMessage message="project.delete_project"/>
         </button>
       </div>
     );
 
     return (
-      <Palette title={<Translation id="common.settings"/>}>
+      <Palette title={<FormattedMessage message="common.settings"/>}>
         <div className="setting-palette">
           {error && !error.field && <div>{error.message}</div>}
           <Form onSubmit={this.handleSubmit}>
             <Input
               name="title"
               ref="title"
-              label={<Translation id="common.title"/>}
+              label={<FormattedMessage message="common.title"/>}
               type="text"
               required
               maxLength={255}
@@ -71,13 +70,13 @@ class SettingPalette extends React.Component {
             <Input
               name="description"
               ref="description"
-              label={<Translation id="project.description"/>}
+              label={<FormattedMessage message="project.description"/>}
               type="textarea"
               initialValue={project.get('description')}
               onChange={this.handleInputChange.bind(this, 'description')}/>
             <div className="setting-palette__btn-wrap">
               <button type="submit" className="setting-palette__save" disabled={!this.hasChanged()}>
-                <Translation id="common.update"/>
+                <FormattedMessage message="common.update"/>
               </button>
             </div>
           </Form>

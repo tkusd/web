@@ -4,7 +4,8 @@ import Actions from '../constants/Actions';
 class AppStore extends BaseStore {
   static handlers = {
     setPageTitle: Actions.SET_PAGE_TITLE,
-    setStatusCode: Actions.SET_STATUS_CODE
+    setStatusCode: Actions.SET_STATUS_CODE,
+    setFirstRender: Actions.SET_FIRST_RENDER
   }
 
   constructor(context){

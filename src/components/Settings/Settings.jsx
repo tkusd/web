@@ -5,9 +5,9 @@ import DeleteUser from './DeleteUser';
 import ChangePassword from './ChangePassword';
 import connectToStores from '../../decorators/connectToStores';
 import pureRender from '../../decorators/pureRender';
-import Translation from '../i18n/Translation';
 import NotFound from '../NotFound';
 import bindActions from '../../utils/bindActions';
+import {FormattedMessage} from '../intl';
 
 if (process.env.BROWSER){
   require('../../styles/Settings/Settings.styl');
@@ -36,12 +36,12 @@ class Settings extends React.Component {
       return (
         <div className="settings">
           <h1 className="settings__title">
-            <Translation id="common.settings"/>
+            <FormattedMessage message="common.settings"/>
           </h1>
           <div className="settings__content">
             <section className="settings__section">
               <h2 className="settings__section-title">
-                <Translation id="settings.profile"/>
+                <FormattedMessage message="settings.profile"/>
               </h2>
               <div className="settings__section-content">
                 <ProfileForm user={user}/>
@@ -49,7 +49,7 @@ class Settings extends React.Component {
             </section>
             <section className="settings__section">
               <h2 className="settings__section-title">
-                <Translation id="settings.change_password"/>
+                <FormattedMessage message="settings.change_password"/>
               </h2>
               <div className="settings__section-content">
                 <ChangePassword user={user}/>
@@ -57,7 +57,7 @@ class Settings extends React.Component {
             </section>
             <section className="settings__section">
               <h2 className="settings__section-title">
-                <Translation id="settings.delete_account"/>
+                <FormattedMessage message="settings.delete_account"/>
               </h2>
               <div className="settings__section-content">
                 <DeleteUser user={user}/>

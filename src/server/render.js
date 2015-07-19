@@ -10,12 +10,14 @@ import routes from '../routes';
 import HtmlDocument from './HtmlDocument';
 import promisify from '../utils/promisify';
 import bindActions from '../utils/bindActions';
+import availableLocales from './availableLocales';
 import * as stores from '../stores';
 import * as TokenAction from '../actions/TokenAction';
 import * as UserAction from '../actions/UserAction';
 
 const readFile = promisify(fs.readFile);
 const STATS_PATH = path.join(__dirname, '../../public/build/webpack-stats.json');
+const DEFAULT_LOCALE = 'en';
 
 let webpackStats;
 
@@ -31,7 +33,7 @@ function readStats(req){
 
 function render(req, res, next){
   const flux = new Flux(stores);
-  const lang = req.locale;
+  const lang = req.acceptsLanguages(availableLocales) || DEFAULT_LOCALE;
   const {checkToken} = bindActions(TokenAction, flux);
   const {loadCurrentUser} = bindActions(UserAction, flux);
 
@@ -49,12 +51,8 @@ function render(req, res, next){
     AppStore.setFirstRender(false);
     AppStore.setCSRFToken(req.csrfToken());
 
-    LocaleStore.setData('en', require('../../locales/en'));
-
-    if (lang !== 'en'){
-      LocaleStore.setLanguage(lang);
-      LocaleStore.setData(lang, require('../../locales/' + lang));
-    }
+    LocaleStore.setLanguage(lang);
+    LocaleStore.setData(require('../../locales/' + lang));
 
     Router.run(routes(flux), location, (err, initialState, transition) => {
       if (err) return next(err);

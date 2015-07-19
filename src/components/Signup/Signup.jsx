@@ -4,8 +4,8 @@ import {Form, Input} from '../form';
 import * as UserAction from '../../actions/UserAction';
 import * as AppAction from '../../actions/AppAction';
 import * as TokenAction from '../../actions/TokenAction';
-import Translation from '../i18n/Translation';
 import bindActions from '../../utils/bindActions';
+import {FormattedMessage} from '../intl';
 
 class Signup extends React.Component {
   static contextTypes = {
@@ -48,38 +48,38 @@ class Signup extends React.Component {
     return (
       <Form onSubmit={this.handleSubmit}>
         <h1 className="login-container__title">
-          <Translation id="common.signup"/>
+          <FormattedMessage message="common.signup"/>
         </h1>
         {error && !error.field && <div className="login-container__error">{error.message}</div>}
         <Input
           name="name"
           ref="name"
-          label={<Translation id="common.name"/>}
+          label={<FormattedMessage message="common.name"/>}
           type="text"
           required
           maxLength={100}/>
         <Input
           name="email"
           ref="email"
-          label={<Translation id="common.email"/>}
+          label={<FormattedMessage message="common.email"/>}
           type="email"
           required/>
         <Input
           name="password"
           ref="password"
-          label={<Translation id="common.password"/>}
+          label={<FormattedMessage message="common.password"/>}
           type="password"
           required
           minLength={6}
           maxLength={50}/>
         <button type="submit" className="login-container__button">
-          <Translation id="common.signup"/>
+          <FormattedMessage message="common.signup"/>
         </button>
         <div className="login-container__link-group">
-          <Translation id="login.login_link_hint"/>
+          <FormattedMessage message="login.login_link_hint"/>
           {' '}
           <Link to="/login" className="login-container__link">
-            <Translation id="common.login"/>
+            <FormattedMessage message="common.login"/>
           </Link>
         </div>
       </Form>

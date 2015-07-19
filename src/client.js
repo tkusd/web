@@ -7,39 +7,18 @@ import routes from './routes';
 import {Container, Flux} from './flux';
 import {history} from 'react-router/lib/BrowserHistory';
 import * as stores from './stores';
+import loadIntl from './utils/loadIntl';
 
 const flux = new Flux(stores, window.$STATE);
-const {AppStore, LocaleStore} = flux.getStore();
-const lang = LocaleStore.getLanguage();
+const {LocaleStore} = flux.getStore();
 
-function onRouteUpdate(){
-  AppStore.setFirstRender(false);
-}
-
-function render(){
+loadIntl(flux, LocaleStore.getLanguage()).then(() => {
   ReactDOM.render(
     React.createElement(Container, {flux},
       React.createElement(Router, {
         history,
-        children: routes(flux),
-        onUpdate: onRouteUpdate
+        children: routes(flux)
       })
     )
   , document.getElementById('root'));
-}
-
-// Load English
-LocaleStore.setData('en', require('../locales/en'));
-
-switch (lang) {
-  case 'en':
-    render();
-    break;
-
-  case 'zh-TW':
-    require.ensure(['../locales/zh-TW'], require => {
-      LocaleStore.setData(lang, require('../locales/zh-TW'));
-      render();
-    }, 'locale-zh-TW');
-    break;
-}
+});

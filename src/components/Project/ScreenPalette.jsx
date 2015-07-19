@@ -4,7 +4,7 @@ import Palette from './Palette';
 import NewScreenModal from './NewScreenModal';
 import ScreenItem from './ScreenItem';
 import FontAwesome from '../common/FontAwesome';
-import Translation from '../i18n/Translation';
+import {FormattedMessage} from '../intl';
 
 if (process.env.BROWSER){
   require('../../styles/Project/ScreenPalette.styl');
@@ -13,7 +13,6 @@ if (process.env.BROWSER){
 class ScreenPalette extends React.Component {
   static contextTypes = {
     flux: React.PropTypes.object.isRequired,
-    __: React.PropTypes.func.isRequired,
     router: React.PropTypes.object.isRequired
   }
 
@@ -38,14 +37,14 @@ class ScreenPalette extends React.Component {
     } else {
       screens = (
         <div className="screen-palette__empty">
-          <Translation id="project.no_screens"/>
+          <FormattedMessage message="project.no_screens"/>
         </div>
       );
     }
 
     return (
       <div className="screen-palette">
-        <Palette title={<Translation id="project.screens"/>}>
+        <Palette title={<FormattedMessage message="project.screens"/>}>
           {screens}
         </Palette>
         {this.renderPortal()}

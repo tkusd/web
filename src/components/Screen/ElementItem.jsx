@@ -4,8 +4,8 @@ import cx from 'classnames';
 import * as ElementAction from '../../actions/ElementAction';
 import FontAwesome from '../common/FontAwesome';
 import {Dropdown, DropdownMenu, DropdownItem} from '../dropdown';
-import Translation from '../i18n/Translation';
 import bindActions from '../../utils/bindActions';
+import {FormattedMessage} from '../intl';
 
 if (process.env.BROWSER){
   require('../../styles/Screen/ElementItem.styl');
@@ -63,12 +63,12 @@ class ElementItem extends React.Component {
             <DropdownMenu position="fixed">
               <DropdownItem>
                 <a onClick={this.renameElement}>
-                  <Translation id="common.rename"/>
+                  <FormattedMessage message="common.rename"/>
                 </a>
               </DropdownItem>
               <DropdownItem>
                 <a onClick={this.deleteElement}>
-                  <Translation id="common.delete"/>
+                  <FormattedMessage message="common.delete"/>
                 </a>
               </DropdownItem>
             </DropdownMenu>

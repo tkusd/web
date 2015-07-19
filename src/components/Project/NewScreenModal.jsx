@@ -3,7 +3,7 @@ import {Modal} from '../modal';
 import {Form, Input} from '../form';
 import * as ElementAction from '../../actions/ElementAction';
 import bindActions from '../../utils/bindActions';
-import Translation from '../i18n/Translation';
+import {FormattedMessage} from '../intl';
 
 class NewScreenModal extends React.Component {
   static contextTypes = {
@@ -38,23 +38,23 @@ class NewScreenModal extends React.Component {
     const {closeModal} = this.props;
 
     return (
-      <Modal title={<Translation id="project.new_screen"/>} onDismiss={closeModal}>
+      <Modal title={<FormattedMessage message="project.new_screen"/>} onDismiss={closeModal}>
         <Form onSubmit={this.handleSubmit}>
           {error && !error.field && <div>{error.message}</div>}
           <Input
             id="new-screen-name"
             name="name"
             ref="name"
-            label={<Translation id="common.name"/>}
+            label={<FormattedMessage message="common.name"/>}
             type="text"
             required
             maxLength={255}/>
           <div className="modal__btn-group">
             <a className="modal__btn" onClick={closeModal}>
-              <Translation id="common.cancel"/>
+              <FormattedMessage message="common.cancel"/>
             </a>
             <button type="submit" className="modal__btn--primary">
-              <Translation id="common.create"/>
+              <FormattedMessage message="common.create"/>
             </button>
           </div>
         </Form>

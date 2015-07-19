@@ -1,8 +1,9 @@
 import React from 'react';
 import connectToStores from '../../decorators/connectToStores';
-import getTranslations from '../../utils/getTranslations';
 import {Flux} from '../../flux';
 import {ModalContainer} from '../modal';
+import * as AppAction from '../../actions/AppAction';
+import bindActions from '../../utils/bindActions';
 
 if (process.env.BROWSER){
   require('../../styles/Application/Application.styl');
@@ -16,14 +17,9 @@ class Application extends React.Component {
     flux: React.PropTypes.instanceOf(Flux).isRequired
   }
 
-  static childContextTypes = {
-    __: React.PropTypes.func.isRequired
-  }
-
-  getChildContext(){
-    return {
-      __: getTranslations(this.context.flux)
-    };
+  componentDidMount() {
+    const {setFirstRender} = bindActions(AppAction, this.context.flux);
+    setFirstRender(false);
   }
 
   componentDidUpdate(){

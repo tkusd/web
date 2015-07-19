@@ -1,5 +1,5 @@
 import React from 'react';
-import Translation from '../i18n/Translation';
+import {FormattedMessage} from '../intl';
 import {ModalPortal} from '../modal';
 import DeleteUserModal from './DeleteUserModal';
 
@@ -11,7 +11,7 @@ class DeleteUser extends React.Component {
   render(){
     let btn = (
       <button className="settings__button--danger">
-        <Translation id="settings.delete_account"/>
+        <FormattedMessage message="settings.delete_account"/>
       </button>
     );
 

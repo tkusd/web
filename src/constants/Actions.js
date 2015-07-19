@@ -3,6 +3,7 @@ import keyMirror from 'keymirror';
 export default keyMirror({
   SET_PAGE_TITLE: null,
   SET_STATUS_CODE: null,
+  SET_FIRST_RENDER: null,
 
   UPDATE_USER: null,
   DELETE_USER: null,

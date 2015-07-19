@@ -1,8 +1,8 @@
 import React from 'react';
 import {Form, Input} from '../form';
 import * as UserAction from '../../actions/UserAction';
-import Translation from '../i18n/Translation';
 import bindActions from '../../utils/bindActions';
+import {FormattedMessage} from '../intl';
 
 class ProfileForm extends React.Component {
   static contextTypes = {
@@ -41,7 +41,7 @@ class ProfileForm extends React.Component {
         <Input
           name="name"
           ref="name"
-          label={<Translation id="common.name"/>}
+          label={<FormattedMessage message="common.name"/>}
           type="text"
           initialValue={user.get('name')}
           required
@@ -49,12 +49,12 @@ class ProfileForm extends React.Component {
         <Input
           name="email"
           ref="email"
-          label={<Translation id="common.email"/>}
+          label={<FormattedMessage message="common.email"/>}
           type="email"
           initialValue={user.get('email')}
           required/>
         <button type="submit" className="settings__button--primary">
-          <Translation id="common.update"/>
+          <FormattedMessage message="common.update"/>
         </button>
       </Form>
     );

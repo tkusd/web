@@ -5,9 +5,9 @@ import {ModalPortal} from '../modal';
 import NewProjectModal from './NewProjectModal';
 import {Link} from 'react-router';
 import pureRender from '../../decorators/pureRender';
-import Translation from '../i18n/Translation';
 import FontAwesome from '../common/FontAwesome';
 import bindActions from '../../utils/bindActions';
+import {FormattedMessage} from '../intl';
 
 if (process.env.BROWSER){
   require('../../styles/Profile/ProjectList.styl');
@@ -23,8 +23,7 @@ if (process.env.BROWSER){
 class ProjectList extends React.Component {
   static contextTypes = {
     flux: React.PropTypes.object.isRequired,
-    router: React.PropTypes.object.isRequired,
-    __: React.PropTypes.func.isRequired
+    router: React.PropTypes.object.isRequired
   }
 
   static propTypes = {
@@ -49,7 +48,7 @@ class ProjectList extends React.Component {
       <div className="project-list">
         <header className="project-list__header">
           <h2 className="project-list__title">
-            <Translation id="profile.projects"/>
+            <FormattedMessage message="profile.projects"/>
           </h2>
           {this.renderPortal()}
         </header>
@@ -66,7 +65,7 @@ class ProjectList extends React.Component {
 
     let btn = (
       <button className="project-list__new-project-btn">
-        <FontAwesome icon="plus"/><Translation id="profile.new_project"/>
+        <FontAwesome icon="plus"/><FormattedMessage message="profile.new_project"/>
       </button>
     );
 
@@ -103,7 +102,7 @@ class ProjectList extends React.Component {
     } else {
       return (
         <div className="project-list__empty">
-          <Translation id="profile.no_projects"/>
+          <FormattedMessage message="profile.no_projects"/>
         </div>
       );
     }

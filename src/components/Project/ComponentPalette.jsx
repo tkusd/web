@@ -1,7 +1,7 @@
 import React from 'react';
 import Palette from './Palette';
 import ComponentItem from './ComponentItem';
-import Translation from '../i18n/Translation';
+import {FormattedMessage} from '../intl';
 
 class ComponentPalette extends React.Component {
   static propTypes = {
@@ -18,7 +18,7 @@ class ComponentPalette extends React.Component {
       )).toArray();
 
     return (
-      <Palette title={<Translation id="project.components"/>}>
+      <Palette title={<FormattedMessage message="project.components"/>}>
         {list}
       </Palette>
     );
