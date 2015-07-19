@@ -31,11 +31,15 @@ function render(){
 // Load English
 LocaleStore.setData('en', require('../locales/en'));
 
-if (lang === 'en'){
-  render();
-} else {
-  require(`!!promise?global!../locales/${lang}`)().then(locale => {
-    LocaleStore.setData(lang, locale);
+switch (lang) {
+  case 'en':
     render();
-  });
+    break;
+
+  case 'zh-TW':
+    require.ensure(['../locales/zh-TW'], require => {
+      LocaleStore.setData(lang, require('../locales/zh-TW'));
+      render();
+    }, 'locale-zh-TW');
+    break;
 }

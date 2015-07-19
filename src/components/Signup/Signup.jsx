@@ -90,7 +90,7 @@ class Signup extends React.Component {
     e.preventDefault();
 
     const {name, email, password} = this.refs;
-    const {createUser} = bindActions(UserAction, this);
+    const {createUser} = bindActions(UserAction, this.context.flux);
 
     if (name.getError() || email.getError() || password.getError()){
       return;
@@ -110,7 +110,7 @@ class Signup extends React.Component {
 
   createToken(user){
     let {email, password} = this.refs;
-    const {login} = bindActions(TokenAction, this);
+    const {login} = bindActions(TokenAction, this.context.flux);
 
     login({
       email: email.getValue(),
