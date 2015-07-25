@@ -1,13 +1,13 @@
 import React from 'react';
 import connectToStores from './connectToStores';
 
-function connectToIntlStore(Component){
+function connectToLocaleStore(Component){
   @connectToStores(['LocaleStore'], ({LocaleStore}, props) => ({
     messages: LocaleStore.getMessages(),
     locales: LocaleStore.getLocales(),
     message: props.message ? LocaleStore.getMessage(props.message) : null
   }))
-  class IntlStoreConnector extends Component {
+  class LocaleStoreConnector extends Component {
     render(){
       return React.createElement(Component, {
         ...this.props,
@@ -18,7 +18,7 @@ function connectToIntlStore(Component){
     }
   }
 
-  return IntlStoreConnector;
+  return LocaleStoreConnector;
 }
 
-export default connectToIntlStore;
+export default connectToLocaleStore;

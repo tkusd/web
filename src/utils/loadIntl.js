@@ -1,6 +1,11 @@
 import isLocaleSupported from 'intl-locales-supported';
 
-function loadIntlPolyfill(lang) {
+function getLanguageFromStore(flux) {
+  return flux.getStore().LocaleStore.getLanguage();
+}
+
+function loadIntlPolyfill(flux) {
+  const lang = getLanguageFromStore(flux);
   if (window.Intl && isLocaleSupported(lang)) return Promise.resolve();
 
   return new Promise((resolve, reject) => {
@@ -11,7 +16,8 @@ function loadIntlPolyfill(lang) {
   });
 }
 
-function loadLocaleData(flux, lang) {
+function loadLocaleData(flux) {
+  const lang = getLanguageFromStore(flux);
   const hasIntl = isLocaleSupported(lang);
 
   require('expose?ReactIntl!react-intl');
@@ -67,8 +73,8 @@ function loadLocaleData(flux, lang) {
   });
 }
 
-export default function loadIntl(flux, lang) {
-  return loadIntlPolyfill(lang).then(() => {
-    return loadLocaleData(flux, lang);
+export default function loadIntl(flux) {
+  return loadIntlPolyfill(flux).then(() => {
+    return loadLocaleData(flux);
   });
 }

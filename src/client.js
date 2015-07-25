@@ -10,9 +10,8 @@ import * as stores from './stores';
 import loadIntl from './utils/loadIntl';
 
 const flux = new Flux(stores, window.$STATE);
-const {LocaleStore} = flux.getStore();
 
-loadIntl(flux, LocaleStore.getLanguage()).then(() => {
+loadIntl(flux).then(() => {
   ReactDOM.render(
     React.createElement(Container, {flux},
       React.createElement(Router, {

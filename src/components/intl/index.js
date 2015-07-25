@@ -1,5 +1,5 @@
 import ReactIntl from 'react-intl';
-import connectToIntlStore from '../../decorators/connectToIntlStore';
+import connectToLocaleStore from '../../decorators/connectToLocaleStore';
 
 let obj = {};
 
@@ -11,7 +11,7 @@ let obj = {};
   'FormattedMessage',
   'FormattedHTMLMessage'
 ].forEach(key => {
-  obj[key] = connectToIntlStore(ReactIntl[key]);
+  obj[key] = connectToLocaleStore(ReactIntl[key]);
 });
 
 export default obj;
