@@ -42,7 +42,7 @@ const spec = {
 
     createChildElement(dropResult.id, {
       // TODO: intl support
-      name: component.context.__('project.' + item.type),
+      name: item.type,
       type: item.type,
       attributes: initialAttributes,
       styles: initialStyles

@@ -25,7 +25,7 @@ class LocaleStore extends BaseStore {
       message = split.reduce((messages, part) => messages[part], this.messages);
     } finally {
       if (message == null) {
-        throw new ReferenceError('Could not find Intl message: ' + key);
+        message = key;
       }
     }
 
