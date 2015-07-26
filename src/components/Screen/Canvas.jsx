@@ -1,10 +1,6 @@
 import React from 'react';
 import ElementTypes from '../../constants/ElementTypes';
 
-if (process.env.BROWSER){
-  require('../../styles/Screen/Canvas.styl');
-}
-
 function noop(){}
 
 class Canvas extends React.Component {

@@ -9,8 +9,6 @@ import {
 } from '../utils/esprima';
 import ElementTypes from '../constants/ElementTypes';
 
-const PRODUCTION = process.env.NODE_ENV === 'production';
-
 const ReactCreateElement = generateMemberExpression('React.createElement');
 const ReactCreateClass = generateMemberExpression('React.createClass');
 
@@ -190,14 +188,11 @@ export default function generateScript(flux, projectID){
     ]
   };
 
-  let options = {
+  return escodegen.generate(ast, {
     format: {
       indent: {
-        style: PRODUCTION ? '' : '  '
-      },
-      compact: Boolean(PRODUCTION)
+        style: '  '
+      }
     }
-  };
-
-  return escodegen.generate(ast, options);
+  });
 }

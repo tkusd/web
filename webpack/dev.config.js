@@ -20,7 +20,8 @@ export default merge({}, config, {
   },
   devtool: 'eval',
   entry: {
-    main: [].concat(HOT_LOAD_SCRIPTS, config.entry.main)
+    main: [].concat(HOT_LOAD_SCRIPTS, config.entry.main),
+    preview: [].concat(HOT_LOAD_SCRIPTS, config.entry.preview)
   },
   module: {
     loaders: config.module.loaders.concat([

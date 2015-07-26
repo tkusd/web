@@ -53,7 +53,7 @@ export default {
     ]
   },
   plugins: [
-    new webpack.optimize.CommonsChunkPlugin('vendor', 'vendor.[hash:8].js'),
+    new webpack.optimize.CommonsChunkPlugin('vendor', 'vendor.[hash:8].js', ['main']),
 
     function(){
       this.plugin('done', writeStats);

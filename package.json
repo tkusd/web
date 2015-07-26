@@ -5,7 +5,7 @@
   "main": "index",
   "scripts": {
     "build": "webpack --stats --progress",
-    "dev": "NODE_ENV=development node index",
+    "dev": "NODE_ENV=development node dev",
     "start": "NODE_ENV=production node index"
   },
   "author": "Tommy Chen <tommy351@gmail.com> (http://zespia.tw)",
@@ -16,6 +16,7 @@
     "cookie-session": "^1.1.0",
     "csurf": "^1.8.2",
     "escodegen": "^1.6.1",
+    "esmangle": "^1.0.1",
     "eventemitter3": "^1.1.0",
     "express": "^4.12.4",
     "font-awesome": "^4.3.0",
