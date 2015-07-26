@@ -2,4 +2,6 @@ delete process.env.BROWSER;
 
 require('babel-core/register');
 
-require('./src/server');
+if (process.env.NODE_ENV === 'production' || require('piping')({hook: true})){
+  require('./src/server');
+}

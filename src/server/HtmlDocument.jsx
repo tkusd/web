@@ -21,7 +21,7 @@ class HtmlDocument extends React.Component {
     );
 
     let script = [].concat(
-      stats['common.js'].js,
+      stats.vendor.js,
       stats.main.js
     );
 

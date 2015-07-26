@@ -8,6 +8,11 @@ const argv = minimist(process.argv.slice(2));
 const WEBPACK_HOST = argv.host || 'localhost';
 const WEBPACK_PORT = argv.port ? parseInt(argv.port, 10) + 1 : 4001;
 
+const HOT_LOAD_SCRIPTS = [
+  `webpack-dev-server/client?http://${WEBPACK_HOST}:${WEBPACK_PORT}`,
+  'webpack/hot/only-dev-server'
+];
+
 export default merge({}, config, {
   server: {
     host: WEBPACK_HOST,
@@ -15,10 +20,7 @@ export default merge({}, config, {
   },
   devtool: 'eval',
   entry: {
-    main: [].concat([
-      `webpack-dev-server/client?http://${WEBPACK_HOST}:${WEBPACK_PORT}`,
-      'webpack/hot/only-dev-server'
-    ], config.entry.main)
+    main: [].concat(HOT_LOAD_SCRIPTS, config.entry.main)
   },
   module: {
     loaders: config.module.loaders.concat([

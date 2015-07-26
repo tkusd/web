@@ -1,43 +1,30 @@
 import React from 'react';
 import ReactDOM from 'react-dom/server';
-import path from 'path';
-import fs from 'graceful-fs';
 import Router from 'react-router';
 import Location from 'react-router/lib/Location';
 
 import {Flux, Container} from '../flux';
 import routes from '../routes';
 import HtmlDocument from './HtmlDocument';
-import promisify from '../utils/promisify';
 import bindActions from '../utils/bindActions';
 import availableLocales from './availableLocales';
 import * as stores from '../stores';
 import * as TokenAction from '../actions/TokenAction';
 import * as UserAction from '../actions/UserAction';
+import readWebpackStats from './readWebpackStats';
 
-const readFile = promisify(fs.readFile);
-const STATS_PATH = path.join(__dirname, '../../public/build/webpack-stats.json');
 const DEFAULT_LOCALE = 'en';
-
-let webpackStats;
-
-function readStats(req){
-  if (req.get('env') === 'production' && webpackStats){
-    return Promise.resolve(webpackStats);
-  }
-
-  return readFile(STATS_PATH, 'utf8').then(content => {
-    webpackStats = JSON.parse(content);
-  });
-}
 
 function render(req, res, next){
   const flux = new Flux(stores);
   const lang = req.acceptsLanguages(availableLocales) || DEFAULT_LOCALE;
   const {checkToken} = bindActions(TokenAction, flux);
   const {loadCurrentUser} = bindActions(UserAction, flux);
+  let stats;
 
-  readStats(req).then(() => {
+  readWebpackStats(req).then(webpackStats => {
+    stats = webpackStats;
+
     // Check web token
     return checkToken(req.session.token).catch(() => {
       req.session.token = null;
@@ -74,7 +61,7 @@ function render(req, res, next){
       );
 
       let html = ReactDOM.renderToStaticMarkup(
-        React.createElement(HtmlDocument, {flux, markup, stats: webpackStats})
+        React.createElement(HtmlDocument, {flux, markup, stats})
       );
 
       res.status(AppStore.getStatusCode());

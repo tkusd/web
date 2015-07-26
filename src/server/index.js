@@ -7,7 +7,6 @@ import morgan from 'morgan';
 import csurf from 'csurf';
 import serveStatic from 'serve-static';
 import minimist from 'minimist';
-import {fork} from 'child_process';
 
 require('./loadIntlPolyfill');
 
@@ -26,7 +25,6 @@ server.use(cookieSession({
 }));
 server.use(compression());
 server.use(csurf());
-// server.use(locale(locales));
 
 if (PRODUCTION){
   // On production, use the public directory for static files
@@ -37,12 +35,13 @@ if (PRODUCTION){
   }));
 } else {
   // On development, serve the static files from the webpack dev server.
-  fork(require.resolve('./webpack'));
+  require('./webpack');
 }
 
 // Internal API
 server.use('/_api', require('./api'));
 server.get('/logout', require('./logout'));
+server.get('/projects/:id/preview', require('../preview'));
 
 // Render the app server-side and send it as response.
 server.get('/*', require('./render'));

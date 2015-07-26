@@ -1,8 +1,8 @@
 import React from 'react';
-import Canvas from './Canvas';
 import ElementSidebar from './ElementSidebar';
 import Immutable from 'immutable';
 import ScreenToolbar from './ScreenToolbar';
+import CanvasContainer from './CanvasContainer';
 
 if (process.env.BROWSER){
   require('../../styles/Screen/Screen.styl');
@@ -58,7 +58,7 @@ class Screen extends React.Component {
     return (
       <div className="screen">
         <div className="screen__canvas">
-          <Canvas {...this.props}
+          <CanvasContainer {...this.props}
             elements={elements}
             element={elements.get(selectedScreen)}
             activeElement={activeElement}

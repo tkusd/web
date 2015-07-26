@@ -5,7 +5,9 @@ import writeStats from './utils/write-stats';
 const assetPath = path.join(__dirname, '../public/build');
 
 let entry = {
-  main: ['./src/client']
+  main: ['./src/client'],
+  preview: ['./src/preview/client'],
+  vendor: ['react', 'react-router', 'immutable']
 };
 
 export default {
@@ -51,7 +53,7 @@ export default {
     ]
   },
   plugins: [
-    new webpack.optimize.CommonsChunkPlugin('common.js'),
+    new webpack.optimize.CommonsChunkPlugin('vendor', 'vendor.[hash:8].js'),
 
     function(){
       this.plugin('done', writeStats);

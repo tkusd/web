@@ -1,0 +1,62 @@
+@import "nib"
+@import "../common"
+
+.canvas__screen
+  position: absolute
+  top: 0
+  left: 0
+  right: 0
+  bottom: 0
+  margin: auto
+  width: 360px
+  height: 640px
+  background: #fff
+
+$canvas-resize-area
+  position: fixed
+
+.canvas__resize-n
+  @extend $canvas-resize-area
+  cursor: n-resize
+  border-top: 2px solid color-accent
+
+.canvas__resize-e
+  @extend $canvas-resize-area
+  cursor: e-resize
+  border-right: 2px solid color-accent
+
+.canvas__resize-s
+  @extend $canvas-resize-area
+  cursor: s-resize
+  border-bottom: 2px solid color-accent
+
+.canvas__resize-w
+  @extend $canvas-resize-area
+  cursor: w-resize
+  border-left: 2px solid color-accent
+
+$canvas-resize-corner
+  @extend $canvas-resize-area
+  background: color-accent
+
+.canvas__resize-ne
+  @extend $canvas-resize-corner
+  cursor: ne-resize
+
+.canvas__resize-se
+  @extend $canvas-resize-corner
+  cursor: se-resize
+
+.canvas__resize-sw
+  @extend $canvas-resize-corner
+  cursor: sw-resize
+
+.canvas__resize-nw
+  @extend $canvas-resize-corner
+  cursor: nw-resize
+
+.canvas__mask
+  background: color-accent
+  opacity: 0.5
+  position: fixed
+  pointer-events: none
