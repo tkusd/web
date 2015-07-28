@@ -35,20 +35,15 @@ app.post('/tokens', (req, res, next) => {
     body: req.body
   })
   .then(response => {
-    if (response.status !== 201) return response;
+    if (response.status !== 201){
+      return proxy(res)(response);
+    }
 
-    return response.text().then(txt => {
-      let json = JSON.parse(txt);
+    return response.json().then(json => {
       req.session.token = json;
-
-      // Replace response.text and response.json because the body has been decoded.
-      response.text = () => Promise.resolve(txt);
-      response.json = () => Promise.resolve(json);
-
-      return response;
+      res.status(response.status).json(json);
     });
   })
-  .then(proxy(res))
   .catch(next);
 });
 
@@ -66,7 +61,7 @@ app.delete('/tokens', (req, res, next) => {
     method: 'delete'
   })
   .then(response => {
-    if (response.status === 204 && token.id === req.body.id){
+    if (response.status === 204){
       req.session.token = null;
     }
 
