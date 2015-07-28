@@ -1,5 +1,17 @@
 @import "nib"
 @import "~normalize.css"
+@import "./variables"
 
-#root
-  @import "./theme"
+*, *::before, *::after
+  box-sizing: border-box
+
+body
+  font-size: font-size-base
+  font-family: font-sans
+  background: color-background
+  color: color-text
+  text-rendering: optimizeLegibility
+  -webkit-font-smoothing: antialiased
+  -moz-osx-font-smoothing: grayscale
+
+@import "./theme"

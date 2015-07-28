@@ -1,20 +1,38 @@
 import React from 'react';
 import ElementItem from './ElementItem';
+import {DropTarget} from 'react-dnd';
+import ItemTypes from '../../constants/ItemTypes';
 
 if (process.env.BROWSER){
   require('../../styles/Screen/ElementList.styl');
 }
 
+const spec = {
+  drop(){}
+};
+
+@DropTarget(ItemTypes.ELEMENT_ITEM, spec, connect => ({
+  connectDropTarget: connect.dropTarget()
+}))
 class ElementList extends React.Component {
   static propTypes = {
     elements: React.PropTypes.object.isRequired,
     activeElement: React.PropTypes.string,
     parent: React.PropTypes.string.isRequired,
-    selectElement: React.PropTypes.func.isRequired
+    selectElement: React.PropTypes.func.isRequired,
+
+    // React DnD
+    connectDropTarget: React.PropTypes.func.isRequired
   }
 
   render(){
-    const {elements, parent, activeElement, selectElement} = this.props;
+    const {
+      elements,
+      parent,
+      activeElement,
+      selectElement,
+      connectDropTarget
+    } = this.props;
 
     const list = elements
       .filter(item => item.get('element_id') === parent)
@@ -27,7 +45,7 @@ class ElementList extends React.Component {
           selectElement={selectElement}/>
       )).toArray();
 
-    return (
+    return connectDropTarget(
       <ul className="element-list">{list}</ul>
     );
   }

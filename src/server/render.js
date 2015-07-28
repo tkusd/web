@@ -67,7 +67,7 @@ function render(req, res, next){
       res.status(AppStore.getStatusCode());
       res.send('<!DOCTYPE html>' + html);
     });
-  });
+  }).catch(next);
 }
 
 export default render;

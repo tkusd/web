@@ -1,25 +1,26 @@
 import React from 'react';
 import {Flux} from '../flux';
-import generateScript from './generateScript';
 
 class HtmlDocument extends React.Component {
   static propTypes = {
     flux: React.PropTypes.instanceOf(Flux).isRequired,
-    stats: React.PropTypes.object.isRequired,
-    projectID: React.PropTypes.string.isRequired
+    script: React.PropTypes.string.isRequired,
+    stats: React.PropTypes.object.isRequired
   }
 
   render(){
-    const {flux, stats, projectID} = this.props;
+    const {flux, script, stats} = this.props;
     const {AppStore} = flux.getStore();
 
-    let style = [].concat(
+    let styles = [].concat(
       stats.preview.css
     );
 
-    let script = [].concat(
+    let scripts = [].concat(
       stats.preview.js
     );
+
+    let scriptContent = 'window.$INIT = function($VENDOR){' + script + '}';
 
     return (
       <html>
@@ -29,12 +30,12 @@ class HtmlDocument extends React.Component {
           <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
           <meta httpEquiv="X-UA-Compatible" content="IE=edge"/>
           <meta name="mobile-web-app-capable" content="yes"/>
-          {style.map((href, key) => <link rel="stylesheet" type="text/css" href={href} key={key}/>)}
+          {styles.map((href, key) => <link rel="stylesheet" type="text/css" href={href} key={key}/>)}
         </head>
         <body>
           <div id="root"/>
-          <script dangerouslySetInnerHTML={{__html: generateScript(flux, projectID)}}/>
-          {script.map((src, key) => <script src={src} key={key} defer/>)}
+          <script dangerouslySetInnerHTML={{__html: scriptContent}}/>
+          {scripts.map((src, key) => <script src={src} key={key}/>)}
         </body>
       </html>
     );

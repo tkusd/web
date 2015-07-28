@@ -9,6 +9,16 @@ import * as TokenAction from '../actions/TokenAction';
 import * as UserAction from '../actions/UserAction';
 import HtmlDocument from './HtmlDocument';
 import readWebpackStats from '../server/readWebpackStats';
+import webpackCompile from './webpackCompile';
+import generateScript from './generateScript';
+
+let webpackExternals = {
+  './src/styles/preview/base.styl': '""'
+};
+
+['react', 'react-dom', 'react-router', 'react-router/lib/HashHistory'].forEach(key => {
+  webpackExternals[key] = `$VENDOR["${key}"]`;
+});
 
 export default function(req, res, next){
   const flux = new Flux(stores);
@@ -32,8 +42,14 @@ export default function(req, res, next){
   }).then(() => {
     return getFullProject(req.params.id);
   }).then(() => {
+    let script = generateScript(flux, req.params.id);
+
+    return webpackCompile(script, {
+      externals: webpackExternals
+    });
+  }).then(script => {
     let html = ReactDOM.renderToStaticMarkup(
-      React.createElement(HtmlDocument, {flux, stats, projectID: req.params.id})
+      React.createElement(HtmlDocument, {flux, script, stats})
     );
 
     res.status(AppStore.getStatusCode());

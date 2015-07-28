@@ -70,6 +70,7 @@ function generateRouteComponent(elements, screen){
     callee: ReactCreateClass,
     arguments: [
       generateObjectExpression({
+        displayName: generateLiteral(`Screen(${screen.get('name')})`),
         render: {
           type: 'FunctionExpression',
           params: [],
@@ -103,42 +104,46 @@ function generateRoutes(flux, projectID){
       });
     }).toArray();
 
-  return generateArrayExpression([].concat(routes, generateObjectExpression({
-    path: generateLiteral('*'),
-    onEnter: {
-      type: 'FunctionExpression',
-      params: [
-        generateIdentifier('state'),
-        generateIdentifier('transition')
-      ],
-      body: {
-        type: 'BlockStatement',
-        body: [
-          {
-            type: 'CallExpression',
-            callee: generateMemberExpression('transition.to'),
-            arguments: [
-              generateLiteral('/' + mainScreen)
-            ]
-          }
-        ]
+  if (mainScreen){
+    routes.push(generateObjectExpression({
+      path: generateLiteral('*'),
+      onEnter: {
+        type: 'FunctionExpression',
+        params: [
+          generateIdentifier('state'),
+          generateIdentifier('transition')
+        ],
+        body: {
+          type: 'BlockStatement',
+          body: [
+            {
+              type: 'CallExpression',
+              callee: generateMemberExpression('transition.to'),
+              arguments: [
+                generateLiteral('/' + mainScreen)
+              ]
+            }
+          ]
+        }
       }
-    }
-  })));
+    }));
+  }
+
+  return generateArrayExpression(routes);
 }
 
 function generateReactRender(flux, projectID){
   return {
     type: 'CallExpression',
-    callee: generateMemberExpression('React.render'),
+    callee: generateMemberExpression('ReactDOM.render'),
     arguments: [
       {
         type: 'CallExpression',
         callee: ReactCreateElement,
         arguments: [
-          generateIdentifier('Router'),
+          generateMemberExpression('ReactRouter.Router'),
           generateObjectExpression({
-            history: generateIdentifier('history'),
+            history: generateMemberExpression('HashHistory.history'),
             children: generateRoutes(flux, projectID)
           })
         ]
@@ -154,38 +159,50 @@ function generateReactRender(flux, projectID){
   };
 }
 
-function generateBody(flux, projectID){
+function generateRequire(identifier, moduleName){
   return {
-    type: 'BlockStatement',
-    body: [
-      generateReactRender(flux, projectID)
-    ]
+    type: 'VariableDeclaration',
+    declarations: [
+      {
+        type: 'VariableDeclarator',
+        id: generateIdentifier(identifier),
+        init: {
+          type: 'CallExpression',
+          callee: generateIdentifier('require'),
+          arguments: [
+            generateLiteral(moduleName)
+          ]
+        }
+      }
+    ],
+    kind: 'var'
   };
+}
+
+function generateBody(flux, projectID){
+  return [
+    {
+      type: 'CallExpression',
+      callee: generateIdentifier('require'),
+      arguments: [
+        generateLiteral('./src/styles/preview/base.styl')
+      ]
+    },
+    generateRequire('React', 'react'),
+    generateRequire('ReactRouter', 'react-router'),
+    generateRequire('HashHistory', 'react-router/lib/HashHistory'),
+    generateRequire('ReactDOM', 'react-dom'),
+    {
+      type: 'ExpressionStatement',
+      expression: generateReactRender(flux, projectID)
+    }
+  ];
 }
 
 export default function generateScript(flux, projectID){
   let ast = {
     type: 'Program',
-    body: [
-      {
-        type: 'ExpressionStatement',
-        expression: {
-          type: 'AssignmentExpression',
-          operator: '=',
-          left: generateMemberExpression('window.$INIT'),
-          right: {
-            type: 'FunctionExpression',
-            id: generateIdentifier('$INIT'),
-            params: [
-              generateIdentifier('React'),
-              generateIdentifier('Router'),
-              generateIdentifier('history')
-            ],
-            body: generateBody(flux, projectID)
-          }
-        }
-      }
-    ]
+    body: generateBody(flux, projectID)
   };
 
   return escodegen.generate(ast, {

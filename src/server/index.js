@@ -44,8 +44,7 @@ server.get('/projects/:id/preview', require('../preview'));
 server.get('/*', require('./render'));
 
 server.use((err, req, res, next) => {
-  console.error('Error on request %s %s', req.method, req.url);
-  console.error(err.stack);
+  console.error(err.stack || err);
   res.status(500).send('Server error');
 });
 
