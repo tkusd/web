@@ -22,14 +22,29 @@ app.use((req, res, next) => {
   next();
 });
 
-app.post('/tokens', (req, res, next) => {
-  if (req.session.token){
-    return res.status(400).send({
-      error: 2000,
-      message: 'You have already logged in.'
-    });
-  }
+function checkToken(req, res, next){
+  if (!req.session.token) return next();
 
+  const {token} = req.session;
+
+  api('tokens/' + token.id, {
+    method: 'put'
+  })
+  .then(response => {
+    if (response.status === 200) {
+      res.status(400).send({
+        error: 2000,
+        message: 'You have already logged in.'
+      });
+    } else {
+      req.session.token = null;
+      next();
+    }
+  })
+  .catch(next);
+}
+
+app.post('/tokens', checkToken, (req, res, next) => {
   api('tokens', {
     method: 'post',
     body: req.body
