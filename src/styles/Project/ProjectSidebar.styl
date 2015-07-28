@@ -3,6 +3,20 @@
 
 tab-width = 48px
 
+$project-sidebar-tab
+  width: tab-width
+  height: @width
+  font-size: 20px
+  line-height: @height
+  text-align: center
+  display: block
+  color: #999
+  cursor: pointer
+  border-radius: 3px 0 0 3px
+  border-left: 2px solid transparent
+  &:hover
+    color: #fff
+
 .project-sidebar
   position: absolute
   top: 0
@@ -25,20 +39,17 @@ tab-width = 48px
     bottom: 0
     background: color-project-sidebar
   .tab-host__tab
-    width: tab-width
-    height: @width
-    font-size: 20px
-    line-height: @height
-    text-align: center
-    display: block
-    color: #999
-    cursor: pointer
-    border-radius: 3px 0 0 3px
-    border-left: 2px solid transparent
+    @extend $project-sidebar-tab
     &.active
       color: #fff
       background: color-project-sidebar
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.2)
       border-left-color: color-accent
-    &:hover
-      color: #fff
+
+.project-sidebar__links
+  position: absolute
+  bottom: 0
+  left: 0
+
+.project-sidebar__link
+  @extend $project-sidebar-tab

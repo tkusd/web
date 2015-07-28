@@ -14,21 +14,29 @@ if (process.env.BROWSER){
 @pureRender
 class ProjectSidebar extends React.Component {
   static propTypes = {
+    project: React.PropTypes.object.isRequired,
     editable: React.PropTypes.bool.isRequired
   }
 
   render(){
     return (
-      <TabHost className="project-sidebar">
-        <TabPane tab={<FontAwesome icon="mobile"/>}>
-          <ScreenPalette {...this.props}/>
-        </TabPane>
-        {this.renderComponentPalette()}
-        {this.renderSettingPalette()}
-        <TabPane tab={<FontAwesome icon="share-alt"/>}>
-          <SharePalette {...this.props}/>
-        </TabPane>
-      </TabHost>
+      <div className="project-sidebar">
+        <TabHost>
+          <TabPane tab={<FontAwesome icon="mobile"/>}>
+            <ScreenPalette {...this.props}/>
+          </TabPane>
+          {this.renderComponentPalette()}
+          {this.renderSettingPalette()}
+          <TabPane tab={<FontAwesome icon="share-alt"/>}>
+            <SharePalette {...this.props}/>
+          </TabPane>
+        </TabHost>
+        <div className="project-sidebar__links">
+          <a href={this.makePreviewHref()} className="project-sidebar__link" target="_blank" onClick={this.openPreviewWindow}>
+            <FontAwesome icon="eye"/>
+          </a>
+        </div>
+      </div>
     );
   }
 
@@ -50,6 +58,19 @@ class ProjectSidebar extends React.Component {
         <SettingPalette {...this.props}/>
       </TabPane>
     );
+  }
+
+  makePreviewHref(){
+    const {project} = this.props;
+    return `/projects/${project.get('id')}/preview`;
+  }
+
+  openPreviewWindow = (e) => {
+    e.preventDefault();
+
+    const {project} = this.props;
+
+    window.open(this.makePreviewHref(), project.get('id'), 'menubar=no, location=no, width=360, height=640, status=no');
   }
 }
 
