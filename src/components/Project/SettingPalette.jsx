@@ -1,6 +1,7 @@
 import React from 'react';
 import Palette from './Palette';
-import {Form, Input} from '../form';
+import {Form, InputGroup} from '../form';
+import {validators} from 'react-form-input';
 import Immutable from 'immutable';
 import * as ProjectAction from '../../actions/ProjectAction';
 import {ModalPortal} from '../modal';
@@ -58,17 +59,18 @@ class SettingPalette extends React.Component {
         <div className="setting-palette">
           {error && !error.field && <div>{error.message}</div>}
           <Form onSubmit={this.handleSubmit}>
-            <Input
-              name="title"
+            <InputGroup
               ref="title"
               label={<FormattedMessage message="common.title"/>}
               type="text"
               required
-              maxLength={255}
+              validators={[
+                validators.required('Title is required'),
+                validators.maxLength(255, 'The maximum length of the title is 255')
+              ]}
               initialValue={project.get('title')}
               onChange={this.handleInputChange.bind(this, 'title')}/>
-            <Input
-              name="description"
+            <InputGroup
               ref="description"
               label={<FormattedMessage message="project.description"/>}
               type="textarea"

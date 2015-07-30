@@ -1,5 +1,6 @@
 import React from 'react';
 import SizeInput from './SizeInput';
+import shallowEqual from '../../utils/shallowEqual';
 
 if (process.env.BROWSER){
   require('../../styles/form/LayoutBox.styl');
@@ -40,7 +41,7 @@ class LayoutBox extends React.Component {
   }
 
   componentWillReceiveProps(nextProps){
-    if (nextProps.hasOwnProperty('value')){
+    if (nextProps.hasOwnProperty('value') && !shallowEqual(nextProps.value, this.props.value)){
       this.setState({value: nextProps.value});
     }
   }

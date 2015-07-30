@@ -20,25 +20,15 @@ const COMPONENTS = [
     }
   },
   {
-    type: ElementTypes.layout,
-    container: true,
-    resizable: true
-  },
-  {
     type: ElementTypes.button,
     container: true,
-    resizable: true
-  },
-  {
-    type: ElementTypes.input,
-    resizable: true
-  },
-  {
-    type: ElementTypes.link,
     resizable: true,
-    container: true,
     attributes: {
-      href: {
+      text: {
+        type: 'text',
+        initialValue: 'Button'
+      },
+      icon: {
         type: 'text'
       }
     }
@@ -48,13 +38,14 @@ const COMPONENTS = [
     resizable: true,
     attributes: {
       src: {
-        type: 'text'
+        type: 'text',
+        initialValue: 'http://placehold.it/300x300'
+      },
+      alt: {
+        type: 'text',
+        initialValue: 'Picture'
       }
     }
-  },
-  {
-    type: ElementTypes.list,
-    resizable: true
   }
 ];
 

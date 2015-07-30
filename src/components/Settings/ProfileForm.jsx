@@ -1,5 +1,6 @@
 import React from 'react';
-import {Form, Input} from '../form';
+import {Form, InputGroup} from '../form';
+import {validators} from 'react-form-input';
 import * as UserAction from '../../actions/UserAction';
 import bindActions from '../../utils/bindActions';
 import {FormattedMessage} from '../intl';
@@ -38,21 +39,27 @@ class ProfileForm extends React.Component {
     return (
       <Form onSubmit={this.handleSubmit}>
         {error && !error.field && <div className="settings__form-error">{error.message}</div>}
-        <Input
+        <InputGroup
           name="name"
           ref="name"
           label={<FormattedMessage message="common.name"/>}
           type="text"
           initialValue={user.get('name')}
           required
-          maxLength={100}/>
-        <Input
-          name="email"
+          validators={[
+            validators.required('Name is required'),
+            validators.maxLength(100, 'The maximum length of the name is 100')
+          ]}/>
+        <InputGroup
           ref="email"
           label={<FormattedMessage message="common.email"/>}
           type="email"
           initialValue={user.get('email')}
-          required/>
+          required
+          validators={[
+            validators.required('Email is required'),
+            validators.email('Email is invalid')
+          ]}/>
         <button type="submit" className="settings__button--primary">
           <FormattedMessage message="common.update"/>
         </button>

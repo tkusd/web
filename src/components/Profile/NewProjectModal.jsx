@@ -1,6 +1,7 @@
 import React from 'react';
 import {Modal} from '../modal';
-import {Form, Input} from '../form';
+import {Form, InputGroup} from '../form';
+import {validators} from 'react-form-input';
 import * as ProjectAction from '../../actions/ProjectAction';
 import {FormattedMessage} from '../intl';
 import bindActions from '../../utils/bindActions';
@@ -41,13 +42,15 @@ class NewProjectModal extends React.Component {
       <Modal title={<FormattedMessage message="profile.new_project"/>} onDismiss={closeModal}>
         <Form onSubmit={this.handleSubmit}>
           {error && !error.field && <div>{error.message}</div>}
-          <Input
-            name="title"
+          <InputGroup
             ref="title"
             label={<FormattedMessage message="common.title"/>}
             type="text"
             required
-            maxLength={255}/>
+            validators={[
+              validators.required('Title is required'),
+              validators.maxLength(255, 'The maximum length of title is 255')
+            ]}/>
           <div className="modal__btn-group">
             <a className="modal__btn" onClick={closeModal}>
               <FormattedMessage message="common.cancel"/>

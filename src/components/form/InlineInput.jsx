@@ -1,5 +1,6 @@
 import React from 'react';
-import Input from './Input';
+import ReactDOM from 'react-dom';
+import Input from 'react-form-input';
 import Form from './Form';
 import omit from 'lodash/object/omit';
 
@@ -48,7 +49,7 @@ class InlineInput extends React.Component {
     });
 
     setTimeout(() => {
-      this.refs.input.focus();
+      ReactDOM.findDOMNode(this.refs.input).focus();
     }, 0);
   }
 

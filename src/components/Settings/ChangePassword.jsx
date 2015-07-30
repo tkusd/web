@@ -1,5 +1,6 @@
 import React from 'react';
-import {Form, Input} from '../form';
+import {Form, InputGroup} from '../form';
+import {validators} from 'react-form-input';
 import * as UserAction from '../../actions/UserAction';
 import bindActions from '../../utils/bindActions';
 import {FormattedMessage} from '../intl';
@@ -37,20 +38,20 @@ class ChangePassword extends React.Component {
     return (
       <Form onSubmit={this.handleSubmit}>
         {error && !error.field && <div className="settings__form-error">{error.message}</div>}
-        <Input
-          name="old_password"
+        <InputGroup
           ref="old_password"
           label={<FormattedMessage message="settings.current_password"/>}
           type="password"
-          minLength={6}
-          maxLength={50}/>
-        <Input
-          name="password"
+          validators={[
+            validators.length(6, 50, 'The length of the password must be between 6 to 50')
+          ]}/>
+        <InputGroup
           ref="password"
           label={<FormattedMessage message="settings.new_password"/>}
           type="password"
-          minLength={6}
-          maxLength={50}/>
+          validators={[
+            validators.length(6, 50, 'The length of the password must be between 6 to 50')
+          ]}/>
         <button type="submit" className="settings__button--primary">
           <FormattedMessage message="settings.change_password"/>
         </button>

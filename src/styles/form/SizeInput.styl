@@ -1,20 +1,20 @@
 @import "nib"
 @import "../common"
-@import "./Input"
+@import "./InputGroup"
 
 unit-width = 30px
 
 .size-input
-  @extend .input
+  @extend .input-group
 
 .size-input__label
-  @extend .input__label
+  @extend .input-group__label
 
 .size-input__field
   position: relative
 
 .size-input__value
-  @extend .input__field
+  @extend .input-group__field
   display: none
   line-height: 1
   &:focus

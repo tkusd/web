@@ -34,22 +34,15 @@ function generateRouteChildren(elements, element){
 
     case ElementTypes.button:
       tagName = 'button';
-      break;
-
-    case ElementTypes.input:
-      tagName = 'input';
-      break;
-
-    case ElementTypes.link:
-      tagName = 'a';
+      children.unshift(
+        generateLiteral(element.getIn(['attributes', 'text']))
+      );
       break;
 
     case ElementTypes.image:
       tagName = 'img';
-      break;
-
-    case ElementTypes.list:
-      tagName = 'ul';
+      props.src = generateLiteral(element.getIn(['attributes', 'src']));
+      props.alt = generateLiteral(element.getIn(['attributes', 'alt']));
       break;
   }
 

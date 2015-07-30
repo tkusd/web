@@ -1,9 +1,33 @@
 @import "nib"
 @import "./variables"
+@import "./mixins"
 
-a
-  color: color-primary
-  text-decoration: none
-  -webkit-tap-highlight-color: rgba(0,0,0,0) // Removes the dark touch outlines on links in webkit browsers.
-  &:active
-    color: darken(@color, 10%)
+$body
+  @extend $tap-highlight-transparent
+  touch-callout: none
+  -webkit-font-smoothing: antialiased
+  -moz-osx-font-smoothing: grayscale
+  text-size-adjust: none
+  user-select: none
+
+  top: 0
+  right: 0
+  bottom: 0
+  left: 0
+  overflow: hidden
+
+  margin: 0
+  padding: 0
+
+  color: base-color
+  word-wrap: break-word
+  font-size: font-size-base
+  font-family: font-family-base
+  line-height-computed: line-height-computed
+  text-rendering: optimizeLegibility
+  -webkit-backface-visibility: hidden
+  -webkit-user-drag: none
+  -ms-content-zooming: none
+
+@import "./type"
+@import "./button"

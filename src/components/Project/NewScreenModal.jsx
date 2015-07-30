@@ -1,6 +1,7 @@
 import React from 'react';
 import {Modal} from '../modal';
-import {Form, Input} from '../form';
+import {Form, InputGroup} from '../form';
+import {validators} from 'react-form-input';
 import * as ElementAction from '../../actions/ElementAction';
 import bindActions from '../../utils/bindActions';
 import {FormattedMessage} from '../intl';
@@ -41,14 +42,15 @@ class NewScreenModal extends React.Component {
       <Modal title={<FormattedMessage message="project.new_screen"/>} onDismiss={closeModal}>
         <Form onSubmit={this.handleSubmit}>
           {error && !error.field && <div>{error.message}</div>}
-          <Input
-            id="new-screen-name"
-            name="name"
+          <InputGroup
             ref="name"
             label={<FormattedMessage message="common.name"/>}
             type="text"
             required
-            maxLength={255}/>
+            validators={[
+              validators.required('Name is required'),
+              validators.maxLength('The maximum length of the name is 255')
+            ]}/>
           <div className="modal__btn-group">
             <a className="modal__btn" onClick={closeModal}>
               <FormattedMessage message="common.cancel"/>

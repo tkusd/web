@@ -1,6 +1,7 @@
 import React from 'react';
 import {Link} from 'react-router';
-import {Form, Input} from '../form';
+import {Form, InputGroup} from '../form';
+import {validators} from 'react-form-input';
 import * as UserAction from '../../actions/UserAction';
 import * as AppAction from '../../actions/AppAction';
 import * as TokenAction from '../../actions/TokenAction';
@@ -43,7 +44,7 @@ class Signup extends React.Component {
   }
 
   render(){
-    let {error} = this.state;
+    const {error} = this.state;
 
     return (
       <Form onSubmit={this.handleSubmit}>
@@ -51,27 +52,33 @@ class Signup extends React.Component {
           <FormattedMessage message="common.signup"/>
         </h1>
         {error && !error.field && <div className="login-container__error">{error.message}</div>}
-        <Input
-          name="name"
+        <InputGroup
           ref="name"
           label={<FormattedMessage message="common.name"/>}
           type="text"
           required
-          maxLength={100}/>
-        <Input
-          name="email"
+          validators={[
+            validators.required('Name is required'),
+            validators.maxLength(100, 'The maximum length of name is 100')
+          ]}/>
+        <InputGroup
           ref="email"
           label={<FormattedMessage message="common.email"/>}
           type="email"
-          required/>
-        <Input
-          name="password"
+          required
+          validators={[
+            validators.required('Email is required'),
+            validators.email('Email is invalid')
+          ]}/>
+        <InputGroup
           ref="password"
           label={<FormattedMessage message="common.password"/>}
           type="password"
           required
-          minLength={6}
-          maxLength={50}/>
+          validators={[
+            validators.required('Password is required'),
+            validators.length(6, 50, 'The length of the password must be between 6 to 50')
+          ]}/>
         <button type="submit" className="login-container__button">
           <FormattedMessage message="common.signup"/>
         </button>

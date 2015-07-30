@@ -1,0 +1,40 @@
+$paragraph
+  margin: 0 0 line-height-computed * 0.5
+
+$heading
+  color: base-color
+  font-weight: headings-font-weight
+  font-family: headings-font-weight
+  line-height: headings-line-height
+  margin-top: line-height-computed * 0.5
+  margin-bottom: line-height-computed * 0.5
+  small
+    font-weight: normal
+    line-height: 1
+
+$h1
+  @extend $heading
+  margin-top: line-height-computed
+  font-size: floor(font-size-base * 2.6)
+
+$h2
+  @extend $heading
+  margin-top: line-height-computed
+  font-size: floor(font-size-base * 2.15)
+
+$h3
+  @extend $heading
+  margin-top: line-height-computed
+  font-size: ceil(font-size-base * 1.7)
+
+$h4
+  @extend $heading
+  font-size: ceil(font-size-base * 1.25)
+
+$h5
+  @extend $heading
+  font-size: font-size-base
+
+$h6
+  @extend $heading
+  font-size: ceil(font-size-base * 0.85)

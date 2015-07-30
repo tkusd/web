@@ -37,7 +37,7 @@ class SizeInput extends React.Component {
   }
 
   componentWillReceiveProps(nextProps){
-    if (nextProps.hasOwnProperty('value')){
+    if (nextProps.hasOwnProperty('value') && nextProps.value !== this.props.value){
       this.setState(this.parseRawValue(nextProps.value));
     }
   }
