@@ -6,7 +6,7 @@ import cookieSession from 'cookie-session';
 import morgan from 'morgan';
 import csurf from 'csurf';
 import serveStatic from 'serve-static';
-import minimist from 'minimist';
+import loadConfig from '../utils/loadConfig';
 
 require('./loadIntlPolyfill');
 
@@ -14,14 +14,16 @@ require('./loadIntlPolyfill');
 const server = express();
 const NODE_ENV = server.get('env');
 const PRODUCTION = NODE_ENV === 'production';
-const argv = minimist(process.argv.slice(2));
-const PORT = argv.port || 4000;
+const config = loadConfig();
+
+server.set('trust proxy', 1);
 
 // Middleware
 server.use(morgan(PRODUCTION ? 'combined' : 'dev'));
 server.use(bodyParser.json());
 server.use(cookieSession({
-  keys: ['secret1', 'secret2']
+  keys: config.secret,
+  maxAge: 1000 * 60 * 60 * 24 * 30 // 1 month
 }));
 server.use(compression());
 server.use(csurf());
@@ -50,6 +52,6 @@ server.use((err, req, res, next) => {
   res.status(500).send('Server error');
 });
 
-server.listen(PORT, () => {
-  console.log('Server listening on port %d', PORT);
+server.listen(config.port, config.host, () => {
+  console.log('Server listening on port %s:%d', config.host, config.port);
 });

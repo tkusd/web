@@ -2,11 +2,11 @@ import config from './config';
 import merge from 'lodash/object/merge';
 import webpack from 'webpack';
 import notifyStats from './utils/notify-stats';
-import minimist from 'minimist';
+import loadConfig from '../src/utils/loadConfig';
 
-const argv = minimist(process.argv.slice(2));
-const WEBPACK_HOST = argv.host || 'localhost';
-const WEBPACK_PORT = argv.port ? parseInt(argv.port, 10) + 1 : 4001;
+const serverConfig = loadConfig();
+const WEBPACK_HOST = serverConfig.host;
+const WEBPACK_PORT = serverConfig.port + 1;
 
 const HOT_LOAD_SCRIPTS = [
   `webpack-dev-server/client?http://${WEBPACK_HOST}:${WEBPACK_PORT}`,
