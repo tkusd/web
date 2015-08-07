@@ -5,14 +5,40 @@ import {
   generateArrayExpression,
   generateObjectExpression,
   generateMemberExpression,
-  generateASTFromObject
+  generateASTFromObject,
+  generateRequire,
+  generateCallExpression,
+  generateCallStatement,
+  generateBlockStatement,
+  generateVariable,
+  generateBinaryExpression,
+  generateAssignmentStatement
 } from '../utils/esprima';
 import ElementTypes from '../constants/ElementTypes';
 
-const ReactCreateElement = generateMemberExpression('React.createElement');
-const ReactCreateClass = generateMemberExpression('React.createClass');
+function ReactCreateElement(tag, props, children){
+  let args = [tag];
 
-function generateRouteChildren(elements, element){
+  if (props){
+    args.push(generateObjectExpression(props));
+  }
+
+  if (children){
+    args.push(generateArrayExpression(children));
+  }
+
+  return generateCallExpression(generateMemberExpression('React.createElement'), args);
+}
+
+function ReactCreateClass(obj){
+  return generateCallExpression(generateMemberExpression('React.createClass'), generateObjectExpression(obj));
+}
+
+const ReactDiv = ReactCreateElement.bind(null, generateLiteral('div'));
+const TouchstoneViewManager = ReactCreateElement.bind(null, generateMemberExpression('touchstone.ViewManager'));
+const TouchstoneView = ReactCreateElement.bind(null, generateMemberExpression('touchstone.View'));
+
+function generateViewChildren(elements, element){
   const elementID = element.get('id');
   const childElements = elements.filter(item => item.get('element_id') === elementID);
 
@@ -21,7 +47,7 @@ function generateRouteChildren(elements, element){
     key: generateLiteral(elementID)
   };
 
-  let children = childElements.map(item => generateRouteChildren(elements, item)).toArray();
+  let children = childElements.map(item => generateViewChildren(elements, item)).toArray();
   let tagName = 'div';
 
   switch (element.get('type')){
@@ -46,161 +72,160 @@ function generateRouteChildren(elements, element){
       break;
   }
 
-  let args = [
-    generateLiteral(tagName),
-    generateObjectExpression(props)
-  ];
-
-  if (children && children.length){
-    args.push(generateArrayExpression(children));
-  }
-
-  return {
-    type: 'CallExpression',
-    callee: ReactCreateElement,
-    arguments: args
-  };
+  return ReactCreateElement(generateLiteral(tagName), props, children);
 }
 
-function generateRouteComponent(elements, screen){
-  return {
-    type: 'CallExpression',
-    callee: ReactCreateClass,
-    arguments: [
-      generateObjectExpression({
-        displayName: generateLiteral(`Screen(${screen.get('name')})`),
-        render: {
-          type: 'FunctionExpression',
-          params: [],
-          body: {
-            type: 'BlockStatement',
-            body: [
-              {
-                type: 'ReturnStatement',
-                argument: generateRouteChildren(elements, screen)
-              }
-            ]
+function generateView(elements, screen){
+  return TouchstoneView({
+    name: generateLiteral(screen.get('id')),
+    component: ReactCreateClass({
+      render: {
+        type: 'FunctionExpression',
+        params: [],
+        body: generateBlockStatement([
+          {
+            type: 'ReturnStatement',
+            argument: generateViewChildren(elements, screen)
           }
-        }
-      })
-    ]
-  };
+        ])
+      }
+    })
+  });
 }
 
-function generateRoutes(flux, projectID){
+function generateViewManager(flux, projectID){
   const {ElementStore, ProjectStore} = flux.getStore();
   const project = ProjectStore.getProject(projectID);
   const elements = ElementStore.getElementsOfProject(projectID);
-  const mainScreen = project.get('main_screen');
+  const mainScreen = project.get('main_screen', '');
 
-  let routes = elements
+  const views = elements
     .filter(screen => !screen.get('element_id'))
-    .map(screen => {
-      return generateObjectExpression({
-        path: generateLiteral('/' + screen.get('id')),
-        component: generateRouteComponent(elements, screen)
-      });
-    }).toArray();
+    .map(screen => generateView(elements, screen))
+    .toArray();
 
-  if (mainScreen){
-    routes.push(generateObjectExpression({
-      path: generateLiteral('*'),
-      onEnter: {
-        type: 'FunctionExpression',
-        params: [
-          generateIdentifier('state'),
-          generateIdentifier('transition')
-        ],
-        body: {
-          type: 'BlockStatement',
-          body: [
-            {
-              type: 'CallExpression',
-              callee: generateMemberExpression('transition.to'),
-              arguments: [
-                generateLiteral('/' + mainScreen)
-              ]
-            }
-          ]
+  return TouchstoneViewManager({
+    name: generateLiteral(projectID),
+    defaultView: generateLiteral(mainScreen)
+  }, views);
+}
+
+function generateApp(flux, projectID){
+  /*
+  React.createClass({
+    displayName: 'App',
+    mixins: [touchstone.createApp()],
+    render: function(){
+      var appWrapperClassName = 'app-wrapper';
+      if (window.device) appWrapperClassName += ' device--' + window.device.platform;
+
+      return <div className={appWrapperClassName}>...</div>
+    }
+  })
+  */
+  return ReactCreateClass({
+    mixins: generateArrayExpression([
+      generateCallExpression(generateMemberExpression('touchstone.createApp'))
+    ]),
+    render: {
+      type: 'FunctionExpression',
+      params: [],
+      body: generateBlockStatement([
+        generateVariable('appWrapperClassName', generateLiteral('app-wrapper')),
+        {
+          type: 'IfStatement',
+          test: generateMemberExpression('window.device'),
+          consequent: generateAssignmentStatement(
+            '+=',
+            generateIdentifier('appWrapperClassName'),
+            generateBinaryExpression(
+              '+',
+              generateLiteral(' device--'),
+              generateMemberExpression('window.device.platform')
+            )
+          )
+        },
+        {
+          type: 'ReturnStatement',
+          argument: ReactDiv({
+            className: generateIdentifier('appWrapperClassName')
+          }, [
+            generateViewManager(flux, projectID)
+          ])
         }
-      }
-    }));
-  }
-
-  return generateArrayExpression(routes);
+      ])
+    }
+  });
 }
 
-function generateReactRender(flux, projectID){
-  return {
-    type: 'CallExpression',
-    callee: generateMemberExpression('ReactDOM.render'),
-    arguments: [
-      {
-        type: 'CallExpression',
-        callee: ReactCreateElement,
-        arguments: [
-          generateMemberExpression('ReactRouter.Router'),
-          generateObjectExpression({
-            history: generateMemberExpression('HashHistory.history'),
-            children: generateRoutes(flux, projectID)
-          })
-        ]
-      },
-      {
-        type: 'CallExpression',
-        callee: generateMemberExpression('document.getElementById'),
-        arguments: [
-          generateLiteral('root')
-        ]
-      }
-    ]
-  };
-}
-
-function generateRequire(identifier, moduleName){
-  return {
-    type: 'VariableDeclaration',
-    declarations: [
-      {
-        type: 'VariableDeclarator',
-        id: generateIdentifier(identifier),
-        init: {
-          type: 'CallExpression',
-          callee: generateIdentifier('require'),
-          arguments: [
-            generateLiteral(moduleName)
-          ]
-        }
-      }
-    ],
-    kind: 'var'
-  };
-}
-
-function generateBody(flux, projectID){
+function generateAppStarter(flux, projectID){
   return [
+    /*
+    function startApp(){
+      if (window.StatusBar){
+        window.StatusBar.styleDefault();
+      }
+
+      React.render(..., document.getElementById('app'));
+    }
+    */
     {
-      type: 'CallExpression',
-      callee: generateIdentifier('require'),
-      arguments: [
-        generateLiteral('./src/styles/preview/base.styl')
-      ]
+      type: 'FunctionDeclaration',
+      id: generateIdentifier('startApp'),
+      params: [],
+      body: generateBlockStatement([
+        {
+          type: 'IfStatement',
+          test: generateMemberExpression('window.StatusBar'),
+          consequent: generateBlockStatement([
+            generateCallStatement(generateMemberExpression('window.StatusBar.styleDefault'))
+          ])
+        },
+        generateCallStatement(generateMemberExpression('ReactDOM.render'), [
+          ReactCreateElement(generateApp(flux, projectID)),
+          generateCallExpression(generateMemberExpression('document.getElementById'), [
+            generateLiteral('root')
+          ])
+        ])
+      ])
     },
-    generateRequire('React', 'react'),
-    generateRequire('ReactRouter', 'react-router'),
-    generateRequire('HashHistory', 'react-router/lib/HashHistory'),
-    generateRequire('ReactDOM', 'react-dom'),
+    /*
+    if (window.cordova){
+      document.addEventListener('deviceready', startApp, false);
+    } else {
+      startApp();
+    }
+    */
     {
-      type: 'ExpressionStatement',
-      expression: generateReactRender(flux, projectID)
+      type: 'IfStatement',
+      test: generateMemberExpression('window.cordova'),
+      consequent: generateBlockStatement([
+          generateCallStatement(generateMemberExpression('document.addEventListener'), [
+            generateLiteral('deviceready'),
+            generateIdentifier('startApp'),
+            generateLiteral(false)
+          ])
+      ]),
+      alternate: generateBlockStatement([
+        generateCallStatement(generateIdentifier('startApp'))
+      ])
     }
   ];
+}
+
+function generateProgram(flux, projectID){
+  return [].concat(
+    generateRequire('React', 'react'),
+    generateRequire('ReactDOM', 'react-dom'),
+    generateRequire('touchstone', 'touchstonejs'),
+    generateAppStarter(flux, projectID)
+  );
 }
 
 export default function generateScript(flux, projectID){
   let ast = {
     type: 'Program',
-    body: generateBody(flux, projectID)
+    body: generateProgram(flux, projectID)
   };
 
   return escodegen.generate(ast, {

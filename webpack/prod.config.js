@@ -23,6 +23,10 @@ export default merge({}, config, {
       {
         test: /\.styl$/,
         loader: ExtractTextPlugin.extract('style', 'css!postcss!stylus')
+      },
+      {
+        test: /\.less$/,
+        loader: ExtractTextPlugin.extract('style', 'css!postcss!less')
       }
     ])
   },

@@ -37,6 +37,10 @@ export default merge({}, config, {
       {
         test: /\.styl$/,
         loader: 'style!css!postcss!stylus'
+      },
+      {
+        test: /\.less$/,
+        loader: 'style!css!postcss!less'
       }
     ])
   },

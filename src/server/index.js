@@ -36,8 +36,6 @@ if (PRODUCTION){
     maxAge: 1000 * 60 * 60 * 24 * 30, // 1 month
     index: false
   }));
-} else {
-  require('../../webpack/server');
 }
 
 // Internal API

@@ -13,10 +13,10 @@ import webpackCompile from './webpackCompile';
 import generateScript from './generateScript';
 
 let webpackExternals = {
-  './src/styles/preview/base.styl': '""'
+  // './src/styles/preview/base.styl': '""'
 };
 
-['react', 'react-dom', 'react-router', 'react-router/lib/HashHistory'].forEach(key => {
+['react', 'react-dom', 'touchstonejs'].forEach(key => {
   webpackExternals[key] = `$VENDOR["${key}"]`;
 });
 
