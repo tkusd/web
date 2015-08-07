@@ -1,6 +1,6 @@
 import Actions from '../constants/Actions';
-import {api} from '../utils/request';
-import {parseJSON, dispatchEvent, filterError} from './common';
+import {api, parseJSON, filterError} from '../utils/request';
+import {dispatchEvent} from './common';
 import assign from 'lodash/object/assign';
 import omit from 'lodash/object/omit';
 import qs from 'querystring';

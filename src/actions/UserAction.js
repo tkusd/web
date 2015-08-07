@@ -1,6 +1,6 @@
 import Actions from '../constants/Actions';
-import {api} from '../utils/request';
-import {parseJSON, dispatchEvent, filterError} from './common';
+import {api, parseJSON, filterError} from '../utils/request';
+import {dispatchEvent} from './common';
 
 export function getUser(id){
   return api('users/' + id, {

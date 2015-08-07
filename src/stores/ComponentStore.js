@@ -1,13 +1,12 @@
 import BaseStore from './BaseStore';
-import {Map} from 'immutable';
+import Immutable, {Map} from 'immutable';
 import ElementTypes from '../constants/ElementTypes';
 
 const COMPONENTS = [
   {
     type: ElementTypes.screen,
     hidden: true,
-    container: true,
-    resizable: false
+    component: true
   },
   {
     type: ElementTypes.text,
@@ -21,8 +20,6 @@ const COMPONENTS = [
   },
   {
     type: ElementTypes.button,
-    container: true,
-    resizable: true,
     attributes: {
       text: {
         type: 'text',
@@ -35,7 +32,6 @@ const COMPONENTS = [
   },
   {
     type: ElementTypes.image,
-    resizable: true,
     attributes: {
       src: {
         type: 'text',
@@ -46,6 +42,47 @@ const COMPONENTS = [
         initialValue: 'Picture'
       }
     }
+  },
+  {
+    type: ElementTypes.checkbox,
+    attributes: {
+      checked: {
+        type: 'boolean',
+        initialValue: false
+      },
+      disabled: {
+        type: 'boolean',
+        initialValue: false
+      }
+    }
+  },
+  {
+    type: ElementTypes.toggle,
+    attributes: {
+      checked: {
+        type: 'boolean',
+        initialValue: false
+      },
+      disabled: {
+        type: 'boolean',
+        initialValue: false
+      }
+    }
+  },
+  {
+    type: ElementTypes.input,
+    attributes: {
+      type: {
+        type: 'text',
+        initialValue: 'text'
+      },
+      placeholder: {
+        type: 'text'
+      }
+    }
+  },
+  {
+    type: ElementTypes.webview
   }
 ];
 
@@ -55,7 +92,7 @@ class ComponentStore extends BaseStore {
 
     this.data = Map().withMutations(data => {
       COMPONENTS.forEach(item => {
-        data.set(item.type, Map(item));
+        data.set(item.type, Immutable.fromJS(item));
       });
     });
   }

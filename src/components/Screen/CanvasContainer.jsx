@@ -67,6 +67,7 @@ class CanvasContainer extends React.Component {
     this.handleWindowResize = throttle(this.handleWindowResize.bind(this), THROTTLE_DELAY, {
       leading: true
     });
+    this.handleNodeClick = this.handleNodeClick.bind(this);
   }
 
   componentDidMount(){
@@ -93,22 +94,19 @@ class CanvasContainer extends React.Component {
     const {
       connectDropTarget,
       isOver,
-      canDrop,
-      element,
-      components
+      canDrop
     } = this.props;
 
     const isDragOver = isOver && canDrop;
     const isActive = this.isElementActive();
     const componentType = getComponentType(this.props);
-    const isResizable = components.get(element.get('type')).get('resizable');
 
     let result = (
       <div>
-        <Canvas {...this.props} ref="node" onClick={this.handleNodeClick.bind(this)}>
+        <Canvas {...this.props} ref="node" onClick={this.handleNodeClick}>
           {this.renderChildren()}
         </Canvas>
-        {isActive && isResizable && this.renderResizeArea()}
+        {isActive && this.renderResizeArea()}
         {isDragOver && this.renderDragOverMask()}
       </div>
     );

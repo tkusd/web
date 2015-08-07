@@ -16,6 +16,7 @@ class HtmlDocument extends React.Component {
     const dehydratedState = 'window.$STATE=' + serialize(flux.dehydrate());
 
     let style = [].concat(
+      stats.vendor.css,
       stats.main.css,
       '//fonts.googleapis.com/css?family=Lato:400,300,700'
     );

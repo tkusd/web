@@ -27,9 +27,6 @@ class ProjectSidebar extends React.Component {
           </TabPane>
           {this.renderComponentPalette()}
           {this.renderSettingPalette()}
-          <TabPane tab={<FontAwesome icon="share-alt"/>}>
-            <SharePalette {...this.props}/>
-          </TabPane>
         </TabHost>
         <div className="project-sidebar__links">
           <a href={this.makePreviewHref()} className="project-sidebar__link" target="_blank" onClick={this.openPreviewWindow}>
@@ -56,6 +53,14 @@ class ProjectSidebar extends React.Component {
     return (
       <TabPane tab={<FontAwesome icon="cog"/>}>
         <SettingPalette {...this.props}/>
+      </TabPane>
+    );
+  }
+
+  renderSharePalette(){
+    return (
+      <TabPane tab={<FontAwesome icon="share-alt"/>}>
+        <SharePalette {...this.props}/>
       </TabPane>
     );
   }

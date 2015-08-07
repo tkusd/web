@@ -1,91 +1,90 @@
 import React from 'react';
-import ElementSidebar from './ElementSidebar';
-import Immutable from 'immutable';
-import ScreenToolbar from './ScreenToolbar';
+import connectToStores from '../../decorators/connectToStores';
+import pureRender from '../../decorators/pureRender';
+import * as ElementAction from '../../actions/ElementAction';
+import bindActions from '../../utils/bindActions';
 import CanvasContainer from './CanvasContainer';
+import ElementSidebar from './ElementSidebar';
 
 if (process.env.BROWSER){
   require('../../styles/Screen/Screen.styl');
 }
 
+@connectToStores(['ElementStore', 'ComponentStore', 'ProjectStore'], (stores, props) => ({
+  elements: stores.ElementStore.getElementsOfProject(props.params.projectID),
+  components: stores.ComponentStore.getList(),
+  editable: stores.ProjectStore.isEditable(props.params.projectID),
+  activeElement: stores.ElementStore.getSelectedElement()
+}))
+@pureRender
 class Screen extends React.Component {
-  static contextTypes = {
-    flux: React.PropTypes.object.isRequired
+  static onEnter(state, transition){
+    const {AppStore} = this.getStore();
+    const {getChildElements} = bindActions(ElementAction, this);
+
+    if (AppStore.isFirstRender()){
+      return Promise.resolve();
+    }
+
+    return getChildElements(state.params.screenID).catch(err => {
+      if (err.response && err.response.status === 404){
+        transition.to('/projects/' + state.params.projectID);
+      } else {
+        throw err;
+      }
+    });
   }
 
-  static propTypes = {
-    elements: React.PropTypes.object.isRequired,
-    components: React.PropTypes.object.isRequired,
-    editable: React.PropTypes.bool.isRequired,
-    selectedScreen: React.PropTypes.string.isRequired,
-    updateElement: React.PropTypes.func.isRequired,
-    hasUnsavedChanges: React.PropTypes.bool.isRequired,
-    isSavingChanges: React.PropTypes.bool.isRequired
+  static contextTypes = {
+    flux: React.PropTypes.object.isRequired,
+    router: React.PropTypes.object.isRequired
   }
 
   constructor(props, context){
     super(props, context);
 
-    this.state = {
-      elements: this.props.elements,
-      updating: false,
-      activeElement: null
-    };
-
+    this.routerWillLeave = this.routerWillLeave.bind(this);
     this.selectElement = this.selectElement.bind(this);
-    this.updateElement = this.updateElement.bind(this);
   }
 
-  componentWillReceiveProps(props){
-    if (!Immutable.is(this.props.elements, props.elements)){
-      this.setState({
-        elements: props.elements
-      });
-    }
+  componentDidMount(){
+    this.context.router.addTransitionHook(this.routerWillLeave);
+  }
 
-    // Reset the active element when the screen changed
-    if (this.props.selectedScreen !== props.selectedScreen){
-      this.setState({
-        activeElement: null
-      });
-    }
+  componentWillUnmount(){
+    this.context.router.removeTransitionHook(this.routerWillLeave);
+  }
+
+  routerWillLeave(state, transition){
+    const {deselectElement} = bindActions(ElementAction, this.context.flux);
+    deselectElement();
   }
 
   render(){
-    const {elements, activeElement} = this.state;
-    const {selectedScreen, editable, hasUnsavedChanges, isSavingChanges} = this.props;
+    const {elements, editable} = this.state;
+    const selectedScreen = this.props.params.screenID;
 
     return (
       <div className="screen">
         <div className="screen__canvas">
-          <CanvasContainer {...this.props}
-            elements={elements}
+          <CanvasContainer
+            {...this.state}
             element={elements.get(selectedScreen)}
-            activeElement={activeElement}
             selectElement={this.selectElement}/>
         </div>
         {editable && (
-          <ElementSidebar {...this.props}
-            elements={elements}
-            activeElement={activeElement}
+          <ElementSidebar
+            {...this.state}
             selectElement={this.selectElement}
-            updateElement={this.updateElement}/>
+            selectedScreen={selectedScreen}/>
         )}
-        {<ScreenToolbar {...this.props} updating={isSavingChanges} changed={hasUnsavedChanges}/>}
       </div>
     );
   }
 
   selectElement(id){
-    this.setState({activeElement: id});
-  }
-
-  updateElement(id, data){
-    this.setState({
-      elements: this.state.elements.set(id, data)
-    });
-
-    this.props.updateElement(id, data);
+    const {selectElement} = bindActions(ElementAction, this.context.flux);
+    selectElement(id);
   }
 }
 

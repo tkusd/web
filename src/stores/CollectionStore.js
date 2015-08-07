@@ -1,5 +1,5 @@
 import BaseStore from './BaseStore';
-import {Map} from 'immutable';
+import Immutable, {Map} from 'immutable';
 
 class CollectionStore extends BaseStore {
   constructor(context){
@@ -17,7 +17,7 @@ class CollectionStore extends BaseStore {
   }
 
   set(id, data){
-    this.data = this.data.set(id, Map(data));
+    this.data = this.data.set(id, Immutable.fromJS(data));
     this.emitChange();
   }
 
@@ -37,7 +37,7 @@ class CollectionStore extends BaseStore {
   rehydrate(state){
     this.data = this.data.withMutations(function(data){
       state.data.forEach(item => {
-        data.set(item.id, Map(item));
+        data.set(item.id, Immutable.fromJS(item));
       });
     });
   }

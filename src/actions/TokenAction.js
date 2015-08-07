@@ -1,8 +1,8 @@
 import Actions from '../constants/Actions';
-import {api, internal} from '../utils/request';
+import {api, internal, parseJSON, filterError} from '../utils/request';
 import * as UserAction from './UserAction';
 import bindActions from '../utils/bindActions';
-import {parseJSON, dispatchEvent, filterError} from './common';
+import {dispatchEvent} from './common';
 
 export function createToken(payload){
   return internal('tokens', {

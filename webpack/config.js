@@ -7,7 +7,13 @@ const assetPath = path.join(__dirname, '../public/build');
 let entry = {
   main: ['./src/client'],
   preview: ['./src/preview/client'],
-  vendor: ['react', 'react-router', 'immutable']
+  vendor: [
+    'react',
+    'react-router',
+    'immutable',
+    'normalize.css',
+    'font-awesome/css/font-awesome.css'
+  ]
 };
 
 export default {
@@ -49,6 +55,10 @@ export default {
       {
         test: /\.json$/,
         loader: 'json'
+      },
+      {
+        test: /\.png$/,
+        loader: 'file?name=[name]-[hash:8].[ext]'
       }
     ]
   },

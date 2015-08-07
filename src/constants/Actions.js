@@ -15,9 +15,11 @@ export default keyMirror({
   UPDATE_PROJECT_LIST: null,
   DELETE_PROJECT: null,
 
+  CREATE_ELEMENT: null,
   UPDATE_ELEMENT: null,
   UPDATE_ELEMENT_LIST: null,
   DELETE_ELEMENT: null,
+  SELECT_ELEMENT: null,
 
   OPEN_MODAL: null,
   CLOSE_MODAL: null,

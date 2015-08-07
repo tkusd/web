@@ -17,6 +17,7 @@ class HtmlDocument extends React.Component {
     );
 
     let scripts = [].concat(
+      'cordova.js',
       stats.preview.js
     );
 
@@ -27,9 +28,11 @@ class HtmlDocument extends React.Component {
         <head>
           <meta charSet="utf-8"/>
           <title>{AppStore.getPageTitle()}</title>
-          <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+          <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width"/>
           <meta httpEquiv="X-UA-Compatible" content="IE=edge"/>
           <meta name="mobile-web-app-capable" content="yes"/>
+          <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+          <meta name="msapplication-tap-highlight" content="no"/>
           {styles.map((href, key) => <link rel="stylesheet" type="text/css" href={href} key={key}/>)}
         </head>
         <body>

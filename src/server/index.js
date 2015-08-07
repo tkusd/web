@@ -17,6 +17,7 @@ const PRODUCTION = NODE_ENV === 'production';
 const config = loadConfig();
 
 server.set('trust proxy', 1);
+server.set('x-powered-by', false);
 
 // Middleware
 server.use(morgan(PRODUCTION ? 'combined' : 'dev'));

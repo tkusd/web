@@ -21,39 +21,44 @@ function generateRouteChildren(elements, element){
     key: generateLiteral(elementID)
   };
 
-  const children = childElements.map(item => generateRouteChildren(elements, item)).toArray();
-
+  let children = childElements.map(item => generateRouteChildren(elements, item)).toArray();
   let tagName = 'div';
 
   switch (element.get('type')){
     case ElementTypes.text:
       children.unshift(
-        generateLiteral(element.getIn(['attributes', 'text']))
+        generateLiteral(element.getIn(['attributes', 'text'], ''))
       );
       break;
 
     case ElementTypes.button:
       tagName = 'button';
       children.unshift(
-        generateLiteral(element.getIn(['attributes', 'text']))
+        generateLiteral(element.getIn(['attributes', 'text'], ''))
       );
       break;
 
     case ElementTypes.image:
       tagName = 'img';
-      props.src = generateLiteral(element.getIn(['attributes', 'src']));
-      props.alt = generateLiteral(element.getIn(['attributes', 'alt']));
+      props.src = generateLiteral(element.getIn(['attributes', 'src'], ''));
+      props.alt = generateLiteral(element.getIn(['attributes', 'alt'], ''));
+      children = null;
       break;
+  }
+
+  let args = [
+    generateLiteral(tagName),
+    generateObjectExpression(props)
+  ];
+
+  if (children && children.length){
+    args.push(generateArrayExpression(children));
   }
 
   return {
     type: 'CallExpression',
     callee: ReactCreateElement,
-    arguments: [
-      generateLiteral(tagName),
-      generateObjectExpression(props),
-      generateArrayExpression(children)
-    ]
+    arguments: args
   };
 }
 

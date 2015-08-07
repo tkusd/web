@@ -1,6 +1,6 @@
 import CollectionStore from './CollectionStore';
 import Actions from '../constants/Actions';
-import {Map} from 'immutable';
+import Immutable, {Map} from 'immutable';
 
 class ProjectStore extends CollectionStore {
   static handlers = {
@@ -44,7 +44,7 @@ class ProjectStore extends CollectionStore {
   setList(payload){
     this.pagination = this.pagination.set(payload.user_id, payload);
     this.data = this.data.withMutations(data => {
-      payload.data.forEach(item => data.set(item.id, Map(item)));
+      payload.data.forEach(item => data.set(item.id, Immutable.fromJS(item)));
     });
 
     this.emitChange();

@@ -1,27 +1,11 @@
 import Actions from '../constants/Actions';
-import {api} from '../utils/request';
-import {parseJSON, dispatchEvent, filterError} from './common';
+import {api, parseJSON, filterError} from '../utils/request';
+import {dispatchEvent} from './common';
 import qs from 'querystring';
 import assign from 'lodash/object/assign';
 
-export function createElement(projectID, payload){
-  return api(`projects/${projectID}/elements`, {
-    method: 'post',
-    body: payload
-  }, this)
-    .then(filterError)
-    .then(parseJSON)
-    .then(dispatchEvent(this, Actions.UPDATE_ELEMENT));
-}
-
-export function createChildElement(parent, payload){
-  return api(`elements/${parent}/elements`, {
-    method: 'post',
-    body: payload
-  }, this)
-    .then(filterError)
-    .then(parseJSON)
-    .then(dispatchEvent(this, Actions.UPDATE_ELEMENT));
+export function createElement(payload){
+  this.dispatch(Actions.CREATE_ELEMENT, payload);
 }
 
 export function getElement(id){
@@ -47,22 +31,17 @@ export function getChildElements(id, options){
 }
 
 export function updateElement(id, payload){
-  return api('elements/' + id, {
-    method: 'put',
-    body: payload
-  }, this)
-    .then(filterError)
-    .then(parseJSON)
-    .then(dispatchEvent(this, Actions.UPDATE_ELEMENT));
+  this.dispatch(Actions.UPDATE_ELEMENT, payload);
 }
 
-export function deleteElement(id, payload){
-  return api('elements/' + id, {
-    method: 'delete',
-    body: payload
-  }, this)
-    .then(filterError)
-    .then(() => {
-      this.dispatch(Actions.DELETE_ELEMENT, id);
-    });
+export function deleteElement(id){
+  this.dispatch(Actions.DELETE_ELEMENT, id);
+}
+
+export function selectElement(id){
+  this.dispatch(Actions.SELECT_ELEMENT, id);
+}
+
+export function deselectElement(){
+  this.dispatch(Actions.SELECT_ELEMENT, null);
 }

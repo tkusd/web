@@ -52,7 +52,7 @@ export default function webpackCompile(script, options){
       }
 
       if (jsonStats.warnings.length){
-        console.log(jsonStats.warnings[0]);
+        console.error(jsonStats.warnings[0]);
       }
 
       resolve(fs.readFileSync(path.join(BASE_PATH, BUILD_FILE), 'utf8'));
