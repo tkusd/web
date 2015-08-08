@@ -1,8 +1,8 @@
-// require('../styles/preview/base.styl');
-require('../styles/preview/touchstone.less');
+require('framework7');
+require('framework7/dist/css/framework7.ios.css');
 
-window.$INIT({
-  'react': require('react'),
-  'react-dom': require('react-dom'),
-  'touchstonejs': require('touchstonejs')
+const app = new window.Framework7();
+// const $ = window.Dom7;
+const mainView = app.addView('.view-main', {
+  domCache: true
 });

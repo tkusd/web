@@ -1,16 +1,19 @@
 import React from 'react';
-import {Flux} from '../flux';
+import Views from './Views';
+import connectToStores from '../decorators/connectToStores';
 
+@connectToStores(['AppStore'], (stores, props) => ({
+  pageTitle: stores.AppStore.getPageTitle()
+}))
 class HtmlDocument extends React.Component {
   static propTypes = {
-    flux: React.PropTypes.instanceOf(Flux).isRequired,
-    script: React.PropTypes.string.isRequired,
-    stats: React.PropTypes.object.isRequired
+    stats: React.PropTypes.object.isRequired,
+    projectID: React.PropTypes.string.isRequired
   }
 
   render(){
-    const {flux, script, stats} = this.props;
-    const {AppStore} = flux.getStore();
+    const {stats, projectID} = this.props;
+    const {pageTitle} = this.state;
 
     let styles = [].concat(
       stats.preview.css
@@ -20,26 +23,26 @@ class HtmlDocument extends React.Component {
       stats.preview.js
     );
 
-    let scriptContent = 'window.$INIT = function($VENDOR){' + script + '}';
-
     return (
       <html>
         <head>
           <meta charSet="utf-8"/>
-          <title>{AppStore.getPageTitle()}</title>
-          <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width"/>
+          <title>{pageTitle}</title>
+          <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui"/>
           <meta httpEquiv="X-UA-Compatible" content="IE=edge"/>
           <meta name="apple-mobile-web-app-capable" content="yes"/>
-          <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-          <meta name="apple-mobile-web-app-title" content={AppStore.getPageTitle()}/>
+          <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+          <meta name="apple-mobile-web-app-title" content={pageTitle}/>
           <meta name="mobile-web-app-capable" content="yes"/>
-          <meta name="msapplication-tap-highlight" content="no"/>
-          <meta name="format-detection" content="telephone=no"/>
           {styles.map((href, key) => <link rel="stylesheet" type="text/css" href={href} key={key}/>)}
         </head>
-        <body></div>
-          <div id="root"/>
-          <script dangerouslySetInnerHTML={{__html: scriptContent}}/>
+        <body>
+          {/* Status bar overlay for full screen mode (PhoneGap) */}
+          <div className="statusbar-overlay"/>
+          {/* Panels overlay */}
+          <div className="panel-overlay"/>
+          {/* Views */}
+          <Views projectID={projectID}/>
           {scripts.map((src, key) => <script src={src} key={key} async/>)}
         </body>
       </html>

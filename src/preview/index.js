@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/server';
 
-import {Flux} from '../flux';
+import {Flux, Container} from '../flux';
 import bindActions from '../utils/bindActions';
 import * as stores from '../stores';
 import * as ProjectAction from '../actions/ProjectAction';
@@ -9,16 +9,6 @@ import * as TokenAction from '../actions/TokenAction';
 import * as UserAction from '../actions/UserAction';
 import HtmlDocument from './HtmlDocument';
 import readWebpackStats from '../server/readWebpackStats';
-import webpackCompile from './webpackCompile';
-import generateScript from './generateScript';
-
-let webpackExternals = {
-  // './src/styles/preview/base.styl': '""'
-};
-
-['react', 'react-dom', 'touchstonejs'].forEach(key => {
-  webpackExternals[key] = `$VENDOR["${key}"]`;
-});
 
 export default function(req, res, next){
   const flux = new Flux(stores);
@@ -26,6 +16,7 @@ export default function(req, res, next){
   const {loadCurrentUser} = bindActions(UserAction, flux);
   const {getFullProject} = bindActions(ProjectAction, flux);
   const {AppStore} = flux.getStore();
+  const projectID = req.params.id;
 
   let stats;
 
@@ -40,16 +31,12 @@ export default function(req, res, next){
   }).then(() => {
     return loadCurrentUser();
   }).then(() => {
-    return getFullProject(req.params.id);
+    return getFullProject(projectID);
   }).then(() => {
-    let script = generateScript(flux, req.params.id);
-
-    return webpackCompile(script, {
-      externals: webpackExternals
-    });
-  }).then(script => {
     let html = ReactDOM.renderToStaticMarkup(
-      React.createElement(HtmlDocument, {flux, script, stats})
+      React.createElement(Container, {flux},
+        React.createElement(HtmlDocument, {stats, projectID})
+      )
     );
 
     res.status(AppStore.getStatusCode());
