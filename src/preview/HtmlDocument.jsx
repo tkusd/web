@@ -2,8 +2,9 @@ import React from 'react';
 import Views from './Views';
 import connectToStores from '../decorators/connectToStores';
 
-@connectToStores(['AppStore'], (stores, props) => ({
-  pageTitle: stores.AppStore.getPageTitle()
+@connectToStores(['AppStore', 'ProjectStore'], (stores, props) => ({
+  pageTitle: stores.AppStore.getPageTitle(),
+  project: stores.ProjectStore.getProject(props.projectID)
 }))
 class HtmlDocument extends React.Component {
   static propTypes = {
@@ -13,15 +14,24 @@ class HtmlDocument extends React.Component {
 
   render(){
     const {stats, projectID} = this.props;
-    const {pageTitle} = this.state;
+    const {pageTitle, project} = this.state;
+    const theme = project.get('theme');
 
     let styles = [].concat(
-      stats.preview.css
+      // stats.preview.css
     );
 
     let scripts = [].concat(
-      stats.preview.js
+      // stats.preview.js
     );
+
+    if (theme === 'material'){
+      styles.push(stats.preview_material.css);
+      scripts.push(stats.preview_material.js);
+    } else {
+      styles.push(stats.preview_ios.css);
+      scripts.push(stats.preview_ios.js);
+    }
 
     return (
       <html>

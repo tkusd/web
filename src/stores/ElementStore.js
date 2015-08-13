@@ -67,6 +67,10 @@ class ElementStore extends CollectionStore {
     });
 
     this.emitChange();
+
+    api(`elements/${id}`, {
+      method: 'delete'
+    }, this.context);
   }
 
   deleteChildElement(data, id){
@@ -130,7 +134,7 @@ class ElementStore extends CollectionStore {
         return api(`elements/${id}`, {
           method: 'put',
           body: element.toJS()
-        })
+        }, this.context)
         .then(filterError)
         .then(parseJSON)
         .then(data => {
@@ -163,7 +167,7 @@ class ElementStore extends CollectionStore {
       return api(endpoint, {
         method: 'post',
         body: element.toJS()
-      })
+      }, this.context)
       .then(filterError)
       .then(parseJSON)
       .then(data => {
