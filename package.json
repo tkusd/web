@@ -10,6 +10,7 @@
   },
   "author": "Tommy Chen <tommy351@gmail.com> (http://zespia.tw)",
   "dependencies": {
+    "base-x": "^1.0.1",
     "body-parser": "^1.12.4",
     "classnames": "^2.1.1",
     "compression": "^1.4.4",

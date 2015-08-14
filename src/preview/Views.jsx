@@ -1,6 +1,11 @@
 import React from 'react';
 import cx from 'classnames';
 import connectToStores from '../decorators/connectToStores';
+import base62uuid from '../utils/base62uuid';
+
+function getElementID(element){
+  return 'e' + base62uuid(element.get('id'));
+}
 
 @connectToStores(['ProjectStore', 'ElementStore'], (stores, props) => ({
   project: stores.ProjectStore.getProject(props.projectID),
@@ -16,13 +21,15 @@ class Views extends React.Component {
   }
 
   render(){
+    const {project} = this.state;
+
     let pages = this.getChildElements(null)
       .map(this.renderPage.bind(this))
       .toArray();
 
     return (
       <div className="views">
-        <div className="view view-main">
+        <div className="view view-main" data-page={project.get('main_screen')}>
           <div className="pages">{pages}</div>
         </div>
       </div>
@@ -39,7 +46,7 @@ class Views extends React.Component {
       .map((element, i) => {
         if (i){
           return (
-            <div className="subnavbar">
+            <div id={getElementID(element)} className="subnavbar">
               {this.renderChildElements(element)}
             </div>
           );
@@ -83,7 +90,7 @@ class Views extends React.Component {
   renderElement(element){
     switch (element.get('type')){
       case 'label':
-        return <div>{element.getIn(['attributes', 'text'])}</div>;
+        return <div id={getElementID(element)}>{element.getIn(['attributes', 'text'])}</div>;
 
       case 'card':
         return this.renderCard(element);
@@ -98,7 +105,9 @@ class Views extends React.Component {
         });
 
         return (
-          <a href={element.getIn(['attributes', 'href'])} className={className}>{element.getIn(['attributes', 'text'])}</a>
+          <a id={getElementID(element)} href={element.getIn(['attributes', 'href'], '#')} className={className}>
+            {element.getIn(['attributes', 'text'])}
+          </a>
         );
 
       case 'block':
@@ -107,21 +116,21 @@ class Views extends React.Component {
         if (title){
           return [
              <div className="content-block-title">{title}</div>,
-             <div className="content-block">
+             <div id={getElementID(element)} className="content-block">
                {this.renderChildElements(element)}
              </div>
           ];
         }
 
         return (
-          <div className="content-block">
+          <div id={getElementID(element)} className="content-block">
             {this.renderChildElements(element)}
           </div>
         );
 
       case 'buttonRow':
         return (
-          <div className="buttons-row">
+          <div id={getElementID(element)} className="buttons-row">
             {this.renderChildElements(element)}
           </div>
         );
@@ -132,7 +141,7 @@ class Views extends React.Component {
     const children = this.getChildElements(element.get('id'));
 
     return (
-      <div className="navbar">
+      <div id={getElementID(element)} className="navbar">
         <div className="navbar-inner">
           <div className="left">
             {children.filter(element => element.getIn(['attributes', 'position']) === 'left')
@@ -156,7 +165,7 @@ class Views extends React.Component {
     let header = children
       .filter(element => element.get('type') === 'header')
       .map(element => (
-        <div className="card-header">
+        <div id={getElementID(element)} className="card-header">
           {this.renderChildElements(element)}
         </div>
       ))
@@ -165,10 +174,14 @@ class Views extends React.Component {
     let footer = children
       .filter(element => element.get('type') === 'footer')
       .map(element => (
-        <div className="card-footer">
+        <div id={getElementID(element)} className="card-footer">
           {this.getChildElements(element.get('id')).map(element => {
             if (element.get('type') === 'button'){
-              return <a href={element.getIn(['attributes', 'href'])} className="link">{element.getIn(['attributes', 'text'])}</a>;
+              return (
+                <a id={getElementID(element)} href={element.getIn(['attributes', 'href'], '#')} className="link">
+                  {element.getIn(['attributes', 'text'])}
+                </a>
+              );
             } else {
               return this.renderElement(element);
             }
@@ -183,7 +196,7 @@ class Views extends React.Component {
       .toArray();
 
     return (
-      <div className="card">
+      <div id={getElementID(element)} className="card">
         {header}
         <div className="card-content">
           <div className="card-content-inner">
@@ -199,11 +212,15 @@ class Views extends React.Component {
     const children = this.getChildElements(element.get('id'));
 
     return (
-      <div className="toolbar">
+      <div id={getElementID(element)} className="toolbar">
         <div className="toolbar-inner">
           {children.map(element => {
             if (element.get('type') === 'button'){
-              return <a href={element.getIn(['attributes', 'href'])} className="link">{element.getIn(['attributes', 'text'])}</a>;
+              return (
+                <a id={getElementID(element)} href={element.getIn(['attributes', 'href'], '#')} className="link">
+                  {element.getIn(['attributes', 'text'])}
+                </a>
+              );
             } else {
               return this.renderElement(element);
             }

@@ -9,6 +9,7 @@ import * as TokenAction from '../actions/TokenAction';
 import * as UserAction from '../actions/UserAction';
 import HtmlDocument from './HtmlDocument';
 import readWebpackStats from '../server/readWebpackStats';
+import generateScript from './generateScript';
 
 export default function(req, res, next){
   const flux = new Flux(stores);
@@ -33,9 +34,11 @@ export default function(req, res, next){
   }).then(() => {
     return getFullProject(projectID);
   }).then(() => {
+    let script = 'window.$INIT = function(app){' + generateScript(flux, projectID) + '}';
+
     let html = ReactDOM.renderToStaticMarkup(
       React.createElement(Container, {flux},
-        React.createElement(HtmlDocument, {stats, projectID})
+        React.createElement(HtmlDocument, {stats, projectID, script})
       )
     );
 

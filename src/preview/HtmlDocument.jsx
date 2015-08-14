@@ -9,29 +9,24 @@ import connectToStores from '../decorators/connectToStores';
 class HtmlDocument extends React.Component {
   static propTypes = {
     stats: React.PropTypes.object.isRequired,
-    projectID: React.PropTypes.string.isRequired
+    projectID: React.PropTypes.string.isRequired,
+    script: React.PropTypes.string.isRequired
   }
 
   render(){
-    const {stats, projectID} = this.props;
+    const {stats, projectID, script} = this.props;
     const {pageTitle, project} = this.state;
     const theme = project.get('theme');
 
     let styles = [].concat(
-      // stats.preview.css
+      // stats.preview.css,
+      theme === 'material' ? stats.preview_material.css : stats.preview_ios.css
     );
 
     let scripts = [].concat(
-      // stats.preview.js
+      // stats.preview.js,
+      theme === 'material' ? stats.preview_material.js : stats.preview_ios.js
     );
-
-    if (theme === 'material'){
-      styles.push(stats.preview_material.css);
-      scripts.push(stats.preview_material.js);
-    } else {
-      styles.push(stats.preview_ios.css);
-      scripts.push(stats.preview_ios.js);
-    }
 
     return (
       <html>
@@ -53,6 +48,7 @@ class HtmlDocument extends React.Component {
           <div className="panel-overlay"/>
           {/* Views */}
           <Views projectID={projectID}/>
+          <script dangerouslySetInnerHTML={{__html: script}}/>
           {scripts.map((src, key) => <script src={src} key={key}/>)}
         </body>
       </html>
