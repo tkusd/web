@@ -53,7 +53,7 @@ class HtmlDocument extends React.Component {
           <div className="panel-overlay"/>
           {/* Views */}
           <Views projectID={projectID}/>
-          {scripts.map((src, key) => <script src={src} key={key} async/>)}
+          {scripts.map((src, key) => <script src={src} key={key}/>)}
         </body>
       </html>
     );

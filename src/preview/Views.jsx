@@ -100,6 +100,31 @@ class Views extends React.Component {
         return (
           <a href={element.getIn(['attributes', 'href'])} className={className}>{element.getIn(['attributes', 'text'])}</a>
         );
+
+      case 'block':
+        const title = element.getIn(['attributes', 'title']);
+
+        if (title){
+          return [
+             <div className="content-block-title">{title}</div>,
+             <div className="content-block">
+               {this.renderChildElements(element)}
+             </div>
+          ];
+        }
+
+        return (
+          <div className="content-block">
+            {this.renderChildElements(element)}
+          </div>
+        );
+
+      case 'buttonRow':
+        return (
+          <div className="buttons-row">
+            {this.renderChildElements(element)}
+          </div>
+        );
     }
   }
 
