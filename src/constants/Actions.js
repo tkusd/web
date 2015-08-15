@@ -23,5 +23,17 @@ export default keyMirror({
 
   OPEN_MODAL: null,
   CLOSE_MODAL: null,
-  KILL_MODAL: null
+  KILL_MODAL: null,
+
+  UPDATE_ACTION: null,
+  UPDATE_ACTION_LIST: null,
+  DELETE_ACTION: null,
+
+  UPDATE_EVENT: null,
+  UPDATE_EVENT_LIST: null,
+  DELETE_EVENT: null,
+
+  UPDATE_ASSET: null,
+  UPDATE_ASSET_LIST: null,
+  DELETE_ASSET: null
 });

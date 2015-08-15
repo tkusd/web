@@ -111,22 +111,7 @@ class Views extends React.Component {
         );
 
       case 'block':
-        const title = element.getIn(['attributes', 'title']);
-
-        if (title){
-          return [
-             <div className="content-block-title">{title}</div>,
-             <div id={getElementID(element)} className="content-block">
-               {this.renderChildElements(element)}
-             </div>
-          ];
-        }
-
-        return (
-          <div id={getElementID(element)} className="content-block">
-            {this.renderChildElements(element)}
-          </div>
-        );
+        return this.renderBlock(element);
 
       case 'buttonRow':
         return (
@@ -134,6 +119,9 @@ class Views extends React.Component {
             {this.renderChildElements(element)}
           </div>
         );
+
+      case 'list':
+        return this.renderList(element);
     }
   }
 
@@ -145,14 +133,16 @@ class Views extends React.Component {
         <div className="navbar-inner">
           <div className="left">
             {children.filter(element => element.getIn(['attributes', 'position']) === 'left')
-              .map(this.renderElement.bind(this))}
+              .map(this.renderElement.bind(this))
+              .toArray()}
           </div>
           <div className="center">
             {element.getIn(['attributes', 'title'])}
           </div>
           <div className="right">
             {children.filter(element => element.getIn(['attributes', 'position']) === 'right')
-              .map(this.renderElement.bind(this))}
+              .map(this.renderElement.bind(this))
+              .toArray()}
           </div>
         </div>
       </div>
@@ -228,6 +218,38 @@ class Views extends React.Component {
         </div>
       </div>
     );
+  }
+
+  renderBlock(element){
+    const title = element.getIn(['attributes', 'title']);
+    let result = [
+      <div id={getElementID(element)} className="content-block">
+        {this.renderChildElements(element)}
+      </div>
+    ];
+
+    if (title){
+      result.unshift(<div className="content-block-title">{title}</div>);
+    }
+
+    return result;
+  }
+
+  renderList(element){
+    const title = element.getIn(['attributes', 'title']);
+    let result = [
+      <div id={getElementID(element)} className="list-block">
+        <ul>
+          {this.renderChildElements(element)}
+        </ul>
+      </div>
+    ];
+
+    if (title){
+      result.unshift(<div className="content-block-title">{title}</div>);
+    }
+
+    return result;
   }
 }
 

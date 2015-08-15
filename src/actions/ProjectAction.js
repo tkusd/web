@@ -51,8 +51,10 @@ export function getFullProject(id, options = {}){
     .then(filterError)
     .then(parseJSON)
     .then(data => {
-      this.dispatch(Actions.UPDATE_PROJECT, omit(data, 'elements'));
+      this.dispatch(Actions.UPDATE_PROJECT, omit(data, 'elements', 'actions', 'assets'));
       this.dispatch(Actions.UPDATE_ELEMENT_LIST, data.elements);
+      this.dispatch(Actions.UPDATE_ACTION_LIST, data.actions);
+      this.dispatch(Actions.UPDATE_ASSET_LIST, data.assets);
       return data;
     });
 }

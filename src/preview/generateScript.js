@@ -13,14 +13,22 @@ function getElementID(element){
   return '#e' + base62uuid(element.get('id'));
 }
 
-function generateEventAction(project, event){
-  switch (event.get('action')){
+function flattenArray(arr, item){
+  return item ? arr.concat(item) : arr;
+}
+
+function generateEventAction(flux, event){
+  const {ProjectStore, ActionStore} = flux.getStore();
+  const action = ActionStore.getAction(event.get('action_id'));
+  const project = ProjectStore.getProject(action.get('project_id'));
+
+  switch (action.get('action')){
     case 'alert':
       return generateCallExpression(
         generateMemberExpression('app.alert'),
         [
-          generateLiteral(event.get('text')),
-          generateLiteral(event.get('title', project.get('title')))
+          generateLiteral(action.getIn(['data', 'text'])),
+          generateLiteral(action.getIn(['data', 'title'], project.get('title')))
         ]
       );
 
@@ -28,8 +36,8 @@ function generateEventAction(project, event){
       return generateCallExpression(
         generateMemberExpression('app.confirm'),
         [
-          generateLiteral(event.get('text')),
-          generateLiteral(event.get('title', project.get('title')))
+          generateLiteral(action.getIn(['data', 'text'])),
+          generateLiteral(action.getIn(['data', 'title'], project.get('title')))
         ]
       );
 
@@ -37,20 +45,21 @@ function generateEventAction(project, event){
       return generateCallExpression(
         generateMemberExpression('app.prompt'),
         [
-          generateLiteral(event.get('text')),
-          generateLiteral(event.get('title', project.get('title')))
+          generateLiteral(action.getIn(['data', 'text'])),
+          generateLiteral(action.getIn(['data', 'title'], project.get('title')))
         ]
       );
   }
 }
 
 function generateEventBindings(flux, projectID){
-  const {ProjectStore, ElementStore} = flux.getStore();
-  const project = ProjectStore.getProject(projectID);
+  const {ElementStore, EventStore} = flux.getStore();
   const elements = ElementStore.getElementsOfProject(projectID);
 
   return elements.toArray().map(element => {
-    return element.get('events').toArray().map(event => {
+    const events = EventStore.getEventsOfElement(element.get('id'));
+
+    return events.toArray().map(event => {
       return generateExpressionStatement(
         generateCallExpression({
           type: 'MemberExpression',
@@ -60,20 +69,18 @@ function generateEventBindings(flux, projectID){
           ),
           property: generateIdentifier('on')
         }, [
-          generateLiteral(event.get('type')),
+          generateLiteral(event.get('event')),
           {
             type: 'FunctionExpression',
             params: [],
             body: generateBlockStatement([
-              generateEventAction(project, event)
+              generateEventAction(flux, event)
             ])
           }
         ])
       );
     });
-  }).reduce((arr, item) => {
-    return item ? arr.concat(item) : arr;
-  }, []);
+  }).reduce(flattenArray, []);
 }
 
 function generateProgram(flux, projectID){
@@ -87,8 +94,6 @@ export default function generateScript(flux, projectID){
     type: 'Program',
     body: generateProgram(flux, projectID)
   };
-
-  console.log(JSON.stringify(ast, null, '  '));
 
   return escodegen.generate(ast, {
     format: {

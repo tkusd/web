@@ -2,6 +2,7 @@ import CollectionStore from './CollectionStore';
 import Actions from '../constants/Actions';
 import Immutable, {List} from 'immutable';
 import uuid from 'node-uuid';
+import omit from 'lodash/object/omit';
 import {api, parseJSON, filterError} from '../utils/request';
 
 class ElementStore extends CollectionStore {
@@ -90,10 +91,16 @@ class ElementStore extends CollectionStore {
   }
 
   setList(payload){
+    const {EventStore} = this.context.getStore();
+
     this.data = this.data.withMutations(data => {
       payload.forEach(item => {
         item.$created = true;
-        data.set(item.id, Immutable.fromJS(item));
+        data.set(item.id, Immutable.fromJS(omit(item, 'events')));
+
+        if (item.events){
+          EventStore.setList(item.events);
+        }
       });
     });
 
