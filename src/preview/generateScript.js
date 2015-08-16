@@ -5,7 +5,9 @@ import {
   generateExpressionStatement,
   generateCallExpression,
   generateBlockStatement,
-  generateMemberExpression
+  generateMemberExpression,
+  generateObjectExpression,
+  generateVariable
 } from '../utils/esprima';
 import base62uuid from '../utils/base62uuid';
 
@@ -18,37 +20,43 @@ function flattenArray(arr, item){
 }
 
 function generateEventAction(flux, event){
-  const {ProjectStore, ActionStore} = flux.getStore();
+  const {ActionStore} = flux.getStore();
   const action = ActionStore.getAction(event.get('action_id'));
-  const project = ProjectStore.getProject(action.get('project_id'));
+  let args = [];
 
   switch (action.get('action')){
     case 'alert':
-      return generateCallExpression(
-        generateMemberExpression('app.alert'),
-        [
-          generateLiteral(action.getIn(['data', 'text'])),
-          generateLiteral(action.getIn(['data', 'title'], project.get('title')))
-        ]
-      );
+      args = [
+        generateLiteral(action.getIn(['data', 'text']))
+      ];
+
+      if (action.getIn(['data', 'title'])){
+        args.push(action.getIn(['data', 'title']));
+      }
+
+      return generateCallExpression(generateMemberExpression('app.alert'), args);
 
     case 'confirm':
-      return generateCallExpression(
-        generateMemberExpression('app.confirm'),
-        [
-          generateLiteral(action.getIn(['data', 'text'])),
-          generateLiteral(action.getIn(['data', 'title'], project.get('title')))
-        ]
-      );
+      args = [
+        generateLiteral(action.getIn(['data', 'text']))
+      ];
+
+      if (action.getIn(['data', 'title'])){
+        args.push(action.getIn(['data', 'title']));
+      }
+
+      return generateCallExpression(generateMemberExpression('app.confirm'), args);
 
     case 'prompt':
-      return generateCallExpression(
-        generateMemberExpression('app.prompt'),
-        [
-          generateLiteral(action.getIn(['data', 'text'])),
-          generateLiteral(action.getIn(['data', 'title'], project.get('title')))
-        ]
-      );
+      args = [
+        generateLiteral(action.getIn(['data', 'text']))
+      ];
+
+      if (action.getIn(['data', 'title'])){
+        args.push(action.getIn(['data', 'title']));
+      }
+
+      return generateCallExpression(generateMemberExpression('app.prompt'), args);
   }
 }
 
@@ -84,7 +92,37 @@ function generateEventBindings(flux, projectID){
 }
 
 function generateProgram(flux, projectID){
+  const {ProjectStore} = flux.getStore();
+  const project = ProjectStore.getProject(projectID);
+
   return [].concat(
+    generateVariable('app', {
+      type: 'NewExpression',
+      callee: generateIdentifier('Framework7'),
+      arguments: [
+        generateObjectExpression({
+          material: generateLiteral(project.get('theme') === 'material'),
+          modalTitle: generateLiteral(project.get('title', '')),
+          modalCloseByOutside: generateLiteral(true)
+        })
+      ]
+    }),
+    generateVariable('mainView',
+      generateCallExpression(generateMemberExpression('app.addView'), [
+        generateLiteral('.view-main'),
+        generateObjectExpression({
+          domCache: generateLiteral(true)
+        })
+      ])
+    ),
+    generateExpressionStatement(
+      generateCallExpression(generateMemberExpression('mainView.router.load'), [
+        generateObjectExpression({
+          pageName: generateLiteral(project.get('main_screen', '')),
+          animatePages: generateLiteral(false)
+        })
+      ])
+    ),
     generateEventBindings(flux, projectID)
   );
 }

@@ -34,7 +34,7 @@ export default function(req, res, next){
   }).then(() => {
     return getFullProject(projectID);
   }).then(() => {
-    let script = 'window.$INIT = function(app){' + generateScript(flux, projectID) + '}';
+    let script = 'window.$INIT = function(){' + generateScript(flux, projectID) + '}';
 
     let html = ReactDOM.renderToStaticMarkup(
       React.createElement(Container, {flux},

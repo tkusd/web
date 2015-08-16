@@ -21,15 +21,13 @@ class Views extends React.Component {
   }
 
   render(){
-    const {project} = this.state;
-
     let pages = this.getChildElements(null)
       .map(this.renderPage.bind(this))
       .toArray();
 
     return (
       <div className="views">
-        <div className="view view-main" data-page={project.get('main_screen')}>
+        <div className="view view-main">
           <div className="pages">{pages}</div>
         </div>
       </div>
