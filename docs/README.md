@@ -1,5 +1,7 @@
 ## Structure
 
+HTML:
+
 ``` html
 <body>
     <!-- Status bar overlay for full screen mode (PhoneGap) -->
@@ -7,13 +9,32 @@
     <!-- Panels overlay -->
     <div class="panel-overlay"></div>
     <!-- Views -->
-    <div class="view view-main" data-page="{main screen id}">
+    <div class="view view-main">
         <div class="pages">
             <!-- All screen comes here -->
             <div class="page" data-page="{screen id}">
         </div>
     </div>
 </body>
+```
+
+JavaScript:
+
+``` js
+var app = new Framework7({
+    material: false,
+    modalTitle: 'test',
+    modalCloseByOutside: true
+});
+
+var view = app.addView('.view-main', {
+    domCache: true
+});
+
+view.router.load({
+    pageName: '{main screen id}',
+    animatePages: false
+});
 ```
 
 ## Elements
@@ -161,3 +182,21 @@ Attributes:
 
 - text
 - title
+
+### transition
+
+``` js
+view.router.load({
+    pageName: '{screen id}'
+});
+```
+
+Attributes:
+
+- screen
+
+### back
+
+``` js
+view.router.back();
+```

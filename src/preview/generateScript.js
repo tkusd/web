@@ -27,7 +27,7 @@ function generateEventAction(flux, event){
   switch (action.get('action')){
     case 'alert':
       args = [
-        generateLiteral(action.getIn(['data', 'text']))
+        generateLiteral(action.getIn(['data', 'text'], ''))
       ];
 
       if (action.getIn(['data', 'title'])){
@@ -38,7 +38,7 @@ function generateEventAction(flux, event){
 
     case 'confirm':
       args = [
-        generateLiteral(action.getIn(['data', 'text']))
+        generateLiteral(action.getIn(['data', 'text'], ''))
       ];
 
       if (action.getIn(['data', 'title'])){
@@ -49,7 +49,7 @@ function generateEventAction(flux, event){
 
     case 'prompt':
       args = [
-        generateLiteral(action.getIn(['data', 'text']))
+        generateLiteral(action.getIn(['data', 'text'], ''))
       ];
 
       if (action.getIn(['data', 'title'])){
@@ -57,7 +57,22 @@ function generateEventAction(flux, event){
       }
 
       return generateCallExpression(generateMemberExpression('app.prompt'), args);
+
+    case 'transition':
+      const screen = action.getIn(['data', 'screen']);
+      if (!screen) return [];
+
+      return generateCallExpression(generateMemberExpression('view.router.load'), [
+        generateObjectExpression({
+          pageName: generateLiteral(screen)
+        })
+      ]);
+
+    case 'back':
+      return generateCallExpression(generateMemberExpression('view.router.back'), []);
   }
+
+  return [];
 }
 
 function generateEventBindings(flux, projectID){
@@ -81,9 +96,9 @@ function generateEventBindings(flux, projectID){
           {
             type: 'FunctionExpression',
             params: [],
-            body: generateBlockStatement([
+            body: generateBlockStatement(
               generateEventAction(flux, event)
-            ])
+            )
           }
         ])
       );
@@ -107,7 +122,7 @@ function generateProgram(flux, projectID){
         })
       ]
     }),
-    generateVariable('mainView',
+    generateVariable('view',
       generateCallExpression(generateMemberExpression('app.addView'), [
         generateLiteral('.view-main'),
         generateObjectExpression({
@@ -116,7 +131,7 @@ function generateProgram(flux, projectID){
       ])
     ),
     generateExpressionStatement(
-      generateCallExpression(generateMemberExpression('mainView.router.load'), [
+      generateCallExpression(generateMemberExpression('view.router.load'), [
         generateObjectExpression({
           pageName: generateLiteral(project.get('main_screen', '')),
           animatePages: generateLiteral(false)

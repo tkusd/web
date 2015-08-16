@@ -131,7 +131,7 @@ class Views extends React.Component {
         <div className="navbar-inner">
           <div className="left">
             {children.filter(element => element.getIn(['attributes', 'position']) === 'left')
-              .map(this.renderElement.bind(this))
+              .map(this.replaceButtonWithLink.bind(this))
               .toArray()}
           </div>
           <div className="center">
@@ -139,7 +139,7 @@ class Views extends React.Component {
           </div>
           <div className="right">
             {children.filter(element => element.getIn(['attributes', 'position']) === 'right')
-              .map(this.renderElement.bind(this))
+              .map(this.replaceButtonWithLink.bind(this))
               .toArray()}
           </div>
         </div>
@@ -163,17 +163,8 @@ class Views extends React.Component {
       .filter(element => element.get('type') === 'footer')
       .map(element => (
         <div id={getElementID(element)} className="card-footer">
-          {this.getChildElements(element.get('id')).map(element => {
-            if (element.get('type') === 'button'){
-              return (
-                <a id={getElementID(element)} href={element.getIn(['attributes', 'href'], '#')} className="link">
-                  {element.getIn(['attributes', 'text'])}
-                </a>
-              );
-            } else {
-              return this.renderElement(element);
-            }
-          }).toArray()}
+          {this.getChildElements(element.get('id'))
+            .map(this.replaceButtonWithLink.bind(this)).toArray()}
         </div>
       ))
       .toArray();
@@ -202,17 +193,7 @@ class Views extends React.Component {
     return (
       <div id={getElementID(element)} className="toolbar">
         <div className="toolbar-inner">
-          {children.map(element => {
-            if (element.get('type') === 'button'){
-              return (
-                <a id={getElementID(element)} href={element.getIn(['attributes', 'href'], '#')} className="link">
-                  {element.getIn(['attributes', 'text'])}
-                </a>
-              );
-            } else {
-              return this.renderElement(element);
-            }
-          }).toArray()}
+          {children.map(this.replaceButtonWithLink.bind(this)).toArray()}
         </div>
       </div>
     );
@@ -248,6 +229,18 @@ class Views extends React.Component {
     }
 
     return result;
+  }
+
+  replaceButtonWithLink(element){
+    if (element.get('type') === 'button'){
+      return (
+        <a id={getElementID(element)} href={element.getIn(['attributes', 'href'], '#')} className="link">
+          {element.getIn(['attributes', 'text'])}
+        </a>
+      );
+    } else {
+      return this.renderElement(element);
+    }
   }
 }
 
