@@ -15,13 +15,15 @@ function getElementID(element){
   return '#e' + base62uuid(element.get('id'));
 }
 
+function getActionID(actionID){
+  return 'action_' + base62uuid(actionID);
+}
+
 function flattenArray(arr, item){
   return item ? arr.concat(item) : arr;
 }
 
-function generateEventAction(flux, event){
-  const {ActionStore} = flux.getStore();
-  const action = ActionStore.getAction(event.get('action_id'));
+function generateActionContent(flux, action){
   let args = [];
 
   switch (action.get('action')){
@@ -75,7 +77,23 @@ function generateEventAction(flux, event){
   return [];
 }
 
-function generateEventBindings(flux, projectID){
+function generateActions(flux, projectID){
+  const {ActionStore} = flux.getStore();
+  const actions = ActionStore.getActionsOfProject(projectID);
+
+  return actions.map((action, id) => {
+    return {
+      type: 'FunctionDeclaration',
+      id: generateIdentifier(getActionID(id)),
+      params: [],
+      body: generateBlockStatement(
+        generateActionContent(flux, action)
+      )
+    };
+  }).toArray();
+}
+
+function generateEvents(flux, projectID){
   const {ElementStore, EventStore} = flux.getStore();
   const elements = ElementStore.getElementsOfProject(projectID);
 
@@ -93,13 +111,7 @@ function generateEventBindings(flux, projectID){
           property: generateIdentifier('on')
         }, [
           generateLiteral(event.get('event')),
-          {
-            type: 'FunctionExpression',
-            params: [],
-            body: generateBlockStatement(
-              generateEventAction(flux, event)
-            )
-          }
+          generateIdentifier(getActionID(event.get('action_id')))
         ])
       );
     });
@@ -138,7 +150,8 @@ function generateProgram(flux, projectID){
         })
       ])
     ),
-    generateEventBindings(flux, projectID)
+    generateActions(flux, projectID),
+    generateEvents(flux, projectID)
   );
 }
 

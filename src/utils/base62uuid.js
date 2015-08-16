@@ -8,7 +8,7 @@ export function encode(id){
 }
 
 export function decode(id){
-  return base62.decode(id);
+  return uuid.unparse(base62.decode(id));
 }
 
 export default encode;

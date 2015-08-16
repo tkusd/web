@@ -28,6 +28,10 @@ class ActionStore extends CollectionStore {
 
     this.emitChange();
   }
+
+  getActionsOfProject(projectID){
+    return this.data.filter(action => action.get('project_id') === projectID);
+  }
 }
 
 export default ActionStore;
