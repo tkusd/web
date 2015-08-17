@@ -1,19 +1,11 @@
 import postcss from 'postcss';
 
-const THEME_REGEX = /framework7\.(.+?)\./;
-
-export default postcss.plugin('f7', function(){
+export default postcss.plugin('f7', function(options = {}){
   return function(css, result){
     const {input} = css.source;
 
     if (!/framework7\/dist\/css\//.test(input.file)) {
       return;
-    }
-
-    let theme = '';
-
-    if (THEME_REGEX.test(input.file)){
-      theme = input.file.match(THEME_REGEX)[1];
     }
 
     css.eachRule(rule => {
@@ -24,8 +16,8 @@ export default postcss.plugin('f7', function(){
         return;
       }
 
-      if (theme){
-        rule.selector = `.${theme} ${rule.selector}`;
+      if (options.prefix){
+        rule.selector = `${options.prefix} ${rule.selector}`;
       }
     });
   };

@@ -33,7 +33,7 @@ export default merge({}, config, {
         exclude: /node_modules/
       },
       {
-        test: /\.css$/,
+        test: /\.css(\?theme=\w+)?$/,
         loader: 'style!css!postcss'
       },
       {

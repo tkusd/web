@@ -68,7 +68,7 @@ class Screen extends React.Component {
 
     return (
       <div className="screen">
-        <div className={'screen__view ' + project.get('theme')}>
+        <div className={'screen__view-' + project.get('theme')}>
           <ViewContainer {...this.state}
             element={elements.get(selectedScreen)}/>
         </div>
@@ -93,22 +93,22 @@ class Screen extends React.Component {
     switch (project.get('theme')){
       case 'ios':
         require.ensure([
-          'framework7/dist/css/framework7.ios.css',
-          'framework7/dist/css/framework7.ios.colors.css'
+          'framework7/dist/css/framework7.ios.css?theme=ios',
+          'framework7/dist/css/framework7.ios.colors.css?theme=ios'
         ], require => {
-          require('framework7/dist/css/framework7.ios.css');
-          require('framework7/dist/css/framework7.ios.colors.css');
+          require('framework7/dist/css/framework7.ios.css?theme=ios');
+          require('framework7/dist/css/framework7.ios.colors.css?theme=ios');
         }, 'theme-ios');
 
         break;
 
       case 'material':
         require.ensure([
-          'framework7/dist/css/framework7.material.css',
-          'framework7/dist/css/framework7.material.colors.css'
+          'framework7/dist/css/framework7.material.css?theme=material',
+          'framework7/dist/css/framework7.material.colors.css?theme=material'
         ], require => {
-          require('framework7/dist/css/framework7.material.css');
-          require('framework7/dist/css/framework7.material.colors.css');
+          require('framework7/dist/css/framework7.material.css?theme=material');
+          require('framework7/dist/css/framework7.material.colors.css?theme=material');
         }, 'theme-material');
 
         break;

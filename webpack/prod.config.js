@@ -17,7 +17,7 @@ export default merge({}, config, {
         exclude: /node_modules/
       },
       {
-        test: /\.css$/,
+        test: /\.css(\?theme=\w+)?$/,
         loader: ExtractTextPlugin.extract('style', 'css!postcss')
       },
       {

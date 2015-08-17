@@ -16,7 +16,7 @@ function getElementID(element){
 }
 
 function getActionID(actionID){
-  return 'action_' + base62uuid(actionID);
+  return 'a_' + base62uuid(actionID);
 }
 
 function flattenArray(arr, item){
