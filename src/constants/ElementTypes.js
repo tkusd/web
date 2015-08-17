@@ -2,12 +2,12 @@ import keyMirror from 'keymirror';
 
 export default keyMirror({
   screen: null,
-  text: null,
+  navbar: null,
+  toolbar: null,
+  label: null,
+  card: null,
   button: null,
-  image: null,
-  checkbox: null,
-  toggle: null,
-  input: null,
-  webview: null,
-  toolbar: null
+  block: null,
+  buttonRow: null,
+  list: null
 });

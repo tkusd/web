@@ -6,9 +6,15 @@ const assetPath = path.join(__dirname, '../public/build');
 
 let entry = {
   main: ['./src/client'],
-  preview: ['framework7'],
-  preview_ios: ['./src/preview/client.ios'],
-  preview_material: ['./src/preview/client.material'],
+  preview: ['./src/preview/client'],
+  preview_ios: [
+    'framework7/dist/css/framework7.ios.css',
+    'framework7/dist/css/framework7.ios.colors.css'
+  ],
+  preview_material: [
+    'framework7/dist/css/framework7.material.css',
+    'framework7/dist/css/framework7.material.colors.css'
+  ],
   vendor: [
     'react',
     'react-router',
@@ -66,7 +72,6 @@ export default {
   },
   plugins: [
     new webpack.optimize.CommonsChunkPlugin('vendor', 'vendor.[hash:8].js', ['main']),
-    // new webpack.optimize.CommonsChunkPlugin('preview', 'preview.[hash:8].js', ['preview_ios', 'preview_material']),
 
     function(){
       this.plugin('done', writeStats);

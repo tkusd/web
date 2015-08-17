@@ -3,14 +3,16 @@ import connectToStores from '../../decorators/connectToStores';
 import pureRender from '../../decorators/pureRender';
 import * as ElementAction from '../../actions/ElementAction';
 import bindActions from '../../utils/bindActions';
-import CanvasContainer from './CanvasContainer';
 import ElementSidebar from './ElementSidebar';
+import ViewContainer from './ViewContainer';
 
 if (process.env.BROWSER){
   require('../../styles/Screen/Screen.styl');
+  require('../../styles/Screen/ScreenView.less');
 }
 
 @connectToStores(['ElementStore', 'ComponentStore', 'ProjectStore'], (stores, props) => ({
+  project: stores.ProjectStore.getProject(props.params.projectID),
   elements: stores.ElementStore.getElementsOfProject(props.params.projectID),
   components: stores.ComponentStore.getList(),
   editable: stores.ProjectStore.isEditable(props.params.projectID),
@@ -61,16 +63,14 @@ class Screen extends React.Component {
   }
 
   render(){
-    const {elements, editable} = this.state;
+    const {project, elements, editable} = this.state;
     const selectedScreen = this.props.params.screenID;
 
     return (
       <div className="screen">
-        <div className="screen__canvas">
-          <CanvasContainer
-            {...this.state}
-            element={elements.get(selectedScreen)}
-            selectElement={this.selectElement}/>
+        <div className={'screen__view screen__view-' + project.get('theme')}>
+          <ViewContainer {...this.state}
+            element={elements.get(selectedScreen)}/>
         </div>
         {editable && (
           <ElementSidebar

@@ -1,5 +1,5 @@
 import React from 'react';
-import Views from './Views';
+import ViewContainer from './ViewContainer';
 import connectToStores from '../decorators/connectToStores';
 
 @connectToStores(['AppStore', 'ProjectStore'], (stores, props) => ({
@@ -19,12 +19,12 @@ class HtmlDocument extends React.Component {
     const theme = project.get('theme');
 
     let styles = [].concat(
-      // stats.preview.css,
+      stats.preview.css,
       theme === 'material' ? stats.preview_material.css : stats.preview_ios.css
     );
 
     let scripts = [].concat(
-      // stats.preview.js,
+      stats.preview.js,
       theme === 'material' ? stats.preview_material.js : stats.preview_ios.js
     );
 
@@ -47,7 +47,7 @@ class HtmlDocument extends React.Component {
           {/* Panels overlay */}
           <div className="panel-overlay"/>
           {/* Views */}
-          <Views projectID={projectID}/>
+          <ViewContainer projectID={projectID}/>
           <script dangerouslySetInnerHTML={{__html: script}}/>
           {scripts.map((src, key) => <script src={src} key={key}/>)}
         </body>

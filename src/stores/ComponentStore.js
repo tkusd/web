@@ -5,84 +5,31 @@ import ElementTypes from '../constants/ElementTypes';
 const COMPONENTS = [
   {
     type: ElementTypes.screen,
-    hidden: true,
-    component: true
+    hidden: true
   },
   {
-    type: ElementTypes.text,
-    resizable: true,
-    attributes: {
-      text: {
-        type: 'text',
-        initialValue: 'Text'
-      }
-    }
+    type: ElementTypes.navbar
   },
   {
-    type: ElementTypes.button,
-    attributes: {
-      text: {
-        type: 'text',
-        initialValue: 'Button'
-      },
-      icon: {
-        type: 'text'
-      }
-    }
+    type: ElementTypes.toolbar
   },
   {
-    type: ElementTypes.image,
-    attributes: {
-      src: {
-        type: 'text',
-        initialValue: 'http://placehold.it/300x300'
-      },
-      alt: {
-        type: 'text',
-        initialValue: 'Picture'
-      }
-    }
+    type: ElementTypes.label
   },
   {
-    type: ElementTypes.checkbox,
-    attributes: {
-      checked: {
-        type: 'boolean',
-        initialValue: false
-      },
-      disabled: {
-        type: 'boolean',
-        initialValue: false
-      }
-    }
+    type: ElementTypes.card
   },
   {
-    type: ElementTypes.toggle,
-    attributes: {
-      checked: {
-        type: 'boolean',
-        initialValue: false
-      },
-      disabled: {
-        type: 'boolean',
-        initialValue: false
-      }
-    }
+    type: ElementTypes.button
   },
   {
-    type: ElementTypes.input,
-    attributes: {
-      type: {
-        type: 'text',
-        initialValue: 'text'
-      },
-      placeholder: {
-        type: 'text'
-      }
-    }
+    type: ElementTypes.block
   },
   {
-    type: ElementTypes.webview
+    type: ElementTypes.buttonRow
+  },
+  {
+    type: ElementTypes.list
   }
 ];
 
