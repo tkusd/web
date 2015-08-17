@@ -1,5 +1,8 @@
 import path from 'path';
 import webpack from 'webpack';
+import autoprefixer from 'autoprefixer-core';
+import cssnano from 'cssnano';
+import postcssF7 from './postcss-f7';
 import writeStats from './utils/write-stats';
 
 const assetPath = path.join(__dirname, '../public/build');
@@ -8,10 +11,12 @@ let entry = {
   main: ['./src/client'],
   preview: ['./src/preview/client'],
   preview_ios: [
+    './src/styles/preview/ios.css',
     'framework7/dist/css/framework7.ios.css',
     'framework7/dist/css/framework7.ios.colors.css'
   ],
   preview_material: [
+    './src/styles/preview/material.css',
     'framework7/dist/css/framework7.material.css',
     'framework7/dist/css/framework7.material.colors.css'
   ],
@@ -83,8 +88,13 @@ export default {
       require('nib')()
     ]
   },
-  postcss: [
-    require('autoprefixer-core')(),
-    require('cssnano')()
-  ]
+  postcss: function(){
+    return [
+      postcssF7(),
+      autoprefixer(),
+      cssnano({
+        zindex: false
+      })
+    ];
+  }
 };

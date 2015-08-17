@@ -8,7 +8,6 @@ import ViewContainer from './ViewContainer';
 
 if (process.env.BROWSER){
   require('../../styles/Screen/Screen.styl');
-  require('../../styles/Screen/ScreenView.less');
 }
 
 @connectToStores(['ElementStore', 'ComponentStore', 'ProjectStore'], (stores, props) => ({
@@ -51,6 +50,7 @@ class Screen extends React.Component {
 
   componentDidMount(){
     this.context.router.addTransitionHook(this.routerWillLeave);
+    this.loadThemeCSS();
   }
 
   componentWillUnmount(){
@@ -68,7 +68,7 @@ class Screen extends React.Component {
 
     return (
       <div className="screen">
-        <div className={'screen__view screen__view-' + project.get('theme')}>
+        <div className={'screen__view ' + project.get('theme')}>
           <ViewContainer {...this.state}
             element={elements.get(selectedScreen)}/>
         </div>
@@ -85,6 +85,34 @@ class Screen extends React.Component {
   selectElement(id){
     const {selectElement} = bindActions(ElementAction, this.context.flux);
     selectElement(id);
+  }
+
+  loadThemeCSS(){
+    const {project} = this.state;
+
+    switch (project.get('theme')){
+      case 'ios':
+        require.ensure([
+          'framework7/dist/css/framework7.ios.css',
+          'framework7/dist/css/framework7.ios.colors.css'
+        ], require => {
+          require('framework7/dist/css/framework7.ios.css');
+          require('framework7/dist/css/framework7.ios.colors.css');
+        }, 'theme-ios');
+
+        break;
+
+      case 'material':
+        require.ensure([
+          'framework7/dist/css/framework7.material.css',
+          'framework7/dist/css/framework7.material.colors.css'
+        ], require => {
+          require('framework7/dist/css/framework7.material.css');
+          require('framework7/dist/css/framework7.material.colors.css');
+        }, 'theme-material');
+
+        break;
+    }
   }
 }
 
