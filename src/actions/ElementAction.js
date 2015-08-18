@@ -9,13 +9,28 @@ export function createElement(payload){
   this.dispatch(Actions.CREATE_ELEMENT, payload);
 }
 
+export function createScreen(projectID, payload){
+  return api(`projects/${projectID}/elements`, {
+    method: 'post',
+    body: payload
+  }, this)
+    .then(filterError)
+    .then(parseJSON)
+    .then(data => {
+      this.dispatch(Actions.UPDATE_ELEMENT, data.id, data);
+      return data;
+    });
+}
+
 export function getElement(id){
   return api('elements/' + id, {
     method: 'get'
   }, this)
     .then(filterError)
     .then(parseJSON)
-    .then(dispatchEvent(this, Actions.UPDATE_ELEMENT));
+    .then(data => {
+      this.dispatch(Actions.UPDATE_ELEMENT, data.id, data);
+    });
 }
 
 export function getChildElements(id, options){
@@ -42,7 +57,7 @@ export function getFullElement(id, options = {}){
     .then(filterError)
     .then(parseJSON)
     .then(data => {
-      this.dispatch(Actions.UPDATE_ELEMENT, omit(data, 'elements'));
+      this.dispatch(Actions.UPDATE_ELEMENT, data.id, omit(data, 'elements'));
       this.dispatch(Actions.UPDATE_ELEMENT_LIST, data.elements);
 
       return data;
@@ -50,7 +65,7 @@ export function getFullElement(id, options = {}){
 }
 
 export function updateElement(id, payload){
-  this.dispatch(Actions.UPDATE_ELEMENT, id, payload);
+  this.dispatch(Actions.UPDATE_ELEMENT, id, payload, true);
 }
 
 export function deleteElement(id){

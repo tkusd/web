@@ -41,17 +41,7 @@ class Dropdown extends React.Component {
       'dropdown--active': this.isActive()
     }, props.className);
 
-    let children = [];
-
-    React.Children.forEach(this.props.children, item => {
-      if (item.type === DropdownMenu){
-        if (this.isActive()) children.push(item);
-      } else {
-        children.push(item);
-      }
-    });
-
-    return <div ref="dropdown" {...props}>{children}</div>;
+    return <div ref="dropdown" {...props}>{this.props.children}</div>;
   }
 
   handleClick(e){

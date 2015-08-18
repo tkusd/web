@@ -1,6 +1,5 @@
 import React from 'react';
 import {Modal} from '../modal';
-import {Form} from '../form';
 import * as ElementAction from '../../actions/ElementAction';
 import bindActions from '../../utils/bindActions';
 import {FormattedMessage} from '../intl';
@@ -12,13 +11,8 @@ class DeleteScreenModal extends React.Component {
   }
 
   static propTypes = {
-    element: React.PropTypes.object.isRequired
-  }
-
-  constructor(props, context){
-    super(props, context);
-
-    this.handleSubmit = this.handleSubmit.bind(this);
+    element: React.PropTypes.object.isRequired,
+    selectedScreen: React.PropTypes.string.isRequired
   }
 
   render(){
@@ -26,34 +20,32 @@ class DeleteScreenModal extends React.Component {
 
     return (
       <Modal title={<FormattedMessage message="project.delete_screen"/>} onDismiss={closeModal}>
-        <Form onSubmit={this.handleSubmit}>
-          <p>
-            <FormattedMessage message="project.delete_screen_prompt"/>
-          </p>
-          <div className="modal__btn-group">
-            <a className="modal__btn" onClick={closeModal}>
-              <FormattedMessage message="common.cancel"/>
-            </a>
-            <button className="modal__btn--danger" type="submit">
-              <FormattedMessage message="common.delete"/>
-            </button>
-          </div>
-        </Form>
+        <p>
+          <FormattedMessage message="project.delete_screen_prompt"/>
+        </p>
+        <div className="modal__btn-group">
+          <button className="modal__btn" onClick={closeModal}>
+            <FormattedMessage message="common.cancel"/>
+          </button>
+          <button className="modal__btn--danger" onClick={this.deleteScreen}>
+            <FormattedMessage message="common.delete"/>
+          </button>
+        </div>
       </Modal>
     );
   }
 
-  handleSubmit(e){
-    e.preventDefault();
-
-    const {element, closeModal} = this.props;
+  deleteScreen = (e) => {
+    const {element, closeModal, selectedScreen} = this.props;
     const {deleteElement} = bindActions(ElementAction, this.context.flux);
 
     // Redirect to the project page before deleting the element to avoid errors
-    this.context.router.transitionTo('/projects/' + element.get('project_id'));
-    deleteElement(element.get('id')).then(() => {
-      closeModal();
-    });
+    if (selectedScreen === element.get('id')){
+      this.context.router.replaceWith('/projects/' + element.get('project_id'));
+    }
+
+    deleteElement(element.get('id'));
+    closeModal();
   }
 }
 

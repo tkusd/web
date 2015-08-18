@@ -65,9 +65,9 @@ class ElementStore extends CollectionStore {
     this.pushQueue(payload.id);
   }
 
-  updateElement(id, payload){
+  updateElement(id, payload, async){
     this.set(id, payload);
-    this.pushQueue(id);
+    if (async) this.pushQueue(id);
   }
 
   deleteElement(id){
@@ -163,7 +163,7 @@ class ElementStore extends CollectionStore {
       let element = this.get(id);
 
       // Update the current element
-      if (id !== '_'){
+      if (id[0] !== '_'){
         return api(`elements/${id}`, {
           method: 'put',
           body: element.toJS()

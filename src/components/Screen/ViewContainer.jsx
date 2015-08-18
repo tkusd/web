@@ -42,6 +42,7 @@ const spec = {
     createElement({
       name: component.type,
       type: component.type,
+      project_id: element.get('project_id'),
       element_id: element.get('id'),
       attributes: collectDefaultValue(component.attributes)
     });

@@ -55,7 +55,7 @@ class ModalPortal extends React.Component {
 
     this.setState({id});
 
-    let modal = cloneWithProps(this.props.children, {
+    let modal = cloneElement(this.props.children, {
       closeModal: this.close.bind(this)
     });
 

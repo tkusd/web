@@ -69,13 +69,13 @@ class NewScreenModal extends React.Component {
 
     const {name} = this.refs;
     const {project, closeModal} = this.props;
-    const {createElement} = bindActions(ElementAction, this.context.flux);
+    const {createScreen} = bindActions(ElementAction, this.context.flux);
 
     if (name.getError()){
       return;
     }
 
-    createElement(project.get('id'), {
+    createScreen(project.get('id'), {
       name: name.getValue(),
       type: 'screen'
     }).then(element => {

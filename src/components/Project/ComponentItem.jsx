@@ -2,7 +2,6 @@ import React from 'react';
 import {DragSource} from 'react-dnd';
 import ItemTypes from '../../constants/ItemTypes';
 import cx from 'classnames';
-import {FormattedMessage} from '../intl';
 
 if (process.env.BROWSER){
   require('../../styles/Project/ComponentItem.styl');
@@ -36,7 +35,7 @@ class ComponentItem extends React.Component {
 
     return connectDragSource(
       <div className={className}>
-        <FormattedMessage message={'project.' + component.get('type')}/>
+        {component.get('type')}
       </div>
     , 'copy');
   }
