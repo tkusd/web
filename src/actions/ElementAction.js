@@ -49,7 +49,7 @@ export function getFullElement(id, options = {}){
     });
 }
 
-export function updateElement(id, payload){
+export function updateElement(payload){
   this.dispatch(Actions.UPDATE_ELEMENT, payload);
 }
 

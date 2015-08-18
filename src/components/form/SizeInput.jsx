@@ -16,7 +16,7 @@ class SizeInput extends React.Component {
       React.PropTypes.string,
       React.PropTypes.element
     ]),
-    initialValue: React.PropTypes.string,
+    defaultValue: React.PropTypes.string,
     value: React.PropTypes.string,
     onChange: React.PropTypes.func.isRequired,
     min: React.PropTypes.number,
@@ -31,7 +31,7 @@ class SizeInput extends React.Component {
   constructor(props, context){
     super(props, context);
 
-    this.state = this.parseRawValue(this.props.value != null ? this.props.value : this.props.initialValue);
+    this.state = this.parseRawValue(this.props.value != null ? this.props.value : this.props.defaultValue);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSelectChange = this.handleSelectChange.bind(this);
   }

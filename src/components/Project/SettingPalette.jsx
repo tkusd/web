@@ -68,14 +68,21 @@ class SettingPalette extends React.Component {
                 validators.required('Title is required'),
                 validators.maxLength(255, 'The maximum length of the title is 255')
               ]}
-              initialValue={project.get('title')}
+              defaultValue={project.get('title')}
               onChange={this.handleInputChange.bind(this, 'title')}/>
             <InputGroup
               ref="description"
               label={<FormattedMessage message="project.description"/>}
               type="textarea"
-              initialValue={project.get('description')}
+              defaultValue={project.get('description')}
               onChange={this.handleInputChange.bind(this, 'description')}/>
+            <select
+              ref="theme"
+              defaultValue={project.get('theme')}
+              onChange={this.handleInputChange.bind(this, 'theme')}>
+              <option value="ios">ios</option>
+              <option value="material">material</option>
+            </select>
             <div className="setting-palette__btn-wrap">
               <button type="submit" className="setting-palette__save" disabled={!this.hasChanged()}>
                 <FormattedMessage message="common.update"/>
@@ -93,7 +100,7 @@ class SettingPalette extends React.Component {
   handleSubmit(e){
     e.preventDefault();
 
-    const {title, description} = this.refs;
+    const {title, description, theme} = this.refs;
     const {project} = this.props;
     const id = project.get('id');
     const {updateProject} = bindActions(ProjectAction, this.context.flux);
@@ -104,7 +111,8 @@ class SettingPalette extends React.Component {
 
     updateProject(id, {
       title: title.getValue(),
-      description: description.getValue()
+      description: description.getValue(),
+      theme: theme.value
     }).then(() => {
       const {ProjectStore} = this.context.flux.getStore();
 
@@ -124,6 +132,12 @@ class SettingPalette extends React.Component {
   handleInputChange(name, {value}){
     this.setState({
       project: this.state.project.set(name, value)
+    });
+  }
+
+  handleSelectChange(name, e){
+    this.handleInputChange(name, {
+      value: (e.target || e.currentTarget).value
     });
   }
 }

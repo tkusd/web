@@ -5,6 +5,32 @@ import ItemTypes from '../../constants/ItemTypes';
 import * as ElementAction from '../../actions/ElementAction';
 import bindActions from '../../utils/bindActions';
 
+function getDropTargetType(props){
+  const {element, components} = props;
+  const component = components.get(element.get('type'));
+
+  if (component && component.get('container')){
+    return ItemTypes.CONTAINER;
+  } else {
+    return ItemTypes.NON_CONTAINER;
+  }
+}
+
+function collectDefaultValue(data){
+  let result = {};
+  if (!data) return result;
+
+  Object.keys(data).forEach(key => {
+    const item = data[key];
+
+    if (item.hasOwnProperty('defaultValue')) {
+      result[key] = item.defaultValue;
+    }
+  });
+
+  return result;
+}
+
 const spec = {
   drop(props, monitor, {context}){
     if (monitor.didDrop()) return;
@@ -16,12 +42,23 @@ const spec = {
     createElement({
       name: component.type,
       type: component.type,
-      element_id: element.get('id')
+      element_id: element.get('id'),
+      attributes: collectDefaultValue(component.attributes)
     });
+  },
+
+  canDrop(props, monitor){
+    const {components, element} = props;
+    const item = monitor.getItem();
+    const component = components.get(element.get('type'));
+
+    if (!component.has('availableChildTypes')) return true;
+
+    return component.get('availableChildTypes').has(item.type);
   }
 };
 
-@DropTarget(ItemTypes.CONTAINER, spec, (connect, monitor) => ({
+@DropTarget(getDropTargetType, spec, (connect, monitor) => ({
   connectDropTarget: connect.dropTarget(),
   isOver: monitor.isOver({
     shallow: true
@@ -34,6 +71,8 @@ class ViewContainer extends React.Component {
   }
 
   static propTypes = {
+    components: React.PropTypes.object.isRequired,
+
     // React DnD
     connectDropTarget: React.PropTypes.func.isRequired,
     isOver: React.PropTypes.bool.isRequired,
@@ -44,7 +83,7 @@ class ViewContainer extends React.Component {
     const {pushHoverElement, popHoverElement} = bindActions(ElementAction, this.context.flux);
     const {element} = this.props;
 
-    if (!this.props.isOver && nextProps.isOver){
+    if (!this.props.isOver && nextProps.isOver && nextProps.canDrop){
       pushHoverElement(element.get('id'));
     }
 

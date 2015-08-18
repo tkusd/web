@@ -1,9 +1,12 @@
 import CollectionStore from './CollectionStore';
 import Actions from '../constants/Actions';
-import Immutable, {List, OrderedSet} from 'immutable';
+import Immutable, {OrderedSet} from 'immutable';
 import uuid from 'node-uuid';
 import omit from 'lodash/object/omit';
 import {api, parseJSON, filterError} from '../utils/request';
+import throttle from 'lodash/function/throttle';
+
+const THROTTLE_DELAY = 5000;
 
 class ElementStore extends CollectionStore {
   static handlers = {
@@ -20,7 +23,7 @@ class ElementStore extends CollectionStore {
     super(context);
 
     this.promise = Promise.resolve();
-    this.queue = List();
+    this.queue = OrderedSet();
     this.currentTask = null;
     this.selectedElement = null;
     this.hoverElements = OrderedSet();
@@ -40,9 +43,11 @@ class ElementStore extends CollectionStore {
   }
 
   createElement(payload){
-    if (!payload.id) {
+    let map = Immutable.fromJS(payload);
+
+    if (!map.has('id')) {
       // Create a random UUID for client
-      payload.id = uuid.v4();
+      map = map.set('id', uuid.v4());
     }
 
     if (!payload.index){
@@ -52,18 +57,22 @@ class ElementStore extends CollectionStore {
         .last()
         .get('index');
 
-      payload.index = lastIndex + 1;
+      map = map.set('index', lastIndex + 1);
     }
 
-    payload.$created = false;
-    this.set(payload.id, payload);
-    this.pushQueue(payload.id);
+    map = map.set('$created', false);
+
+    this.set(map.get('id'), map);
+    this.pushQueue(map.get('id'));
   }
 
   updateElement(payload){
-    payload.$created = true;
-    this.set(payload.id, payload);
-    this.pushQueue(payload.id);
+    let map = Immutable.fromJS(payload);
+
+    map = map.set('$created', true);
+
+    this.set(map.get('id'), map);
+    this.pushQueue(map.get('id'));
   }
 
   deleteElement(id){
@@ -129,16 +138,16 @@ class ElementStore extends CollectionStore {
 
     let queueEmpty = this.isQueueEmpty();
 
-    this.queue = this.queue.push(id);
+    this.queue = this.queue.add(id);
 
     if (queueEmpty && !this.currentTask){
-      this.enqueue();
+      this.throttleEnqueue();
     }
   }
 
   enqueue() {
     let id = this.queue.first();
-    this.queue = this.queue.shift();
+    this.queue = this.queue.remove(id);
 
     if (!this.has(id)) return;
 
@@ -174,7 +183,7 @@ class ElementStore extends CollectionStore {
         // Push the current element to the queue if the parent element has not
         // been created yet
         if (!parentElement.get('$created')) {
-          this.queue = this.queue.push(id);
+          this.queue = this.queue.add(id);
           return;
         }
 
@@ -215,6 +224,8 @@ class ElementStore extends CollectionStore {
       if (!this.isQueueEmpty()) this.enqueue();
     });
   }
+
+  throttleEnqueue = throttle(this.enqueue.bind(this), THROTTLE_DELAY)
 
   getHoverElements(){
     return this.hoverElements;

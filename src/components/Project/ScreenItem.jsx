@@ -46,7 +46,7 @@ class ScreenItem extends React.Component {
         <InlineInput
           ref="input"
           name="name"
-          initialValue={element.get('name')}
+          defaultValue={element.get('name')}
           required
           maxLength={255}
           onSubmit={this.handleRenameSubmit}>

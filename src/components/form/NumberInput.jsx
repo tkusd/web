@@ -8,7 +8,7 @@ const THROTTLE_DELAY = 50;
 class NumberInput extends React.Component {
   static propTypes = {
     value: React.PropTypes.number,
-    initialValue: React.PropTypes.number,
+    defaultValue: React.PropTypes.number,
     step: React.PropTypes.number,
     min: React.PropTypes.number,
     max: React.PropTypes.number,
@@ -18,7 +18,7 @@ class NumberInput extends React.Component {
 
   static defaultProps = {
     step: 1,
-    initialValue: 0,
+    defaultValue: 0,
     onChange: noop,
     onKeyDown: noop
   }
@@ -27,7 +27,7 @@ class NumberInput extends React.Component {
     super(props, context);
 
     this.state = {
-      value: this.props.value != null ? this.props.value : this.props.initialValue
+      value: this.props.value != null ? this.props.value : this.props.defaultValue
     };
 
     this.handleChange = this.handleChange.bind(this);

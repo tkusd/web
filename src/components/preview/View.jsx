@@ -60,6 +60,9 @@ class View extends React.Component {
 
       case ElementTypes.list:
         return this.renderList(element);
+
+      case ElementTypes.card:
+        return this.renderCard(element);
     }
 
     return <div></div>;
@@ -94,8 +97,7 @@ class View extends React.Component {
       content.push(
         <Container {...this.props}
           element={item}
-          key={key}
-          subnavbar={Boolean(content.length)}/>
+          key={key}/>
       );
     });
 
@@ -123,14 +125,6 @@ class View extends React.Component {
 
   renderNavBar(element){
     const elements = this.getChildElements(element.get('id'));
-
-    if (this.props.subnavbar){
-      return (
-        <div id={getElementID(element)} className="subnavbar" onClick={this.props.onClick}>
-          {this.renderElements(elements)}
-        </div>
-      );
-    }
 
     return (
       <div id={getElementID(element)} className="navbar" onClick={this.props.onClick}>
@@ -224,6 +218,39 @@ class View extends React.Component {
             {this.renderElements(elements)}
           </ul>
         </div>
+      </div>
+    );
+  }
+
+  renderCard(element){
+    const elements = this.getChildElements(element.get('id'));
+    let header;
+    let footer;
+
+    if (element.getIn(['attributes', 'header'])){
+      header = elements.filter(element => element.getIn(['attributes', 'position']) === 'header');
+    }
+
+    if (element.getIn(['attributes', 'footer'])){
+      footer = elements.filter(element => element.getIn(['attributes', 'position']) === 'footer');
+    }
+
+    return (
+      <div id={getElementID(element)} className="card" onClick={this.props.onClick}>
+        {header && (
+          <div className="card-header">{this.renderElements(header)}</div>
+        )}
+        <div className="card-content">
+          <div className="card-content-inner">
+            {this.renderElements(elements.filter(element => (
+              element.getIn(['attributes', 'position']) !== 'header' &&
+              element.getIn(['attributes', 'position']) !== 'footer'
+            )))}
+          </div>
+        </div>
+        {footer && (
+          <div className="card-footer">{this.renderElements(footer)}</div>
+        )}
       </div>
     );
   }

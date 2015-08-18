@@ -18,13 +18,13 @@ const layoutShape = React.PropTypes.shape({
 class LayoutBox extends React.Component {
   static propTypes = {
     onChange: React.PropTypes.func.isRequired,
-    initialValue: layoutShape,
+    defaultValue: layoutShape,
     value: layoutShape
   }
 
   static defaultProps = {
     onChange: noop,
-    initialValue: {
+    defaultValue: {
       top: '',
       left: '',
       right: '',
@@ -36,7 +36,7 @@ class LayoutBox extends React.Component {
     super(props, context);
 
     this.state = {
-      value: this.props.value != null ? this.props.value : this.props.initialValue
+      value: this.props.value != null ? this.props.value : this.props.defaultValue
     };
   }
 

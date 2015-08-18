@@ -140,14 +140,6 @@ Attributes:
 </div>
 ```
 
-### header
-
-僅用於 card
-
-### footer
-
-僅用於 card
-
 ## Actions
 
 ### alert

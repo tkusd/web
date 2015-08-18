@@ -44,7 +44,7 @@ class ProfileForm extends React.Component {
           ref="name"
           label={<FormattedMessage message="common.name"/>}
           type="text"
-          initialValue={user.get('name')}
+          defaultValue={user.get('name')}
           required
           validators={[
             validators.required('Name is required'),
@@ -54,7 +54,7 @@ class ProfileForm extends React.Component {
           ref="email"
           label={<FormattedMessage message="common.email"/>}
           type="email"
-          initialValue={user.get('email')}
+          defaultValue={user.get('email')}
           required
           validators={[
             validators.required('Email is required'),

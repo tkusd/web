@@ -33,6 +33,7 @@ class ViewMask extends React.Component {
       leading: true
     });
     this.handleNodeClick = this.handleNodeClick.bind(this);
+    this.handleOutsideClick = this.handleOutsideClick.bind(this);
   }
 
   componentDidMount(){
@@ -85,11 +86,17 @@ class ViewMask extends React.Component {
     }
   }
 
+  componentDidUpdate(prevProps){
+    if (!Immutable.is(this.props.elements, prevProps.elements)){
+      this.updateRect();
+    }
+  }
+
   render(){
     const {project} = this.props;
 
     return (
-      <div className="view-mask">
+      <div className="view-mask" onClick={this.handleOutsideClick} ref="container">
         <div className={cx('view-mask__screen', project.get('theme'))}>
           <ViewContainer {...this.props} onClick={this.handleNodeClick}/>
         </div>
@@ -180,13 +187,17 @@ class ViewMask extends React.Component {
     );
   }
 
-  handleWindowResize(){
+  updateRect(){
     const {activeNode, maskNode} = this.state;
 
     this.setState({
       activeNodeRect: activeNode && activeNode.getBoundingClientRect(),
       maskNodeRect: maskNode && maskNode.getBoundingClientRect()
     });
+  }
+
+  handleWindowResize(){
+    this.updateRect();
   }
 
   handleNodeClick(e){
@@ -202,6 +213,12 @@ class ViewMask extends React.Component {
     if (!target) return;
 
     this.props.selectElement(target.id.substring(1));
+  }
+
+  handleOutsideClick(e){
+    if (e.target !== this.refs.container) return;
+
+    this.props.selectElement(null);
   }
 }
 

@@ -5,6 +5,7 @@ import * as ElementAction from '../../actions/ElementAction';
 import bindActions from '../../utils/bindActions';
 import ElementSidebar from './ElementSidebar';
 import ViewMask from './ViewMask';
+import ScreenToolbar from './ScreenToolbar';
 
 if (process.env.BROWSER){
   require('../../styles/Screen/Screen.styl');
@@ -56,6 +57,12 @@ class Screen extends React.Component {
 
   componentWillUnmount(){
     this.context.router.removeTransitionHook(this.routerWillLeave);
+  }
+
+  componentDidUpdate(prevProps, prevState){
+    if (this.state.project.get('theme') !== prevState.project.get('theme')){
+      this.loadThemeCSS();
+    }
   }
 
   routerWillLeave(state, transition){

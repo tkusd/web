@@ -5,31 +5,116 @@ import ElementTypes from '../constants/ElementTypes';
 const COMPONENTS = [
   {
     type: ElementTypes.screen,
-    hidden: true
+    hidden: true,
+    container: true
   },
   {
-    type: ElementTypes.navbar
+    type: ElementTypes.navbar,
+    container: true,
+    attributes: {
+      title: {
+        type: 'string',
+        label: 'Title'
+      }
+    }
   },
   {
-    type: ElementTypes.toolbar
+    type: ElementTypes.toolbar,
+    container: true
   },
   {
-    type: ElementTypes.label
+    type: ElementTypes.label,
+    container: false,
+    attributes: {
+      text: {
+        type: 'string',
+        defaultValue: 'Label',
+        label: 'Text'
+      }
+    }
   },
   {
-    type: ElementTypes.card
+    type: ElementTypes.card,
+    container: true,
+    availableChildTypes: [
+      ElementTypes.label,
+      ElementTypes.button,
+      ElementTypes.buttonRow
+    ],
+    attributes: {
+      header: {
+        type: 'boolean',
+        label: 'Header'
+      },
+      footer: {
+        type: 'boolean',
+        label: 'Footer'
+      }
+    }
   },
   {
-    type: ElementTypes.button
+    type: ElementTypes.button,
+    container: false,
+    attributes: {
+      text: {
+        type: 'string',
+        defaultValue: 'Button',
+        label: 'Text'
+      },
+      active: {
+        type: 'boolean',
+        label: 'Active'
+      },
+      round: {
+        type: 'boolean',
+        label: 'Round'
+      },
+      fill: {
+        type: 'boolean',
+        label: 'Fill'
+      },
+      big: {
+        type: 'boolean',
+        label: 'Big'
+      },
+      raised: {
+        type: 'boolean',
+        label: 'Raised'
+      }
+    }
   },
   {
-    type: ElementTypes.block
+    type: ElementTypes.block,
+    container: true,
+    availableChildTypes: [
+      ElementTypes.label,
+      ElementTypes.card,
+      ElementTypes.button,
+      ElementTypes.buttonRow
+    ],
+    attributes: {
+      title: {
+        type: 'string',
+        label: 'Title',
+        defaultValue: 'Block'
+      }
+    }
   },
   {
-    type: ElementTypes.buttonRow
+    type: ElementTypes.buttonRow,
+    container: true,
+    availableChildTypes: [ElementTypes.button]
   },
   {
-    type: ElementTypes.list
+    type: ElementTypes.list,
+    container: false,
+    attributes: {
+      title: {
+        type: 'string',
+        label: 'Title',
+        defaultValue: 'List'
+      }
+    }
   }
 ];
 
