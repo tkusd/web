@@ -95,7 +95,7 @@ class AttributePalette extends React.Component {
       return;
     }
 
-    updateElement(element.setIn(field, data.value));
+    updateElement(element.get('id'), element.setIn(field, data.value));
   }
 
   handleCheckboxChange(field, e){

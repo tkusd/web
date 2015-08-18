@@ -8,6 +8,10 @@ import throttle from 'lodash/function/throttle';
 
 const THROTTLE_DELAY = 5000;
 
+function sortByIndex(a, b){
+  return a.get('index') - b.get('index');
+}
+
 class ElementStore extends CollectionStore {
   static handlers = {
     createElement: Actions.CREATE_ELEMENT,
@@ -43,36 +47,27 @@ class ElementStore extends CollectionStore {
   }
 
   createElement(payload){
-    let map = Immutable.fromJS(payload);
-
-    if (!map.has('id')) {
-      // Create a random UUID for client
-      map = map.set('id', uuid.v4());
+    if (!payload.id){
+      payload.id = '_' + uuid.v4();
     }
 
     if (!payload.index){
       const lastIndex = this.data
         .filter(element => element.get('id') === payload.element_id)
-        .sort((a, b) => a.get('index') - b.get('index'))
+        .sort(sortByIndex)
         .last()
         .get('index');
 
-      map = map.set('index', lastIndex + 1);
+      payload.index = lastIndex + 1;
     }
 
-    map = map.set('$created', false);
-
-    this.set(map.get('id'), map);
-    this.pushQueue(map.get('id'));
+    this.set(payload.id, payload);
+    this.pushQueue(payload.id);
   }
 
-  updateElement(payload){
-    let map = Immutable.fromJS(payload);
-
-    map = map.set('$created', true);
-
-    this.set(map.get('id'), map);
-    this.pushQueue(map.get('id'));
+  updateElement(id, payload){
+    this.set(id, payload);
+    this.pushQueue(id);
   }
 
   deleteElement(id){
@@ -91,9 +86,11 @@ class ElementStore extends CollectionStore {
 
     this.emitChange();
 
-    api(`elements/${id}`, {
-      method: 'delete'
-    }, this.context);
+    if (id[0] !== '_'){
+      api(`elements/${id}`, {
+        method: 'delete'
+      }, this.context);
+    }
   }
 
   deleteChildElement(data, id){
@@ -109,7 +106,13 @@ class ElementStore extends CollectionStore {
   getElementsOfProject(id){
     return this.data
       .filter(item => item.get('project_id') === id)
-      .sort((a, b) => a.get('index') - b.get('index'));
+      .sort(sortByIndex);
+  }
+
+  getChildElements(id){
+    return this.data
+      .filter(item => item.get('element_id') === id)
+      .sort(sortByIndex);
   }
 
   setList(payload){
@@ -129,46 +132,47 @@ class ElementStore extends CollectionStore {
     this.emitChange();
   }
 
-  isQueueEmpty(){
-    return !this.queue.count();
+  hasUnsavedChanges(){
+    if (this.currentTask) return true;
+    return this.queue.count() > 0;
   }
 
   pushQueue(id){
-    if (this.queue.has(id)) return;
-
-    let queueEmpty = this.isQueueEmpty();
-
-    this.queue = this.queue.add(id);
-
-    if (queueEmpty && !this.currentTask){
+    if (this.hasUnsavedChanges()){
+      this.queue = this.queue.add(id);
+    } else {
+      this.queue = this.queue.add(id);
       this.throttleEnqueue();
     }
   }
 
   enqueue() {
     let id = this.queue.first();
+    if (!id) return;
+
     this.queue = this.queue.remove(id);
 
+    if (this.currentTask === id) return;
+
+    // Skip if the element does not exist
     if (!this.has(id)) return;
 
     this.promise = this.promise.then(() => {
-      // Skip if the element does not exist
       this.currentTask = id;
 
       let element = this.get(id);
-      this.data = this.data.set(id, element.set('$progress', true));
 
       // Update the current element
-      if (element.get('$created')){
+      if (id !== '_'){
         return api(`elements/${id}`, {
           method: 'put',
           body: element.toJS()
         }, this.context)
-        .then(filterError)
-        .then(parseJSON)
-        .then(data => {
-          this.set(data.id, Immutable.fromJS(data));
-        });
+          .then(filterError)
+          .then(parseJSON)
+          .then(data => {
+            this.set(id, data);
+          });
       }
 
       let parentID = element.get('element_id');
@@ -182,7 +186,7 @@ class ElementStore extends CollectionStore {
 
         // Push the current element to the queue if the parent element has not
         // been created yet
-        if (!parentElement.get('$created')) {
+        if (!parentElement.get('id')[0] === '_') {
           this.queue = this.queue.add(id);
           return;
         }
@@ -197,35 +201,38 @@ class ElementStore extends CollectionStore {
         method: 'post',
         body: element.toJS()
       }, this.context)
-      .then(filterError)
-      .then(parseJSON)
-      .then(data => {
-        this.data = this.data.withMutations(map => {
-          map.remove(id);
-          map.set(data.id, Immutable.fromJS(data));
-        }).map(item => {
-          if (item.get('element_id') !== id) return item;
-          return item.set('element_id', data.id);
+        .then(filterError)
+        .then(parseJSON)
+        .then(data => {
+          this.data = this.data.withMutations(map => {
+            map.remove(id);
+            map.set(data.id, Immutable.fromJS(data));
+          }).map(item => {
+            if (item.get('element_id') !== id) return item;
+            return item.set('element_id', data.id);
+          });
+
+          if (this.selectedElement === id){
+            this.selectedElement = data.id;
+          }
+
+          id = data.id;
         });
-
-        if (this.selectedElement === id){
-          this.selectedElement = data.id;
-        }
-
-        id = data.id;
-        this.emitChange();
-      });
     }).catch(err => {
       console.error(err);
-      this.set(id, this.get(id).set('$error', err));
     }).then(() => {
-      this.set(id, this.get(id).set('$progress', false));
       this.currentTask = null;
-      if (!this.isQueueEmpty()) this.enqueue();
+      this.emitChange();
+
+      if (this.hasUnsavedChanges()){
+        this.enqueue();
+      }
     });
   }
 
-  throttleEnqueue = throttle(this.enqueue.bind(this), THROTTLE_DELAY)
+  throttleEnqueue = throttle(this.enqueue.bind(this), THROTTLE_DELAY, {
+    leading: false
+  })
 
   getHoverElements(){
     return this.hoverElements;

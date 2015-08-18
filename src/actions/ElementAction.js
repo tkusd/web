@@ -49,8 +49,8 @@ export function getFullElement(id, options = {}){
     });
 }
 
-export function updateElement(payload){
-  this.dispatch(Actions.UPDATE_ELEMENT, payload);
+export function updateElement(id, payload){
+  this.dispatch(Actions.UPDATE_ELEMENT, id, payload);
 }
 
 export function deleteElement(id){

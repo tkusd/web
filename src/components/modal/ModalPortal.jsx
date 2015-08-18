@@ -1,5 +1,4 @@
-import React from 'react';
-import cloneWithProps from 'react/lib/cloneWithProps';
+import React, {cloneElement} from 'react';
 import * as ModalAction from '../../actions/ModalAction';
 import bindActions from '../../utils/bindActions';
 
@@ -36,7 +35,7 @@ class ModalPortal extends React.Component {
 
   render(){
     if (this.props.trigger){
-      return cloneWithProps(this.props.trigger, {
+      return cloneElement(this.props.trigger, {
         onClick: this.handleTriggerClick
       });
     } else {

@@ -17,7 +17,8 @@ if (process.env.BROWSER){
   components: stores.ComponentStore.getList(),
   editable: stores.ProjectStore.isEditable(props.params.projectID),
   activeElement: stores.ElementStore.getSelectedElement(),
-  hoverElements: stores.ElementStore.getHoverElements()
+  hoverElements: stores.ElementStore.getHoverElements(),
+  hasUnsavedChanges: stores.ElementStore.hasUnsavedChanges()
 }))
 @pureRender
 class Screen extends React.Component {
@@ -85,6 +86,7 @@ class Screen extends React.Component {
             selectElement={this.selectElement}
             selectedScreen={selectedScreen}/>
         )}
+        <ScreenToolbar {...this.state}/>
       </div>
     );
   }
