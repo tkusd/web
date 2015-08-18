@@ -15,7 +15,7 @@ export default function(req, res, next){
     prepareFullProject(req)
   ]).then(([stats, flux]) => {
     const {AppStore} = flux.getStore();
-    let script = 'window.$INIT = function(){"use strict";\n' + generateScript(flux, projectID) + '}';
+    let script = 'window.$INIT = function(){' + generateScript(flux, projectID) + '}';
 
     let html = ReactDOM.renderToStaticMarkup(
       React.createElement(Container, {flux},
@@ -25,5 +25,11 @@ export default function(req, res, next){
 
     res.status(AppStore.getStatusCode());
     res.send('<!DOCTYPE html>' + html);
-  }).catch(next);
+  }).catch(err => {
+    if (err.response && err.response.status === 404){
+      return res.status(404).send('Not found');
+    }
+
+    throw err;
+  });
 }

@@ -106,5 +106,11 @@ export default function(req, res, next){
     zip.directory(F7_DIST, 'www/framework7');
 
     zip.finalize();
-  }).catch(next);
+  }).catch(err => {
+    if (err.response && err.response.status === 404){
+      return res.status(404).send('Not found');
+    }
+
+    throw err;
+  });
 }

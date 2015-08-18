@@ -123,6 +123,9 @@ function generateProgram(flux, projectID){
   const project = ProjectStore.getProject(projectID);
 
   return [].concat(
+    generateExpressionStatement(
+      generateLiteral('use strict')
+    ),
     generateVariable('app', {
       type: 'NewExpression',
       callee: generateIdentifier('Framework7'),
