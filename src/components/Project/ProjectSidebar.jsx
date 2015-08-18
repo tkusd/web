@@ -29,6 +29,9 @@ class ProjectSidebar extends React.Component {
           {this.renderSettingPalette()}
         </TabHost>
         <div className="project-sidebar__links">
+          <a href={this.makeDownloadHref()} className="project-sidebar__link" target="_blank" onClick={this.openDownloadWindow}>
+            <FontAwesome icon="download"/>
+          </a>
           <a href={this.makePreviewHref()} className="project-sidebar__link" target="_blank" onClick={this.openPreviewWindow}>
             <FontAwesome icon="eye"/>
           </a>
@@ -70,12 +73,22 @@ class ProjectSidebar extends React.Component {
     return `/projects/${project.get('id')}/preview`;
   }
 
+  makeDownloadHref(){
+    const {project} = this.props;
+    return `/projects/${project.get('id')}/download`;
+  }
+
   openPreviewWindow = (e) => {
     e.preventDefault();
 
     const {project} = this.props;
 
     window.open(this.makePreviewHref(), project.get('id'), 'menubar=no, location=no, width=360, height=640, status=no');
+  }
+
+  openDownloadWindow = (e) => {
+    e.preventDefault();
+    window.location.href = this.makeDownloadHref();
   }
 }
 
