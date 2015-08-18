@@ -94,7 +94,7 @@ export default {
       if (query.theme){
         return [
           postcssF7({
-            prefix: '.screen__view-' + query.theme
+            prefix: '.' + query.theme
           })
         ];
       }

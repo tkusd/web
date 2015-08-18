@@ -4,7 +4,7 @@ import pureRender from '../../decorators/pureRender';
 import * as ElementAction from '../../actions/ElementAction';
 import bindActions from '../../utils/bindActions';
 import ElementSidebar from './ElementSidebar';
-import ViewContainer from './ViewContainer';
+import ViewMask from './ViewMask';
 
 if (process.env.BROWSER){
   require('../../styles/Screen/Screen.styl');
@@ -15,7 +15,8 @@ if (process.env.BROWSER){
   elements: stores.ElementStore.getElementsOfProject(props.params.projectID),
   components: stores.ComponentStore.getList(),
   editable: stores.ProjectStore.isEditable(props.params.projectID),
-  activeElement: stores.ElementStore.getSelectedElement()
+  activeElement: stores.ElementStore.getSelectedElement(),
+  hoverElements: stores.ElementStore.getHoverElements()
 }))
 @pureRender
 class Screen extends React.Component {
@@ -63,15 +64,14 @@ class Screen extends React.Component {
   }
 
   render(){
-    const {project, elements, editable} = this.state;
+    const {elements, editable} = this.state;
     const selectedScreen = this.props.params.screenID;
 
     return (
       <div className="screen">
-        <div className={'screen__view-' + project.get('theme')}>
-          <ViewContainer {...this.state}
-            element={elements.get(selectedScreen)}/>
-        </div>
+        <ViewMask {...this.state}
+          element={elements.get(selectedScreen)}
+          selectElement={this.selectElement}/>
         {editable && (
           <ElementSidebar
             {...this.state}

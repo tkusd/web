@@ -12,7 +12,7 @@ import {
 import base62uuid from '../utils/base62uuid';
 
 function getElementID(element){
-  return '#e' + base62uuid(element.get('id'));
+  return '#e' + element.get('id');
 }
 
 function getActionID(actionID){

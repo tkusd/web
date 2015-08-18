@@ -64,3 +64,11 @@ export function selectElement(id){
 export function deselectElement(){
   this.dispatch(Actions.SELECT_ELEMENT, null);
 }
+
+export function pushHoverElement(id){
+  this.dispatch(Actions.PUSH_HOVER_ELEMENT, id);
+}
+
+export function popHoverElement(id){
+  this.dispatch(Actions.POP_HOVER_ELEMENT, id);
+}

@@ -36,6 +36,7 @@
     "node-uuid": "^1.4.3",
     "normalize.css": "^3.0.3",
     "react": "^0.14.0-beta1",
+    "react-color": "^1.0.3",
     "react-dnd": "^1.1.4",
     "react-dom": "^0.14.0-beta1",
     "react-form-input": "^0.1.1",

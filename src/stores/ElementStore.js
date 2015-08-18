@@ -1,6 +1,6 @@
 import CollectionStore from './CollectionStore';
 import Actions from '../constants/Actions';
-import Immutable, {List} from 'immutable';
+import Immutable, {List, OrderedSet} from 'immutable';
 import uuid from 'node-uuid';
 import omit from 'lodash/object/omit';
 import {api, parseJSON, filterError} from '../utils/request';
@@ -11,7 +11,9 @@ class ElementStore extends CollectionStore {
     updateElement: Actions.UPDATE_ELEMENT,
     setList: Actions.UPDATE_ELEMENT_LIST,
     deleteElement: Actions.DELETE_ELEMENT,
-    selectElement: Actions.SELECT_ELEMENT
+    selectElement: Actions.SELECT_ELEMENT,
+    pushHoverElement: Actions.PUSH_HOVER_ELEMENT,
+    popHoverElement: Actions.POP_HOVER_ELEMENT
   }
 
   constructor(context){
@@ -21,6 +23,7 @@ class ElementStore extends CollectionStore {
     this.queue = List();
     this.currentTask = null;
     this.selectedElement = null;
+    this.hoverElements = OrderedSet();
   }
 
   getSelectedElement(){
@@ -40,6 +43,16 @@ class ElementStore extends CollectionStore {
     if (!payload.id) {
       // Create a random UUID for client
       payload.id = uuid.v4();
+    }
+
+    if (!payload.index){
+      const lastIndex = this.data
+        .filter(element => element.get('id') === payload.element_id)
+        .sort((a, b) => a.get('index') - b.get('index'))
+        .last()
+        .get('index');
+
+      payload.index = lastIndex + 1;
     }
 
     payload.$created = false;
@@ -116,7 +129,7 @@ class ElementStore extends CollectionStore {
 
     let queueEmpty = this.isQueueEmpty();
 
-    this.queue.push(id);
+    this.queue = this.queue.push(id);
 
     if (queueEmpty && !this.currentTask){
       this.enqueue();
@@ -124,7 +137,7 @@ class ElementStore extends CollectionStore {
   }
 
   enqueue() {
-    const id = this.queue.first();
+    let id = this.queue.first();
     this.queue = this.queue.shift();
 
     if (!this.has(id)) return;
@@ -190,6 +203,7 @@ class ElementStore extends CollectionStore {
           this.selectedElement = data.id;
         }
 
+        id = data.id;
         this.emitChange();
       });
     }).catch(err => {
@@ -200,6 +214,20 @@ class ElementStore extends CollectionStore {
       this.currentTask = null;
       if (!this.isQueueEmpty()) this.enqueue();
     });
+  }
+
+  getHoverElements(){
+    return this.hoverElements;
+  }
+
+  pushHoverElement(id){
+    this.hoverElements = this.hoverElements.add(id);
+    this.emitChange();
+  }
+
+  popHoverElement(id){
+    this.hoverElements = this.hoverElements.remove(id);
+    this.emitChange();
   }
 }
 

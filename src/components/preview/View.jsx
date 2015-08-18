@@ -1,22 +1,25 @@
 import React from 'react';
 import cx from 'classnames';
 import ElementTypes from '../../constants/ElementTypes';
-import base62uuid from '../../utils/base62uuid';
 import NoopContainer from './NoopContainer';
 
 function getElementID(element){
-  return 'e' + base62uuid(element.get('id'));
+  return 'e' + element.get('id');
 }
+
+function noop(){}
 
 class View extends React.Component {
   static propTypes = {
     element: React.PropTypes.object.isRequired,
     elements: React.PropTypes.object.isRequired,
-    Container: React.PropTypes.func.isRequired
+    Container: React.PropTypes.func.isRequired,
+    onClick: React.PropTypes.func.isRequired
   }
 
   static defaultProps = {
-    Container: NoopContainer
+    Container: NoopContainer,
+    onClick: noop
   }
 
   getChildElements(parent){
@@ -31,9 +34,15 @@ class View extends React.Component {
       case ElementTypes.screen:
         return this.renderPage(element);
 
+      case ElementTypes.navbar:
+        return this.renderNavBar(element);
+
+      case ElementTypes.toolbar:
+        return this.renderToolbar(element);
+
       case ElementTypes.label:
         return (
-          <div id={getElementID(element)}>{element.getIn(['attributes', 'text'])}</div>
+          <div id={getElementID(element)} onClick={this.props.onClick}>{element.getIn(['attributes', 'text'])}</div>
         );
 
       case ElementTypes.button:
@@ -41,7 +50,7 @@ class View extends React.Component {
 
       case ElementTypes.buttonRow:
         return (
-          <div id={getElementID(element)} className="buttons-row">
+          <div id={getElementID(element)} className="buttons-row" onClick={this.props.onClick}>
             {this.renderElements(children)}
           </div>
         );
@@ -65,6 +74,7 @@ class View extends React.Component {
   }
 
   renderPage(element){
+    const {Container} = this.props;
     const id = element.get('id');
     const children = this.getChildElements(id);
     let content = [];
@@ -81,16 +91,11 @@ class View extends React.Component {
     });
 
     navbar.forEach((item, key) => {
-      if (!content.length){
-        return content.push(this.renderNavBar(item));
-      }
-
-      const children = this.getChildElements(key);
-
       content.push(
-        <div id={getElementID(item)} className="subnavbar" key={key}>
-          {this.renderElements(children)}
-        </div>
+        <Container {...this.props}
+          element={item}
+          key={key}
+          subnavbar={Boolean(content.length)}/>
       );
     });
 
@@ -104,14 +109,8 @@ class View extends React.Component {
     );
 
     toolbar.forEach((item, key) => {
-      const children = this.getChildElements(key);
-
       content.push(
-        <div id={getElementID(item)} className="toolbar" key={key}>
-          <div className="toolbar-inner">
-            {this.renderElements(children)}
-          </div>
-        </div>
+        <Container {...this.props} element={item} key={key}/>
       );
     });
 
@@ -123,11 +122,18 @@ class View extends React.Component {
   }
 
   renderNavBar(element){
-    const id = element.get('id');
-    const elements = this.getChildElements(id);
+    const elements = this.getChildElements(element.get('id'));
+
+    if (this.props.subnavbar){
+      return (
+        <div id={getElementID(element)} className="subnavbar" onClick={this.props.onClick}>
+          {this.renderElements(elements)}
+        </div>
+      );
+    }
 
     return (
-      <div id={getElementID(element)} className="navbar" key={id}>
+      <div id={getElementID(element)} className="navbar" onClick={this.props.onClick}>
         <div className="navbar-inner">
           <div className="left">
             {this.renderElements(elements.filter(element => (
@@ -142,6 +148,18 @@ class View extends React.Component {
               element.getIn(['attributes', 'position']) === 'right'
             )))}
           </div>
+        </div>
+      </div>
+    );
+  }
+
+  renderToolbar(element){
+    const elements = this.getChildElements(element.get('id'));
+
+    return (
+      <div id={getElementID(element)} className="toolbar" onClick={this.props.onClick}>
+        <div className="toolbar-inner">
+          {this.renderElements(elements)}
         </div>
       </div>
     );
@@ -174,7 +192,7 @@ class View extends React.Component {
         id={getElementID(element)}
         href={element.getIn(['attributes', 'href'], '#')}
         className={className}
-        onClick={this.handleButtonClick}>
+        onClick={this.props.onClick}>
         {element.getIn(['attributes', 'text'])}
       </a>
     );
@@ -187,7 +205,7 @@ class View extends React.Component {
     return (
       <div>
         {title && <div className="content-block-title">{title}</div>}
-        <div id={getElementID(element)} className="content-block">
+        <div id={getElementID(element)} className="content-block" onClick={this.props.onClick}>
           {this.renderElements(elements)}
         </div>
       </div>
@@ -201,17 +219,13 @@ class View extends React.Component {
     return (
       <div>
         {title && <div className="content-block-title">{title}</div>}
-        <div id={getElementID(element)} className="list-block">
+        <div id={getElementID(element)} className="list-block" onClick={this.props.onClick}>
           <ul>
             {this.renderElements(elements)}
           </ul>
         </div>
       </div>
     );
-  }
-
-  handleButtonClick(e){
-    e.preventDefault();
   }
 }
 

@@ -1,0 +1,80 @@
+@import "nib"
+@import "../common"
+
+.view-mask
+  position: absolute
+  top: 0
+  left: 0
+  right: element-sidebar-width
+  bottom: 0
+
+.view-mask__screen
+  position: absolute
+  top: 0
+  left: 0
+  right: 0
+  bottom: 0
+  width: 360px
+  height: 640px
+  margin: auto
+  &.ios
+    font-family: Helvetica Neue, Helvetica, Arial, sans-serif
+    color: #000
+    font-size: 14px
+    line-height: 1.4
+    background: #fff
+  &.material
+    font-family: Roboto, Noto, Helvetica, Arial, sans-serif
+    color: #212121
+    font-size: 14px
+    line-height: 1.5
+    background: #fff
+
+$view-resize-area
+  position: fixed
+
+.view-mask__resize-n
+  @extend $view-resize-area
+  cursor: n-resize
+  border-top: 2px solid color-accent
+
+.view-mask__resize-e
+  @extend $view-resize-area
+  cursor: e-resize
+  border-right: 2px solid color-accent
+
+.view-mask__resize-s
+  @extend $view-resize-area
+  cursor: s-resize
+  border-bottom: 2px solid color-accent
+
+.view-mask__resize-w
+  @extend $view-resize-area
+  cursor: w-resize
+  border-left: 2px solid color-accent
+
+$view-resize-corner
+  @extend $view-resize-area
+  background: color-accent
+
+.view-mask__resize-ne
+  @extend $view-resize-corner
+  cursor: ne-resize
+
+.view-mask__resize-se
+  @extend $view-resize-corner
+  cursor: se-resize
+
+.view-mask__resize-sw
+  @extend $view-resize-corner
+  cursor: sw-resize
+
+.view-mask__resize-nw
+  @extend $view-resize-corner
+  cursor: nw-resize
+
+.view-mask__mask
+  background: color-accent
+  opacity: 0.5
+  position: fixed
+  pointer-events: none

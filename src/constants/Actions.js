@@ -20,6 +20,8 @@ export default keyMirror({
   UPDATE_ELEMENT_LIST: null,
   DELETE_ELEMENT: null,
   SELECT_ELEMENT: null,
+  PUSH_HOVER_ELEMENT: null,
+  POP_HOVER_ELEMENT: null,
 
   OPEN_MODAL: null,
   CLOSE_MODAL: null,
