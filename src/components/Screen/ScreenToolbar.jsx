@@ -18,14 +18,15 @@ class ScreenToolbar extends React.Component {
     hasUnsavedChanges: React.PropTypes.bool.isRequired,
     isSavingChanges: React.PropTypes.bool.isRequired,
     screenSize: React.PropTypes.string.isRequired,
-    updateScreenSize: React.PropTypes.func.isRequired
+    updateScreenSize: React.PropTypes.func.isRequired,
+    updateScreenDimension: React.PropTypes.func.isRequired
   }
 
   render(){
     return (
       <div className="screen-toolbar">
         <div className="screen-toolbar__status">{this.renderStatus()}</div>
-        <div className="screen-toolbar__resize">{this.renderResizeSelect()}</div>
+        {this.renderResizeSelect()}
       </div>
     );
   }
@@ -50,6 +51,7 @@ class ScreenToolbar extends React.Component {
     const {screenSize} = this.props;
 
     return (
+      <div className="screen-toolbar__resize">
       <select value={screenSize} onChange={this.handleScreenResize}>
         <option value="320x480">Apple iPhone 4 (320x480)</option>
         <option value="320x568">Apple iPhone 5 (320x568)</option>
@@ -59,12 +61,26 @@ class ScreenToolbar extends React.Component {
         <option value="360x640">Google Nexus 5 (360x640)</option>
         <option value="412x732">Google Nexus 6 (412x732)</option>
       </select>
+        <button className="screen-toolbar__swap-btn" onClick={this.swapScreenDimension}>
+          <FontAwesome icon="refresh"/>
+        </button>
+      </div>
     );
   }
 
   handleScreenResize = (e) => {
     const {updateScreenSize} = this.props;
     updateScreenSize(e.target.value);
+  }
+
+  swapScreenDimension = (e) => {
+    const {updateScreenDimension, screenDimension} = this.props;
+
+    if (screenDimension === 'landscape'){
+      updateScreenDimension('horizontal');
+    } else {
+      updateScreenDimension('landscape');
+    }
   }
 
   saveNow = (e) => {

@@ -51,12 +51,14 @@ class Screen extends React.Component {
     super(props, context);
 
     this.state = {
-      screenSize: '360x640'
+      screenSize: '360x640',
+      screenDimension: 'landscape'
     };
 
     this.routerWillLeave = this.routerWillLeave.bind(this);
     this.selectElement = this.selectElement.bind(this);
     this.updateScreenSize = this.updateScreenSize.bind(this);
+    this.updateScreenDimension = this.updateScreenDimension.bind(this);
   }
 
   componentDidMount(){
@@ -96,7 +98,9 @@ class Screen extends React.Component {
             selectElement={this.selectElement}
             selectedScreen={selectedScreen}/>
         )}
-        <ScreenToolbar {...this.state} updateScreenSize={this.updateScreenSize}/>
+        <ScreenToolbar {...this.state}
+          updateScreenSize={this.updateScreenSize}
+          updateScreenDimension={this.updateScreenDimension}/>
       </div>
     );
   }
@@ -109,6 +113,12 @@ class Screen extends React.Component {
   updateScreenSize(size){
     this.setState({
       screenSize: size
+    });
+  }
+
+  updateScreenDimension(dimension){
+    this.setState({
+      screenDimension: dimension
     });
   }
 

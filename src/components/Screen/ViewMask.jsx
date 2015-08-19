@@ -106,8 +106,12 @@ class ViewMask extends React.Component {
   }
 
   renderScreen(){
-    const {project, screenSize} = this.props;
-    const [width, height] = screenSize.split('x');
+    const {project, screenSize, screenDimension} = this.props;
+    let [width, height] = screenSize.split('x');
+
+    if (screenDimension === 'horizontal'){
+      [height, width] = [width, height];
+    }
 
     let style = {width, height};
 
