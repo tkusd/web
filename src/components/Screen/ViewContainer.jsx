@@ -16,46 +16,10 @@ function getDropTargetType(props){
   }
 }
 
-function collectDefaultValue(data){
-  let result = {};
-  if (!data) return result;
-
-  Object.keys(data).forEach(key => {
-    const item = data[key];
-
-    if (item.hasOwnProperty('defaultValue')) {
-      result[key] = item.defaultValue;
-    }
-  });
-
-  return result;
-}
-
 const spec = {
   drop(props, monitor, {context}){
     if (monitor.didDrop()) return;
-
-    const component = monitor.getItem();
-    const {element} = props;
-    const {createElement} = bindActions(ElementAction, context.flux);
-
-    createElement({
-      name: component.type,
-      type: component.type,
-      project_id: element.get('project_id'),
-      element_id: element.get('id'),
-      attributes: collectDefaultValue(component.attributes)
-    });
-  },
-
-  canDrop(props, monitor){
-    const {components, element} = props;
-    const item = monitor.getItem();
-    const component = components.get(element.get('type'));
-
-    if (!component.has('availableChildTypes')) return true;
-
-    return component.get('availableChildTypes').has(item.type);
+    return props.element.toJS();
   }
 };
 
@@ -72,8 +36,6 @@ class ViewContainer extends React.Component {
   }
 
   static propTypes = {
-    components: React.PropTypes.object.isRequired,
-
     // React DnD
     connectDropTarget: React.PropTypes.func.isRequired,
     isOver: React.PropTypes.bool.isRequired,

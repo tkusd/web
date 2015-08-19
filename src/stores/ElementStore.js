@@ -52,12 +52,11 @@ class ElementStore extends CollectionStore {
     }
 
     if (!payload.index){
-      const lastIndex = this.data
-        .filter(element => element.get('id') === payload.element_id)
+      const lastSibling = this.getChildElements(payload.element_id)
         .sort(sortByIndex)
-        .last()
-        .get('index');
+        .last();
 
+      const lastIndex = lastSibling ? lastSibling.get('index') : 0;
       payload.index = lastIndex + 1;
     }
 
@@ -120,7 +119,6 @@ class ElementStore extends CollectionStore {
 
     this.data = this.data.withMutations(data => {
       payload.forEach(item => {
-        item.$created = true;
         data.set(item.id, Immutable.fromJS(omit(item, 'events')));
 
         if (item.events){
@@ -135,6 +133,10 @@ class ElementStore extends CollectionStore {
   hasUnsavedChanges(){
     if (this.currentTask) return true;
     return this.queue.count() > 0;
+  }
+
+  isSavingChanges(){
+    return Boolean(this.currentTask);
   }
 
   pushQueue(id){
@@ -171,7 +173,12 @@ class ElementStore extends CollectionStore {
           .then(filterError)
           .then(parseJSON)
           .then(data => {
-            this.set(id, data);
+            let newData = Immutable.fromJS(data);
+
+            // Keep current data if the local data has been changed during update
+            if (Immutable.is(this.get(id), newData)){
+              this.set(id, data);
+            }
           });
       }
 
@@ -205,8 +212,17 @@ class ElementStore extends CollectionStore {
         .then(parseJSON)
         .then(data => {
           this.data = this.data.withMutations(map => {
+            let newData = Immutable.fromJS(data);
+            let oldData = this.get(id).set('id', data.id);
+
             map.remove(id);
-            map.set(data.id, Immutable.fromJS(data));
+
+            // Keep current data if the local data has been changed during update
+            if (Immutable.is(newData, oldData)){
+              map.set(data.id, newData);
+            } else {
+              map.set(data.id, oldData);
+            }
           }).map(item => {
             if (item.get('element_id') !== id) return item;
             return item.set('element_id', data.id);

@@ -56,7 +56,7 @@ class AttributePalette extends React.Component {
             validators.required('Name is required')
           ]}/>
         {component.has('attributes') &&
-          component.get('attributes').map(this.renderAttributeField.bind(this))}
+          component.get('attributes').map(this.renderAttributeField.bind(this)).toArray()}
       </div>
     );
   }

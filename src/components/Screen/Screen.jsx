@@ -62,7 +62,9 @@ class Screen extends React.Component {
 
   componentDidUpdate(prevProps, prevState){
     if (this.state.project.get('theme') !== prevState.project.get('theme')){
+      const {deselectElement} = bindActions(ElementAction, this.context.flux);
       this.loadThemeCSS();
+      deselectElement();
     }
   }
 
