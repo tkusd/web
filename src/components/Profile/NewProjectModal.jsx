@@ -5,6 +5,12 @@ import {validators} from 'react-form-input';
 import * as ProjectAction from '../../actions/ProjectAction';
 import {FormattedMessage} from '../intl';
 import bindActions from '../../utils/bindActions';
+import RadioGroup from 'react-radio-group';
+import FontAwesome from '../common/FontAwesome';
+
+if (process.env.BROWSER){
+  require('../../styles/Profile/NewProjectModal.styl');
+}
 
 class NewProjectModal extends React.Component {
   static contextTypes = {
@@ -20,6 +26,7 @@ class NewProjectModal extends React.Component {
     super(props, context);
 
     this.state = {
+      themeValue: 'ios',
       error: null
     };
 
@@ -35,7 +42,7 @@ class NewProjectModal extends React.Component {
   }
 
   render(){
-    const {error} = this.state;
+    const {error, themeValue} = this.state;
     const {closeModal} = this.props;
 
     return (
@@ -51,6 +58,23 @@ class NewProjectModal extends React.Component {
               validators.required('Title is required'),
               validators.maxLength(255, 'The maximum length of title is 255')
             ]}/>
+          <RadioGroup
+            selectedValue={themeValue}
+            onChange={this.handleRadioChange.bind(this)}>
+            {Radio => (
+              <div className="new-project-modal__radio-group">
+                <div className="new-project-modal__radio-group-title">Theme</div>
+                <label className="new-project-modal__radio">
+                  <Radio value="ios"/>
+                  <FontAwesome icon="apple"/>iOS
+                </label>
+                <label className="new-project-modal__radio">
+                  <Radio value="material"/>
+                  <FontAwesome icon="android"/>Material
+                </label>
+              </div>
+            )}
+          </RadioGroup>
           <div className="modal__btn-group">
             <a className="modal__btn" onClick={closeModal}>
               <FormattedMessage message="common.cancel"/>
@@ -75,12 +99,19 @@ class NewProjectModal extends React.Component {
     }
 
     createProject(this.props.user.get('id'), {
-      title: title.getValue()
+      title: title.getValue(),
+      theme: this.state.themeValue
     }).then(project => {
       this.setState({error: null});
       this.context.router.transitionTo('/projects/' + project.id);
     }, err => {
       this.setState({error: err.body || err});
+    });
+  }
+
+  handleRadioChange(value){
+    this.setState({
+      themeValue: value
     });
   }
 }

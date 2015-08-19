@@ -8,6 +8,8 @@ import {ModalPortal} from '../modal';
 import DeleteProjectModal from './DeleteProjectModal';
 import bindActions from '../../utils/bindActions';
 import {FormattedMessage} from '../intl';
+import RadioGroup from 'react-radio-group';
+import FontAwesome from '../common/FontAwesome';
 
 if (process.env.BROWSER){
   require('../../styles/Project/SettingPalette.styl');
@@ -43,8 +45,7 @@ class SettingPalette extends React.Component {
   }
 
   render(){
-    const {project} = this.props;
-    const {error} = this.state;
+    const {project, error} = this.state;
 
     let deleteBtn = (
       <div className="setting-palette__btn-wrap">
@@ -68,21 +69,31 @@ class SettingPalette extends React.Component {
                 validators.required('Title is required'),
                 validators.maxLength(255, 'The maximum length of the title is 255')
               ]}
-              defaultValue={project.get('title')}
+              value={project.get('title')}
               onChange={this.handleInputChange.bind(this, 'title')}/>
             <InputGroup
               ref="description"
               label={<FormattedMessage message="project.description"/>}
               type="textarea"
-              defaultValue={project.get('description')}
+              value={project.get('description')}
               onChange={this.handleInputChange.bind(this, 'description')}/>
-            <select
-              ref="theme"
-              defaultValue={project.get('theme')}
-              onChange={this.handleInputChange.bind(this, 'theme')}>
-              <option value="ios">ios</option>
-              <option value="material">material</option>
-            </select>
+            <RadioGroup
+              selectedValue={project.get('theme')}
+              onChange={this.handleRadioChange.bind(this, 'theme')}>
+              {Radio => (
+                <div className="setting-palette__radio-group">
+                  <div className="setting-palette__radio-group-title">Theme</div>
+                  <label className="setting-palette__radio">
+                    <Radio value="ios"/>
+                    <FontAwesome icon="apple"/>iOS
+                  </label>
+                  <label className="setting-palette__radio">
+                    <Radio value="material"/>
+                    <FontAwesome icon="android"/>Material
+                  </label>
+                </div>
+              )}
+            </RadioGroup>
             <div className="setting-palette__btn-wrap">
               <button type="submit" className="setting-palette__save" disabled={!this.hasChanged()}>
                 <FormattedMessage message="common.update"/>
@@ -100,8 +111,8 @@ class SettingPalette extends React.Component {
   handleSubmit(e){
     e.preventDefault();
 
-    const {title, description, theme} = this.refs;
-    const {project} = this.props;
+    const {title, description} = this.refs;
+    const {project} = this.state;
     const id = project.get('id');
     const {updateProject} = bindActions(ProjectAction, this.context.flux);
 
@@ -110,9 +121,9 @@ class SettingPalette extends React.Component {
     }
 
     updateProject(id, {
-      title: title.getValue(),
-      description: description.getValue(),
-      theme: theme.value
+      title: project.get('title'),
+      description: project.get('description'),
+      theme: project.get('theme')
     }).then(() => {
       const {ProjectStore} = this.context.flux.getStore();
 
@@ -135,10 +146,8 @@ class SettingPalette extends React.Component {
     });
   }
 
-  handleSelectChange(name, e){
-    this.handleInputChange(name, {
-      value: (e.target || e.currentTarget).value
-    });
+  handleRadioChange(name, value){
+    this.handleInputChange(name, {value});
   }
 }
 

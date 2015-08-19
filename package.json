@@ -41,6 +41,7 @@
     "react-dom": "^0.14.0-beta3",
     "react-form-input": "^0.3.0",
     "react-intl": "^1.2.0",
+    "react-radio-group": "^2.1.1",
     "react-router": "^1.0.0-beta3",
     "serialize-javascript": "^1.0.0",
     "serve-static": "^1.9.3",

@@ -5,7 +5,6 @@ import SettingPalette from './SettingPalette';
 import pureRender from '../../decorators/pureRender';
 import FontAwesome from '../common/FontAwesome';
 import {TabHost, TabPane} from '../tab';
-import SharePalette from './SharePalette';
 
 if (process.env.BROWSER){
   require('../../styles/Project/ProjectSidebar.styl');
@@ -56,14 +55,6 @@ class ProjectSidebar extends React.Component {
     return (
       <TabPane tab={<FontAwesome icon="cog"/>}>
         <SettingPalette {...this.props}/>
-      </TabPane>
-    );
-  }
-
-  renderSharePalette(){
-    return (
-      <TabPane tab={<FontAwesome icon="share-alt"/>}>
-        <SharePalette {...this.props}/>
       </TabPane>
     );
   }
