@@ -50,8 +50,13 @@ class Screen extends React.Component {
   constructor(props, context){
     super(props, context);
 
+    this.state = {
+      screenSize: '360x640'
+    };
+
     this.routerWillLeave = this.routerWillLeave.bind(this);
     this.selectElement = this.selectElement.bind(this);
+    this.updateScreenSize = this.updateScreenSize.bind(this);
   }
 
   componentDidMount(){
@@ -91,7 +96,7 @@ class Screen extends React.Component {
             selectElement={this.selectElement}
             selectedScreen={selectedScreen}/>
         )}
-        <ScreenToolbar {...this.state}/>
+        <ScreenToolbar {...this.state} updateScreenSize={this.updateScreenSize}/>
       </div>
     );
   }
@@ -99,6 +104,12 @@ class Screen extends React.Component {
   selectElement(id){
     const {selectElement} = bindActions(ElementAction, this.context.flux);
     selectElement(id);
+  }
+
+  updateScreenSize(size){
+    this.setState({
+      screenSize: size
+    });
   }
 
   loadThemeCSS(){

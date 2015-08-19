@@ -18,7 +18,8 @@ class ViewMask extends React.Component {
     project: React.PropTypes.object.isRequired,
     selectElement: React.PropTypes.func.isRequired,
     activeElement: React.PropTypes.string,
-    hoverElements: React.PropTypes.object.isRequired
+    hoverElements: React.PropTypes.object.isRequired,
+    screenSize: React.PropTypes.string.isRequired
   }
 
   constructor(props, context){
@@ -95,15 +96,24 @@ class ViewMask extends React.Component {
   }
 
   render(){
-    const {project} = this.props;
-
     return (
       <div className="view-mask" onClick={this.handleOutsideClick} ref="container">
-        <div className={cx('view-mask__screen', project.get('theme'))}>
-          <ViewContainer {...this.props} onClick={this.handleNodeClick}/>
-        </div>
+        {this.renderScreen()}
         {this.renderResizeArea()}
         {this.renderMask()}
+      </div>
+    );
+  }
+
+  renderScreen(){
+    const {project, screenSize} = this.props;
+    const [width, height] = screenSize.split('x');
+
+    let style = {width, height};
+
+    return (
+      <div className={cx('view-mask__screen', project.get('theme'))} style={style}>
+        <ViewContainer {...this.props} onClick={this.handleNodeClick}/>
       </div>
     );
   }
