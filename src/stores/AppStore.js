@@ -15,6 +15,7 @@ class AppStore extends BaseStore {
     this.csrfToken = '';
     this.firstRender = true;
     this.statusCode = 200;
+    this.apiEndpoint = '';
   }
 
   getPageTitle(){
@@ -57,16 +58,27 @@ class AppStore extends BaseStore {
     this.emitChange();
   }
 
+  getAPIEndpoint(){
+    return this.apiEndpoint;
+  }
+
+  setAPIEndpoint(url){
+    this.apiEndpoint = url;
+    this.emitChange();
+  }
+
   dehydrate(){
     return {
       pageTitle: this.pageTitle,
-      csrfToken: this.csrfToken
+      csrfToken: this.csrfToken,
+      apiEndpoint: this.apiEndpoint
     };
   }
 
   rehydrate(state){
     this.pageTitle = state.pageTitle;
     this.csrfToken = state.csrfToken;
+    this.apiEndpoint = state.apiEndpoint;
   }
 }
 

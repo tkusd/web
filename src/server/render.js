@@ -20,7 +20,10 @@ function render(req, res, next){
   const lang = req.acceptsLanguages(availableLocales) || DEFAULT_LOCALE;
   const {checkToken} = bindActions(TokenAction, flux);
   const {loadCurrentUser} = bindActions(UserAction, flux);
+  const {AppStore, LocaleStore} = flux.getStore();
   let stats;
+
+  AppStore.setAPIEndpoint(req.app.get('config').apiEndpoint);
 
   readWebpackStats(req).then(webpackStats => {
     stats = webpackStats;
@@ -32,7 +35,6 @@ function render(req, res, next){
   }).then(() => {
     return loadCurrentUser();
   }).then(() => {
-    const {AppStore, LocaleStore} = flux.getStore();
     const location = new Location(req.path, req.query);
 
     AppStore.setFirstRender(false);

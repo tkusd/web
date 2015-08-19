@@ -1,11 +1,6 @@
-import fetch_ from 'isomorphic-fetch';
+import fetch from 'isomorphic-fetch';
 import merge from 'lodash/object/merge';
 
-// Fix "Illegal invocation" error in Chrome
-// https://github.com/matthew-andrews/isomorphic-fetch/pull/20
-const fetch = fetch_.bind(this);
-
-const API_BASE = process.env.NODE_ENV === 'production' ? 'http://tkusd.zespia.tw/v1/' : 'http://localhost:3000/v1/';
 const INTERNAL_BASE = '/_api/';
 
 function setupRequestOptions(options){
@@ -25,19 +20,17 @@ function setupRequestOptions(options){
 }
 
 export function api(url, options, context){
-  options = setupRequestOptions(options);
+  const {AppStore, TokenStore} = context.getStore();
+  const apiEndpoint = AppStore.getAPIEndpoint();
 
+  options = setupRequestOptions(options);
   options.mode = 'cors';
 
-  if (context){
-    const {TokenStore} = context.getStore();
-
-    if (TokenStore.isLoggedIn()){
-      options.headers.Authorization = 'Bearer ' + TokenStore.getToken();
-    }
+  if (TokenStore.isLoggedIn()){
+    options.headers.Authorization = 'Bearer ' + TokenStore.getToken();
   }
 
-  return fetch(API_BASE + url, options);
+  return fetch(apiEndpoint + url, options);
 }
 
 export function internal(url, options, context){

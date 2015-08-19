@@ -6,11 +6,25 @@ import ScreenItem from './ScreenItem';
 import FontAwesome from '../common/FontAwesome';
 import {FormattedMessage} from '../intl';
 import pureRender from '../../decorators/pureRender';
+import ItemTypes from '../../constants/ItemTypes';
+import {DropTarget} from 'react-dnd';
+import Immutable from 'immutable';
+import bindActions from '../../utils/bindActions';
+import * as ProjectAction from '../../actions/ProjectAction';
 
 if (process.env.BROWSER){
   require('../../styles/Project/ScreenPalette.styl');
 }
 
+const spec = {
+  drop(){
+    //
+  }
+};
+
+@DropTarget(ItemTypes.SCREEN_ITEM, spec, connect => ({
+  connectDropTarget: connect.dropTarget()
+}))
 @pureRender
 class ScreenPalette extends React.Component {
   static contextTypes = {
@@ -25,31 +39,62 @@ class ScreenPalette extends React.Component {
     editable: React.PropTypes.bool.isRequired
   }
 
+  constructor(props, context){
+    super(props, context);
+
+    this.state = {
+      screens: this.getScreens()
+    };
+
+    this.moveScreen = this.moveScreen.bind(this);
+    this.updateIndex = this.updateIndex.bind(this);
+  }
+
+  getScreens(props = this.props){
+    return props.elements.filter(item => !item.get('element_id'));
+  }
+
+  componentWillReceiveProps(nextProps){
+    if (!Immutable.is(this.props.elements, nextProps.elements)){
+      this.setState({
+        screens: this.getScreens(nextProps)
+      });
+    }
+  }
+
   render(){
-    const {elements} = this.props;
+    return (
+      <div className="screen-palette">
+        <Palette title={<FormattedMessage message="project.screens"/>}>
+          {this.renderContent()}
+        </Palette>
+        {this.renderPortal()}
+      </div>
+    );
+  }
 
-    let screens;
+  renderContent(){
+    const {screens} = this.state;
 
-    if (elements.count()){
-      screens = elements
-        .filter(item => !item.get('element_id'))
-        .map((item, id) => (
-          <ScreenItem {...this.props} key={id} element={item}/>
-        )).toArray();
-    } else {
-      screens = (
+    if (!screens.count()){
+      return (
         <div className="screen-palette__empty">
           <FormattedMessage message="project.no_screens"/>
         </div>
       );
     }
 
-    return (
-      <div className="screen-palette">
-        <Palette title={<FormattedMessage message="project.screens"/>}>
-          {screens}
-        </Palette>
-        {this.renderPortal()}
+    const {connectDropTarget} = this.props;
+
+    return connectDropTarget(
+      <div className="screen-palette__list">
+        {screens.map((item, id) => (
+          <ScreenItem {...this.props}
+            key={id}
+            element={item}
+            moveScreen={this.moveScreen}
+            updateIndex={this.updateIndex}/>
+        )).toArray()}
       </div>
     );
   }
@@ -69,6 +114,35 @@ class ScreenPalette extends React.Component {
         <NewScreenModal project={project}/>
       </ModalPortal>
     );
+  }
+
+  moveScreen(id, atIndex){
+    const screens = this.getScreens();
+    const element = screens.get(id);
+    let newScreens = screens.remove(id);
+    let index = 1;
+
+    this.setState({
+      screens: newScreens.slice(0, atIndex - 1)
+        .set(id, element)
+        .concat(newScreens.slice(atIndex - 1))
+        .map(element => element.set('index', index++))
+    });
+  }
+
+  updateIndex(){
+    const {project} = this.props;
+    const {screens} = this.state;
+    const {updateProject} = bindActions(ProjectAction, this.context.flux);
+
+    let currentIndex = this.getScreens().map(element => element.get('id'));
+    let newIndex = screens.map(element => element.get('id'));
+
+    if (Immutable.is(currentIndex, newIndex)) return;
+
+    updateProject(project.get('id'), {
+      elements: newIndex.toArray()
+    });
   }
 }
 
