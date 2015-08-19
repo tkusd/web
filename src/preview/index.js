@@ -9,11 +9,12 @@ import prepareFullProject from '../server/prepareFullProject';
 
 export default function(req, res, next){
   const projectID = req.params.id;
+  const flux = req.flux;
 
   Promise.all([
     readWebpackStats(req),
     prepareFullProject(req)
-  ]).then(([stats, flux]) => {
+  ]).then(([stats]) => {
     const {AppStore} = flux.getStore();
     let script = 'window.$INIT = function(){' + generateScript(flux, projectID) + '}';
 

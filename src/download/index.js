@@ -79,7 +79,9 @@ function generateHTML(flux, projectID){
 }
 
 export default function(req, res, next){
-  prepareFullProject(req).then(flux => {
+  const flux = req.flux;
+
+  prepareFullProject(req).then(() => {
     const {ProjectStore} = flux.getStore();
     const projectID = req.params.id;
     const project = ProjectStore.getProject(projectID);

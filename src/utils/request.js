@@ -3,6 +3,8 @@ import merge from 'lodash/object/merge';
 
 const INTERNAL_BASE = '/_api/';
 
+function noop(){}
+
 function setupRequestOptions(options){
   options = merge({
     method: 'get',
@@ -70,10 +72,16 @@ export function parseJSON(res){
 
 export function filterError(res){
   if (res.status < 200 || res.status > 300){
-    return res.json().then(json => {
-      return Promise.reject(new ResponseError(res, json));
-    }).catch(() => {
+    const contentType = res.headers.get('Content-Type');
+
+    if (!~contentType.indexOf('json')){
       return Promise.reject(new ResponseError(res));
+    }
+
+    return res.json().then(json => {
+      return json;
+    }, noop).then(json => {
+      return Promise.reject(new ResponseError(res, json));
     });
   }
 

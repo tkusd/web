@@ -6,7 +6,7 @@ export default function logout(req, res, next){
 
   api('tokens/' + token.id, {
     method: 'delete'
-  })
+  }, req.flux)
   .then(response => {
     if (response.status === 204){
       req.session.token = null;

@@ -3,44 +3,26 @@ import ReactDOM from 'react-dom/server';
 import Router from 'react-router';
 import Location from 'react-router/lib/Location';
 
-import {Flux, Container} from '../flux';
+import {Container} from '../flux';
 import routes from '../routes';
 import HtmlDocument from './HtmlDocument';
-import bindActions from '../utils/bindActions';
-import availableLocales from './availableLocales';
-import * as stores from '../stores';
-import * as TokenAction from '../actions/TokenAction';
-import * as UserAction from '../actions/UserAction';
 import readWebpackStats from './readWebpackStats';
-
-const DEFAULT_LOCALE = 'en';
+import checkCurrentUser from './checkCurrentUser';
 
 function render(req, res, next){
-  const flux = new Flux(stores);
-  const lang = req.acceptsLanguages(availableLocales) || DEFAULT_LOCALE;
-  const {checkToken} = bindActions(TokenAction, flux);
-  const {loadCurrentUser} = bindActions(UserAction, flux);
+  const flux = req.flux;
   const {AppStore, LocaleStore} = flux.getStore();
   let stats;
 
-  AppStore.setAPIEndpoint(req.app.get('config').apiEndpoint);
-
   readWebpackStats(req).then(webpackStats => {
     stats = webpackStats;
-
-    // Check web token
-    return checkToken(req.session.token).catch(() => {
-      req.session.token = null;
-    });
-  }).then(() => {
-    return loadCurrentUser();
+    return checkCurrentUser(req);
   }).then(() => {
     const location = new Location(req.path, req.query);
+    const lang = LocaleStore.getLanguage();
 
     AppStore.setFirstRender(false);
     AppStore.setCSRFToken(req.csrfToken());
-
-    LocaleStore.setLanguage(lang);
     LocaleStore.setData(require('../../locales/' + lang));
 
     Router.run(routes(flux), location, (err, initialState, transition) => {

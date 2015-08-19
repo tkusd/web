@@ -56,8 +56,17 @@ class InputGroup extends React.Component {
     return this.refs.input.getValue();
   }
 
+  setValue(value){
+    this.refs.input.setValue(value);
+  }
+
   getError(){
     return this.refs.input.getError();
+  }
+
+  setError(error){
+    this.setState({error});
+    this.refs.input.setError(error);
   }
 
   reset(){

@@ -1,7 +1,5 @@
 import express from 'express';
 import {api} from '../utils/request';
-import {Flux} from '../flux';
-import * as stores from '../stores';
 
 const app = express();
 
@@ -20,11 +18,6 @@ function proxy(res){
 }
 
 app.use((req, res, next) => {
-  const flux = req.flux = new Flux(stores);
-  const {AppStore} = flux.getStore();
-
-  AppStore.setAPIEndpoint(req.app.get('config').apiEndpoint);
-
   res.header('X-CSRF-Token', req.csrfToken());
   next();
 });
@@ -81,14 +74,14 @@ app.delete('/tokens', (req, res, next) => {
 
   api('tokens/' + req.body.id, {
     method: 'delete'
-  })
+  }, req.flux)
   .then(response => {
     if (response.status === 204){
       req.session.token = null;
     }
 
     return response;
-  }, req.flux)
+  })
   .then(proxy(res))
   .catch(next);
 });

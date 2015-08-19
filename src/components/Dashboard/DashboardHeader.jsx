@@ -16,6 +16,10 @@ if (process.env.BROWSER){
 }))
 @pureRender
 class DashboardHeader extends React.Component {
+  static contextTypes = {
+    router: React.PropTypes.object.isRequired
+  }
+
   render(){
     const {currentUser} = this.state;
 
@@ -69,13 +73,23 @@ class DashboardHeader extends React.Component {
             <Link to="/signup" className="dashboard-header__link--primary">
               <FormattedMessage message="common.signup"/>
             </Link>
-            <Link to="/login" className="dashboard-header__link">
+            <a href="/login" className="dashboard-header__link" onClick={this.handleLoginClick}>
               <FormattedMessage message="common.login"/>
-            </Link>
+            </a>
           </div>
         </header>
       );
     }
+  }
+
+  handleLoginClick = (e) => {
+    e.preventDefault();
+
+    const {router} = this.context;
+
+    router.transitionTo('/login', {}, {
+      from: router.state.location.pathname
+    });
   }
 }
 

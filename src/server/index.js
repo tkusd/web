@@ -7,6 +7,9 @@ import morgan from 'morgan';
 import csurf from 'csurf';
 import serveStatic from 'serve-static';
 import loadConfig from '../utils/loadConfig';
+import {Flux} from '../flux';
+import * as stores from '../stores';
+import availableLocales from './availableLocales';
 
 require('./loadIntlPolyfill');
 
@@ -15,10 +18,11 @@ const server = express();
 const NODE_ENV = server.get('env');
 const PRODUCTION = NODE_ENV === 'production';
 const config = loadConfig();
+const DEFAULT_LOCALE = 'en';
 
 server.set('trust proxy', ['loopback', 'linklocal', 'uniquelocal']);
 server.set('x-powered-by', false);
-server.set('config', config);
+// server.set('config', config);
 
 // Middleware
 server.use(morgan(PRODUCTION ? 'combined' : 'dev'));
@@ -38,6 +42,17 @@ if (PRODUCTION){
     index: false
   }));
 }
+
+server.use((req, res, next) => {
+  const flux = req.flux = new Flux(stores);
+  const lang = req.acceptsLanguages(availableLocales) || DEFAULT_LOCALE;
+  const {AppStore, LocaleStore} = flux.getStore();
+
+  AppStore.setAPIEndpoint(config.apiEndpoint);
+  LocaleStore.setLanguage(lang);
+
+  next();
+});
 
 // Internal API
 server.use('/_api', require('./api'));

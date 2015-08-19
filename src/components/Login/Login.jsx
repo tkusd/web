@@ -87,6 +87,7 @@ class Login extends React.Component {
     e.preventDefault();
 
     const {email, password} = this.refs;
+    const {location} = this.props;
     const {login} = bindActions(TokenAction, this.context.flux);
 
     if (email.getError() || password.getError()){
@@ -98,7 +99,12 @@ class Login extends React.Component {
       password: password.getValue()
     }).then(token => {
       this.setState({error: null});
-      this.context.router.transitionTo('/users/' + token.user_id);
+
+      if (location.state && location.state.from){
+        this.context.router.transitionTo(location.state.from);
+      } else {
+        this.context.router.transitionTo('/users/' + token.user_id);
+      }
     }).catch(err => {
       this.setState({error: err.body || err});
     });
