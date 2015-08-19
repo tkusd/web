@@ -57,8 +57,12 @@ export function getFullElement(id, options = {}){
     .then(filterError)
     .then(parseJSON)
     .then(data => {
-      this.dispatch(Actions.UPDATE_ELEMENT, data.id, omit(data, 'elements'));
+      this.dispatch(Actions.UPDATE_ELEMENT, data.id, omit(data, 'elements', 'events'));
       this.dispatch(Actions.UPDATE_ELEMENT_LIST, data.elements);
+
+      if (data.events){
+        this.dispatch(Actions.UPDATE_EVENT_LIST, data.events);
+      }
 
       return data;
     });

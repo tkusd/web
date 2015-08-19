@@ -10,6 +10,7 @@ import {
   generateVariable
 } from '../utils/esprima';
 import base62uuid from '../utils/base62uuid';
+import {actions} from '../constants/ElementTypes';
 
 function getElementID(element){
   return '#e' + element.get('id');
@@ -27,7 +28,7 @@ function generateActionContent(flux, action){
   let args = [];
 
   switch (action.get('action')){
-    case 'alert':
+    case actions.alert:
       args = [
         generateLiteral(action.getIn(['data', 'text'], ''))
       ];
@@ -38,7 +39,7 @@ function generateActionContent(flux, action){
 
       return generateCallExpression(generateMemberExpression('app.alert'), args);
 
-    case 'confirm':
+    case actions.confirm:
       args = [
         generateLiteral(action.getIn(['data', 'text'], ''))
       ];
@@ -49,7 +50,7 @@ function generateActionContent(flux, action){
 
       return generateCallExpression(generateMemberExpression('app.confirm'), args);
 
-    case 'prompt':
+    case actions.prompt:
       args = [
         generateLiteral(action.getIn(['data', 'text'], ''))
       ];
@@ -60,7 +61,7 @@ function generateActionContent(flux, action){
 
       return generateCallExpression(generateMemberExpression('app.prompt'), args);
 
-    case 'transition':
+    case actions.transition:
       const screen = action.getIn(['data', 'screen']);
       if (!screen) return [];
 
@@ -70,7 +71,7 @@ function generateActionContent(flux, action){
         })
       ]);
 
-    case 'back':
+    case actions.back:
       return generateCallExpression(generateMemberExpression('view.router.back'), []);
   }
 

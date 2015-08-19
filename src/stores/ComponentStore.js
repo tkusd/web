@@ -79,7 +79,8 @@ const COMPONENTS = [
       },
       raised: {
         type: 'boolean',
-        label: 'Raised'
+        label: 'Raised',
+        platform: 'android'
       }
     }
   },

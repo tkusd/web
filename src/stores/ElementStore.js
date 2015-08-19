@@ -12,6 +12,16 @@ function sortByIndex(a, b){
   return a.get('index') - b.get('index');
 }
 
+function getElementBody(element){
+  return {
+    is_visible: element.get('is_visible', true),
+    name: element.get('name'),
+    styles: element.get('styles', {}),
+    attributes: element.get('attributes', {}),
+    type: element.get('type')
+  };
+}
+
 class ElementStore extends CollectionStore {
   static handlers = {
     createElement: Actions.CREATE_ELEMENT,
@@ -168,7 +178,7 @@ class ElementStore extends CollectionStore {
       if (id[0] !== '_'){
         return api(`elements/${id}`, {
           method: 'put',
-          body: element.toJS()
+          body: getElementBody(element)
         }, this.context)
           .then(filterError)
           .then(parseJSON)
@@ -206,7 +216,7 @@ class ElementStore extends CollectionStore {
 
       return api(endpoint, {
         method: 'post',
-        body: element.toJS()
+        body: getElementBody(element)
       }, this.context)
         .then(filterError)
         .then(parseJSON)

@@ -8,6 +8,10 @@ class CollectionStore extends BaseStore {
     this.data = Map();
   }
 
+  getList(){
+    return this.data;
+  }
+
   has(id){
     return this.data.has(id);
   }

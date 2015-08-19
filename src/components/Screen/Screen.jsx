@@ -11,26 +11,28 @@ if (process.env.BROWSER){
   require('../../styles/Screen/Screen.styl');
 }
 
-@connectToStores(['ElementStore', 'ComponentStore', 'ProjectStore'], (stores, props) => ({
+@connectToStores(['ElementStore', 'ComponentStore', 'ProjectStore', 'ActionStore', 'EventStore'], (stores, props) => ({
   project: stores.ProjectStore.getProject(props.params.projectID),
   elements: stores.ElementStore.getElementsOfProject(props.params.projectID),
   components: stores.ComponentStore.getList(),
   editable: stores.ProjectStore.isEditable(props.params.projectID),
   activeElement: stores.ElementStore.getSelectedElement(),
   hoverElements: stores.ElementStore.getHoverElements(),
-  hasUnsavedChanges: stores.ElementStore.hasUnsavedChanges()
+  hasUnsavedChanges: stores.ElementStore.hasUnsavedChanges(),
+  actions: stores.ActionStore.getActionsOfProject(props.params.projectID),
+  events: stores.EventStore.getList()
 }))
 @pureRender
 class Screen extends React.Component {
   static onEnter(state, transition){
     const {AppStore} = this.getStore();
-    const {getChildElements} = bindActions(ElementAction, this);
+    const {getFullElement} = bindActions(ElementAction, this);
 
     if (AppStore.isFirstRender()){
       return Promise.resolve();
     }
 
-    return getChildElements(state.params.screenID).catch(err => {
+    return getFullElement(state.params.screenID).catch(err => {
       if (err.response && err.response.status === 404){
         transition.to('/projects/' + state.params.projectID);
       } else {

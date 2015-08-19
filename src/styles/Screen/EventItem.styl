@@ -1,0 +1,38 @@
+@import "nib"
+@import "../common"
+
+.event-item
+  padding: 0 padding-medium
+  position: relative
+
+.event-item__content
+  line-height: 1
+  white-space: nowrap
+  overflow: hidden
+  text-overflow: ellipsis
+  padding: padding-small 0
+
+.event-item__event
+  &:after
+    content: "-"
+    padding: 0 0.5em
+    font-weight: normal
+
+.event-item__action
+  a
+    color: color-accent
+    text-decoration: none
+
+.event-item__dropdown
+  position: absolute
+  top: 0
+  right: 0
+  bottom: 0
+
+.event-item__more-btn
+  background: none
+  border: none
+  padding: 0 12px
+  line-height: 30px
+  &:hover
+    background: #666

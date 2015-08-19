@@ -1,27 +1,11 @@
 @import "nib"
 @import "../common"
-@import "../button"
 
 .attribute-palette
   padding: 0 padding-medium
-  .input__field
-  .size-input__value
-  .size-input__unit
-  .color-picker__field
+  .input-group__field
     border-bottom-color: lighten(color-project-sidebar, 20%)
-  .size-input__value
-    &:focus
-      border-bottom-color: color-accent
 
 .attribute-palette__empty
   text-align: center
   padding: padding-medium
-
-.attribute-palette__half-wrap
-  clearfix()
-  margin: 0 padding-small * -1
-
-.attribute-palette__half
-  width: 50%
-  float: left
-  padding: 0 padding-small
