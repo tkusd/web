@@ -2,11 +2,13 @@ import React from 'react';
 import Palette from '../Project/Palette';
 import ElementList from './ElementList';
 import {FormattedMessage} from '../intl';
+import pureRender from '../../decorators/pureRender';
 
 if (process.env.BROWSER){
   require('../../styles/Screen/ElementPalette.styl');
 }
 
+@pureRender
 class ElementPalette extends React.Component {
   static propTypes = {
     elements: React.PropTypes.object.isRequired,

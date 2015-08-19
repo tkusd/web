@@ -3,11 +3,13 @@ import FontAwesome from '../common/FontAwesome';
 import EventItem from './EventItem';
 import {ModalPortal} from '../modal';
 import NewEventModal from './NewEventModal';
+import pureRender from '../../decorators/pureRender';
 
 if (process.env.BROWSER){
   require('../../styles/Screen/EventList.styl');
 }
 
+@pureRender
 class EventList extends React.Component {
   static propTypes = {
     events: React.PropTypes.object.isRequired,

@@ -3,6 +3,8 @@ import {actions as ElementActionTypes} from '../../constants/ElementTypes';
 import {Link} from 'react-router';
 import {Dropdown, DropdownMenu, DropdownItem} from '../dropdown';
 import FontAwesome from '../common/FontAwesome';
+import {ModalPortal} from '../modal';
+import NewEventModal from './NewEventModal';
 
 if (process.env.BROWSER){
   require('../../styles/Screen/EventItem.styl');
@@ -18,6 +20,10 @@ class EventItem extends React.Component {
   render(){
     const {event} = this.props;
 
+    let editBtn = (
+      <a>Edit</a>
+    );
+
     return (
       <li className="event-item">
         <div className="event-item__content">
@@ -30,7 +36,9 @@ class EventItem extends React.Component {
           </button>
           <DropdownMenu position="fixed">
             <DropdownItem>
-              <a>Edit</a>
+              <ModalPortal trigger={editBtn}>
+                <NewEventModal {...this.props}/>
+              </ModalPortal>
             </DropdownItem>
             <DropdownItem>
               <a>Delete</a>

@@ -4,9 +4,9 @@ import Immutable, {OrderedSet} from 'immutable';
 import uuid from 'node-uuid';
 import omit from 'lodash/object/omit';
 import {api, parseJSON, filterError} from '../utils/request';
-import throttle from 'lodash/function/throttle';
+import debounce from 'lodash/function/debounce';
 
-const THROTTLE_DELAY = 5000;
+const DEBOUNCE_DELAY = 5000;
 
 function sortByIndex(a, b){
   return a.get('index') - b.get('index');
@@ -30,7 +30,8 @@ class ElementStore extends CollectionStore {
     deleteElement: Actions.DELETE_ELEMENT,
     selectElement: Actions.SELECT_ELEMENT,
     pushHoverElement: Actions.PUSH_HOVER_ELEMENT,
-    popHoverElement: Actions.POP_HOVER_ELEMENT
+    popHoverElement: Actions.POP_HOVER_ELEMENT,
+    updateElementNow: Actions.UPDATE_ELEMENT_NOW
   }
 
   constructor(context){
@@ -146,7 +147,7 @@ class ElementStore extends CollectionStore {
   }
 
   isSavingChanges(){
-    return Boolean(this.currentTask);
+    return this.currentTask != null;
   }
 
   pushQueue(id){
@@ -154,8 +155,10 @@ class ElementStore extends CollectionStore {
       this.queue = this.queue.add(id);
     } else {
       this.queue = this.queue.add(id);
-      this.throttleEnqueue();
+      this.debounceEnqueue();
     }
+
+    this.emitChange();
   }
 
   enqueue() {
@@ -171,6 +174,7 @@ class ElementStore extends CollectionStore {
 
     this.promise = this.promise.then(() => {
       this.currentTask = id;
+      this.emitChange();
 
       let element = this.get(id);
 
@@ -256,9 +260,13 @@ class ElementStore extends CollectionStore {
     });
   }
 
-  throttleEnqueue = throttle(this.enqueue.bind(this), THROTTLE_DELAY, {
+  debounceEnqueue = debounce(this.enqueue.bind(this), DEBOUNCE_DELAY, {
     leading: false
   })
+
+  updateElementNow(){
+    if (!this.isSavingChanges()) this.enqueue();
+  }
 
   getHoverElements(){
     return this.hoverElements;

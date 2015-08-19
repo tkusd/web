@@ -58,7 +58,6 @@ class ElementItem extends React.Component {
 
     this.handleClick = this.handleClick.bind(this);
     this.toggleList = this.toggleList.bind(this);
-    this.renameElement = this.renameElement.bind(this);
     this.deleteElement = this.deleteElement.bind(this);
   }
 
@@ -94,11 +93,6 @@ class ElementItem extends React.Component {
               <FontAwesome icon="ellipsis-v"/>
             </button>
             <DropdownMenu position="fixed">
-              <DropdownItem>
-                <a onClick={this.renameElement}>
-                  <FormattedMessage message="common.rename"/>
-                </a>
-              </DropdownItem>
               <DropdownItem>
                 <a onClick={this.deleteElement}>
                   <FormattedMessage message="common.delete"/>
@@ -148,10 +142,6 @@ class ElementItem extends React.Component {
     } else {
       this.expandList();
     }
-  }
-
-  renameElement(e){
-    e.preventDefault();
   }
 
   deleteElement(e){

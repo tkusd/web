@@ -1,16 +1,18 @@
 import React from 'react';
 import cx from 'classnames';
 import ViewContainer from './ViewContainer';
-import throttle from 'lodash/function/throttle';
+import debounce from 'lodash/function/debounce';
 import Immutable from 'immutable';
+import pureRender from '../../decorators/pureRender';
 
 if (process.env.BROWSER){
   require('../../styles/Screen/ViewMask.styl');
 }
 
-const THROTTLE_DELAY = 100;
+const DEBOUNCE_DELAY = 250;
 const RESIZE_AREA_SIZE = 4;
 
+@pureRender
 class ViewMask extends React.Component {
   static propTypes = {
     project: React.PropTypes.object.isRequired,
@@ -29,7 +31,7 @@ class ViewMask extends React.Component {
       maskRect: null
     };
 
-    this.handleWindowResize = throttle(this.handleWindowResize.bind(this), THROTTLE_DELAY, {
+    this.handleWindowResize = debounce(this.handleWindowResize.bind(this), DEBOUNCE_DELAY, {
       leading: true
     });
     this.handleNodeClick = this.handleNodeClick.bind(this);

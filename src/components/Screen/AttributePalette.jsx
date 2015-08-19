@@ -6,11 +6,16 @@ import {validators} from 'react-form-input';
 import bindActions from '../../utils/bindActions';
 import * as ElementAction from '../../actions/ElementAction';
 import EventList from './EventList';
+import pureRender from '../../decorators/pureRender';
+import debounce from 'lodash/function/debounce';
 
 if (process.env.BROWSER){
   require('../../styles/Screen/AttributePalette.styl');
 }
 
+const DEBOUNCE_DELAY = 250;
+
+@pureRender
 class AttributePalette extends React.Component {
   static contextTypes = {
     flux: React.PropTypes.object.isRequired
@@ -21,14 +26,36 @@ class AttributePalette extends React.Component {
     components: React.PropTypes.object.isRequired,
     elements: React.PropTypes.object.isRequired,
     activeElement: React.PropTypes.string,
-    events: React.PropTypes.object.isRequired
+    events: React.PropTypes.object.isRequired,
+    selectedScreen: React.PropTypes.string.isRequired
   }
 
-  getActiveElement(){
-    const {elements, activeElement} = this.props;
-    if (!activeElement) return;
+  constructor(props, context){
+    super(props, context);
 
-    return elements.get(activeElement);
+    this.state = {
+      element: this.getActiveElement()
+    };
+
+    this.commitChange = debounce(this.commitChange.bind(this), DEBOUNCE_DELAY);
+  }
+
+  componentWillReceiveProps(nextProps){
+    if (this.props.activeElement !== nextProps.activeElement){
+      this.setState({
+        element: this.getActiveElement(nextProps)
+      });
+    }
+  }
+
+  getActiveElement(props = this.props){
+    const {elements, activeElement, selectedScreen} = props;
+
+    if (activeElement){
+      return elements.get(activeElement);
+    } else {
+      return elements.get(selectedScreen);
+    }
   }
 
   render(){
@@ -40,7 +67,7 @@ class AttributePalette extends React.Component {
   }
 
   renderContent(){
-    const element = this.getActiveElement();
+    const {element} = this.state;
     const {components, events, activeElement, project} = this.props;
     if (!element) return;
 
@@ -70,7 +97,7 @@ class AttributePalette extends React.Component {
   }
 
   renderAttributeField(attr, i){
-    const element = this.getActiveElement();
+    const {element} = this.state;
 
     switch (attr.get('type')){
       case 'boolean':
@@ -93,12 +120,20 @@ class AttributePalette extends React.Component {
   }
 
   handleInputChange(field, data){
-    const element = this.getActiveElement();
-    const {updateElement} = bindActions(ElementAction, this.context.flux);
-
     if (data.error) return;
 
-    updateElement(element.get('id'), element.setIn(field, data.value));
+    this.setState({
+      element: this.state.element.setIn(field, data.value)
+    });
+
+    this.commitChange();
+  }
+
+  commitChange(){
+    const {element} = this.state;
+    const {updateElement} = bindActions(ElementAction, this.context.flux);
+
+    updateElement(element.get('id'), element);
   }
 }
 

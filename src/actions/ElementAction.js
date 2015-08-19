@@ -76,6 +76,10 @@ export function deleteElement(id){
   this.dispatch(Actions.DELETE_ELEMENT, id);
 }
 
+export function updateElementNow(){
+  this.dispatch(Actions.UPDATE_ELEMENT_NOW);
+}
+
 export function selectElement(id){
   this.dispatch(Actions.SELECT_ELEMENT, id);
 }

@@ -2,6 +2,7 @@ import React from 'react';
 import ElementItem from './ElementItem';
 import {DropTarget} from 'react-dnd';
 import ItemTypes from '../../constants/ItemTypes';
+import pureRender from '../../decorators/pureRender';
 
 if (process.env.BROWSER){
   require('../../styles/Screen/ElementList.styl');
@@ -14,6 +15,7 @@ const spec = {
 @DropTarget(ItemTypes.ELEMENT_ITEM, spec, connect => ({
   connectDropTarget: connect.dropTarget()
 }))
+@pureRender
 class ElementList extends React.Component {
   static propTypes = {
     elements: React.PropTypes.object.isRequired,

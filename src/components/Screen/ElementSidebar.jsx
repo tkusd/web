@@ -1,11 +1,13 @@
 import React from 'react';
 import AttributePalette from './AttributePalette';
 import ElementPalette from './ElementPalette';
+import pureRender from '../../decorators/pureRender';
 
 if (process.env.BROWSER){
   require('../../styles/Screen/ElementSidebar.styl');
 }
 
+@pureRender
 class ElementSidebar extends React.Component {
   render(){
     return (

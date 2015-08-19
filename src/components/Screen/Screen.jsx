@@ -19,6 +19,7 @@ if (process.env.BROWSER){
   activeElement: stores.ElementStore.getSelectedElement(),
   hoverElements: stores.ElementStore.getHoverElements(),
   hasUnsavedChanges: stores.ElementStore.hasUnsavedChanges(),
+  isSavingChanges: stores.ElementStore.isSavingChanges(),
   actions: stores.ActionStore.getActionsOfProject(props.params.projectID),
   events: stores.EventStore.getList()
 }))

@@ -5,11 +5,13 @@ import NewScreenModal from './NewScreenModal';
 import ScreenItem from './ScreenItem';
 import FontAwesome from '../common/FontAwesome';
 import {FormattedMessage} from '../intl';
+import pureRender from '../../decorators/pureRender';
 
 if (process.env.BROWSER){
   require('../../styles/Project/ScreenPalette.styl');
 }
 
+@pureRender
 class ScreenPalette extends React.Component {
   static contextTypes = {
     flux: React.PropTypes.object.isRequired,
@@ -24,7 +26,7 @@ class ScreenPalette extends React.Component {
   }
 
   render(){
-    const {elements, selectedScreen, editable} = this.props;
+    const {elements} = this.props;
 
     let screens;
 
@@ -32,7 +34,7 @@ class ScreenPalette extends React.Component {
       screens = elements
         .filter(item => !item.get('element_id'))
         .map((item, id) => (
-          <ScreenItem key={id} element={item} selectedScreen={selectedScreen} editable={editable}/>
+          <ScreenItem {...this.props} key={id} element={item}/>
         )).toArray();
     } else {
       screens = (

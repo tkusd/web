@@ -2,7 +2,9 @@ import React from 'react';
 import Palette from './Palette';
 import ComponentItem from './ComponentItem';
 import {FormattedMessage} from '../intl';
+import pureRender from '../../decorators/pureRender';
 
+@pureRender
 class ComponentPalette extends React.Component {
   static propTypes = {
     components: React.PropTypes.object.isRequired

@@ -4,6 +4,7 @@ import ItemTypes from '../../constants/ItemTypes';
 import cx from 'classnames';
 import * as ElementAction from '../../actions/ElementAction';
 import bindActions from '../../utils/bindActions';
+import pureRender from '../../decorators/pureRender';
 
 if (process.env.BROWSER){
   require('../../styles/Project/ComponentItem.styl');
@@ -59,6 +60,7 @@ const spec = {
   connectDragSource: connect.dragSource(),
   isDragging: monitor.isDragging()
 }))
+@pureRender
 class ComponentItem extends React.Component {
   static contextTypes = {
     flux: React.PropTypes.object.isRequired

@@ -4,6 +4,7 @@ import View from '../preview/View';
 import ItemTypes from '../../constants/ItemTypes';
 import * as ElementAction from '../../actions/ElementAction';
 import bindActions from '../../utils/bindActions';
+import pureRender from '../../decorators/pureRender';
 
 function getDropTargetType(props){
   const {element, components} = props;
@@ -30,6 +31,7 @@ const spec = {
   }),
   canDrop: monitor.canDrop()
 }))
+@pureRender
 class ViewContainer extends React.Component {
   static contextTypes = {
     flux: React.PropTypes.object.isRequired

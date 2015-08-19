@@ -1,11 +1,13 @@
 import React from 'react';
 import {Link} from 'react-router';
 import FontAwesome from '../common/FontAwesome';
+import pureRender from '../../decorators/pureRender';
 
 if (process.env.BROWSER){
   require('../../styles/Project/ProjectHeader.styl');
 }
 
+@pureRender
 class ProjectHeader extends React.Component {
   static propTypes = {
     project: React.PropTypes.object.isRequired
