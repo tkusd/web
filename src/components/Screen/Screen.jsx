@@ -12,6 +12,41 @@ if (process.env.BROWSER){
   require('../../styles/Screen/Screen.styl');
 }
 
+function loadThemeCSS(theme){
+  if (!process.env.BROWSER) return Promise.resolve();
+
+  return new Promise((resolve, reject) => {
+    switch (theme){
+      case 'ios':
+        require.ensure([
+          'framework7/dist/css/framework7.ios.css?theme=ios',
+          'framework7/dist/css/framework7.ios.colors.css?theme=ios'
+        ], require => {
+          require('framework7/dist/css/framework7.ios.css?theme=ios');
+          require('framework7/dist/css/framework7.ios.colors.css?theme=ios');
+          resolve();
+        }, 'theme-ios');
+
+        break;
+
+      case 'material':
+        require.ensure([
+          'framework7/dist/css/framework7.material.css?theme=material',
+          'framework7/dist/css/framework7.material.colors.css?theme=material'
+        ], require => {
+          require('framework7/dist/css/framework7.material.css?theme=material');
+          require('framework7/dist/css/framework7.material.colors.css?theme=material');
+          resolve();
+        }, 'theme-material');
+
+        break;
+
+      default:
+        resolve();
+    }
+  });
+}
+
 @connectToStores(['ElementStore', 'ComponentStore', 'ProjectStore', 'ActionStore', 'EventStore'], (stores, props) => ({
   project: stores.ProjectStore.getProject(props.params.projectID),
   elements: stores.ElementStore.getElementsOfProject(props.params.projectID),
@@ -27,14 +62,20 @@ if (process.env.BROWSER){
 @pureRender
 class Screen extends React.Component {
   static onEnter(state, transition){
-    const {AppStore} = this.getStore();
+    const {AppStore, ProjectStore} = this.getStore();
     const {getFullElement} = bindActions(ElementAction, this);
+    let promise;
 
     if (AppStore.isFirstRender()){
-      return Promise.resolve();
+      promise = Promise.resolve();
+    } else {
+      promise = getFullElement(state.params.screenID);
     }
 
-    return getFullElement(state.params.screenID).catch(err => {
+    return promise.then(element => {
+      const project = ProjectStore.getProject(state.params.projectID);
+      return loadThemeCSS(project.get('theme'));
+    }).catch(err => {
       if (err.response && err.response.status === 404){
         transition.to('/projects/' + state.params.projectID);
       } else {
@@ -64,24 +105,21 @@ class Screen extends React.Component {
 
   componentDidMount(){
     this.context.router.addTransitionHook(this.routerWillLeave);
-    this.loadThemeCSS();
   }
 
   componentWillUnmount(){
     this.context.router.removeTransitionHook(this.routerWillLeave);
   }
 
-  componentDidUpdate(prevProps, prevState){
-    if (this.state.project.get('theme') !== prevState.project.get('theme')){
-      const {deselectElement} = bindActions(ElementAction, this.context.flux);
-      this.loadThemeCSS();
-      deselectElement();
+  componentWillUpdate(nextProps, nextState){
+    if (this.state.project.get('theme') !== nextState.project.get('theme')){
+      loadThemeCSS(nextState.project.get('theme'));
+      this.selectElement(null);
     }
   }
 
   routerWillLeave(state, transition){
-    const {deselectElement} = bindActions(ElementAction, this.context.flux);
-    deselectElement();
+    this.selectElement(null);
   }
 
   render(){
@@ -129,34 +167,6 @@ class Screen extends React.Component {
     this.setState({
       screenDimension: dimension
     });
-  }
-
-  loadThemeCSS(){
-    const {project} = this.state;
-
-    switch (project.get('theme')){
-      case 'ios':
-        require.ensure([
-          'framework7/dist/css/framework7.ios.css?theme=ios',
-          'framework7/dist/css/framework7.ios.colors.css?theme=ios'
-        ], require => {
-          require('framework7/dist/css/framework7.ios.css?theme=ios');
-          require('framework7/dist/css/framework7.ios.colors.css?theme=ios');
-        }, 'theme-ios');
-
-        break;
-
-      case 'material':
-        require.ensure([
-          'framework7/dist/css/framework7.material.css?theme=material',
-          'framework7/dist/css/framework7.material.colors.css?theme=material'
-        ], require => {
-          require('framework7/dist/css/framework7.material.css?theme=material');
-          require('framework7/dist/css/framework7.material.colors.css?theme=material');
-        }, 'theme-material');
-
-        break;
-    }
   }
 }
 
