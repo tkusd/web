@@ -4,6 +4,7 @@ import {Flux} from '../../flux';
 import {ModalContainer} from '../modal';
 import * as AppAction from '../../actions/AppAction';
 import bindActions from '../../utils/bindActions';
+import cx from 'classnames';
 
 if (process.env.BROWSER){
   require('../../styles/Application/Application.styl');
@@ -29,9 +30,13 @@ class Application extends React.Component {
   render(){
     const {isTransitioning} = this.props;
 
+    let progressBarClassName = cx('application__progress-bar', {
+      'application__progress-bar--active': isTransitioning
+    });
+
     return (
       <div className="application">
-        {isTransitioning && <div className="application__progress-bar"/>}
+        <div className={progressBarClassName}/>
         {this.props.children}
         <ModalContainer/>
       </div>

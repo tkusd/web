@@ -27,6 +27,10 @@ body
   right: 0
   height: 4px
   background: rgba(color-accent, 0.4)
+  z-index: 2
+  opacity: 0
+  pointer-events: none
+  transition: opacity 0.8s
   &:before
     content: ""
     position: absolute
@@ -36,6 +40,10 @@ body
     background: color-accent
     width: 60%
     animation: app-progress-bar 1.3s cubic-bezier(0.65, 0.815, 0.735, 0.395) infinite
+
+.application__progress-bar--active
+  opacity: 1
+  transition: opacity 0.2s
 
 @keyframes app-progress-bar
   0%
