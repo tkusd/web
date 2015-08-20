@@ -32,9 +32,7 @@ export default merge({}, config, {
   },
   plugins: config.plugins.concat([
     // extract css files
-    new ExtractTextPlugin('[name]-[contenthash:8].css', {
-      allChunks: true
-    }),
+    new ExtractTextPlugin('[name]-[contenthash:8].css'),
 
     // env variables
     new webpack.DefinePlugin({

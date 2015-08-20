@@ -17,7 +17,7 @@ export default postcss.plugin('f7', function(options = {}){
       }
 
       if (options.prefix){
-        rule.selector = `${options.prefix} ${rule.selector}`;
+        rule.selector = rule.selectors.map(selector => options.prefix + ' ' + selector).join(', ');
       }
     });
   };
