@@ -1,6 +1,6 @@
 import BaseStore from './BaseStore';
 import Immutable, {Map} from 'immutable';
-import ElementTypes from '../constants/ElementTypes';
+import ElementTypes, {events} from '../constants/ElementTypes';
 
 const COMPONENTS = [
   {
@@ -11,6 +11,9 @@ const COMPONENTS = [
   {
     type: ElementTypes.navbar,
     container: true,
+    availableEventTypes: [
+      events.click
+    ],
     attributes: {
       title: {
         type: 'string',
@@ -20,11 +23,17 @@ const COMPONENTS = [
   },
   {
     type: ElementTypes.toolbar,
-    container: true
+    container: true,
+    availableEventTypes: [
+      events.click
+    ]
   },
   {
     type: ElementTypes.label,
     container: false,
+    availableEventTypes: [
+      events.click
+    ],
     attributes: {
       text: {
         type: 'string',
@@ -36,6 +45,9 @@ const COMPONENTS = [
   {
     type: ElementTypes.card,
     container: true,
+    availableEventTypes: [
+      events.click
+    ],
     availableChildTypes: [
       ElementTypes.label,
       ElementTypes.button,
@@ -55,6 +67,9 @@ const COMPONENTS = [
   {
     type: ElementTypes.button,
     container: false,
+    availableEventTypes: [
+      events.click
+    ],
     attributes: {
       text: {
         type: 'string',

@@ -2,7 +2,7 @@ import React from 'react';
 import FontAwesome from '../common/FontAwesome';
 import EventItem from './EventItem';
 import {ModalPortal} from '../modal';
-import NewEventModal from './NewEventModal';
+import EventModal from './EventModal';
 import pureRender from '../../decorators/pureRender';
 
 if (process.env.BROWSER){
@@ -47,7 +47,7 @@ class EventList extends React.Component {
 
     return (
       <ModalPortal trigger={btn}>
-        <NewEventModal/>
+        <EventModal {...this.props}/>
       </ModalPortal>
     );
   }

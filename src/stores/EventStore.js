@@ -21,6 +21,11 @@ class EventStore extends CollectionStore {
     this.remove(id);
   }
 
+  deleteEventsOfElement(elementID){
+    this.data = this.data.filter(item => item.get('element_id') !== elementID);
+    this.emitChange();
+  }
+
   setList(payload){
     this.data = this.data.withMutations(data => {
       payload.forEach(item => data.set(item.id, Immutable.fromJS(item)));

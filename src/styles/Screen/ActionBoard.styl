@@ -1,0 +1,48 @@
+@import "nib"
+@import "../common"
+
+stripe-width = 1px
+stripe-interval = 50px
+stripe-color = lighten(color-background, 15%)
+
+.action-board
+  background-color: color-background
+  background-image: repeating-linear-gradient(
+    180deg,
+    transparent,
+    transparent stripe-interval - stripe-width,
+    stripe-color stripe-interval
+  ), repeating-linear-gradient(
+    90deg,
+    transparent,
+    transparent stripe-interval - stripe-width,
+    stripe-color stripe-interval
+  )
+  border-radius: 5px
+  height: 100%
+  overflow: auto
+  color: color-text
+  position: relative
+  user-select: none
+  cursor: pointer
+
+.action-board__hint
+  color: color-secondary-text
+  position: absolute
+  top: 0
+  left: 0
+  right: 0
+  bottom: 0
+  line-height: 1
+  text-align: center
+  margin: auto
+  font-size: 2em
+  font-weight: 300
+  vertical-align: middle
+  background: radial-gradient(rgba(#000, 0.3), rgba(#000, 0.6))
+  pointer-events: none
+  &:before
+    content: ""
+    height: 100%
+    display: inline-block
+    vertical-align: middle

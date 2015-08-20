@@ -2,6 +2,7 @@ import React, {PropTypes} from 'react';
 import Input from 'react-form-input';
 import omit from 'lodash/object/omit';
 import pureRender from '../../decorators/pureRender';
+import cx from 'classnames';
 
 if (process.env.BROWSER){
   require('../../styles/form/InputGroup.styl');
@@ -16,7 +17,8 @@ class InputGroup extends React.Component {
       PropTypes.string,
       PropTypes.element
     ]),
-    onChange: PropTypes.func
+    onChange: PropTypes.func,
+    className: PropTypes.string
   }
 
   static defaultProps = {
@@ -38,11 +40,11 @@ class InputGroup extends React.Component {
     const {error} = this.state;
 
     return (
-      <div className="input-group">
+      <div className={cx('input-group', this.props.className)}>
         <label>
           {label && <span className="input-group__label">{label}</span>}
           <Input
-            {...omit(this.props, 'label')}
+            {...omit(this.props, 'label', 'className')}
             className="input-group__field"
             ref="input"
             onChange={this.handleChange}/>

@@ -28,47 +28,47 @@ function loadLocaleData(flux) {
 
   return new Promise((resolve, reject) => {
     switch (lang){
-      case 'zh-TW':
-        if (hasIntl) {
-          require.ensure([
-            'react-intl/dist/locale-data/zh',
-            '../../locales/zh-TW'
-          ], require => {
-            require('react-intl/dist/locale-data/zh');
-            setLocaleData(require('../../locales/zh-TW'));
-            resolve();
-          }, 'locale-zh-TW');
-        } else {
-          require.ensure([
-            'intl/locale-data/jsonp/zh-Hant-TW',
-            'react-intl/dist/locale-data/zh',
-            '../../locales/zh-TW'
-          ], require => {
-            require('intl/locale-data/jsonp/zh-Hant-TW');
-            require('react-intl/dist/locale-data/zh');
-            setLocaleData(require('../../locales/zh-TW'));
-            resolve();
-          }, 'locale-zh-TW-intl');
-        }
+    case 'zh-TW':
+      if (hasIntl) {
+        require.ensure([
+          'react-intl/dist/locale-data/zh',
+          '../../locales/zh-TW'
+        ], require => {
+          require('react-intl/dist/locale-data/zh');
+          setLocaleData(require('../../locales/zh-TW'));
+          resolve();
+        }, 'locale-zh-TW');
+      } else {
+        require.ensure([
+          'intl/locale-data/jsonp/zh-Hant-TW',
+          'react-intl/dist/locale-data/zh',
+          '../../locales/zh-TW'
+        ], require => {
+          require('intl/locale-data/jsonp/zh-Hant-TW');
+          require('react-intl/dist/locale-data/zh');
+          setLocaleData(require('../../locales/zh-TW'));
+          resolve();
+        }, 'locale-zh-TW-intl');
+      }
 
-        break;
+      break;
 
-      default:
-        if (hasIntl){
-          require.ensure(['../../locales/en'], require => {
-            setLocaleData(require('../../locales/en'));
-            resolve();
-          }, 'locale-en');
-        } else {
-          require.ensure([
-            'intl/locale-data/jsonp/en',
-            '../../locales/en'
-          ], require => {
-            require('intl/locale-data/jsonp/en');
-            setLocaleData(require('../../locales/en'));
-            resolve();
-          }, 'locale-en-intl');
-        }
+    default:
+      if (hasIntl){
+        require.ensure(['../../locales/en'], require => {
+          setLocaleData(require('../../locales/en'));
+          resolve();
+        }, 'locale-en');
+      } else {
+        require.ensure([
+          'intl/locale-data/jsonp/en',
+          '../../locales/en'
+        ], require => {
+          require('intl/locale-data/jsonp/en');
+          setLocaleData(require('../../locales/en'));
+          resolve();
+        }, 'locale-en-intl');
+      }
     }
   });
 }

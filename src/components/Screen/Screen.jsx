@@ -17,32 +17,32 @@ function loadThemeCSS(theme){
 
   return new Promise((resolve, reject) => {
     switch (theme){
-      case 'ios':
-        require.ensure([
-          'framework7/dist/css/framework7.ios.css?theme=ios',
-          'framework7/dist/css/framework7.ios.colors.css?theme=ios'
-        ], require => {
-          require('framework7/dist/css/framework7.ios.css?theme=ios');
-          require('framework7/dist/css/framework7.ios.colors.css?theme=ios');
-          resolve();
-        }, 'theme-ios');
-
-        break;
-
-      case 'material':
-        require.ensure([
-          'framework7/dist/css/framework7.material.css?theme=material',
-          'framework7/dist/css/framework7.material.colors.css?theme=material'
-        ], require => {
-          require('framework7/dist/css/framework7.material.css?theme=material');
-          require('framework7/dist/css/framework7.material.colors.css?theme=material');
-          resolve();
-        }, 'theme-material');
-
-        break;
-
-      default:
+    case 'ios':
+      require.ensure([
+        'framework7/dist/css/framework7.ios.css?theme=ios',
+        'framework7/dist/css/framework7.ios.colors.css?theme=ios'
+      ], require => {
+        require('framework7/dist/css/framework7.ios.css?theme=ios');
+        require('framework7/dist/css/framework7.ios.colors.css?theme=ios');
         resolve();
+      }, 'theme-ios');
+
+      break;
+
+    case 'material':
+      require.ensure([
+        'framework7/dist/css/framework7.material.css?theme=material',
+        'framework7/dist/css/framework7.material.colors.css?theme=material'
+      ], require => {
+        require('framework7/dist/css/framework7.material.css?theme=material');
+        require('framework7/dist/css/framework7.material.colors.css?theme=material');
+        resolve();
+      }, 'theme-material');
+
+      break;
+
+    default:
+      resolve();
     }
   });
 }
@@ -57,7 +57,8 @@ function loadThemeCSS(theme){
   hasUnsavedChanges: stores.ElementStore.hasUnsavedChanges(),
   isSavingChanges: stores.ElementStore.isSavingChanges(),
   actions: stores.ActionStore.getActionsOfProject(props.params.projectID),
-  events: stores.EventStore.getList()
+  events: stores.EventStore.getList(),
+  actionDefinitions: stores.ActionStore.getDefinitions()
 }))
 @pureRender
 class Screen extends React.Component {

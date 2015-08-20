@@ -2,11 +2,11 @@
 @import "~normalize.css"
 @import "../common"
 
-*, *::before, *::after
-  box-sizing: border-box
-
 html, body, #root
   height: 100%
+
+*, *:before, *:after
+  box-sizing: border-box
 
 body
   font-size: font-size-base
@@ -26,8 +26,8 @@ body
   left: 0
   right: 0
   height: 4px
-  background: rgba(color-accent, 0.4)
-  z-index: 2
+  background: rgba(color-accent, 0.3)
+  z-index: 100
   opacity: 0
   pointer-events: none
   transition: opacity 0.8s

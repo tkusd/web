@@ -103,8 +103,9 @@ export default {
     return [
       autoprefixer(),
       cssnano({
+        autoprefixer: false,
         zindex: false,
-        idents: false
+        reduceIdents: false
       })
     ];
   }

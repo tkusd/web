@@ -21,5 +21,7 @@ export const actions = keyMirror({
 });
 
 export const events = keyMirror({
-  click: null
+  click: null,
+  enter: null,
+  leave: null
 });

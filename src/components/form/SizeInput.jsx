@@ -116,17 +116,17 @@ class SizeInput extends React.Component {
     let newState = {};
 
     switch (typeof value){
-      case 'object':
-        newState = value;
-        break;
+    case 'object':
+      newState = value;
+      break;
 
-      case 'number':
-        newState = {value};
-        break;
+    case 'number':
+      newState = {value};
+      break;
 
-      case 'string':
-        newState = this.parseRawValue(value);
-        break;
+    case 'string':
+      newState = this.parseRawValue(value);
+      break;
     }
 
     this.setState(newState);

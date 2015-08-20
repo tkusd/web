@@ -82,6 +82,7 @@ class ElementStore extends CollectionStore {
 
   deleteElement(id){
     const element = this.get(id);
+    const {EventStore} = this.context.getStore();
 
     if (this.selectedElement === id){
       this.selectedElement = element.get('element_id');
@@ -91,6 +92,7 @@ class ElementStore extends CollectionStore {
 
     this.data = this.data.withMutations(data => {
       data.remove(id);
+      EventStore.deleteEventsOfElement(id);
       this.deleteChildElement(data, id);
     });
 

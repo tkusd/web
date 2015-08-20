@@ -31,38 +31,38 @@ class View extends React.Component {
     const children = this.getChildElements(element.get('id'));
 
     switch (element.get('type')){
-      case ElementTypes.screen:
-        return this.renderPage(element);
+    case ElementTypes.screen:
+      return this.renderPage(element);
 
-      case ElementTypes.navbar:
-        return this.renderNavBar(element);
+    case ElementTypes.navbar:
+      return this.renderNavBar(element);
 
-      case ElementTypes.toolbar:
-        return this.renderToolbar(element);
+    case ElementTypes.toolbar:
+      return this.renderToolbar(element);
 
-      case ElementTypes.label:
-        return (
-          <div id={getElementID(element)} onClick={this.props.onClick}>{element.getIn(['attributes', 'text'])}</div>
-        );
+    case ElementTypes.label:
+      return (
+        <div id={getElementID(element)} onClick={this.props.onClick}>{element.getIn(['attributes', 'text'])}</div>
+      );
 
-      case ElementTypes.button:
-        return this.renderButton(element);
+    case ElementTypes.button:
+      return this.renderButton(element);
 
-      case ElementTypes.buttonRow:
-        return (
-          <div id={getElementID(element)} className="buttons-row" onClick={this.props.onClick}>
-            {this.renderElements(children)}
-          </div>
-        );
+    case ElementTypes.buttonRow:
+      return (
+        <div id={getElementID(element)} className="buttons-row" onClick={this.props.onClick}>
+          {this.renderElements(children)}
+        </div>
+      );
 
-      case ElementTypes.block:
-        return this.renderBlock(element);
+    case ElementTypes.block:
+      return this.renderBlock(element);
 
-      case ElementTypes.list:
-        return this.renderList(element);
+    case ElementTypes.list:
+      return this.renderList(element);
 
-      case ElementTypes.card:
-        return this.renderCard(element);
+    case ElementTypes.card:
+      return this.renderCard(element);
     }
 
     return <div></div>;
@@ -165,20 +165,20 @@ class View extends React.Component {
     let className = '';
 
     switch (parent.get('type')){
-      case 'toolbar':
-      case 'navbar':
-      case 'card':
-        className = 'link';
-        break;
+    case 'toolbar':
+    case 'navbar':
+    case 'card':
+      className = 'link';
+      break;
 
-      default:
-        className = cx('button', {
-          active: element.getIn(['attributes', 'active']),
-          'button-round': element.getIn(['attributes', 'round']),
-          'button-fill': element.getIn(['attributes', 'fill']),
-          'button-big': element.getIn(['attributes', 'big']),
-          'button-raised': element.getIn(['attributes', 'raised'])
-        });
+    default:
+      className = cx('button', {
+        active: element.getIn(['attributes', 'active']),
+        'button-round': element.getIn(['attributes', 'round']),
+        'button-fill': element.getIn(['attributes', 'fill']),
+        'button-big': element.getIn(['attributes', 'big']),
+        'button-raised': element.getIn(['attributes', 'raised'])
+      });
     }
 
     return (

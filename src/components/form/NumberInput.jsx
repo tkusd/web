@@ -77,13 +77,13 @@ class NumberInput extends React.Component {
 
   handleKeyDown(e){
     switch (e.keyCode){
-      case 38: // up
-        this.increase();
-        break;
+    case 38: // up
+      this.increase();
+      break;
 
-      case 40: // down
-        this.decrease();
-        break;
+    case 40: // down
+      this.decrease();
+      break;
     }
 
     this.props.onKeyDown(e);

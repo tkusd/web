@@ -28,51 +28,51 @@ function generateActionContent(flux, action){
   let args = [];
 
   switch (action.get('action')){
-    case actions.alert:
-      args = [
-        generateLiteral(action.getIn(['data', 'text'], ''))
-      ];
+  case actions.alert:
+    args = [
+      generateLiteral(action.getIn(['data', 'text'], ''))
+    ];
 
-      if (action.getIn(['data', 'title'])){
-        args.push(action.getIn(['data', 'title']));
-      }
+    if (action.getIn(['data', 'title'])){
+      args.push(action.getIn(['data', 'title']));
+    }
 
-      return generateCallExpression(generateMemberExpression('app.alert'), args);
+    return generateCallExpression(generateMemberExpression('app.alert'), args);
 
-    case actions.confirm:
-      args = [
-        generateLiteral(action.getIn(['data', 'text'], ''))
-      ];
+  case actions.confirm:
+    args = [
+      generateLiteral(action.getIn(['data', 'text'], ''))
+    ];
 
-      if (action.getIn(['data', 'title'])){
-        args.push(action.getIn(['data', 'title']));
-      }
+    if (action.getIn(['data', 'title'])){
+      args.push(action.getIn(['data', 'title']));
+    }
 
-      return generateCallExpression(generateMemberExpression('app.confirm'), args);
+    return generateCallExpression(generateMemberExpression('app.confirm'), args);
 
-    case actions.prompt:
-      args = [
-        generateLiteral(action.getIn(['data', 'text'], ''))
-      ];
+  case actions.prompt:
+    args = [
+      generateLiteral(action.getIn(['data', 'text'], ''))
+    ];
 
-      if (action.getIn(['data', 'title'])){
-        args.push(action.getIn(['data', 'title']));
-      }
+    if (action.getIn(['data', 'title'])){
+      args.push(action.getIn(['data', 'title']));
+    }
 
-      return generateCallExpression(generateMemberExpression('app.prompt'), args);
+    return generateCallExpression(generateMemberExpression('app.prompt'), args);
 
-    case actions.transition:
-      const screen = action.getIn(['data', 'screen']);
-      if (!screen) return [];
+  case actions.transition:
+    const screen = action.getIn(['data', 'screen']);
+    if (!screen) return [];
 
-      return generateCallExpression(generateMemberExpression('view.router.load'), [
-        generateObjectExpression({
-          pageName: generateLiteral(screen)
-        })
-      ]);
+    return generateCallExpression(generateMemberExpression('view.router.load'), [
+      generateObjectExpression({
+        pageName: generateLiteral(screen)
+      })
+    ]);
 
-    case actions.back:
-      return generateCallExpression(generateMemberExpression('view.router.back'), []);
+  case actions.back:
+    return generateCallExpression(generateMemberExpression('view.router.back'), []);
   }
 
   return [];

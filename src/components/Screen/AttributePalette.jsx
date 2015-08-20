@@ -110,7 +110,12 @@ class AttributePalette extends React.Component {
               .map(this.renderAttributeField.bind(this)).toArray()}
           </div>
         )}
-        <EventList {...this.props} events={elementEvents}/>
+        {component.has('availableEventTypes') && component.get('availableEventTypes').count() && (
+          <EventList {...this.props}
+            events={elementEvents}
+            element={element}
+            component={component}/>
+        )}
       </div>
     );
   }
@@ -119,13 +124,13 @@ class AttributePalette extends React.Component {
     const {element} = this.state;
 
     switch (attr.get('type')){
-      case 'boolean':
-        return (
-          <Checkbox key={i}
-            value={element.getIn(['attributes', i])}
-            label={attr.get('label')}
-            onChange={this.handleInputChange.bind(this, ['attributes', i])}/>
-        );
+    case 'boolean':
+      return (
+        <Checkbox key={i}
+          value={element.getIn(['attributes', i])}
+          label={attr.get('label')}
+          onChange={this.handleInputChange.bind(this, ['attributes', i])}/>
+      );
     }
 
     return (
