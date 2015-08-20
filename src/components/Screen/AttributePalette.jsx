@@ -8,6 +8,8 @@ import * as ElementAction from '../../actions/ElementAction';
 import EventList from './EventList';
 import pureRender from '../../decorators/pureRender';
 import debounce from 'lodash/function/debounce';
+import FontAwesome from '../common/FontAwesome';
+import ElementTypes from '../../constants/ElementTypes';
 
 if (process.env.BROWSER){
   require('../../styles/Screen/AttributePalette.styl');
@@ -18,7 +20,8 @@ const DEBOUNCE_DELAY = 250;
 @pureRender
 class AttributePalette extends React.Component {
   static contextTypes = {
-    flux: React.PropTypes.object.isRequired
+    flux: React.PropTypes.object.isRequired,
+    router: React.PropTypes.object.isRequired
   }
 
   static propTypes = {
@@ -41,7 +44,7 @@ class AttributePalette extends React.Component {
   }
 
   componentWillReceiveProps(nextProps){
-    if (this.props.activeElement !== nextProps.activeElement){
+    if (this.props.activeElement !== nextProps.activeElement || this.props.selectedScreen !== nextProps.selectedScreen){
       this.setState({
         element: this.getActiveElement(nextProps)
       });
@@ -88,9 +91,17 @@ class AttributePalette extends React.Component {
           validators={[
             validators.required('Name is required')
           ]}/>
-        {component.has('attributes') && component.get('attributes')
-          .filter(attr => !attr.has('platform') || attr.get('platform') === platform)
-          .map(this.renderAttributeField.bind(this)).toArray()}
+        <button className="attribute-palette__delete-btn" onClick={this.deleteElement}>
+          <FontAwesome icon="trash-o"/>Delete
+        </button>
+        {component.has('attributes') && (
+          <div>
+            <h4>Attributes</h4>
+            {component.get('attributes')
+              .filter(attr => !attr.has('platform') || attr.get('platform') === platform)
+              .map(this.renderAttributeField.bind(this)).toArray()}
+          </div>
+        )}
         <EventList {...this.props} events={elementEvents}/>
       </div>
     );
@@ -134,6 +145,20 @@ class AttributePalette extends React.Component {
     const {updateElement} = bindActions(ElementAction, this.context.flux);
 
     updateElement(element.get('id'), element);
+  }
+
+  deleteElement = () => {
+    const {element} = this.state;
+    const {selectElement, deleteElement} = bindActions(ElementAction, this.context.flux);
+
+    if (element.get('type') === ElementTypes.screen){
+      if (!confirm('Are you sure?')) return;
+      this.context.router.replaceWith('/projects/' + element.get('project_id'));
+    } else {
+      selectElement(element.get('element_id'));
+    }
+
+    deleteElement(element.get('id'));
   }
 }
 

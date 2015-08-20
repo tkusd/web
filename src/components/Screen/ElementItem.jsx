@@ -1,11 +1,7 @@
 import React from 'react';
 import ElementList from './ElementList';
 import cx from 'classnames';
-import * as ElementAction from '../../actions/ElementAction';
 import FontAwesome from '../common/FontAwesome';
-import {Dropdown, DropdownMenu, DropdownItem} from '../dropdown';
-import bindActions from '../../utils/bindActions';
-import {FormattedMessage} from '../intl';
 import {DragSource, DropTarget} from 'react-dnd';
 import ItemTypes from '../../constants/ItemTypes';
 
@@ -58,7 +54,6 @@ class ElementItem extends React.Component {
 
     this.handleClick = this.handleClick.bind(this);
     this.toggleList = this.toggleList.bind(this);
-    this.deleteElement = this.deleteElement.bind(this);
   }
 
   render(){
@@ -130,16 +125,6 @@ class ElementItem extends React.Component {
     } else {
       this.expandList();
     }
-  }
-
-  deleteElement(e){
-    e.preventDefault();
-
-    const {element, selectElement} = this.props;
-    const {deleteElement} = bindActions(ElementAction, this.context.flux);
-
-    selectElement(null);
-    deleteElement(element.get('id'));
   }
 }
 

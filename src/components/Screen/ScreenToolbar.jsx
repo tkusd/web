@@ -19,7 +19,8 @@ class ScreenToolbar extends React.Component {
     isSavingChanges: React.PropTypes.bool.isRequired,
     screenSize: React.PropTypes.string.isRequired,
     updateScreenSize: React.PropTypes.func.isRequired,
-    updateScreenDimension: React.PropTypes.func.isRequired
+    updateScreenDimension: React.PropTypes.func.isRequired,
+    editable: React.PropTypes.bool.isRequired
   }
 
   render(){
@@ -32,7 +33,8 @@ class ScreenToolbar extends React.Component {
   }
 
   renderStatus(){
-    const {isSavingChanges, hasUnsavedChanges} = this.props;
+    const {isSavingChanges, hasUnsavedChanges, editable} = this.props;
+    if (!editable) return;
 
     if (isSavingChanges){
       return (

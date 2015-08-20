@@ -6,6 +6,7 @@ import bindActions from '../../utils/bindActions';
 import ElementSidebar from './ElementSidebar';
 import ViewMask from './ViewMask';
 import ScreenToolbar from './ScreenToolbar';
+import cx from 'classnames';
 
 if (process.env.BROWSER){
   require('../../styles/Screen/Screen.styl');
@@ -87,9 +88,13 @@ class Screen extends React.Component {
     const {elements, editable} = this.state;
     const selectedScreen = this.props.params.screenID;
 
+    let containerClassName = cx('screen__container', {
+      'screen__container--full': editable
+    });
+
     return (
       <div className="screen">
-        <div className="screen__container">
+        <div className={containerClassName}>
           <div className="screen__content">
             <ViewMask {...this.state}
               element={elements.get(selectedScreen)}

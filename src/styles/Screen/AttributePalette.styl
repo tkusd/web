@@ -1,11 +1,14 @@
 @import "nib"
 @import "../common"
+@import "../button"
 
 .attribute-palette
   padding: 0 padding-medium
   .input-group__field
     border-bottom-color: lighten(color-project-sidebar, 20%)
 
-.attribute-palette__empty
-  text-align: center
-  padding: padding-medium
+.attribute-palette__delete-btn
+  @extend $button-danger
+  @extend $button-small
+  i
+    padding-right: 0.5em
