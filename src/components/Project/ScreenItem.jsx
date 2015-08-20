@@ -27,12 +27,6 @@ const sourceSpec = {
   },
 
   endDrag(props, monitor){
-    /*
-    if (!monitor.didDrop()) return;
-
-    const item = monitor.getItem();
-    props.moveScreen(item.id, item.originalIndex, true);*/
-
     if (monitor.didDrop()){
       props.updateIndex();
     } else {

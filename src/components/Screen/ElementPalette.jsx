@@ -12,23 +12,18 @@ if (process.env.BROWSER){
 class ElementPalette extends React.Component {
   static propTypes = {
     elements: React.PropTypes.object.isRequired,
-    activeElement: React.PropTypes.string,
-    selectedScreen: React.PropTypes.string,
-    selectElement: React.PropTypes.func.isRequired
+    selectedScreen: React.PropTypes.string
   }
 
   render(){
-    const {elements, activeElement, selectedScreen, selectElement} = this.props;
+    const {elements, selectedScreen} = this.props;
     const elementCount = elements.filter(item => item.get('element_id') === selectedScreen).count();
     let content;
 
     if (elementCount){
       content = (
-        <ElementList
-          elements={elements}
-          activeElement={activeElement}
-          parent={selectedScreen}
-          selectElement={selectElement}/>
+        <ElementList {...this.props}
+          parent={selectedScreen}/>
       );
     } else {
       content = (

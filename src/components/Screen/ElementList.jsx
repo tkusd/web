@@ -1,53 +1,32 @@
 import React from 'react';
 import ElementItem from './ElementItem';
-import {DropTarget} from 'react-dnd';
-import ItemTypes from '../../constants/ItemTypes';
 import pureRender from '../../decorators/pureRender';
 
 if (process.env.BROWSER){
   require('../../styles/Screen/ElementList.styl');
 }
 
-const spec = {
-  drop(){}
-};
-
-@DropTarget(ItemTypes.ELEMENT_ITEM, spec, connect => ({
-  connectDropTarget: connect.dropTarget()
-}))
 @pureRender
 class ElementList extends React.Component {
   static propTypes = {
     elements: React.PropTypes.object.isRequired,
     activeElement: React.PropTypes.string,
     parent: React.PropTypes.string.isRequired,
-    selectElement: React.PropTypes.func.isRequired,
-
-    // React DnD
-    connectDropTarget: React.PropTypes.func.isRequired
+    selectElement: React.PropTypes.func.isRequired
   }
 
   render(){
-    const {
-      elements,
-      parent,
-      activeElement,
-      selectElement,
-      connectDropTarget
-    } = this.props;
+    const {elements, parent} = this.props;
 
     const list = elements
       .filter(item => item.get('element_id') === parent)
       .map((item, id) => (
-        <ElementItem
+        <ElementItem {...this.props}
           key={id}
-          elements={elements}
-          element={item}
-          activeElement={activeElement}
-          selectElement={selectElement}/>
+          element={item}/>
       )).toArray();
 
-    return connectDropTarget(
+    return (
       <ul className="element-list">{list}</ul>
     );
   }

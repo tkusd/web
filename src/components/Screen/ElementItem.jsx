@@ -2,31 +2,37 @@ import React from 'react';
 import ElementList from './ElementList';
 import cx from 'classnames';
 import FontAwesome from '../common/FontAwesome';
-import {DragSource, DropTarget} from 'react-dnd';
+import {DropTarget} from 'react-dnd';
 import ItemTypes from '../../constants/ItemTypes';
 
 if (process.env.BROWSER){
   require('../../styles/Screen/ElementItem.styl');
 }
 
-const targetSpec = {
-  canDrop(){
-    return false;
+function getDropTargetType(props){
+  const {element, components} = props;
+  const component = components.get(element.get('type'));
+
+  if (component && component.get('container')){
+    return ItemTypes.CONTAINER;
+  } else {
+    return ItemTypes.NON_CONTAINER;
+  }
+}
+
+const spec = {
+  drop(props, monitor, {context}){
+    if (monitor.didDrop()) return;
+    return props.element.toJS();
   }
 };
 
-const sourceSpec = {
-  beginDrag(props){
-    return {};
-  }
-};
-
-@DropTarget(ItemTypes.ELEMENT_ITEM, targetSpec, connect => ({
-  connectDropTarget: connect.dropTarget()
-}))
-@DragSource(ItemTypes.ELEMENT_ITEM, sourceSpec, (connect, monitor) => ({
-  connectDragSource: connect.dragSource(),
-  isDragging: monitor.isDragging()
+@DropTarget(getDropTargetType, spec, (connect, monitor) => ({
+  connectDropTarget: connect.dropTarget(),
+  isOver: monitor.isOver({
+    shallow: true
+  }),
+  canDrop: monitor.canDrop()
 }))
 class ElementItem extends React.Component {
   static contextTypes = {
@@ -34,6 +40,7 @@ class ElementItem extends React.Component {
   }
 
   static propTypes = {
+    components: React.PropTypes.object.isRequired,
     elements: React.PropTypes.object.isRequired,
     element: React.PropTypes.object.isRequired,
     activeElement: React.PropTypes.string,
@@ -41,8 +48,8 @@ class ElementItem extends React.Component {
 
     // React DnD
     connectDropTarget: React.PropTypes.func.isRequired,
-    connectDragSource: React.PropTypes.func.isRequired,
-    isDragging: React.PropTypes.bool.isRequired
+    isOver: React.PropTypes.bool.isRequired,
+    canDrop: React.PropTypes.bool.isRequired
   }
 
   constructor(props, context){
@@ -61,9 +68,9 @@ class ElementItem extends React.Component {
       elements,
       element,
       activeElement,
-      selectElement,
-      connectDragSource,
-      connectDropTarget
+      connectDropTarget,
+      isOver,
+      canDrop
     } = this.props;
     const {expanded} = this.state;
 
@@ -73,10 +80,11 @@ class ElementItem extends React.Component {
 
     let classname = cx('element-item', {
       'element-item--selected': activeElement === element.get('id'),
-      'element-item--expanded': expanded
+      'element-item--expanded': expanded,
+      'element-item--over': isOver && canDrop
     });
 
-    return connectDragSource(connectDropTarget(
+    return connectDropTarget(
       <li className={classname}>
         <div className="element-item__content">
           <a className="element-item__toggle" onClick={this.toggleList}>
@@ -84,15 +92,9 @@ class ElementItem extends React.Component {
           </a>
           <a className="element-item__name" onClick={this.handleClick}>{element.get('name')}</a>
         </div>
-        {expanded && (
-          <ElementList
-            elements={elements}
-            activeElement={activeElement}
-            parent={id}
-            selectElement={selectElement}/>
-        )}
+        {expanded && <ElementList {...this.props} parent={id}/>}
       </li>
-    ));
+    );
   }
 
   handleClick(e){
