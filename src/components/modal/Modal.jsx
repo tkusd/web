@@ -12,7 +12,14 @@ class Modal extends React.Component {
       React.PropTypes.string,
       React.PropTypes.element
     ]),
-    onDismiss: React.PropTypes.func
+    onDismiss: React.PropTypes.func,
+    className: React.PropTypes.string,
+    full: React.PropTypes.bool
+  }
+
+  static defaultProps = {
+    className: '',
+    full: false
   }
 
   constructor(props, context){
@@ -36,13 +43,17 @@ class Modal extends React.Component {
   render(){
     let className = cx('modal', {
       'modal--active': this.state.active
+    }, this.props.className);
+
+    let dialogClassName = cx('modal__dialog', {
+      'modal__dialog--full': this.props.full
     });
 
     return (
       <div className={className}>
         <div className="modal__back" onClick={this.dismiss}></div>
         <div className="modal__container">
-          <div className="modal__dialog">
+          <div className={dialogClassName}>
             <header className="modal__header">
               <h3 className="modal__title">{this.props.title}</h3>
               <button className="modal__btn-close" onClick={this.dismiss}>

@@ -31,9 +31,10 @@
 .modal__container
   display: table-cell
   vertical-align: middle
+  padding: padding-large
 
 .modal__dialog
-  width: 500px
+  max-width: 500px
   margin: auto
   background: #fff
   padding: padding-medium 24px
@@ -41,6 +42,9 @@
   box-shadow: 1px 3px 20px rgba(0, 0, 0, 0.2)
   color: color-text-black
   position: relative
+
+.modal__dialog--full
+  max-width: 100%
 
 .modal__title
   margin: 0

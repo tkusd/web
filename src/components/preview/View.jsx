@@ -117,7 +117,7 @@ class View extends React.Component {
     });
 
     return (
-      <div className={className} data-page={id}>
+      <div id={getElementID(element)} className={className} data-page={id}>
         {content}
       </div>
     );

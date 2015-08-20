@@ -2,12 +2,11 @@
 @import "../common"
 
 .element-sidebar
-  position: absolute
-  top: 0
-  bottom: 0
-  right: 0
+  float: right
   width: element-sidebar-width
   background: color-project-sidebar
+  margin-right: @width * -1
+  height: 100%
 
 .element-sidebar__attribute-palette
   height: 60%

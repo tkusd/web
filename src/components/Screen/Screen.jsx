@@ -89,18 +89,22 @@ class Screen extends React.Component {
 
     return (
       <div className="screen">
-        <ViewMask {...this.state}
-          element={elements.get(selectedScreen)}
-          selectElement={this.selectElement}/>
-        {editable && (
-          <ElementSidebar
-            {...this.state}
-            selectElement={this.selectElement}
-            selectedScreen={selectedScreen}/>
-        )}
-        <ScreenToolbar {...this.state}
-          updateScreenSize={this.updateScreenSize}
-          updateScreenDimension={this.updateScreenDimension}/>
+        <div className="screen__container">
+          <div className="screen__content">
+            <ViewMask {...this.state}
+              element={elements.get(selectedScreen)}
+              selectElement={this.selectElement}/>
+            <ScreenToolbar {...this.state}
+              updateScreenSize={this.updateScreenSize}
+              updateScreenDimension={this.updateScreenDimension}/>
+          </div>
+          {editable && (
+            <ElementSidebar
+              {...this.state}
+              selectElement={this.selectElement}
+              selectedScreen={selectedScreen}/>
+          )}
+        </div>
       </div>
     );
   }

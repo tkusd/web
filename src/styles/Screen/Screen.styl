@@ -2,9 +2,17 @@
 @import "../common"
 
 .screen
-  position: absolute
-  top: 0
-  left: project-sidebar-width
-  bottom: 0
-  right: 0
-  overflow: hidden
+  float: right
+  height: 100%
+  width: 100%
+
+.screen__container
+  clearfix()
+  margin-right: element-sidebar-width
+  height: 100%
+
+.screen__content
+  float: left
+  width: 100%
+  height: 100%
+  position: relative

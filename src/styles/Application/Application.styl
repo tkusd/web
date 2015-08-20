@@ -5,6 +5,9 @@
 *, *::before, *::after
   box-sizing: border-box
 
+html, body, #root
+  height: 100%
+
 body
   font-size: font-size-base
   font-family: font-sans
@@ -13,3 +16,29 @@ body
   text-rendering: optimizeLegibility
   -webkit-font-smoothing: antialiased
   -moz-osx-font-smoothing: grayscale
+
+.application
+  height: 100%
+
+.application__progress-bar
+  position: fixed
+  top: 0
+  left: 0
+  right: 0
+  height: 4px
+  background: rgba(color-accent, 0.4)
+  &:before
+    content: ""
+    position: absolute
+    top: 0
+    left: 0
+    bottom: 0
+    background: color-accent
+    width: 60%
+    animation: app-progress-bar 1.3s cubic-bezier(0.65, 0.815, 0.735, 0.395) infinite
+
+@keyframes app-progress-bar
+  0%
+    transform: translateX(-100%)
+  100%
+    transform: translateX(160%)

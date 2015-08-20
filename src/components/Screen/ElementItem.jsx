@@ -88,18 +88,6 @@ class ElementItem extends React.Component {
             {hasChildren && <FontAwesome icon={expanded ? 'caret-down' : 'caret-right'}/>}
           </a>
           <a className="element-item__name" onClick={this.handleClick}>{element.get('name')}</a>
-          <Dropdown className="element-item__dropdown">
-            <button className="element-item__more-btn">
-              <FontAwesome icon="ellipsis-v"/>
-            </button>
-            <DropdownMenu position="fixed">
-              <DropdownItem>
-                <a onClick={this.deleteElement}>
-                  <FormattedMessage message="common.delete"/>
-                </a>
-              </DropdownItem>
-            </DropdownMenu>
-          </Dropdown>
         </div>
         {expanded && (
           <ElementList

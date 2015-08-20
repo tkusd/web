@@ -27,8 +27,11 @@ class Application extends React.Component {
   }
 
   render(){
+    const {isTransitioning} = this.props;
+
     return (
-      <div>
+      <div className="application">
+        {isTransitioning && <div className="application__progress-bar"/>}
         {this.props.children}
         <ModalContainer/>
       </div>
