@@ -7,8 +7,17 @@
   .input-group__field
     border-bottom-color: lighten(color-project-sidebar, 20%)
 
-.attribute-palette__delete-btn
-  @extend $button-danger
+$attribute-palette-btn
   @extend $button-small
+  margin-right: padding-small
+  margin-bottom: padding-small
   i
     padding-right: 0.5em
+
+.attribute-palette__main-screen-btn
+  @extend $attribute-palette-btn
+  @extend $button-primary
+
+.attribute-palette__delete-btn
+  @extend $attribute-palette-btn
+  @extend $button-danger

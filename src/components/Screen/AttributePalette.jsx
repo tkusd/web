@@ -5,6 +5,7 @@ import {InputGroup, Checkbox} from '../form';
 import {validators} from 'react-form-input';
 import bindActions from '../../utils/bindActions';
 import * as ElementAction from '../../actions/ElementAction';
+import * as ProjectAction from '../../actions/ProjectAction';
 import EventList from './EventList';
 import pureRender from '../../decorators/pureRender';
 import debounce from 'lodash/function/debounce';
@@ -91,6 +92,13 @@ class AttributePalette extends React.Component {
           validators={[
             validators.required('Name is required')
           ]}/>
+        {element.get('type') === ElementTypes.screen && (
+          <button className="attribute-palette__main-screen-btn"
+            onClick={this.updateMainScreen}
+            disabled={project.get('main_screen') === element.get('id')}>
+            <FontAwesome icon="mobile"/>Set as main screen
+          </button>
+        )}
         <button className="attribute-palette__delete-btn" onClick={this.deleteElement}>
           <FontAwesome icon="trash-o"/>Delete
         </button>
@@ -159,6 +167,18 @@ class AttributePalette extends React.Component {
     }
 
     deleteElement(element.get('id'));
+  }
+
+  updateMainScreen = () => {
+    const {project} = this.props;
+    const {element} = this.state;
+    if (element.get('type') !== ElementTypes.screen || project.get('main_screen') === element.get('id')) return;
+
+    const {updateProject} = bindActions(ProjectAction, this.context.flux);
+
+    updateProject(project.get('id'), {
+      main_screen: element.get('id')
+    });
   }
 }
 
