@@ -45,7 +45,8 @@ class ActionBoard extends React.Component {
   componentWillReceiveProps(nextProps){
     if (this.props.actionID !== nextProps.actionID){
       this.setState({
-        actionID: nextProps.actionID
+        actionID: nextProps.actionID,
+        queue: OrderedSet()
       });
     }
 
@@ -151,24 +152,27 @@ class ActionBoard extends React.Component {
                   return item.set('action_id', data.id);
                 });
 
+              let newState = {actions, queue};
+
               if (this.state.actionID === id){
-                this.setState({
-                  actionID: data.id
-                });
+                newState.actionID = data.id;
               }
+
+              this.setState(newState);
             });
         } else {
           return updateAction(id, getActionBody(action))
             .then(data => {
               actions = actions.set(data.id, Immutable.fromJS(data));
+              this.setState({actions, queue});
             });
         }
-      }).then(() => {
-        this.setState({
-          actions,
-          queue,
-          isSaving: false
-        });
+      });
+    });
+
+    promise = promise.then(() => {
+      this.setState({
+        isSaving: false
       });
     });
 

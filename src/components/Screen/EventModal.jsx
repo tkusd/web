@@ -30,7 +30,8 @@ class EventModal extends React.Component {
 
     this.state = {
       eventValue: event && event.get('event'),
-      actionValue: event && event.get('action_id')
+      actionValue: event && event.get('action_id'),
+      isSaving: false
     };
   }
 
@@ -61,7 +62,7 @@ class EventModal extends React.Component {
 
   renderEventSelector(){
     const {component} = this.props;
-    const {eventValue} = this.state;
+    const {eventValue, isSaving} = this.state;
 
     let options = component.get('availableEventTypes').map(event => ({
       value: event,
@@ -73,14 +74,15 @@ class EventModal extends React.Component {
         <label className="event-modal__select-label">Event</label>
         <Select value={eventValue}
           options={options}
-          onChange={this.handleSelectChange.bind(this, 'eventValue')}/>
+          onChange={this.handleSelectChange.bind(this, 'eventValue')}
+          disabled={isSaving}/>
       </div>
     );
   }
 
   renderActionSelector(){
     const {actions, actionDefinitions} = this.props;
-    const {actionValue} = this.state;
+    const {actionValue, isSaving} = this.state;
 
     let options = actions
       .filter(action => !action.get('action_id'))
@@ -100,7 +102,8 @@ class EventModal extends React.Component {
         <Select value={actionValue}
           options={options}
           onChange={this.handleSelectChange.bind(this, 'actionValue')}
-          placeholder="New action..."/>
+          placeholder="New action..."
+          disabled={isSaving}/>
       </div>
     );
   }
@@ -113,17 +116,22 @@ class EventModal extends React.Component {
 
   createEvent = () => {
     const {element, closeModal} = this.props;
-    const {eventValue, actionValue} = this.state;
+    const {eventValue} = this.state;
     const {createEvent} = bindActions(EventAction, this.context.flux);
+    const {board} = this.refs;
 
-    if (!eventValue || !actionValue) return;
-/*
-    createEvent(element.get('id'), {
-      event: eventValue,
-      action_id: actionValue
+    if (!eventValue) return;
+
+    board.saveChanges().then(() => {
+      return createEvent(element.get('id'), {
+        event: eventValue,
+        action_id: board.getActionID()
+      });
     }).then(() => {
       closeModal();
-    });*/
+    }).catch(err => {
+      console.error(err);
+    });
   }
 
   updateEvent = () => {
