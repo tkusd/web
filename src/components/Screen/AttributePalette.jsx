@@ -72,14 +72,19 @@ class AttributePalette extends React.Component {
 
   renderContent(){
     const {element} = this.state;
-    const {components, events, activeElement, project} = this.props;
+    const {components, events, activeElement, project, elements} = this.props;
     if (!element) return;
 
     const component = components.get(element.get('type'));
     if (!component) return;
 
+    const parent = elements.get(element.get('element_id'));
     const elementEvents = events.filter(event => event.get('element_id') === activeElement);
-    const platform = project.get('platform');
+    let parentComponent;
+
+    if (parent){
+      parentComponent = components.get(parent.get('type'));
+    }
 
     return (
       <div className="attribute-palette">
@@ -106,7 +111,9 @@ class AttributePalette extends React.Component {
           <div>
             <h4>Attributes</h4>
             {component.get('attributes')
-              .filter(attr => !attr.has('platform') || attr.get('platform') === platform)
+              .map(this.renderAttributeField.bind(this)).toArray()}
+            {parentComponent && parentComponent.get('childAttributes') &&
+              parentComponent.get('childAttributes')
               .map(this.renderAttributeField.bind(this)).toArray()}
           </div>
         )}
@@ -120,26 +127,41 @@ class AttributePalette extends React.Component {
     );
   }
 
-  renderAttributeField(attr, i){
+  renderAttributeField(attr, key){
     const {element} = this.state;
+    const value = element.getIn(['attributes', key]);
 
     switch (attr.get('type')){
     case 'boolean':
       return (
-        <Checkbox key={i}
-          value={element.getIn(['attributes', i])}
+        <Checkbox key={key}
+          value={value}
           label={attr.get('label')}
-          onChange={this.handleInputChange.bind(this, ['attributes', i])}/>
+          onChange={this.handleInputChange.bind(this, ['attributes', key])}/>
+      );
+
+    case 'select':
+      return (
+        <label key={key} className="input-group">
+          <span className="input-group__label">{attr.get('label')}</span>
+          <select className="attribute-palette__select"
+            value={value}
+            onChange={this.handleRawInputChange.bind(this, ['attributes', key])}>
+            {attr.get('values').map(item => (
+              <option key={item.get('value')} value={item.get('value')}>{item.get('label')}</option>
+            )).toArray()}
+          </select>
+        </label>
       );
     }
 
     return (
       <InputGroup
-        key={i}
+        key={key}
         type="text"
         label={attr.get('label')}
-        onChange={this.handleInputChange.bind(this, ['attributes', i])}
-        value={element.getIn(['attributes', i])}/>
+        onChange={this.handleInputChange.bind(this, ['attributes', key])}
+        value={value}/>
     );
   }
 
@@ -148,6 +170,16 @@ class AttributePalette extends React.Component {
 
     this.setState({
       element: this.state.element.setIn(field, data.value)
+    });
+
+    this.commitChange();
+  }
+
+  handleRawInputChange(field, e){
+    const value = (e.target || e.currentTarget).value;
+
+    this.setState({
+      element: this.state.element.setIn(field, value)
     });
 
     this.commitChange();

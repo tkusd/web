@@ -6,6 +6,7 @@ import * as ElementAction from '../../actions/ElementAction';
 import bindActions from '../../utils/bindActions';
 import pureRender from '../../decorators/pureRender';
 import uuid from 'node-uuid';
+import assign from 'lodash/object/assign';
 
 if (process.env.BROWSER){
   require('../../styles/Project/ComponentItem.styl');
@@ -47,14 +48,19 @@ const spec = {
 
     const {createElement, selectElement} = bindActions(ElementAction, context.flux);
     const id = '_' + uuid.v4();
+    let attributes = collectDefaultValue(item.attributes);
+
+    if (elementComponent.has('childAttributes')){
+      attributes = assign(attributes, collectDefaultValue(elementComponent.get('childAttributes').toJS()));
+    }
 
     createElement({
-      id: id,
+      id,
       name: item.type,
       type: item.type,
       project_id: element.project_id,
       element_id: element.id,
-      attributes: collectDefaultValue(item.attributes)
+      attributes
     });
 
     setTimeout(() => {

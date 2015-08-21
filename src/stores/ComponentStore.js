@@ -29,6 +29,17 @@ const COMPONENTS = [
         type: 'string',
         label: 'Title'
       }
+    },
+    childAttributes: {
+      position: {
+        type: 'select',
+        label: 'Position',
+        values: [
+          {value: 'left', label: 'Left'},
+          {value: 'right', label: 'Right'}
+        ],
+        defaultValue: 'left'
+      }
     }
   },
   {
@@ -73,6 +84,17 @@ const COMPONENTS = [
         type: 'boolean',
         label: 'Footer'
       }
+    },
+    childAttributes: {
+      position: {
+        type: 'select',
+        label: 'Position',
+        values: [
+          {value: '', label: 'Content'},
+          {value: 'header', label: 'Header'},
+          {value: 'footer', label: 'Footer'}
+        ]
+      }
     }
   },
   {
@@ -105,8 +127,7 @@ const COMPONENTS = [
       },
       raised: {
         type: 'boolean',
-        label: 'Raised',
-        platform: 'android'
+        label: 'Raised'
       }
     }
   },
