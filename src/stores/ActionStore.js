@@ -51,8 +51,14 @@ const ACTIONS = Immutable.fromJS({
     description: 'Load the specified page.',
     data: {
       screen: {
-        type: 'string',
-        label: 'Screen ID'
+        type: 'select',
+        label: 'Screen',
+        values({elements}){
+          return elements.filter(item => !item.get('element_id')).map((item, key) => ({
+            value: key,
+            label: item.get('name')
+          })).toArray();
+        }
       }
     }
   },

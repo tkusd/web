@@ -51,14 +51,43 @@ class ActionNode extends React.Component {
 
     return (
       <div className="action-node__data-list">
-        {definition.get('data').map((data, key) => (
-          <InputGroup key={key}
-            className="action-node__input"
-            value={action.getIn(['data', key])}
-            label={data.get('label')}
-            onChange={this.handleInputGroupChange.bind(this, ['data', key])}/>
-        )).toArray()}
+        {definition.get('data').map(this.renderInputField.bind(this)).toArray()}
       </div>
+    );
+  }
+
+  renderInputField(data, key){
+    const {action} = this.props;
+
+    switch (data.get('type')){
+    case 'select':
+      let values = data.get('values') || [];
+
+      if (typeof values === 'function'){
+        values = values(this.props);
+      }
+
+      return (
+        <label key={key} className="action-node__input">
+          <span className="input-group__label">{data.get('label')}</span>
+          <select
+            className="action-node__input-select"
+            value={action.getIn(['data', key])}
+            onChange={this.handleInputChange.bind(this, ['data', key])}>
+            {values.map((item, i) => (
+              <option value={item.value} key={i}>{item.label}</option>
+            ))}
+          </select>
+        </label>
+      );
+    }
+
+    return (
+      <InputGroup key={key}
+        className="action-node__input"
+        value={action.getIn(['data', key])}
+        label={data.get('label')}
+        onChange={this.handleInputGroupChange.bind(this, ['data', key])}/>
     );
   }
 
