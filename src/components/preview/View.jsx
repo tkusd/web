@@ -75,6 +75,9 @@ class View extends React.Component {
 
     case ElementTypes.image:
       return this.renderImage(element);
+
+    case ElementTypes.accordion:
+      return this.renderAccordion(element);
     }
 
     return <div></div>;
@@ -227,7 +230,8 @@ class View extends React.Component {
     const title = element.getIn(['attributes', 'title']);
 
     let className = cx('list-block', {
-      inset: element.getIn(['attributes', 'inset'])
+      inset: element.getIn(['attributes', 'inset']),
+      'accordion-list': elements.filter(element => element.get('type') === ElementTypes.accordion).count()
     });
 
     return (
@@ -320,6 +324,25 @@ class View extends React.Component {
     const src = element.getIn(['attributes', 'src']);
 
     return <img id={getElementID(element)} src={src} onClick={this.props.onClick}/>;
+  }
+
+  renderAccordion(element){
+    let className = cx('accordion-item', {
+      'accordion-item-expanded': element.getIn(['attributes', 'expanded'])
+    });
+
+    return (
+      <li id={getElementID(element)} className={className} onClick={this.props.onClick}>
+        <a href="#" className="item-content item-link">
+          <div className="item-inner">
+            <div className="item-title">{element.getIn(['attributes', 'title'])}</div>
+          </div>
+        </a>
+        <div className="accordion-item-content">
+          {this.renderElements(this.getChildElements(element.get('id')))}
+        </div>
+      </li>
+    );
   }
 }
 

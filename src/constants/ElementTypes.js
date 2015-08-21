@@ -13,7 +13,8 @@ export default keyMirror({
   image: null,
   listItem: null,
   listDivider: null,
-  listGroup: null
+  listGroup: null,
+  accordion: null
 });
 
 export const actions = keyMirror({

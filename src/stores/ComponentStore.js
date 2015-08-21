@@ -1,5 +1,5 @@
 import BaseStore from './BaseStore';
-import Immutable, {Map} from 'immutable';
+import Immutable, {OrderedMap} from 'immutable';
 import ElementTypes, {events} from '../constants/ElementTypes';
 
 const COMPONENTS = [
@@ -7,6 +7,10 @@ const COMPONENTS = [
     type: ElementTypes.screen,
     hidden: true,
     container: true,
+    availableEventTypes: [
+      events.enter,
+      events.leave
+    ],
     attributes: {
       theme: {
         type: 'string',
@@ -57,7 +61,8 @@ const COMPONENTS = [
     availableChildTypes: [
       ElementTypes.label,
       ElementTypes.button,
-      ElementTypes.buttonRow
+      ElementTypes.buttonRow,
+      ElementTypes.image
     ],
     attributes: {
       header: {
@@ -133,7 +138,8 @@ const COMPONENTS = [
     availableChildTypes: [
       ElementTypes.listItem,
       ElementTypes.listDivider,
-      ElementTypes.listGroup
+      ElementTypes.listGroup,
+      ElementTypes.accordion
     ],
     attributes: {
       title: {
@@ -151,6 +157,9 @@ const COMPONENTS = [
     type: ElementTypes.listItem,
     container: true,
     availableChildTypes: [ElementTypes.label],
+    availableEventTypes: [
+      events.click
+    ],
     attributes: {
       media: {
         type: 'string',
@@ -183,7 +192,8 @@ const COMPONENTS = [
     container: true,
     availableChildTypes: [
       ElementTypes.listItem,
-      ElementTypes.listDivider
+      ElementTypes.listDivider,
+      ElementTypes.accordion
     ],
     attributes: {
       title: {
@@ -198,8 +208,30 @@ const COMPONENTS = [
     container: false,
     attributes: {
       src: {
-        type: 'asset',
+        type: 'string',
         label: 'Image'
+      }
+    }
+  },
+  {
+    type: ElementTypes.accordion,
+    container: true,
+    availableChildTypes: [
+      ElementTypes.block,
+      ElementTypes.label,
+      ElementTypes.button,
+      ElementTypes.buttonRow,
+      ElementTypes.image
+    ],
+    attributes: {
+      title: {
+        type: 'string',
+        label: 'Title',
+        defaultValue: 'Accordion'
+      },
+      expanded: {
+        type: 'boolean',
+        label: 'Expanded'
       }
     }
   }
@@ -209,7 +241,7 @@ class ComponentStore extends BaseStore {
   constructor(context){
     super(context);
 
-    this.data = Map().withMutations(data => {
+    this.data = OrderedMap().withMutations(data => {
       COMPONENTS.forEach(item => {
         data.set(item.type, Immutable.fromJS(item));
       });
