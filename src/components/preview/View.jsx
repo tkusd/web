@@ -61,8 +61,20 @@ class View extends React.Component {
     case ElementTypes.list:
       return this.renderList(element);
 
+    case ElementTypes.listItem:
+      return this.renderListItem(element);
+
+    case ElementTypes.listDivider:
+      return this.renderListDivider(element);
+
+    case ElementTypes.listGroup:
+      return this.renderListGroup(element);
+
     case ElementTypes.card:
       return this.renderCard(element);
+
+    case ElementTypes.image:
+      return this.renderImage(element);
     }
 
     return <div></div>;
@@ -92,6 +104,10 @@ class View extends React.Component {
       'navbar-fixed': navbar.count(),
       'toolbar-fixed': toolbar.count()
     });
+
+    if (element.getIn(['attributes', 'theme'])){
+      className = cx(className, 'theme-' + element.getIn(['attributes', 'theme']));
+    }
 
     navbar.forEach((item, key) => {
       content.push(
@@ -210,14 +226,59 @@ class View extends React.Component {
     const elements = this.getChildElements(element.get('id'));
     const title = element.getIn(['attributes', 'title']);
 
+    let className = cx('list-block', {
+      inset: element.getIn(['attributes', 'inset'])
+    });
+
     return (
       <div>
         {title && <div className="content-block-title">{title}</div>}
-        <div id={getElementID(element)} className="list-block" onClick={this.props.onClick}>
+        <div id={getElementID(element)} className={className} onClick={this.props.onClick}>
           <ul>
             {this.renderElements(elements)}
           </ul>
         </div>
+      </div>
+    );
+  }
+
+  renderListItem(element){
+    let className = cx('item-content', {
+      'item-link': element.getIn(['attributes', 'link'])
+    });
+
+    return (
+      <li>
+        <div id={getElementID(element)} className={className} onClick={this.props.onClick}>
+          {element.getIn(['attributes', 'media']) && (
+            <div className="item-media">{element.getIn(['attributes', 'media'])}</div>
+          )}
+          <div className="item-inner">
+            <div className="item-title">{element.getIn(['attributes', 'title'])}</div>
+            <div className="item-after">
+              {this.renderElements(this.getChildElements(element.get('id')))}
+            </div>
+          </div>
+        </div>
+      </li>
+    );
+  }
+
+  renderListDivider(element){
+    return (
+      <li id={getElementID(element)} className="item-divider" onClick={this.props.onClick}>
+        {element.getIn(['attributes', 'title'])}
+      </li>
+    );
+  }
+
+  renderListGroup(element){
+    return (
+      <div id={getElementID(element)} className="list-group" onClick={this.props.onClick}>
+        <ul>
+          <li className="list-group-title">{element.getIn(['attributes', 'title'])}</li>
+          {this.renderElements(this.getChildElements(element.get('id')))}
+        </ul>
       </div>
     );
   }
@@ -253,6 +314,12 @@ class View extends React.Component {
         )}
       </div>
     );
+  }
+
+  renderImage(element){
+    const src = element.getIn(['attributes', 'src']);
+
+    return <img id={getElementID(element)} src={src} onClick={this.props.onClick}/>;
   }
 }
 

@@ -5,6 +5,7 @@ import cx from 'classnames';
 import * as ElementAction from '../../actions/ElementAction';
 import bindActions from '../../utils/bindActions';
 import pureRender from '../../decorators/pureRender';
+import uuid from 'node-uuid';
 
 if (process.env.BROWSER){
   require('../../styles/Project/ComponentItem.styl');
@@ -44,15 +45,21 @@ const spec = {
       return;
     }
 
-    const {createElement} = bindActions(ElementAction, context.flux);
+    const {createElement, selectElement} = bindActions(ElementAction, context.flux);
+    const id = '_' + uuid.v4();
 
     createElement({
+      id: id,
       name: item.type,
       type: item.type,
       project_id: element.project_id,
       element_id: element.id,
       attributes: collectDefaultValue(item.attributes)
     });
+
+    setTimeout(() => {
+      selectElement(id);
+    }, 0);
   }
 };
 

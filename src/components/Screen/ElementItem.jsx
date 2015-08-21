@@ -45,6 +45,7 @@ class ElementItem extends React.Component {
     element: React.PropTypes.object.isRequired,
     activeElement: React.PropTypes.string,
     selectElement: React.PropTypes.func.isRequired,
+    hoverElements: React.PropTypes.object.isRequired,
 
     // React DnD
     connectDropTarget: React.PropTypes.func.isRequired,
@@ -70,7 +71,8 @@ class ElementItem extends React.Component {
       activeElement,
       connectDropTarget,
       isOver,
-      canDrop
+      canDrop,
+      hoverElements
     } = this.props;
     const {expanded} = this.state;
 
@@ -81,7 +83,7 @@ class ElementItem extends React.Component {
     let classname = cx('element-item', {
       'element-item--selected': activeElement === element.get('id'),
       'element-item--expanded': expanded,
-      'element-item--over': isOver && canDrop
+      'element-item--over': (isOver && canDrop) || (hoverElements.last() === id)
     });
 
     return connectDropTarget(

@@ -6,7 +6,13 @@ const COMPONENTS = [
   {
     type: ElementTypes.screen,
     hidden: true,
-    container: true
+    container: true,
+    attributes: {
+      theme: {
+        type: 'string',
+        label: 'Theme'
+      }
+    }
   },
   {
     type: ElementTypes.navbar,
@@ -123,12 +129,77 @@ const COMPONENTS = [
   },
   {
     type: ElementTypes.list,
-    container: false,
+    container: true,
+    availableChildTypes: [
+      ElementTypes.listItem,
+      ElementTypes.listDivider,
+      ElementTypes.listGroup
+    ],
     attributes: {
       title: {
         type: 'string',
         label: 'Title',
         defaultValue: 'List'
+      },
+      inset: {
+        type: 'boolean',
+        label: 'Inset'
+      }
+    }
+  },
+  {
+    type: ElementTypes.listItem,
+    container: true,
+    availableChildTypes: [ElementTypes.label],
+    attributes: {
+      media: {
+        type: 'string',
+        label: 'Media'
+      },
+      title: {
+        type: 'string',
+        label: 'Title',
+        defaultValue: 'List item'
+      },
+      link: {
+        type: 'boolean',
+        label: 'Link'
+      }
+    }
+  },
+  {
+    type: ElementTypes.listDivider,
+    container: false,
+    attributes: {
+      title: {
+        type: 'string',
+        label: 'Title',
+        defaultValue: 'List divider'
+      }
+    }
+  },
+  {
+    type: ElementTypes.listGroup,
+    container: true,
+    availableChildTypes: [
+      ElementTypes.listItem,
+      ElementTypes.listDivider
+    ],
+    attributes: {
+      title: {
+        type: 'String',
+        label: 'Title',
+        defaultValue: 'List group'
+      }
+    }
+  },
+  {
+    type: ElementTypes.image,
+    container: false,
+    attributes: {
+      src: {
+        type: 'asset',
+        label: 'Image'
       }
     }
   }

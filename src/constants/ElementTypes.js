@@ -9,7 +9,11 @@ export default keyMirror({
   button: null,
   block: null,
   buttonRow: null,
-  list: null
+  list: null,
+  image: null,
+  listItem: null,
+  listDivider: null,
+  listGroup: null
 });
 
 export const actions = keyMirror({
