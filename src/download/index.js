@@ -113,6 +113,6 @@ export default function(req, res, next){
       return res.status(404).send('Not found');
     }
 
-    throw err;
+    next(err);
   });
 }

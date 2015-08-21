@@ -45,7 +45,7 @@ class EventModal extends React.Component {
           {this.renderActionSelector()}
         </div>
         <div className="event-modal__action-board">
-          <ActionBoard {...this.props} actionID={actionValue}/>
+          <ActionBoard {...this.props} actionID={actionValue} ref="board"/>
         </div>
         <div className="modal__btn-group">
           <button className="modal__btn" onClick={closeModal}>
@@ -117,16 +117,33 @@ class EventModal extends React.Component {
     const {createEvent} = bindActions(EventAction, this.context.flux);
 
     if (!eventValue || !actionValue) return;
-
+/*
     createEvent(element.get('id'), {
       event: eventValue,
       action_id: actionValue
     }).then(() => {
       closeModal();
-    });
+    });*/
   }
 
   updateEvent = () => {
+    const {updateEvent} = bindActions(EventAction, this.context.flux);
+    const {event, closeModal} = this.props;
+    const {eventValue} = this.state;
+    const {board} = this.refs;
+
+    if (!eventValue) return;
+
+    board.saveChanges().then(() => {
+      return updateEvent(event.get('id'), {
+        event: eventValue,
+        action_id: board.getActionID()
+      });
+    }).then(() => {
+      closeModal();
+    }).catch(err => {
+      console.error(err);
+    });
   }
 }
 

@@ -34,7 +34,9 @@ function generateActionContent(flux, action){
     ];
 
     if (action.getIn(['data', 'title'])){
-      args.push(action.getIn(['data', 'title']));
+      args.push(
+        generateLiteral(action.getIn(['data', 'title']))
+      );
     }
 
     return generateCallExpression(generateMemberExpression('app.alert'), args);

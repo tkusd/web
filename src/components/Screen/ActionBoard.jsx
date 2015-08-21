@@ -2,16 +2,31 @@ import React from 'react';
 import ActionNode from './ActionNode';
 import uuid from 'node-uuid';
 import Immutable, {OrderedSet} from 'immutable';
+import bindActions from '../../utils/bindActions';
+import * as ActionAction from '../../actions/ActionAction';
+import FontAwesome from '../common/FontAwesome';
 
 if (process.env.BROWSER){
   require('../../styles/Screen/ActionBoard.styl');
 }
 
+function getActionBody(action){
+  return {
+    name: action.get('name'),
+    action: action.get('action'),
+    data: action.get('data').toJS()
+  };
+}
+
 class ActionBoard extends React.Component {
+  static contextTypes = {
+    flux: React.PropTypes.object.isRequired
+  }
+
   static propTypes = {
     actions: React.PropTypes.object.isRequired,
     actionID: React.PropTypes.string,
-    project: React.PropTypes.object.isRequired
+    element: React.PropTypes.object.isRequired
   }
 
   constructor(props, context){
@@ -20,7 +35,8 @@ class ActionBoard extends React.Component {
     this.state = {
       actionID: this.props.actionID,
       actions: this.props.actions,
-      queue: OrderedSet()
+      queue: OrderedSet(),
+      isSaving: false
     };
 
     this.updateAction = this.updateAction.bind(this);
@@ -41,7 +57,7 @@ class ActionBoard extends React.Component {
   }
 
   render(){
-    const {actionID, actions} = this.state;
+    const {actionID, actions, isSaving} = this.state;
     let content;
 
     if (actionID){
@@ -61,6 +77,11 @@ class ActionBoard extends React.Component {
     return (
       <div className="action-board" onClick={this.createNode} ref="board">
         {content}
+        {isSaving && (
+          <div className="action-board__saving-hint">
+            <FontAwesome icon="circle-o-notch" spin/>Saving...
+          </div>
+        )}
       </div>
     );
   }
@@ -71,7 +92,7 @@ class ActionBoard extends React.Component {
     // Only for create new event currently
     if (this.state.actionID) return;
 
-    const {project} = this.props;
+    const {element} = this.props;
     const {queue, actions} = this.state;
     const id = '_' + uuid.v4();
     const now = new Date().toISOString();
@@ -79,7 +100,7 @@ class ActionBoard extends React.Component {
     let newAction = Immutable.fromJS({
       id,
       name: '',
-      project_id: project.get('id'),
+      project_id: element.get('project_id'),
       action: '',
       data: {},
       created_at: now,
@@ -101,6 +122,61 @@ class ActionBoard extends React.Component {
       actions: actions.set(id, action),
       queue: queue.add(id)
     });
+  }
+
+  saveChanges(){
+    const {createAction, updateAction} = bindActions(ActionAction, this.context.flux);
+    const {element} = this.props;
+    let {actions, queue} = this.state;
+    let promise = Promise.resolve();
+
+    if (!queue.count()) return promise;
+
+    this.setState({
+      isSaving: true
+    });
+
+    queue.forEach(id => {
+      promise = promise.then(() => {
+        const action = actions.get(id);
+        queue = queue.remove(id);
+
+        if (id[0] === '_'){
+          return createAction(element.get('project_id'), getActionBody(action))
+            .then(data => {
+              actions = actions.remove(id)
+                .set(data.id, Immutable.fromJS(data))
+                .map(item => {
+                  if (item.get('action_id') !== id) return item;
+                  return item.set('action_id', data.id);
+                });
+
+              if (this.state.actionID === id){
+                this.setState({
+                  actionID: data.id
+                });
+              }
+            });
+        } else {
+          return updateAction(id, getActionBody(action))
+            .then(data => {
+              actions = actions.set(data.id, Immutable.fromJS(data));
+            });
+        }
+      }).then(() => {
+        this.setState({
+          actions,
+          queue,
+          isSaving: false
+        });
+      });
+    });
+
+    return promise;
+  }
+
+  getActionID(){
+    return this.state.actionID;
   }
 }
 

@@ -1,9 +1,6 @@
-delete process.env.BROWSER;
+require('babel-core/register');
 
 var fork = require('child_process').fork;
 
-require('babel-core/register');
-
+fork(require.resolve('./index'), process.argv.slice(2));
 require('./webpack/server');
-
-fork(require.resolve('./index'));
