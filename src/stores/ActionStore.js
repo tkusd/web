@@ -48,7 +48,13 @@ const ACTIONS = Immutable.fromJS({
   },
   [ElementActionTypes.transition]: {
     name: 'Transition',
-    description: 'Load the specified page.'
+    description: 'Load the specified page.',
+    data: {
+      screen: {
+        type: 'string',
+        label: 'Screen ID'
+      }
+    }
   },
   [ElementActionTypes.back]: {
     name: 'Back',
