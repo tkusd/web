@@ -18,7 +18,11 @@
 <body>
   <div class="statusbar-overlay"></div>
   <div class="panel-overlay"></div>
-  {{ views }}
+  <div class="views">
+    <div class="view view-main">
+      <div class="pages"></div>
+    </div>
+  </div>
   <script src="cordova.js"></script>
   <script src="framework7/js/framework7.min.js"></script>
   <script src="js/script.js"></script>

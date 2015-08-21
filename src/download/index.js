@@ -1,12 +1,7 @@
-import React from 'react';
-import ReactDOM from 'react-dom/server';
 import prepareFullProject from '../server/prepareFullProject';
 import archiver from 'archiver';
 import xmlbuilder from 'xmlbuilder';
-import {html as htmlBeautify} from 'js-beautify';
 import swig from 'swig';
-import ViewContainer from '../preview/ViewContainer';
-import {Container} from '../flux';
 import generateScript from '../preview/generateScript';
 import path from 'path';
 
@@ -65,17 +60,7 @@ function generateHTML(flux, projectID){
   const {ProjectStore} = flux.getStore();
   const project = ProjectStore.getProject(projectID);
 
-  let views = ReactDOM.renderToStaticMarkup(
-    React.createElement(Container, {flux},
-      React.createElement(ViewContainer, {projectID})
-    )
-  );
-
-  let html = template({project, views});
-
-  return htmlBeautify(html, {
-    indent_size: 2
-  });
+  return template({project});
 }
 
 export default function(req, res, next){
@@ -101,7 +86,7 @@ export default function(req, res, next){
     zip.append(html, {name: 'www/index.html'});
 
     // www/js/script.js
-    let script = generateScript(flux, projectID);
+    let script = '(function(){' + generateScript(flux, projectID) + '}()';
     zip.append(script, {name: 'www/js/script.js'});
 
     // www/framework7

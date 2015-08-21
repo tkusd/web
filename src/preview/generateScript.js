@@ -1,4 +1,6 @@
 import escodegen from 'escodegen';
+import {createElement} from 'react';
+import {renderToStaticMarkup} from 'react-dom/server';
 import {
   generateLiteral,
   generateIdentifier,
@@ -11,6 +13,7 @@ import {
 } from '../utils/esprima';
 import base62uuid from '../utils/base62uuid';
 import {actions} from '../constants/ElementTypes';
+import View from '../components/preview/View';
 
 function getElementID(element){
   return '#e' + element.get('id');
@@ -18,6 +21,10 @@ function getElementID(element){
 
 function getActionID(actionID){
   return 'a_' + base62uuid(actionID);
+}
+
+function getViewID(elementID){
+  return 'v_' + base62uuid(elementID);
 }
 
 function flattenArray(arr, item){
@@ -69,7 +76,7 @@ function generateActionContent(flux, action){
 
     return generateCallExpression(generateMemberExpression('view.router.load'), [
       generateObjectExpression({
-        pageName: generateLiteral(screen)
+        content: generateIdentifier(getViewID(screen))
       })
     ]);
 
@@ -109,16 +116,51 @@ function generateEvents(flux, projectID){
           type: 'MemberExpression',
           object: generateCallExpression(
             generateIdentifier('Dom7'),
-            [generateLiteral(getElementID(element))]
+            [generateIdentifier('document')]
           ),
           property: generateIdentifier('on')
         }, [
           generateLiteral(event.get('event')),
+          generateLiteral(getElementID(element)),
           generateIdentifier(getActionID(event.get('action_id')))
         ])
       );
     });
   }).reduce(flattenArray, []);
+}
+
+function generateViews(flux, projectID){
+  const {ProjectStore, ElementStore} = flux.getStore();
+  const project = ProjectStore.getProject(projectID);
+  const elements = ElementStore.getElementsOfProject(projectID);
+  const mainScreen = project.get('main_screen');
+
+  let result = elements.filter(element => !element.get('element_id'))
+    .map(element => (
+      createElement(View, {
+        elements,
+        project,
+        element
+      })
+    ))
+    .map(renderToStaticMarkup)
+    .map((str, key) => (
+      generateVariable(getViewID(key), generateLiteral(str))
+    ))
+    .toArray();
+
+  if (mainScreen){
+    result.push(generateExpressionStatement(
+      generateCallExpression(generateMemberExpression('view.router.load'), [
+        generateObjectExpression({
+          content: generateIdentifier(getViewID(mainScreen)),
+          animatePages: generateLiteral(false)
+        })
+      ])
+    ));
+  }
+
+  return result;
 }
 
 function generateProgram(flux, projectID){
@@ -142,20 +184,10 @@ function generateProgram(flux, projectID){
     }),
     generateVariable('view',
       generateCallExpression(generateMemberExpression('app.addView'), [
-        generateLiteral('.view-main'),
-        generateObjectExpression({
-          domCache: generateLiteral(true)
-        })
+        generateLiteral('.view-main')
       ])
     ),
-    generateExpressionStatement(
-      generateCallExpression(generateMemberExpression('view.router.load'), [
-        generateObjectExpression({
-          pageName: generateLiteral(project.get('main_screen', '')),
-          animatePages: generateLiteral(false)
-        })
-      ])
-    ),
+    generateViews(flux, projectID),
     generateActions(flux, projectID),
     generateEvents(flux, projectID)
   );
