@@ -1,34 +1,24 @@
 import React from 'react';
 import connectToStores from '../../decorators/connectToStores';
-import {Flux} from '../../flux';
 import {ModalContainer} from '../modal';
-import * as AppAction from '../../actions/AppAction';
-import bindActions from '../../utils/bindActions';
 import cx from 'classnames';
 
 if (process.env.BROWSER){
   require('../../styles/Application/Application.styl');
 }
 
-@connectToStores(['AppStore', 'LocaleStore'], (stores, props) => ({
-  pageTitle: stores.AppStore.getPageTitle()
+@connectToStores(['AppStore', 'ModalStore'], (stores, props) => ({
+  pageTitle: stores.AppStore.getPageTitle(),
+  modals: stores.ModalStore.getList()
 }))
 class Application extends React.Component {
-  static contextTypes = {
-    flux: React.PropTypes.instanceOf(Flux).isRequired
-  }
-
-  componentDidMount() {
-    const {setFirstRender} = bindActions(AppAction, this.context.flux);
-    setFirstRender(false);
-  }
-
   componentDidUpdate(){
     document.title = this.state.pageTitle;
   }
 
   render(){
     const {isTransitioning} = this.props;
+    const {modals} = this.state;
 
     let progressBarClassName = cx('application__progress-bar', {
       'application__progress-bar--active': isTransitioning
@@ -38,7 +28,7 @@ class Application extends React.Component {
       <div className="application">
         <div className={progressBarClassName}/>
         {this.props.children}
-        <ModalContainer/>
+        <ModalContainer modals={modals}/>
       </div>
     );
   }

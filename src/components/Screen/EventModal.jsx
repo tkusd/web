@@ -40,7 +40,7 @@ class EventModal extends React.Component {
     const {actionValue} = this.state;
 
     return (
-      <Modal title={event ? 'Edit event' : 'New event'} onDismiss={closeModal} full>
+      <Modal title={event ? 'Edit event' : 'New event'} onDismiss={closeModal} large>
         <div className="event-modal__select-wrap">
           {this.renderEventSelector()}
           {this.renderActionSelector()}

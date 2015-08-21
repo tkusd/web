@@ -26,11 +26,12 @@ class ProjectStore extends CollectionStore {
   deleteProject(id){
     if (!this.has(id)) return;
 
-    const {ElementStore, ActionStore} = this.context.getStore();
+    const {ElementStore, ActionStore, AssetStore} = this.context.getStore();
 
     this.remove(id);
     ElementStore.deleteElementsOfProject(id);
     ActionStore.deleteActionsOfProject(id);
+    AssetStore.deleteAssetsOfProject(id);
   }
 
   deleteProjectsOfUser(id){

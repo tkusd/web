@@ -1,0 +1,87 @@
+@import "nib"
+@import "../common"
+
+.asset-chooser
+  height: 100%
+  position: relative
+  overflow: auto
+
+.asset-chooser__overlay
+  position: absolute
+  top: 0
+  left: 0
+  right: 0
+  bottom: 0
+  vertical-align: middle
+  line-height: 1
+  font-size: 2em
+  text-align: center
+  &:before
+    content: ""
+    vertical-align: middle
+    height: 100%
+    display: inline-block
+
+.asset-chooser__overlay--dragging
+  @extend .asset-chooser__overlay
+  background: rgba(color-accent, 0.4)
+  color: #fff
+
+.asset-chooser__list
+  display: flex
+  flex-flow: row wrap
+  justify-content: flex-start
+  align-items: flex-start
+
+.asset-chooser__item
+  width: 200px
+  text-align: center
+  padding: padding-medium
+  cursor: pointer
+  margin: auto
+
+.asset-chooser__item-icon-wrap
+  height: 0
+  overflow: hidden
+  padding-top: 100%
+  position: relative
+
+.asset-chooser__item-icon
+  position: absolute
+  top: 8px
+  left: 8px
+  right: 8px
+  bottom: 8px
+  border-radius: 8px
+  text-align: center
+  vertical-align: middle
+  font-size: 50px
+  &:before
+    content: ""
+    display: inline-block
+    vertical-align: middle
+    height: 100%
+  .asset-chooser__item--active &
+    box-shadow: 0 0 0 8px #ddd
+  img
+    max-width: 100%
+    max-height: 100%
+    display: inline-block
+    width: auto
+    height: auto
+    margin: auto
+    vertical-align: middle
+
+.asset-chooser__item-name
+  line-height: 1.5em
+  height: @line-height
+  overflow: hidden
+  display: block
+  text-overflow: ellipsis
+  margin-top: padding-small
+  border-radius: 8px
+  white-space: nowrap
+  padding: 0 8px
+  .asset-chooser__item--active &
+    background: color-accent
+    color: #fff

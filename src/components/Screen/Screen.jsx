@@ -47,7 +47,15 @@ function loadThemeCSS(theme){
   });
 }
 
-@connectToStores(['ElementStore', 'ComponentStore', 'ProjectStore', 'ActionStore', 'EventStore'], (stores, props) => ({
+@connectToStores([
+  'ElementStore',
+  'ComponentStore',
+  'ProjectStore',
+  'ActionStore',
+  'EventStore',
+  'AssetStore',
+  'AppStore'
+], (stores, props) => ({
   project: stores.ProjectStore.getProject(props.params.projectID),
   elements: stores.ElementStore.getElementsOfProject(props.params.projectID),
   components: stores.ComponentStore.getList(),
@@ -58,7 +66,9 @@ function loadThemeCSS(theme){
   isSavingChanges: stores.ElementStore.isSavingChanges(),
   actions: stores.ActionStore.getActionsOfProject(props.params.projectID),
   events: stores.EventStore.getList(),
-  actionDefinitions: stores.ActionStore.getDefinitions()
+  actionDefinitions: stores.ActionStore.getDefinitions(),
+  assets: stores.AssetStore.getAssetsOfProject(props.params.projectID),
+  apiEndpoint: stores.AppStore.getAPIEndpoint()
 }))
 @pureRender
 class Screen extends React.Component {

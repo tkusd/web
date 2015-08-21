@@ -11,6 +11,8 @@ import pureRender from '../../decorators/pureRender';
 import debounce from 'lodash/function/debounce';
 import FontAwesome from '../common/FontAwesome';
 import ElementTypes from '../../constants/ElementTypes';
+import {ModalPortal} from '../modal';
+import AssetModal from './AssetModal';
 
 if (process.env.BROWSER){
   require('../../styles/Screen/AttributePalette.styl');
@@ -128,8 +130,10 @@ class AttributePalette extends React.Component {
   }
 
   renderAttributeField(attr, key){
+    const {project} = this.props;
     const {element} = this.state;
     const value = element.getIn(['attributes', key]);
+    let inputType = 'text';
 
     switch (attr.get('type')){
     case 'boolean':
@@ -153,12 +157,30 @@ class AttributePalette extends React.Component {
           </select>
         </label>
       );
+
+    case 'asset':
+      let btn = (
+        <button>{attr.get('label')}</button>
+      );
+
+      return (
+        <ModalPortal key={key} trigger={btn}>
+          <AssetModal
+            projectID={project.get('id')}
+            url={value}
+            onSubmit={this.setValueInField.bind(this, ['attributes', key])}/>
+        </ModalPortal>
+      );
+
+    case 'number':
+      inputType = 'number';
+      break;
     }
 
     return (
       <InputGroup
         key={key}
-        type="text"
+        type={inputType}
         label={attr.get('label')}
         onChange={this.handleInputChange.bind(this, ['attributes', key])}
         value={value}/>
@@ -167,17 +189,15 @@ class AttributePalette extends React.Component {
 
   handleInputChange(field, data){
     if (data.error) return;
-
-    this.setState({
-      element: this.state.element.setIn(field, data.value)
-    });
-
-    this.commitChange();
+    this.setValueInField(field, data.value);
   }
 
   handleRawInputChange(field, e){
     const value = (e.target || e.currentTarget).value;
+    this.setValueInField(field, value);
+  }
 
+  setValueInField(field, value){
     this.setState({
       element: this.state.element.setIn(field, value)
     });

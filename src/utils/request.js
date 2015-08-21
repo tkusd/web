@@ -2,6 +2,7 @@ import fetch from 'isomorphic-fetch';
 import merge from 'lodash/object/merge';
 
 const INTERNAL_BASE = '/_api/';
+const ContentType = 'Content-Type';
 
 function noop(){}
 
@@ -9,13 +10,16 @@ function setupRequestOptions(options){
   options = merge({
     method: 'get',
     headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json'
+      'Accept': 'application/json'
     }
   }, options);
 
-  if (typeof options.body === 'object'){
+  if (options.body && options.body.constructor === Object){
     options.body = JSON.stringify(options.body);
+
+    if (!options.headers.hasOwnProperty(ContentType)){
+      options.headers[ContentType] = 'application/json';
+    }
   }
 
   return options;

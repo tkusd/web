@@ -229,8 +229,16 @@ const COMPONENTS = [
     container: false,
     attributes: {
       src: {
-        type: 'string',
+        type: 'asset',
         label: 'Image'
+      },
+      width: {
+        type: 'number',
+        label: 'Width'
+      },
+      height: {
+        type: 'number',
+        label: 'Height'
       }
     }
   },

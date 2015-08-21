@@ -14,12 +14,12 @@ class Modal extends React.Component {
     ]),
     onDismiss: React.PropTypes.func,
     className: React.PropTypes.string,
-    full: React.PropTypes.bool
+    large: React.PropTypes.bool
   }
 
   static defaultProps = {
     className: '',
-    full: false
+    large: false
   }
 
   constructor(props, context){
@@ -46,7 +46,7 @@ class Modal extends React.Component {
     }, this.props.className);
 
     let dialogClassName = cx('modal__dialog', {
-      'modal__dialog--full': this.props.full
+      'modal__dialog--large': this.props.large
     });
 
     return (

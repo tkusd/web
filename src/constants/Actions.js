@@ -36,6 +36,7 @@ export default keyMirror({
   UPDATE_EVENT_LIST: null,
   DELETE_EVENT: null,
 
+  CREATE_ASSET: null,
   UPDATE_ASSET: null,
   UPDATE_ASSET_LIST: null,
   DELETE_ASSET: null

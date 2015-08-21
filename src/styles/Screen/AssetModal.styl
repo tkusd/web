@@ -1,0 +1,22 @@
+@import "nib"
+@import "../common"
+
+.asset-modal__tabs
+  .tab-host__tabs
+    padding: padding-medium 0
+    text-align: center
+  .tab-host__tab
+    display: inline-block
+    padding: 6px 12px
+    border-radius: 5px
+    cursor: pointer
+    &:hover
+      color: color-accent
+    &.active
+      font-weight: bold
+      color: #fff
+      background: color-accent
+
+.asset-modal__asset-list
+  height: 500px
+  padding: padding-medium 0

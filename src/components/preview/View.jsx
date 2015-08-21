@@ -7,6 +7,8 @@ function getElementID(element){
   return 'e' + element.get('id');
 }
 
+const REGEX_ASSET = /^asset:([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$/;
+
 function noop(){}
 
 class View extends React.Component {
@@ -14,7 +16,8 @@ class View extends React.Component {
     element: React.PropTypes.object.isRequired,
     elements: React.PropTypes.object.isRequired,
     Container: React.PropTypes.func.isRequired,
-    onClick: React.PropTypes.func.isRequired
+    onClick: React.PropTypes.func.isRequired,
+    apiEndpoint: React.PropTypes.string.isRequired
   }
 
   static defaultProps = {
@@ -321,9 +324,22 @@ class View extends React.Component {
   }
 
   renderImage(element){
+    const {apiEndpoint} = this.props;
     const src = element.getIn(['attributes', 'src']);
+    let url = src;
 
-    return <img id={getElementID(element)} src={src} onClick={this.props.onClick}/>;
+    if (REGEX_ASSET.test(src)){
+      const assetID = src.match(REGEX_ASSET)[1];
+      url = `${apiEndpoint}assets/${assetID}/blob`
+    }
+
+    return (
+      <img id={getElementID(element)}
+        src={url}
+        onClick={this.props.onClick}
+        width={element.getIn(['attributes', 'width'])}
+        height={element.getIn(['attributes', 'height'])}/>
+    );
   }
 
   renderAccordion(element){

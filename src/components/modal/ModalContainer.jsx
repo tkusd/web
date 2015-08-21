@@ -1,12 +1,12 @@
 import React, {cloneElement} from 'react';
-import connectToStores from '../../decorators/connectToStores';
 
-@connectToStores(['ModalStore'], (stores, props) => ({
-  modals: stores.ModalStore.getList()
-}))
 class ModalContainer extends React.Component {
+  static propTypes = {
+    modals: React.PropTypes.object.isRequired
+  }
+
   render(){
-    const {modals} = this.state;
+    const {modals} = this.props;
 
     return (
       <div>
