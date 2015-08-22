@@ -6,9 +6,13 @@ export function extractAssetID(url){
   }
 }
 
+export function getBlobURL(apiEndpoint, id){
+  return `${apiEndpoint}assets/${id}/blob`;
+}
+
 export default function getAssetBlobURL(apiEndpoint, url){
   const id = extractAssetID(url);
   if (!id) return url;
 
-  return `${apiEndpoint}assets/${id}/blob`;
+  return getBlobURL(apiEndpoint, id);
 }

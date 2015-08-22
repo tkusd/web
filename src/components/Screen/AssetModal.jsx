@@ -5,7 +5,7 @@ import AssetChooser from './AssetChooser';
 import {FormattedMessage} from '../intl';
 import connectToStores from '../../decorators/connectToStores';
 import {InputGroup} from '../form';
-import startsWith from 'lodash/string/startsWith';
+import {extractAssetID} from '../../utils/getAssetBlobURL';
 
 if (process.env.BROWSER){
   require('../../styles/Screen/AssetModal.styl');
@@ -60,7 +60,8 @@ class AssetModal extends React.Component {
           <AssetChooser {...this.props}
             assets={assets}
             apiEndpoint={apiEndpoint}
-            ref="chooser"/>
+            ref="chooser"
+            viewMode="grid"/>
         </div>
       </TabPane>
     );
@@ -73,7 +74,7 @@ class AssetModal extends React.Component {
       <TabPane tab="URL">
         <InputGroup
           label="URL"
-          value={startsWith(url, ASSET_PREFIX) ? '' : url}
+          value={extractAssetID(url) ? '' : url}
           ref="input"/>
       </TabPane>
     );

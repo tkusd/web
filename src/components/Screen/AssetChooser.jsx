@@ -6,6 +6,7 @@ import * as AssetAction from '../../actions/AssetAction';
 import cx from 'classnames';
 import FontAwesome from '../common/FontAwesome';
 import startsWith from 'lodash/string/startsWith';
+import {getBlobURL} from '../../utils/getAssetBlobURL';
 
 if (process.env.BROWSER){
   require('../../styles/Screen/AssetChooser.styl');
@@ -46,11 +47,16 @@ class AssetChooser extends React.Component {
     assets: React.PropTypes.object.isRequired,
     projectID: React.PropTypes.string.isRequired,
     apiEndpoint: React.PropTypes.string.isRequired,
+    viewMode: React.PropTypes.oneOf(['list', 'grid']),
 
     // React DnD
     connectDropTarget: React.PropTypes.func.isRequired,
     isOver: React.PropTypes.bool.isRequired,
     canDrop: React.PropTypes.bool.isRequired
+  }
+
+  static defaultProps = {
+    viewMode: 'list'
   }
 
   constructor(props, context){
@@ -66,16 +72,21 @@ class AssetChooser extends React.Component {
       connectDropTarget,
       isOver,
       canDrop,
-      assets
+      assets,
+      viewMode
     } = this.props;
     const isDragging = isOver && canDrop;
 
+    // let className = cx('asset-chooser__list', {
+    //   'asset-chooser__grid': viewMode === 'grid'
+    // });
+
     return connectDropTarget(
       <div className="asset-chooser">
-        <div className="asset-chooser__list">
+        <div className={'asset-chooser__' + viewMode}>
           {assets.map(this.renderListItem.bind(this)).toArray()}
         </div>
-        {!assets.count() && !isDragging && <div className="asset-chooser__overlay">Drag to upload files...</div>}
+        {!assets.count() && !isDragging && <div className="asset-chooser__overlay">Drag files here to upload...</div>}
         {isDragging && <div className="asset-chooser__overlay--dragging">Drop to upload files...</div>}
       </div>
     );
@@ -99,20 +110,21 @@ class AssetChooser extends React.Component {
             {this.renderAssetIcon(asset)}
           </div>
         </div>
-        <strong className="asset-chooser__item-name">{asset.get('name')}</strong>
+        <span className="asset-chooser__item-name">{asset.get('name')}</span>
       </div>
     );
   }
 
   renderAssetIcon(asset){
-    const {apiEndpoint} = this.props;
+    const {apiEndpoint, viewMode} = this.props;
+    const id = asset.get('id');
 
-    if (asset.get('id')[0] === '_'){
+    if (id[0] === '_'){
       return <FontAwesome icon="circle-o-notch" spin/>;
     }
 
-    if (startsWith(asset.get('type'), 'image/')){
-      return <img src={`${apiEndpoint}assets/${asset.get('id')}/blob`}/>;
+    if (viewMode === 'grid' && startsWith(asset.get('type'), 'image/')){
+      return <img src={getBlobURL(apiEndpoint, id)}/>;
     }
 
     return <FontAwesome icon="file"/>;

@@ -2,6 +2,7 @@ import React from 'react';
 import ScreenPalette from './ScreenPalette';
 import ComponentPalette from './ComponentPalette';
 import SettingPalette from './SettingPalette';
+import AssetPalette from './AssetPalette';
 import pureRender from '../../decorators/pureRender';
 import FontAwesome from '../common/FontAwesome';
 import {TabHost, TabPane} from '../tab';
@@ -26,6 +27,7 @@ class ProjectSidebar extends React.Component {
           </TabPane>
           {this.renderComponentPalette()}
           {this.renderSettingPalette()}
+          {this.renderAssetPalette()}
         </TabHost>
         <div className="project-sidebar__links">
           <a href={this.makeDownloadHref()} className="project-sidebar__link" target="_blank" onClick={this.openDownloadWindow}>
@@ -55,6 +57,16 @@ class ProjectSidebar extends React.Component {
     return (
       <TabPane tab={<FontAwesome icon="cog"/>}>
         <SettingPalette {...this.props}/>
+      </TabPane>
+    );
+  }
+
+  renderAssetPalette(){
+    if (!this.props.editable) return;
+
+    return (
+      <TabPane tab={<FontAwesome icon="file-o"/>}>
+        <AssetPalette {...this.props}/>
       </TabPane>
     );
   }

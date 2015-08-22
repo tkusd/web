@@ -7,11 +7,13 @@ import NotFound from '../NotFound';
 import pureRender from '../../decorators/pureRender';
 import bindActions from '../../utils/bindActions';
 
-@connectToStores(['ProjectStore', 'ElementStore', 'ComponentStore'], (stores, props) => ({
+@connectToStores(['ProjectStore', 'ElementStore', 'ComponentStore', 'AppStore', 'AssetStore'], (stores, props) => ({
   project: stores.ProjectStore.getProject(props.params.projectID),
   elements: stores.ElementStore.getElementsOfProject(props.params.projectID),
   components: stores.ComponentStore.getList(),
-  editable: stores.ProjectStore.isEditable(props.params.projectID)
+  editable: stores.ProjectStore.isEditable(props.params.projectID),
+  apiEndpoint: stores.AppStore.getAPIEndpoint(),
+  assets: stores.AssetStore.getAssetsOfProject(props.params.projectID)
 }))
 @pureRender
 class ProjectContainer extends React.Component {
