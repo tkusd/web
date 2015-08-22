@@ -39,11 +39,12 @@ body
     bottom: 0
     background: color-accent
     width: 60%
-    animation: app-progress-bar 1.3s cubic-bezier(0.65, 0.815, 0.735, 0.395) infinite
 
 .application__progress-bar--active
   opacity: 1
   transition: opacity 0.2s
+  &:before
+    animation: app-progress-bar 1.3s cubic-bezier(0.65, 0.815, 0.735, 0.395) infinite
 
 @keyframes app-progress-bar
   0%
