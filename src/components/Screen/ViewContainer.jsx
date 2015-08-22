@@ -5,6 +5,7 @@ import ItemTypes from '../../constants/ItemTypes';
 import * as ElementAction from '../../actions/ElementAction';
 import bindActions from '../../utils/bindActions';
 import pureRender from '../../decorators/pureRender';
+import getAssetBlobURL from '../../utils/getAssetBlobURL';
 
 function getDropTargetType(props){
   const {element, components} = props;
@@ -38,6 +39,8 @@ class ViewContainer extends React.Component {
   }
 
   static propTypes = {
+    apiEndpoint: React.PropTypes.string.isRequired,
+
     // React DnD
     connectDropTarget: React.PropTypes.func.isRequired,
     isOver: React.PropTypes.bool.isRequired,
@@ -58,10 +61,12 @@ class ViewContainer extends React.Component {
   }
 
   render(){
-    const {connectDropTarget} = this.props;
+    const {connectDropTarget, apiEndpoint} = this.props;
 
     return connectDropTarget(
-      <View {...this.props} Container={ViewContainer}/>
+      <View {...this.props}
+        Container={ViewContainer}
+        getAssetURL={getAssetBlobURL.bind(this, apiEndpoint)}/>
     );
   }
 }

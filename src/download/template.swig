@@ -8,11 +8,11 @@
   <meta name="msapplication-tap-highlight" content="no">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *">
   {% if project.get('theme') === 'material' %}
-    <link rel="stylesheet" href="framework7/css/framework7.material.min.css">
-    <link rel="stylesheet" href="framework7/css/framework7.material.colors.min.css">
+    <link rel="stylesheet" type="text/css" href="framework7/css/framework7.material.min.css">
+    <link rel="stylesheet" type="text/css" href="framework7/css/framework7.material.colors.min.css">
   {% else %}
-    <link rel="stylesheet" href="framework7/css/framework7.ios.min.css">
-    <link rel="stylesheet" href="framework7/css/framework7.ios.colors.min.css">
+    <link rel="stylesheet" type="text/css" href="framework7/css/framework7.ios.min.css">
+    <link rel="stylesheet" type="text/css" href="framework7/css/framework7.ios.colors.min.css">
   {% endif %}
 </head>
 <body>

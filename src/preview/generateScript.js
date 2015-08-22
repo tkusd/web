@@ -14,6 +14,8 @@ import {
 import base62uuid from '../utils/base62uuid';
 import {actions} from '../constants/ElementTypes';
 import View from '../components/preview/View';
+import getAssetBlobURL from '../utils/getAssetBlobURL';
+import merge from 'lodash/object/merge';
 
 function getElementID(element){
   return '#e' + element.get('id');
@@ -129,20 +131,19 @@ function generateEvents(flux, projectID){
   }).reduce(flattenArray, []);
 }
 
-function generateViews(flux, projectID){
-  const {AppStore, ProjectStore, ElementStore} = flux.getStore();
+function generateViews(flux, projectID, options){
+  const {ProjectStore, ElementStore} = flux.getStore();
   const project = ProjectStore.getProject(projectID);
   const elements = ElementStore.getElementsOfProject(projectID);
   const mainScreen = project.get('main_screen');
-  const apiEndpoint = AppStore.getAPIEndpoint();
 
   let result = elements.filter(element => !element.get('element_id'))
     .map(element => (
       createElement(View, {
+        ...options,
         elements,
         project,
-        element,
-        apiEndpoint
+        element
       })
     ))
     .map(renderToStaticMarkup)
@@ -165,7 +166,7 @@ function generateViews(flux, projectID){
   return result;
 }
 
-function generateProgram(flux, projectID){
+function generateProgram(flux, projectID, options){
   const {ProjectStore} = flux.getStore();
   const project = ProjectStore.getProject(projectID);
 
@@ -189,16 +190,22 @@ function generateProgram(flux, projectID){
         generateLiteral('.view-main')
       ])
     ),
-    generateViews(flux, projectID),
+    generateViews(flux, projectID, options),
     generateActions(flux, projectID),
     generateEvents(flux, projectID)
   );
 }
 
-export default function generateScript(flux, projectID){
+export default function generateScript(flux, projectID, options){
+  const {AppStore} = flux.getStore();
+
+  options = merge({
+    getAssetURL: getAssetBlobURL.bind(this, AppStore.getAPIEndpoint())
+  }, options);
+
   let ast = {
     type: 'Program',
-    body: generateProgram(flux, projectID)
+    body: generateProgram(flux, projectID, options)
   };
 
   return escodegen.generate(ast, {

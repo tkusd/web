@@ -7,9 +7,11 @@ function getElementID(element){
   return 'e' + element.get('id');
 }
 
-const REGEX_ASSET = /^asset:([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$/;
-
 function noop(){}
+
+function getDirectURL(url){
+  return url;
+}
 
 class View extends React.Component {
   static propTypes = {
@@ -17,14 +19,15 @@ class View extends React.Component {
     elements: React.PropTypes.object.isRequired,
     Container: React.PropTypes.func.isRequired,
     onClick: React.PropTypes.func.isRequired,
-    apiEndpoint: React.PropTypes.string.isRequired,
-    onScroll: React.PropTypes.func.isRequired
+    onScroll: React.PropTypes.func.isRequired,
+    getAssetURL: React.PropTypes.func.isRequired
   }
 
   static defaultProps = {
     Container: NoopContainer,
     onClick: noop,
-    onScroll: noop
+    onScroll: noop,
+    getAssetURL: getDirectURL
   }
 
   getChildElements(parent){
@@ -260,25 +263,45 @@ class View extends React.Component {
   }
 
   renderListItem(element){
-    let className = cx('item-content', {
-      'item-link': element.getIn(['attributes', 'link'])
-    });
+    let className = 'item-content';
+    let media;
 
-    return (
-      <li>
-        <div id={getElementID(element)} className={className} onClick={this.props.onClick}>
-          {element.getIn(['attributes', 'media']) && (
-            <div className="item-media">{element.getIn(['attributes', 'media'])}</div>
-          )}
-          <div className="item-inner">
-            <div className="item-title">{element.getIn(['attributes', 'title'])}</div>
-            <div className="item-after">
-              {this.renderElements(this.getChildElements(element.get('id')))}
-            </div>
-          </div>
+    if (element.getIn(['attributes', 'media'])){
+      media = (
+        <div className="item-media">{element.getIn(['attributes', 'media'])}</div>
+      );
+    }
+
+    let content = (
+      <div className="item-inner">
+        <div className="item-title">{element.getIn(['attributes', 'title'])}</div>
+        <div className="item-after">
+          {this.renderElements(this.getChildElements(element.get('id')))}
         </div>
-      </li>
+      </div>
     );
+
+    if (element.getIn(['attributes', 'link'])){
+      className = cx(className, 'item-link');
+
+      return (
+        <li>
+          <a id={getElementID(element)} className={className} onClick={this.props.onClick}>
+            {media}
+            {content}
+          </a>
+        </li>
+      );
+    } else {
+      return (
+        <li>
+          <div id={getElementID(element)} className={className} onClick={this.props.onClick}>
+            {media}
+            {content}
+          </div>
+        </li>
+      );
+    }
   }
 
   renderListDivider(element){
@@ -334,18 +357,12 @@ class View extends React.Component {
   }
 
   renderImage(element){
-    const {apiEndpoint} = this.props;
+    const {getAssetURL} = this.props;
     const src = element.getIn(['attributes', 'src']);
-    let url = src;
-
-    if (REGEX_ASSET.test(src)){
-      const assetID = src.match(REGEX_ASSET)[1];
-      url = `${apiEndpoint}assets/${assetID}/blob`
-    }
 
     return (
       <img id={getElementID(element)}
-        src={url}
+        src={getAssetURL(src)}
         onClick={this.props.onClick}
         width={element.getIn(['attributes', 'width'])}
         height={element.getIn(['attributes', 'height'])}/>

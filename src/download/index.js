@@ -4,6 +4,8 @@ import xmlbuilder from 'xmlbuilder';
 import swig from 'swig';
 import generateScript from '../preview/generateScript';
 import path from 'path';
+import request from 'request';
+import {extractAssetID} from '../utils/getAssetBlobURL';
 
 swig.setDefaults({
   autoescape: false
@@ -67,9 +69,12 @@ export default function(req, res, next){
   const flux = req.flux;
 
   prepareFullProject(req).then(() => {
-    const {ProjectStore} = flux.getStore();
+    const {AppStore, ProjectStore, AssetStore, TokenStore} = flux.getStore();
     const projectID = req.params.id;
     const project = ProjectStore.getProject(projectID);
+    const assets = AssetStore.getAssetsOfProject(projectID);
+    const apiEndpoint = AppStore.getAPIEndpoint();
+    const token = TokenStore.getToken();
     const zip = archiver.create('zip', {});
 
     zip.on('error', next);
@@ -86,11 +91,30 @@ export default function(req, res, next){
     zip.append(html, {name: 'www/index.html'});
 
     // www/js/script.js
-    let script = '(function(){' + generateScript(flux, projectID) + '}()';
+    let script = generateScript(flux, projectID, {
+      getAssetURL(url){
+        let id = extractAssetID(url);
+        if (!id) return url;
+
+        const asset = assets.get(id);
+        if (asset) return 'assets/' + asset.get('name');
+      }
+    });
+
+    script = '(function(){' + script + '})()';
     zip.append(script, {name: 'www/js/script.js'});
 
     // www/framework7
     zip.directory(F7_DIST, 'www/framework7');
+
+    // www/assets
+    assets.forEach((asset, key) => {
+      zip.append(request(`${apiEndpoint}assets/${key}/blob`, {
+        headers: {
+          'Authorization': 'Bearer ' + token
+        }
+      }), {name: 'www/assets/' + asset.get('name')});
+    });
 
     zip.finalize();
   }).catch(err => {
