@@ -92,7 +92,8 @@ class AssetChooser extends React.Component {
     return (
       <div key={key}
         className={className}
-        onClick={this.selectAsset.bind(this, key)}>
+        onClick={this.selectAsset.bind(this, key)}
+        title={asset.get('name')}>
         <div className="asset-chooser__item-icon-wrap">
           <div className="asset-chooser__item-icon">
             {this.renderAssetIcon(asset)}

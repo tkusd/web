@@ -17,12 +17,14 @@ class View extends React.Component {
     elements: React.PropTypes.object.isRequired,
     Container: React.PropTypes.func.isRequired,
     onClick: React.PropTypes.func.isRequired,
-    apiEndpoint: React.PropTypes.string.isRequired
+    apiEndpoint: React.PropTypes.string.isRequired,
+    onScroll: React.PropTypes.func.isRequired
   }
 
   static defaultProps = {
     Container: NoopContainer,
-    onClick: noop
+    onClick: noop,
+    onScroll: noop
   }
 
   getChildElements(parent){
@@ -95,7 +97,7 @@ class View extends React.Component {
   }
 
   renderPage(element){
-    const {Container} = this.props;
+    const {Container, onScroll} = this.props;
     const id = element.get('id');
     const children = this.getChildElements(id);
     let content = [];
@@ -124,7 +126,7 @@ class View extends React.Component {
     });
 
     content.push(
-      <div className="page-content" key={id}>
+      <div className="page-content" key={id} onScroll={onScroll}>
         {this.renderElements(children.filter(element => (
           element.get('type') !== ElementTypes.navbar &&
           element.get('type') !== ElementTypes.toolbar
@@ -189,11 +191,19 @@ class View extends React.Component {
     switch (parent.get('type')){
     case 'toolbar':
     case 'navbar':
-    case 'card':
       className = 'link';
       break;
 
-    default:
+    case 'card':
+      let position = element.getIn(['attributes', 'position']);
+
+      if (position === 'header' || position === 'footer'){
+        className = 'link';
+        break;
+      }
+    }
+
+    if (!className){
       className = cx('button', {
         active: element.getIn(['attributes', 'active']),
         'button-round': element.getIn(['attributes', 'round']),

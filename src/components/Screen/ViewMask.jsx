@@ -1,5 +1,4 @@
 import React from 'react';
-import cx from 'classnames';
 import ViewContainer from './ViewContainer';
 import debounce from 'lodash/function/debounce';
 import Immutable from 'immutable';
@@ -18,8 +17,7 @@ class ViewMask extends React.Component {
     project: React.PropTypes.object.isRequired,
     selectElement: React.PropTypes.func.isRequired,
     activeElement: React.PropTypes.string,
-    hoverElements: React.PropTypes.object.isRequired,
-    screenSize: React.PropTypes.string.isRequired
+    hoverElements: React.PropTypes.object.isRequired
   }
 
   constructor(props, context){
@@ -36,7 +34,7 @@ class ViewMask extends React.Component {
       leading: true
     });
     this.handleNodeClick = this.handleNodeClick.bind(this);
-    this.handleOutsideClick = this.handleOutsideClick.bind(this);
+    this.updateRect = this.updateRect.bind(this);
   }
 
   componentDidMount(){
@@ -97,27 +95,12 @@ class ViewMask extends React.Component {
 
   render(){
     return (
-      <div className="view-mask" onClick={this.handleOutsideClick} ref="container">
-        {this.renderScreen()}
+      <div className="view-mask">
+        <ViewContainer {...this.props}
+          onClick={this.handleNodeClick}
+          onScroll={this.updateRect}/>
         {this.renderResizeArea()}
         {this.renderMask()}
-      </div>
-    );
-  }
-
-  renderScreen(){
-    const {project, screenSize, screenDimension} = this.props;
-    let [width, height] = screenSize.split('x');
-
-    if (screenDimension === 'horizontal'){
-      [height, width] = [width, height];
-    }
-
-    let style = {width, height};
-
-    return (
-      <div className={cx('view-mask__screen', project.get('theme'))} style={style}>
-        <ViewContainer {...this.props} onClick={this.handleNodeClick}/>
       </div>
     );
   }
@@ -229,12 +212,6 @@ class ViewMask extends React.Component {
     if (!target) return;
 
     this.props.selectElement(target.id.substring(1));
-  }
-
-  handleOutsideClick(e){
-    if (e.target !== this.refs.container) return;
-
-    this.props.selectElement(null);
   }
 }
 

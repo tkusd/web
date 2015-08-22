@@ -160,16 +160,21 @@ class AttributePalette extends React.Component {
 
     case 'asset':
       let btn = (
-        <button>{attr.get('label')}</button>
+        <button className="attribute-palette__choose-asset-btn">
+          <FontAwesome icon="file-o"/>Choose asset
+        </button>
       );
 
       return (
-        <ModalPortal key={key} trigger={btn}>
-          <AssetModal
-            projectID={project.get('id')}
-            url={value}
-            onSubmit={this.setValueInField.bind(this, ['attributes', key])}/>
-        </ModalPortal>
+        <div className="input-group" key={key}>
+          <label className="input-group__label">{attr.get('label')}</label>
+          <ModalPortal trigger={btn}>
+            <AssetModal
+              projectID={project.get('id')}
+              url={value}
+              onSubmit={this.setValueInField.bind(this, ['attributes', key])}/>
+          </ModalPortal>
+        </div>
       );
 
     case 'number':

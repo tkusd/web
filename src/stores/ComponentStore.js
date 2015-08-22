@@ -24,6 +24,10 @@ const COMPONENTS = [
     availableEventTypes: [
       events.click
     ],
+    availableChildTypes: [
+      ElementTypes.button,
+      ElementTypes.label
+    ],
     attributes: {
       title: {
         type: 'string',

@@ -5,6 +5,7 @@ import * as ElementAction from '../../actions/ElementAction';
 import bindActions from '../../utils/bindActions';
 import ElementSidebar from './ElementSidebar';
 import ViewMask from './ViewMask';
+import ViewContainer from './ViewContainer';
 import ScreenToolbar from './ScreenToolbar';
 import cx from 'classnames';
 
@@ -134,8 +135,13 @@ class Screen extends React.Component {
   }
 
   render(){
-    const {elements, editable} = this.state;
+    const {editable, project, screenSize, screenDimension} = this.state;
     const selectedScreen = this.props.params.screenID;
+    let [width, height] = screenSize.split('x');
+
+    if (screenDimension === 'horizontal'){
+      [height, width] = [width, height];
+    }
 
     let containerClassName = cx('screen__container', {
       'screen__container--full': editable
@@ -144,10 +150,10 @@ class Screen extends React.Component {
     return (
       <div className="screen">
         <div className={containerClassName}>
-          <div className="screen__content">
-            <ViewMask {...this.state}
-              element={elements.get(selectedScreen)}
-              selectElement={this.selectElement}/>
+          <div className="screen__content" onClick={this.handleOutsideClick} ref="content">
+            <div className={cx('screen__view', project.get('theme'))} style={{width, height}}>
+              {this.renderView()}
+            </div>
             <ScreenToolbar {...this.state}
               updateScreenSize={this.updateScreenSize}
               updateScreenDimension={this.updateScreenDimension}/>
@@ -160,6 +166,24 @@ class Screen extends React.Component {
           )}
         </div>
       </div>
+    );
+  }
+
+  renderView(){
+    const {editable, elements} = this.state;
+    const selectedScreen = this.props.params.screenID;
+    const element = elements.get(selectedScreen);
+
+    if (editable){
+      return (
+        <ViewMask {...this.state}
+          element={element}
+          selectElement={this.selectElement}/>
+      );
+    }
+
+    return (
+      <ViewContainer {...this.state} element={element}/>
     );
   }
 
@@ -178,6 +202,12 @@ class Screen extends React.Component {
     this.setState({
       screenDimension: dimension
     });
+  }
+
+  handleOutsideClick = (e) => {
+    if (e.target !== this.refs.content) return;
+
+    this.selectElement(null);
   }
 }
 
