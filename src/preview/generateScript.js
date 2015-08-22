@@ -130,17 +130,19 @@ function generateEvents(flux, projectID){
 }
 
 function generateViews(flux, projectID){
-  const {ProjectStore, ElementStore} = flux.getStore();
+  const {AppStore, ProjectStore, ElementStore} = flux.getStore();
   const project = ProjectStore.getProject(projectID);
   const elements = ElementStore.getElementsOfProject(projectID);
   const mainScreen = project.get('main_screen');
+  const apiEndpoint = AppStore.getAPIEndpoint();
 
   let result = elements.filter(element => !element.get('element_id'))
     .map(element => (
       createElement(View, {
         elements,
         project,
-        element
+        element,
+        apiEndpoint
       })
     ))
     .map(renderToStaticMarkup)

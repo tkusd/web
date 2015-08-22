@@ -10,6 +10,9 @@ export function createElement(payload){
 }
 
 export function createScreen(projectID, payload){
+  const {ProjectStore} = this.getStore();
+  const project = ProjectStore.getProject(projectID);
+
   return api(`projects/${projectID}/elements`, {
     method: 'post',
     body: payload
@@ -18,6 +21,11 @@ export function createScreen(projectID, payload){
     .then(parseJSON)
     .then(data => {
       this.dispatch(Actions.UPDATE_ELEMENT, data.id, data);
+
+      if (!project.get('main_screen')){
+        this.dispatch(Actions.UPDATE_PROJECT, project.set('main_screen', data.id).toJS());
+      }
+
       return data;
     });
 }
