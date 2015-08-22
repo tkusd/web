@@ -90,6 +90,7 @@ export function updateElementNow(){
 
 export function selectElement(id){
   this.dispatch(Actions.SELECT_ELEMENT, id);
+  this.dispatch(Actions.SELECT_ASSET, null);
 }
 
 export function deselectElement(){

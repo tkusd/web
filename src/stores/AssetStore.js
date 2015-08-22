@@ -3,6 +3,9 @@ import Actions from '../constants/Actions';
 import Immutable, {OrderedSet} from 'immutable';
 import uuid from 'node-uuid';
 import {api, parseJSON, filterError} from '../utils/request';
+import debounce from 'lodash/function/debounce';
+
+const DEBOUNCE_DELAY = 5000;
 
 function getAssetBody(asset){
   let form = new FormData();
@@ -27,7 +30,8 @@ class AssetStore extends CollectionStore {
     createAsset: Actions.CREATE_ASSET,
     updateAsset: Actions.UPDATE_ASSET,
     setList: Actions.UPDATE_ASSET_LIST,
-    deleteAsset: Actions.DELETE_ASSET
+    deleteAsset: Actions.DELETE_ASSET,
+    selectAsset: Actions.SELECT_ASSET
   }
 
   constructor(props, context){
@@ -36,6 +40,7 @@ class AssetStore extends CollectionStore {
     this.promise = Promise.resolve();
     this.queue = OrderedSet();
     this.currentTask = null;
+    this.selectedAsset = null;
   }
 
   getAsset(id){
@@ -51,19 +56,23 @@ class AssetStore extends CollectionStore {
     this.pushQueue(payload.id);
   }
 
-  updateAsset(payload){
-    this.set(payload.id, payload);
-    this.pushQueue(payload.id);
+  updateAsset(id, payload){
+    this.set(id, payload);
+    this.pushQueue(id, true);
   }
 
   deleteAsset(id){
+    if (this.selectedAsset === id){
+      this.selectedAsset = null;
+    }
+
     this.queue = this.queue.remove(id);
     this.remove(id);
 
     if (id[0] !== '_'){
       api(`assets/${id}`, {
         method: 'delete'
-      });
+      }, this.context);
     }
   }
 
@@ -84,6 +93,15 @@ class AssetStore extends CollectionStore {
     this.emitChange();
   }
 
+  selectAsset(id){
+    this.selectedAsset = id;
+    this.emitChange();
+  }
+
+  getSelectedAsset(){
+    return this.selectedAsset;
+  }
+
   hasUnsavedChanges(){
     if (this.currentTask) return true;
     return this.queue.count() > 0;
@@ -93,12 +111,17 @@ class AssetStore extends CollectionStore {
     return this.currentTask != null;
   }
 
-  pushQueue(id){
+  pushQueue(id, delay){
     if (this.hasUnsavedChanges()){
       this.queue = this.queue.add(id);
     } else {
       this.queue = this.queue.add(id);
-      this.enqueue();
+
+      if (delay){
+        this.debounceEnqueue();
+      } else {
+        this.enqueue();
+      }
     }
 
     this.emitChange();
@@ -142,6 +165,11 @@ class AssetStore extends CollectionStore {
         .then(parseJSON)
         .then(data => {
           this.data = this.data.remove(id).set(data.id, Immutable.fromJS(data));
+
+          if (this.selectedAsset === id){
+            this.selectedAsset = data.id;
+          }
+
           id = data.id;
         });
     }).catch(err => {
@@ -155,6 +183,10 @@ class AssetStore extends CollectionStore {
       }
     });
   }
+
+  debounceEnqueue = debounce(this.enqueue.bind(this), DEBOUNCE_DELAY, {
+    leading: false
+  })
 }
 
 export default AssetStore;

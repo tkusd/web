@@ -13,7 +13,8 @@ import bindActions from '../../utils/bindActions';
   components: stores.ComponentStore.getList(),
   editable: stores.ProjectStore.isEditable(props.params.projectID),
   apiEndpoint: stores.AppStore.getAPIEndpoint(),
-  assets: stores.AssetStore.getAssetsOfProject(props.params.projectID)
+  assets: stores.AssetStore.getAssetsOfProject(props.params.projectID),
+  selectedAsset: stores.AssetStore.getSelectedAsset()
 }))
 @pureRender
 class ProjectContainer extends React.Component {

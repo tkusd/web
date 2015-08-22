@@ -3,24 +3,37 @@ import TabPane from './TabPane';
 import cx from 'classnames';
 import pureRender from '../../decorators/pureRender';
 
+function noop(){}
+
 @pureRender
 class TabHost extends React.Component {
   static propTypes = {
-    initialIndex: React.PropTypes.number,
-    className: React.PropTypes.string
+    defaultIndex: React.PropTypes.number,
+    index: React.PropTypes.number,
+    className: React.PropTypes.string,
+    onChange: React.PropTypes.func
   }
 
   static defaultProps = {
-    initialIndex: 0,
-    className: ''
+    defaultIndex: 0,
+    className: '',
+    onChange: noop
   }
 
   constructor(props, context){
     super(props, context);
 
     this.state = {
-      currentIndex: this.props.initialIndex
+      currentIndex: this.props.hasOwnProperty('index') ? this.props.index : this.props.defaultIndex
     };
+  }
+
+  componentWillReceiveProps(nextProps){
+    if (nextProps.hasOwnProperty('index') && nextProps.index !== this.state.currentIndex){
+      this.setState({
+        index: nextProps.index
+      });
+    }
   }
 
   render(){
@@ -38,12 +51,17 @@ class TabHost extends React.Component {
       });
 
       tabs.push(
-        <a className={className} onClick={this.switchTab.bind(this, i)} key={i} title={child.props.title}>{child.props.tab}</a>
+        <a className={className}
+          onClick={this.switchTab.bind(this, i)}
+          key={i}
+          title={child.props.title}>
+          {child.props.tab}
+        </a>
       );
       tabContent.push(child.props.children);
     });
 
-    let className = cx(this.props.className, 'tab-host');
+    let className = cx('tab-host', this.props.className);
 
     return (
       <div className={className}>
@@ -57,6 +75,8 @@ class TabHost extends React.Component {
     this.setState({
       currentIndex: index
     });
+
+    this.props.onChange(index);
   }
 }
 

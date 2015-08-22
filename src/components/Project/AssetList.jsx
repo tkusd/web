@@ -9,8 +9,10 @@ import startsWith from 'lodash/string/startsWith';
 import {getBlobURL} from '../../utils/getAssetBlobURL';
 
 if (process.env.BROWSER){
-  require('../../styles/Screen/AssetChooser.styl');
+  require('../../styles/Project/AssetList.styl');
 }
+
+function noop(){}
 
 const ACCEPT_TYPES = ['image/jpeg', 'image/png', 'image/gif'];
 
@@ -38,7 +40,7 @@ const spec = {
   isOver: monitor.isOver(),
   canDrop: monitor.canDrop()
 }))
-class AssetChooser extends React.Component {
+class AssetList extends React.Component {
   static contextTypes = {
     flux: React.PropTypes.object.isRequired
   }
@@ -48,6 +50,8 @@ class AssetChooser extends React.Component {
     projectID: React.PropTypes.string.isRequired,
     apiEndpoint: React.PropTypes.string.isRequired,
     viewMode: React.PropTypes.oneOf(['list', 'grid']),
+    selectedAsset: React.PropTypes.string,
+    onItemClick: React.PropTypes.func.isRequired,
 
     // React DnD
     connectDropTarget: React.PropTypes.func.isRequired,
@@ -56,15 +60,8 @@ class AssetChooser extends React.Component {
   }
 
   static defaultProps = {
-    viewMode: 'list'
-  }
-
-  constructor(props, context){
-    super(props, context);
-
-    this.state = {
-      selectedAsset: null
-    };
+    viewMode: 'list',
+    onItemClick: noop
   }
 
   render(){
@@ -77,40 +74,36 @@ class AssetChooser extends React.Component {
     } = this.props;
     const isDragging = isOver && canDrop;
 
-    // let className = cx('asset-chooser__list', {
-    //   'asset-chooser__grid': viewMode === 'grid'
-    // });
-
     return connectDropTarget(
-      <div className="asset-chooser">
-        <div className={'asset-chooser__' + viewMode}>
+      <div className="asset-list">
+        <div className={'asset-list__' + viewMode}>
           {assets.map(this.renderListItem.bind(this)).toArray()}
         </div>
-        {!assets.count() && !isDragging && <div className="asset-chooser__overlay">Drag files here to upload...</div>}
-        {isDragging && <div className="asset-chooser__overlay--dragging">Drop to upload files...</div>}
+        {!assets.count() && !isDragging && <div className="asset-list__overlay">Drag files here to upload...</div>}
+        {isDragging && <div className="asset-list__overlay--dragging">Drop to upload files...</div>}
       </div>
     );
   }
 
   renderListItem(asset, key){
-    const {selectedAsset} = this.state;
+    const {selectedAsset} = this.props;
 
-    let className = cx('asset-chooser__item', {
-      'asset-chooser__item--active': selectedAsset === key,
-      'asset-chooser__item--new': key[0] === '_'
+    let className = cx('asset-list__item', {
+      'asset-list__item--active': selectedAsset === key,
+      'asset-list__item--new': key[0] === '_'
     });
 
     return (
       <div key={key}
         className={className}
-        onClick={this.selectAsset.bind(this, key)}
+        onClick={this.handleItemClick.bind(this, key)}
         title={asset.get('name')}>
-        <div className="asset-chooser__item-icon-wrap">
-          <div className="asset-chooser__item-icon">
+        <div className="asset-list__item-icon-wrap">
+          <div className="asset-list__item-icon">
             {this.renderAssetIcon(asset)}
           </div>
         </div>
-        <span className="asset-chooser__item-name">{asset.get('name')}</span>
+        <span className="asset-list__item-name">{asset.get('name')}</span>
       </div>
     );
   }
@@ -130,17 +123,9 @@ class AssetChooser extends React.Component {
     return <FontAwesome icon="file"/>;
   }
 
-  getSelectedAsset(){
-    return this.state.selectedAsset;
-  }
-
-  selectAsset(id){
-    if (id[0] === '_') return;
-
-    this.setState({
-      selectedAsset: id
-    });
+  handleItemClick(id){
+    this.props.onItemClick(id);
   }
 }
 
-export default AssetChooser;
+export default AssetList;

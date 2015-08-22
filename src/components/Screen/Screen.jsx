@@ -69,7 +69,8 @@ function loadThemeCSS(theme){
   events: stores.EventStore.getList(),
   actionDefinitions: stores.ActionStore.getDefinitions(),
   assets: stores.AssetStore.getAssetsOfProject(props.params.projectID),
-  apiEndpoint: stores.AppStore.getAPIEndpoint()
+  apiEndpoint: stores.AppStore.getAPIEndpoint(),
+  selectedAsset: stores.AssetStore.getSelectedAsset()
 }))
 @pureRender
 class Screen extends React.Component {

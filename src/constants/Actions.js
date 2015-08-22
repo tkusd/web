@@ -39,5 +39,6 @@ export default keyMirror({
   CREATE_ASSET: null,
   UPDATE_ASSET: null,
   UPDATE_ASSET_LIST: null,
-  DELETE_ASSET: null
+  DELETE_ASSET: null,
+  SELECT_ASSET: null
 });

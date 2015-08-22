@@ -1,7 +1,7 @@
 import React from 'react';
 import {Modal} from '../modal';
 import {TabHost, TabPane} from '../tab';
-import AssetChooser from './AssetChooser';
+import AssetList from '../Project/AssetList';
 import {FormattedMessage} from '../intl';
 import connectToStores from '../../decorators/connectToStores';
 import {InputGroup} from '../form';
@@ -30,6 +30,14 @@ class AssetModal extends React.Component {
     onSubmit: noop
   }
 
+  constructor(props, context){
+    super(props, context);
+
+    this.state = {
+      selectedAsset: null
+    };
+  }
+
   render(){
     const {closeModal} = this.props;
 
@@ -52,16 +60,17 @@ class AssetModal extends React.Component {
   }
 
   renderUploadTab(){
-    const {assets, apiEndpoint} = this.state;
+    const {assets, apiEndpoint, selectedAsset} = this.state;
 
     return (
       <TabPane tab="Assets">
         <div className="asset-modal__asset-list">
-          <AssetChooser {...this.props}
+          <AssetList {...this.props}
+            selectedAsset={selectedAsset}
             assets={assets}
             apiEndpoint={apiEndpoint}
-            ref="chooser"
-            viewMode="grid"/>
+            viewMode="grid"
+            onItemClick={this.selectAsset}/>
         </div>
       </TabPane>
     );
@@ -80,14 +89,21 @@ class AssetModal extends React.Component {
     );
   }
 
-  handleSubmit = () => {
-    const {chooser, input} = this.refs;
-    const {onSubmit, closeModal} = this.props;
+  selectAsset = (id) => {
+    this.setState({
+      selectedAsset: id
+    });
+  }
 
-    if (chooser){
-      onSubmit(ASSET_PREFIX + chooser.decoratedComponentInstance.getSelectedAsset());
-    } else if (input){
+  handleSubmit = () => {
+    const {input} = this.refs;
+    const {onSubmit, closeModal} = this.props;
+    const {selectedAsset} = this.state;
+
+    if (input){
       onSubmit(input.getValue());
+    } else if (selectedAsset) {
+      onSubmit(ASSET_PREFIX + selectedAsset);
     }
 
     closeModal();

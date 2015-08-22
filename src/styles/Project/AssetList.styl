@@ -1,12 +1,12 @@
 @import "nib"
 @import "../common"
 
-.asset-chooser
+.asset-list
   height: 100%
   position: relative
   overflow: auto
 
-.asset-chooser__overlay
+.asset-list__overlay
   position: absolute
   top: 0
   left: 0
@@ -17,49 +17,49 @@
   justify-content: center
   text-align: center
 
-.asset-chooser__overlay--dragging
-  @extend .asset-chooser__overlay
-  background: rgba(color-accent, 0.4)
+.asset-list__overlay--dragging
+  @extend .asset-list__overlay
+  background: rgba(color-accent, 0.6)
   color: #fff
 
-.asset-chooser__grid
+.asset-list__grid
   display: flex
   flex-flow: row wrap
   justify-content: flex-start
   align-items: flex-start
 
-.asset-chooser__item
+.asset-list__item
   cursor: pointer
   padding: padding-small padding-medium
-  .asset-chooser__list &
+  .asset-list__list &
     line-height: 1
     white-space: nowrap
     overflow: hidden
     text-overflow: ellipsis
-  .asset-chooser__grid &
+  .asset-list__grid &
     width: 120px
     text-align: center
     margin: auto
     border-radius: 8px
     margin: padding-small auto
 
-.asset-chooser__item--active
+.asset-list__item--active
   background: color-list-highlight
 
-.asset-chooser__item-icon-wrap
+.asset-list__item-icon-wrap
   overflow: hidden
   position: relative
-  .asset-chooser__list &
+  .asset-list__list &
     display: inline-block
     padding-right: 0.5em
-  .asset-chooser__grid &
+  .asset-list__grid &
     height: 0
     padding-top: 100%
 
-.asset-chooser__item-icon
-  .asset-chooser__list &
+.asset-list__item-icon
+  .asset-list__list &
     display: inline
-  .asset-chooser__grid &
+  .asset-list__grid &
     position: absolute
     top: 0
     left: 0
@@ -85,8 +85,8 @@
       max-height: 100%
       margin: auto
 
-.asset-chooser__item-name
-  .asset-chooser__grid &
+.asset-list__item-name
+  .asset-list__grid &
     display: block
     margin-top: padding-small
     line-height: 1em
