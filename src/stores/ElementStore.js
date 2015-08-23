@@ -1,6 +1,6 @@
 import CollectionStore from './CollectionStore';
 import Actions from '../constants/Actions';
-import Immutable, {OrderedSet} from 'immutable';
+import Immutable, {List, OrderedSet} from 'immutable';
 import uuid from 'node-uuid';
 import omit from 'lodash/object/omit';
 import {api, parseJSON, filterError} from '../utils/request';
@@ -13,13 +13,25 @@ function sortByIndex(a, b){
 }
 
 function getElementBody(element){
-  return {
+  let body = {
     is_visible: element.get('is_visible', true),
     name: element.get('name'),
-    styles: element.get('styles', {}),
-    attributes: element.get('attributes', {}),
     type: element.get('type')
   };
+
+  if (element.get('styles')){
+    body.styles = element.get('styles').toJS();
+  }
+
+  if (element.get('attributes')){
+    body.attributes = element.get('attributes').toJS();
+  }
+
+  if (element.get('elements')){
+    body.elements = element.get('elements').toJS();
+  }
+
+  return body;
 }
 
 class ElementStore extends CollectionStore {
@@ -193,7 +205,7 @@ class ElementStore extends CollectionStore {
             let newData = Immutable.fromJS(data);
 
             // Keep current data if the local data has been changed during update
-            if (Immutable.is(this.get(id), newData)){
+            if (Immutable.is(this.get(id).remove('elements'), newData)){
               this.set(id, data);
             }
           });
@@ -241,8 +253,24 @@ class ElementStore extends CollectionStore {
               map.set(data.id, oldData);
             }
           }).map(item => {
-            if (item.get('element_id') !== id) return item;
-            return item.set('element_id', data.id);
+            let newItem = item;
+
+            // Replace element_id of child elements
+            if (item.get('element_id') === id){
+              newItem = newItem.set('element_id', data.id);
+            }
+
+            // Replace id in elements
+            if (item.get('elements')){
+              const elements = item.get('elements');
+              let index = elements.indexOf(id);
+
+              if (~index){
+                newItem = newItem.set('elements', elements.set(index, data.id));
+              }
+            }
+
+            return newItem;
           });
 
           if (this.selectedElement === id){
@@ -287,12 +315,14 @@ class ElementStore extends CollectionStore {
 
   updateElementIndex(id, indexes){
     this.data = this.data.withMutations(map => {
+      map.set(id, map.get(id).set('elements', List(indexes)));
+
       indexes.forEach((item, i) => {
         map.set(item, map.get(item).set('index', i + 1));
       });
     });
 
-    this.emitChange();
+    this.pushQueue(id);
   }
 }
 
