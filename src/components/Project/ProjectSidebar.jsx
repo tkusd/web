@@ -85,7 +85,6 @@ class ProjectSidebar extends React.Component {
     e.preventDefault();
 
     const {project} = this.props;
-
     window.open(this.makePreviewHref(), project.get('id'), 'menubar=no, location=no, width=360, height=640, status=no');
   }
 

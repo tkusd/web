@@ -1,0 +1,53 @@
+@import "nib"
+@import "../common"
+
+.project-item
+  border-bottom: 1px solid color-divider
+  position: relative
+  &:last-child
+    border-bottom: none
+
+.project-item__link
+  color: inherit
+  text-decoration: none
+  display: block
+  padding: padding-medium padding-small
+
+.project-item__icon
+  margin-right: 0.5em
+
+.project-item__footer
+  font-size: 0.9em
+  color: color-secondary-text
+  padding-top: 0.5em
+
+.project-item__btn-group
+  position: absolute
+  top: 0
+  right: 0
+  bottom: 0
+  display: none
+  .project-item:hover &
+    display: block
+
+$project-item-btn
+  float: left
+  color: #bbb
+  text-decoration: none
+  font-size: 20px
+  margin-left: padding-small
+  cursor: pointer
+  padding: padding-medium padding-small
+  &:hover
+    color: color-accent
+
+.project-item__edit
+  @extend $project-item-btn
+
+.project-item__preview
+  @extend $project-item-btn
+
+.project-item__delete
+  @extend $project-item-btn
+  &:hover
+    color: color-error

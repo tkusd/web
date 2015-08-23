@@ -3,26 +3,25 @@ import connectToStores from '../../decorators/connectToStores';
 import * as ProjectAction from '../../actions/ProjectAction';
 import {ModalPortal} from '../modal';
 import NewProjectModal from './NewProjectModal';
-import {Link} from 'react-router';
 import pureRender from '../../decorators/pureRender';
 import FontAwesome from '../common/FontAwesome';
 import bindActions from '../../utils/bindActions';
 import {FormattedMessage} from '../intl';
+import ProjectItem from './ProjectItem';
 
 if (process.env.BROWSER){
   require('../../styles/Profile/ProjectList.styl');
 }
 
 @connectToStores(['ProjectStore'], (stores, props) => ({
-  projects: stores.ProjectStore.getList(props.params.userID).sort((a, b) => {
-    // Sort by created date
-    return new Date(b.get('created_at')).getTime() - new Date(a.get('created_at')).getTime();
-  })
+  projects: stores.ProjectStore.getList(props.params.userID).sort((a, b) => (
+    new Date(b.get('updated_at')).getTime() - new Date(a.get('updated_at')).getTime()
+  )),
+  pagination: stores.ProjectStore.getPagination(props.params.userID)
 }))
 @pureRender
 class ProjectList extends React.Component {
   static contextTypes = {
-    flux: React.PropTypes.object.isRequired,
     router: React.PropTypes.object.isRequired
   }
 
@@ -40,10 +39,14 @@ class ProjectList extends React.Component {
       return Promise.resolve();
     }
 
-    return getProjectList(state.params.userID);
+    return getProjectList(state.params.userID, {
+      order: '-updated_at'
+    });
   }
 
   render(){
+    const {pagination} = this.state;
+
     return (
       <div className="project-list">
         <header className="project-list__header">
@@ -55,8 +58,27 @@ class ProjectList extends React.Component {
         <div className="project-list__content">
           {this.renderList()}
         </div>
+        <footer className="project-list__footer">
+          {pagination.get('has_more') && (
+            <a className="project_list__more-btn" onClick={this.loadMoreProjects}>
+              Load more...
+            </a>
+          )}
+        </footer>
       </div>
     );
+  }
+
+  loadMoreProjects = (e) => {
+    e.preventDefault();
+
+    const {user} = this.props;
+    const {pagination} = this.state;
+    const {getProjectList} = bindActions(ProjectAction, this.context.flux);
+
+    getProjectList(user.get('id'), {
+      offset: pagination.get('offset') + pagination.get('limit')
+    });
   }
 
   renderPortal(){
@@ -77,35 +99,23 @@ class ProjectList extends React.Component {
   }
 
   renderList(){
-    const {projects} = this.state;
+    const {projects, pagination} = this.state;
 
-    if (projects.count()){
-      return (
-        <ul className="project-list__list">
-          {projects.map((item, key) => {
-            let linkTo = '/projects/' + key;
-
-            if (item.get('main_screen')){
-              linkTo += '/screens/' + item.get('main_screen');
-            }
-
-            return (
-              <li className="project-list__item" key={key}>
-                <Link className="project-list__item-link" to={linkTo}>
-                  <strong>{item.get('title')}</strong>
-                </Link>
-              </li>
-            );
-          }).toArray()}
-        </ul>
-      );
-    } else {
+    if (!projects.count()){
       return (
         <div className="project-list__empty">
           <FormattedMessage message="profile.no_projects"/>
         </div>
       );
     }
+
+    return (
+      <div className="project-list__list">
+        {projects.take(pagination.get('offset') + pagination.get('limit')).map((item, key) => (
+          <ProjectItem {...this.props} project={item} key={key}/>
+        )).toArray()}
+      </div>
+    );
   }
 }
 

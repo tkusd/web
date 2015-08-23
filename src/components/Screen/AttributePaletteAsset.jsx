@@ -67,7 +67,7 @@ class AttributePaletteAsset extends React.Component {
         </button>
         <h4>Attributes</h4>
         {Object.keys(attrs).map(key => (
-          <div className="input-group">
+          <div className="input-group" key={key}>
             <label className="input-group__label">{key}</label>
             {attrs[key]}
           </div>

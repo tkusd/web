@@ -3,7 +3,7 @@
 @import "../button"
 
 .project-list
-  padding: padding-large 0
+  padding-top: padding-large
 
 .project-list__header
   clearfix()
@@ -32,21 +32,18 @@
   color: color-text-black
 
 .project-list__list
-  list-style: none
-  margin: 0
   padding: 0 padding-medium
-
-.project-list__item
-  border-bottom: 1px solid color-divider
-  &:last-child
-    border-bottom: none
-
-.project-list__item-link
-  color: inherit
-  text-decoration: none
-  display: block
-  padding: padding-medium padding-small
 
 .project-list__empty
   padding: padding-medium
   text-align: center
+
+.project-list__footer
+  text-align: center
+  padding: padding-medium
+
+.project_list__more-btn
+  @extend $button-borderless
+  color: color-text
+  &:hover
+    background: lighten(color-background, 10%)

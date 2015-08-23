@@ -1,6 +1,7 @@
 import CollectionStore from './CollectionStore';
 import Actions from '../constants/Actions';
 import Immutable, {Map} from 'immutable';
+import omit from 'lodash/object/omit';
 
 class ProjectStore extends CollectionStore {
   static handlers = {
@@ -44,12 +45,19 @@ class ProjectStore extends CollectionStore {
   }
 
   setList(payload){
-    this.pagination = this.pagination.set(payload.user_id, payload);
+    const pagination = omit(payload, 'data');
+
+    this.pagination = this.pagination.set(payload.user_id, Immutable.fromJS(pagination));
+
     this.data = this.data.withMutations(data => {
       payload.data.forEach(item => data.set(item.id, Immutable.fromJS(item)));
     });
 
     this.emitChange();
+  }
+
+  getPagination(id){
+    return this.pagination.get(id);
   }
 
   isEditable(id){
@@ -61,6 +69,23 @@ class ProjectStore extends CollectionStore {
     if (!currentUser) return false;
 
     return currentUser.get('id') === project.get('user_id');
+  }
+
+  dehydrate(){
+    return {
+      ...super.dehydrate(),
+      pagination: this.pagination.toArray()
+    };
+  }
+
+  rehydrate(state){
+    super.rehydrate(state);
+
+    this.pagination = this.pagination.withMutations(function(data){
+      state.pagination.forEach(item => {
+        data.set(item.user_id, Immutable.fromJS(item));
+      });
+    });
   }
 }
 
