@@ -13,7 +13,7 @@ const MIME_TYPES = {
   'image/gif': 'GIF image'
 };
 
-// @pureRender
+@pureRender
 class AttributePaletteAsset extends React.Component {
   static contextTypes = {
     flux: React.PropTypes.object.isRequired
