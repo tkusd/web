@@ -202,12 +202,7 @@ class ElementStore extends CollectionStore {
           .then(filterError)
           .then(parseJSON)
           .then(data => {
-            let newData = Immutable.fromJS(data);
-
-            // Keep current data if the local data has been changed during update
-            if (Immutable.is(this.get(id).remove('elements'), newData)){
-              this.set(id, data);
-            }
+            this.set(id, Immutable.fromJS(data));
           });
       }
 
@@ -241,17 +236,8 @@ class ElementStore extends CollectionStore {
         .then(parseJSON)
         .then(data => {
           this.data = this.data.withMutations(map => {
-            let newData = Immutable.fromJS(data);
-            let oldData = this.get(id).set('id', data.id);
-
             map.remove(id);
-
-            // Keep current data if the local data has been changed during update
-            if (Immutable.is(newData, oldData)){
-              map.set(data.id, newData);
-            } else {
-              map.set(data.id, oldData);
-            }
+            map.set(data.id, Immutable.fromJS(data));
           }).map(item => {
             let newItem = item;
 

@@ -60,7 +60,8 @@ const spec = {
       type: item.type,
       project_id: element.project_id,
       element_id: element.id,
-      attributes
+      attributes,
+      is_visible: true
     });
 
     setTimeout(() => {
