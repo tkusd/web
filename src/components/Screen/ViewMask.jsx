@@ -3,6 +3,8 @@ import ViewContainer from './ViewContainer';
 import debounce from 'lodash/function/debounce';
 import Immutable from 'immutable';
 import pureRender from '../../decorators/pureRender';
+import ItemTypes from '../../constants/ItemTypes';
+import SortableElementList from './SortableElementList';
 
 if (process.env.BROWSER){
   require('../../styles/Screen/ViewMask.styl');
@@ -11,13 +13,17 @@ if (process.env.BROWSER){
 const DEBOUNCE_DELAY = 250;
 const RESIZE_AREA_SIZE = 4;
 
+@SortableElementList(ItemTypes.VIEW_ITEM)
 @pureRender
 class ViewMask extends React.Component {
   static propTypes = {
     project: React.PropTypes.object.isRequired,
     selectElement: React.PropTypes.func.isRequired,
     activeElement: React.PropTypes.string,
-    hoverElements: React.PropTypes.object.isRequired
+    hoverElements: React.PropTypes.object.isRequired,
+
+    // React DnD
+    connectDropTarget: React.PropTypes.func.isRequired
   }
 
   constructor(props, context){
@@ -94,7 +100,9 @@ class ViewMask extends React.Component {
   }
 
   render(){
-    return (
+    const {connectDropTarget} = this.props;
+
+    return connectDropTarget(
       <div className="view-mask">
         <ViewContainer {...this.props}
           onClick={this.handleNodeClick}

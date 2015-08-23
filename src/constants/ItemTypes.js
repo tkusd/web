@@ -5,5 +5,6 @@ export default keyMirror({
   NON_CONTAINER: null,
 
   ELEMENT_ITEM: null,
-  SCREEN_ITEM: null
+  SCREEN_ITEM: null,
+  VIEW_ITEM: null
 });

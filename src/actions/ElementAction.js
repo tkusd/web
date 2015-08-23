@@ -80,6 +80,10 @@ export function updateElement(id, payload){
   this.dispatch(Actions.UPDATE_ELEMENT, id, payload, true);
 }
 
+export function updateElementIndex(id, indexes){
+  this.dispatch(Actions.UPDATE_ELEMENT_INDEX, id, indexes);
+}
+
 export function deleteElement(id){
   this.dispatch(Actions.DELETE_ELEMENT, id);
 }

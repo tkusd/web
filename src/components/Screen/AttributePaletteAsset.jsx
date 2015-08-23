@@ -95,6 +95,8 @@ class AttributePaletteAsset extends React.Component {
     const {selectAsset, deleteAsset} = bindActions(AssetAction, this.context.flux);
     const {selectedAsset} = this.props;
 
+    if (!confirm('Are you sure?')) return;
+
     selectAsset(null);
     deleteAsset(selectedAsset);
   }

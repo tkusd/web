@@ -3,11 +3,14 @@ import Palette from '../Project/Palette';
 import ElementList from './ElementList';
 import {FormattedMessage} from '../intl';
 import pureRender from '../../decorators/pureRender';
+import SortableElementList from './SortableElementList';
+import ItemTypes from '../../constants/ItemTypes';
 
 if (process.env.BROWSER){
   require('../../styles/Screen/ElementPalette.styl');
 }
 
+@SortableElementList(ItemTypes.ELEMENT_ITEM)
 @pureRender
 class ElementPalette extends React.Component {
   static propTypes = {

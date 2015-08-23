@@ -24,7 +24,7 @@ const sourceSpec = {
       props.updateIndex();
     } else {
       const item = monitor.getItem();
-      props.moveScreen(item.id, item.originalIndex, true);
+      props.moveScreen(item.id, item.originalIndex);
     }
   }
 };

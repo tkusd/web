@@ -31,7 +31,8 @@ class ElementStore extends CollectionStore {
     selectElement: Actions.SELECT_ELEMENT,
     pushHoverElement: Actions.PUSH_HOVER_ELEMENT,
     popHoverElement: Actions.POP_HOVER_ELEMENT,
-    updateElementNow: Actions.UPDATE_ELEMENT_NOW
+    updateElementNow: Actions.UPDATE_ELEMENT_NOW,
+    updateElementIndex: Actions.UPDATE_ELEMENT_INDEX
   }
 
   constructor(context){
@@ -281,6 +282,16 @@ class ElementStore extends CollectionStore {
 
   popHoverElement(id){
     this.hoverElements = this.hoverElements.remove(id);
+    this.emitChange();
+  }
+
+  updateElementIndex(id, indexes){
+    this.data = this.data.withMutations(map => {
+      indexes.forEach((item, i) => {
+        map.set(item, map.get(item).set('index', i + 1));
+      });
+    });
+
     this.emitChange();
   }
 }

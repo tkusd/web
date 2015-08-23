@@ -2,38 +2,18 @@ import React from 'react';
 import ElementList from './ElementList';
 import cx from 'classnames';
 import FontAwesome from '../common/FontAwesome';
-import {DropTarget} from 'react-dnd';
 import ItemTypes from '../../constants/ItemTypes';
+import pureRender from '../../decorators/pureRender';
+import SortableElementItem from './SortableElementItem';
+import ComponentDropZone from './ComponentDropZone';
 
 if (process.env.BROWSER){
   require('../../styles/Screen/ElementItem.styl');
 }
 
-function getDropTargetType(props){
-  const {element, components} = props;
-  const component = components.get(element.get('type'));
-
-  if (component && component.get('container')){
-    return ItemTypes.CONTAINER;
-  } else {
-    return ItemTypes.NON_CONTAINER;
-  }
-}
-
-const spec = {
-  drop(props, monitor, {context}){
-    if (monitor.didDrop()) return;
-    return props.element.toJS();
-  }
-};
-
-@DropTarget(getDropTargetType, spec, (connect, monitor) => ({
-  connectDropTarget: connect.dropTarget(),
-  isOver: monitor.isOver({
-    shallow: true
-  }),
-  canDrop: monitor.canDrop()
-}))
+@SortableElementItem(ItemTypes.ELEMENT_ITEM)
+@ComponentDropZone
+@pureRender
 class ElementItem extends React.Component {
   static contextTypes = {
     flux: React.PropTypes.object.isRequired
@@ -48,9 +28,9 @@ class ElementItem extends React.Component {
     hoverElements: React.PropTypes.object.isRequired,
 
     // React DnD
-    connectDropTarget: React.PropTypes.func.isRequired,
     isOver: React.PropTypes.bool.isRequired,
-    canDrop: React.PropTypes.bool.isRequired
+    canDrop: React.PropTypes.bool.isRequired,
+    isDragging: React.PropTypes.bool.isRequired
   }
 
   constructor(props, context){
@@ -69,9 +49,9 @@ class ElementItem extends React.Component {
       elements,
       element,
       activeElement,
-      connectDropTarget,
       isOver,
       canDrop,
+      isDragging,
       hoverElements
     } = this.props;
     const {expanded} = this.state;
@@ -83,10 +63,11 @@ class ElementItem extends React.Component {
     let classname = cx('element-item', {
       'element-item--selected': activeElement === element.get('id'),
       'element-item--expanded': expanded,
-      'element-item--over': (isOver && canDrop) || (hoverElements.last() === id)
+      'element-item--over': (isOver && canDrop) || (hoverElements.last() === id),
+      'element-item--dragging': isDragging
     });
 
-    return connectDropTarget(
+    return (
       <li className={classname}>
         <div className="element-item__content">
           <a className="element-item__toggle" onClick={this.toggleList}>
