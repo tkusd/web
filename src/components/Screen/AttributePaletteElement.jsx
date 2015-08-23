@@ -76,6 +76,7 @@ class AttributePaletteElement extends React.Component {
 
     const parent = elements.get(element.get('element_id'));
     const elementEvents = events.filter(event => event.get('element_id') === activeElement);
+    const isScreen = element.get('type') === ElementTypes.screen;
     let parentComponent;
 
     if (parent){
@@ -93,7 +94,13 @@ class AttributePaletteElement extends React.Component {
           validators={[
             validators.required('Name is required')
           ]}/>
-        {element.get('type') === ElementTypes.screen && (
+        {!isScreen && (
+          <Checkbox className="attribute-palette__visible-checkbox"
+            value={element.get('is_visible')}
+            label="Visible"
+            onChange={this.handleInputChange.bind(this, ['is_visible'])}/>
+        )}
+        {isScreen && (
           <button className="attribute-palette__main-screen-btn"
             onClick={this.updateMainScreen}
             disabled={project.get('main_screen') === element.get('id')}>

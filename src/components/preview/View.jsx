@@ -31,7 +31,8 @@ class View extends React.Component {
   }
 
   getChildElements(parent){
-    return this.props.elements.filter(element => element.get('element_id') === parent);
+    return this.props.elements.filter(element => element.get('element_id') === parent)
+      .filter(element => element.get('is_visible'));
   }
 
   render(){

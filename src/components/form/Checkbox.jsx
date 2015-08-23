@@ -1,4 +1,6 @@
 import React, {PropTypes} from 'react';
+import cx from 'classnames';
+import omit from 'lodash/object/omit';
 
 if (process.env.BROWSER){
   require('../../styles/form/Checkbox.styl');
@@ -14,7 +16,8 @@ class Checkbox extends React.Component {
     ]),
     onChange: PropTypes.func,
     value: PropTypes.any,
-    defaultValue: PropTypes.any
+    defaultValue: PropTypes.any,
+    className: PropTypes.string
   }
 
   static defaultProps = {
@@ -45,8 +48,8 @@ class Checkbox extends React.Component {
     const {label} = this.props;
 
     return (
-      <label className="checkbox">
-        <input {...this.props}
+      <label className={cx('checkbox', this.props.className)}>
+        <input {...omit(this.props, 'label', 'className')}
           className="checkbox__input"
           type="checkbox"
           onChange={this.handleChange}

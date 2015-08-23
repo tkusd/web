@@ -59,12 +59,14 @@ class ElementItem extends React.Component {
     const id = element.get('id');
     const children = elements.filter(item => item.get('element_id') === id);
     const hasChildren = children.count() > 0;
+    const hidden = !element.get('is_visible');
 
     let classname = cx('element-item', {
       'element-item--selected': activeElement === element.get('id'),
       'element-item--expanded': expanded,
       'element-item--over': (isOver && canDrop) || (hoverElements.last() === id),
-      'element-item--dragging': isDragging
+      'element-item--dragging': isDragging,
+      'element-item--hidden': hidden
     });
 
     return (
@@ -75,6 +77,11 @@ class ElementItem extends React.Component {
           </a>
           <a className="element-item__name" onClick={this.handleClick}>{element.get('name')}</a>
         </div>
+        {hidden && (
+          <div className="element-item__hidden-icon">
+            <FontAwesome icon="eye-slash"/>
+          </div>
+        )}
         {expanded && <ElementList {...this.props} parent={id}/>}
       </li>
     );

@@ -1,6 +1,9 @@
 @import "nib"
 @import "../common"
 
+.element-item
+  position: relative
+
 .element-item__content
   clearfix()
   position: relative
@@ -10,6 +13,10 @@
     background: color-list-highlight
   .element-item--over > &
     background: rgba(color-accent, 0.5)
+  .element-item--hidden > &
+    color: color-secondary-text
+    .element-item__name
+      padding-right: 32px
 
 .element-item--dragging
   visibility: hidden
@@ -28,7 +35,7 @@
   white-space: nowrap
   overflow: hidden
   text-overflow: ellipsis
-  padding: padding-small 0 padding-small 20px
+  padding: padding-small padding-small padding-small 20px
   display: block
 
 .element-item__dropdown
@@ -44,3 +51,12 @@
   line-height: 30px
   &:hover
     background: #666
+
+.element-item__hidden-icon
+  position: absolute
+  top: 0
+  right: padding-small
+  bottom: 0
+  margin: auto
+  height: 1em
+  line-height: 1
