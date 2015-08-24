@@ -63,7 +63,9 @@ class NewProjectModal extends React.Component {
             onChange={this.handleRadioChange.bind(this)}>
             {Radio => (
               <div className="new-project-modal__radio-group">
-                <div className="new-project-modal__radio-group-title">Theme</div>
+                <div className="new-project-modal__radio-group-title">
+                  <FormattedMessage message="project.theme"/>
+                </div>
                 <label className="new-project-modal__radio">
                   <Radio value="ios"/>
                   <FontAwesome icon="apple"/>iOS

@@ -107,6 +107,15 @@ class ElementStore extends CollectionStore {
       data.remove(id);
       EventStore.deleteEventsOfElement(id);
       this.deleteChildElement(data, id);
+    }).map(item => {
+      let newItem = item;
+
+      if (item.get('elements')){
+        const elements = item.get('elements');
+        newItem = newItem.set('elements', elements.remove(id));
+      }
+
+      return newItem;
     });
 
     this.emitChange();

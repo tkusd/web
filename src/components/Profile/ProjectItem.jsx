@@ -1,7 +1,7 @@
 import React from 'react';
 import {Link} from 'react-router';
 import FontAwesome from '../common/FontAwesome';
-import {FormattedRelative} from '../intl';
+import {FormattedMessage, FormattedRelative} from '../intl';
 import {ModalPortal} from '../modal';
 import DeleteProjectModal from '../Project/DeleteProjectModal';
 
@@ -37,7 +37,9 @@ class ProjectItem extends React.Component {
           <FontAwesome className="project-item__icon" icon={project.get('is_private') ? 'lock' : 'globe'}/>
           <strong>{project.get('title')}</strong>
           <footer className="project-item__footer">
-            Updated at <FormattedRelative value={project.get('updated_at')}/>
+            <FormattedMessage
+              message="project.updated_at"
+              date={<FormattedRelative value={project.get('updated_at')}/>}/>
           </footer>
         </Link>
         <div className="project-item__btn-group">

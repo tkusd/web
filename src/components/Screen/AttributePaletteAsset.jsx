@@ -6,11 +6,12 @@ import * as AssetAction from '../../actions/AssetAction';
 import pureRender from '../../decorators/pureRender';
 import FontAwesome from '../common/FontAwesome';
 import prettyBytes from 'pretty-bytes';
+import {FormattedMessage} from '../intl';
 
 const MIME_TYPES = {
-  'image/jpeg': 'JPEG image',
-  'image/png': 'PNG image',
-  'image/gif': 'GIF image'
+  'image/jpeg': 'mime.jpeg',
+  'image/png': 'mime.png',
+  'image/gif': 'mime.gif'
 };
 
 @pureRender
@@ -32,25 +33,38 @@ class AttributePaletteAsset extends React.Component {
   render(){
     const asset = this.getActiveAsset();
 
-    let attrs = {};
+    let attrs = [];
 
     if (asset.get('size')){
-      attrs.Size = prettyBytes(asset.get('size'));
+      attrs.push([
+        <FormattedMessage message="project.size"/>,
+        prettyBytes(asset.get('size'))
+      ]);
     }
 
     if (asset.get('width') && asset.get('height')){
-      attrs.Dimension = `${asset.get('width')} x ${asset.get('height')}`;
+      attrs.push([
+        <FormattedMessage message="project.dimension"/>,
+        `${asset.get('width')} x ${asset.get('height')}`
+      ]);
     }
 
     if (asset.get('type')){
-      attrs.Type = MIME_TYPES[asset.get('type')] || asset.get('type');
+      let type = asset.get('type');
+
+      attrs.push([
+        <FormattedMessage message="project.type"/>,
+        MIME_TYPES.hasOwnProperty(type)
+          ? <FormattedMessage message={MIME_TYPES[type]}/>
+          : type
+      ]);
     }
 
     return (
       <div className="attribute-palette">
         <InputGroup
           type="text"
-          label="Name"
+          label={<FormattedMessage message="common.name"/>}
           value={asset.get('name')}
           onChange={this.handleInputChange.bind(this, ['name'])}
           required
@@ -59,17 +73,20 @@ class AttributePaletteAsset extends React.Component {
           ]}/>
         <InputGroup
           type="textarea"
-          label="Description"
+          label={<FormattedMessage message="project.description"/>}
           value={asset.get('description')}
           onChange={this.handleInputChange.bind(this, ['description'])}/>
         <button className="attribute-palette__delete-btn" onClick={this.deleteAsset}>
-          <FontAwesome icon="trash-o"/>Delete
+          <FontAwesome icon="trash-o"/>
+          <FormattedMessage message="common.delete"/>
         </button>
-        <h4>Attributes</h4>
-        {Object.keys(attrs).map(key => (
-          <div className="input-group" key={key}>
+        <h4>
+          <FormattedMessage message="project.attributes"/>
+        </h4>
+        {attrs.map(([key, value], i) => (
+          <div className="input-group" key={i}>
             <label className="input-group__label">{key}</label>
-            {attrs[key]}
+            {value}
           </div>
         ))}
       </div>

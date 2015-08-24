@@ -3,6 +3,7 @@ import Palette from './Palette';
 import AssetList from './AssetList';
 import * as AssetAction from '../../actions/AssetAction';
 import bindActions from '../../utils/bindActions';
+import {FormattedMessage} from '../intl';
 
 class AssetPalette extends React.Component {
   static contextTypes = {
@@ -18,7 +19,7 @@ class AssetPalette extends React.Component {
     const {project} = this.props;
 
     return (
-      <Palette title="Assets">
+      <Palette title={<FormattedMessage message="project.assets"/>}>
         <AssetList {...this.props}
           projectID={project.get('id')}
           viewMode="list"

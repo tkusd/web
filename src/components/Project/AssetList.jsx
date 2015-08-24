@@ -79,8 +79,16 @@ class AssetList extends React.Component {
         <div className={'asset-list__' + viewMode}>
           {assets.map(this.renderListItem.bind(this)).toArray()}
         </div>
-        {!assets.count() && !isDragging && <div className="asset-list__overlay">Drag files here to upload...</div>}
-        {isDragging && <div className="asset-list__overlay--dragging">Drop to upload files...</div>}
+        {!assets.count() && !isDragging && (
+          <div className="asset-list__overlay">
+            <FormattedMessage message="project.drag_asset_hint"/>
+          </div>
+        )}
+        {isDragging && (
+          <div className="asset-list__overlay--dragging">
+            <FormattedMessage message="project.drop_asset_hint"/>
+          </div>
+        )}
       </div>
     );
   }

@@ -40,7 +40,9 @@ class EventModal extends React.Component {
     const {actionValue} = this.state;
 
     return (
-      <Modal title={event ? 'Edit event' : 'New event'} onDismiss={closeModal} large>
+      <Modal
+        title={<FormattedMessage message={event ? 'project.edit_event' : 'project.new_event'}/>}
+        onDismiss={closeModal} large>
         <div className="event-modal__select-wrap">
           {this.renderEventSelector()}
           {this.renderActionSelector()}
@@ -71,7 +73,9 @@ class EventModal extends React.Component {
 
     return (
       <div className="event-modal__select">
-        <label className="event-modal__select-label">Event</label>
+        <label className="event-modal__select-label">
+          <FormattedMessage message="project.event"/>
+        </label>
         <Select value={eventValue}
           options={options}
           onChange={this.handleSelectChange.bind(this, 'eventValue')}
@@ -98,7 +102,9 @@ class EventModal extends React.Component {
 
     return (
       <div className="event-modal__select">
-        <label className="event-modal__select-label">Action</label>
+        <label className="event-modal__select-label">
+          <FormattedMessage message="project.action"/>
+        </label>
         <Select value={actionValue}
           options={options}
           onChange={this.handleSelectChange.bind(this, 'actionValue')}

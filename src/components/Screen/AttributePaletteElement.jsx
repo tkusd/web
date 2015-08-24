@@ -11,6 +11,7 @@ import FontAwesome from '../common/FontAwesome';
 import ElementTypes from '../../constants/ElementTypes';
 import {ModalPortal} from '../modal';
 import AssetModal from './AssetModal';
+import {FormattedMessage} from '../intl';
 
 const DEBOUNCE_DELAY = 250;
 
@@ -87,7 +88,7 @@ class AttributePaletteElement extends React.Component {
       <div>
         <InputGroup
           type="text"
-          label="Name"
+          label={<FormattedMessage message="common.name"/>}
           value={element.get('name')}
           onChange={this.handleInputChange.bind(this, ['name'])}
           required
@@ -97,22 +98,26 @@ class AttributePaletteElement extends React.Component {
         {!isScreen && (
           <Checkbox className="attribute-palette__visible-checkbox"
             value={element.get('is_visible')}
-            label="Visible"
+            label={<FormattedMessage message="project.visible"/>}
             onChange={this.handleInputChange.bind(this, ['is_visible'])}/>
         )}
         {isScreen && (
           <button className="attribute-palette__main-screen-btn"
             onClick={this.updateMainScreen}
             disabled={project.get('main_screen') === element.get('id')}>
-            <FontAwesome icon="mobile"/>Set as main screen
+            <FontAwesome icon="mobile"/>
+            <FormattedMessage message="project.set_as_main_screen"/>
           </button>
         )}
         <button className="attribute-palette__delete-btn" onClick={this.deleteElement}>
-          <FontAwesome icon="trash-o"/>Delete
+          <FontAwesome icon="trash-o"/>
+          <FormattedMessage message="common.delete"/>
         </button>
         {component.has('attributes') && (
           <div>
-            <h4>Attributes</h4>
+            <h4>
+              <FormattedMessage message="project.attributes"/>
+            </h4>
             {component.get('attributes')
               .map(this.renderAttributeField.bind(this)).toArray()}
             {parentComponent && parentComponent.get('childAttributes') &&
@@ -162,7 +167,8 @@ class AttributePaletteElement extends React.Component {
     case 'asset':
       let btn = (
         <button className="attribute-palette__choose-asset-btn">
-          <FontAwesome icon="file-o"/>Choose asset
+          <FontAwesome icon="file-o"/>
+          <FormattedMessage message="project.choose_asset"/>
         </button>
       );
 

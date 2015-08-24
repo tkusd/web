@@ -5,6 +5,7 @@ class LocaleStore extends BaseStore {
     super(context);
 
     this.locales = [];
+    this.formats = {};
     this.messages = {};
     this.language = 'en';
   }
@@ -13,23 +14,30 @@ class LocaleStore extends BaseStore {
     return this.locales;
   }
 
+  getFormats(){
+    return this.formats;
+  }
+
   getMessages(){
     return this.messages;
   }
 
   getMessage(key){
     const split = key.split('.');
-    let message;
+    let result = this.messages;
+    let len = split.length;
 
-    try {
-      message = split.reduce((messages, part) => messages[part], this.messages);
-    } finally {
-      if (message == null) {
-        message = key;
+    if (!result) return key;
+
+    for (let i = 0; i < len; i++){
+      if (!result.hasOwnProperty(split[i])){
+        return key;
       }
+
+      result = result[split[i]];
     }
 
-    return message;
+    return result;
   }
 
   getLanguage(){
@@ -43,6 +51,7 @@ class LocaleStore extends BaseStore {
 
   setData(data){
     this.locales = data.locales;
+    this.formats = data.formats;
     this.messages = data.messages;
   }
 

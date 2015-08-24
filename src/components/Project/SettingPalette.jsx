@@ -82,7 +82,9 @@ class SettingPalette extends React.Component {
               onChange={this.handleRadioChange.bind(this, 'theme')}>
               {Radio => (
                 <div className="setting-palette__radio-group">
-                  <div className="setting-palette__radio-group-title">Theme</div>
+                  <div className="setting-palette__radio-group-title">
+                    <FormattedMessage message="project.theme"/>
+                  </div>
                   <label className="setting-palette__radio">
                     <Radio value="ios"/>
                     <FontAwesome icon="apple"/>iOS

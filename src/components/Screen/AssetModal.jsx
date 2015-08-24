@@ -42,7 +42,8 @@ class AssetModal extends React.Component {
     const {closeModal} = this.props;
 
     return (
-      <Modal title="Choose asset" onDismiss={closeModal} large>
+      <Modal title={<FormattedMessage message="project.choose_asset"/>}
+        onDismiss={closeModal} large>
         <TabHost className="asset-modal__tabs">
           {this.renderUploadTab()}
           {this.renderURLTab()}
@@ -63,7 +64,7 @@ class AssetModal extends React.Component {
     const {assets, apiEndpoint, selectedAsset} = this.state;
 
     return (
-      <TabPane tab="Assets">
+      <TabPane tab={<FormattedMessage message="project.assets"/>}>
         <div className="asset-modal__asset-list">
           <AssetList {...this.props}
             selectedAsset={selectedAsset}

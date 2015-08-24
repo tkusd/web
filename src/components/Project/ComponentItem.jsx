@@ -7,6 +7,7 @@ import bindActions from '../../utils/bindActions';
 import pureRender from '../../decorators/pureRender';
 import uuid from 'node-uuid';
 import assign from 'lodash/object/assign';
+import {FormattedMessage} from '../intl';
 
 if (process.env.BROWSER){
   require('../../styles/Project/ComponentItem.styl');
@@ -97,7 +98,7 @@ class ComponentItem extends React.Component {
 
     return connectDragSource(
       <div className={className}>
-        {component.get('type')}
+        <FormattedMessage message={'component.' + component.get('type')}/>
       </div>
     , 'copy');
   }

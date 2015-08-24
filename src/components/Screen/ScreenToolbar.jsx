@@ -3,6 +3,7 @@ import pureRender from '../../decorators/pureRender';
 import FontAwesome from '../common/FontAwesome';
 import * as ElementAction from '../../actions/ElementAction';
 import bindActions from '../../utils/bindActions';
+import {FormattedMessage} from '../intl';
 
 if (process.env.BROWSER){
   require('../../styles/Screen/ScreenToolbar.styl');
@@ -39,13 +40,18 @@ class ScreenToolbar extends React.Component {
     if (isSavingChanges){
       return (
         <span className="screen-toolbar__loading">
-          <FontAwesome icon="circle-o-notch" spin/>Saving...
+          <FontAwesome icon="circle-o-notch" spin/>
+          <FormattedMessage message="project.saving"/>
         </span>
       );
     } else if (hasUnsavedChanges){
-      return <a className="screen-toolbar__save-btn" onClick={this.saveNow}>Save now</a>;
+      return (
+        <a className="screen-toolbar__save-btn" onClick={this.saveNow}>
+          <FormattedMessage message="project.save_now"/>
+        </a>
+      );
     } else {
-      return 'Saved';
+      return <FormattedMessage message="project.saved"/>;
     }
   }
 

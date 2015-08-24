@@ -1,6 +1,10 @@
 module.exports = {
   locales: ['zh-Hant-TW'],
 
+  formats: {
+    //
+  },
+
   messages: {
     common: {
       ok: '確定',
@@ -49,27 +53,32 @@ module.exports = {
       delete_project: '刪除專案',
       delete_project_prompt: '您確定要刪除此專案嗎？',
       elements: '元素',
-      select_screen_hint: '請選擇螢幕。',
       attributes: '屬性',
-      select_element_hint: '請選擇元素。',
-      top: '上',
-      bottom: '下',
-      left: '左',
-      right: '右',
-      width: '長度',
-      height: '寬度',
-      position: '位置',
-      style: '樣式',
-      opacity: '透明度',
-      default: '預設',
       position_relative: '相對',
       position_absolute: '絕對',
       position_fixed: '固定',
-      delete_screen: '刪除螢幕',
-      delete_screen_prompt: '您確定要刪除此螢幕嗎？',
       set_as_main_screen: '設為主螢幕',
       no_elements: '沒有元素。',
-      share: '分享'
+      theme: '主題',
+      updated_at: '{date}更新',
+      assets: '資源',
+      size: '大小',
+      dimension: '尺寸',
+      type: '類型',
+      events: '事件',
+      text: '文字',
+      event: '事件',
+      action: '行動',
+      new_event: '新增事件',
+      edit_event: '編輯事件',
+      new_action_hint: '點擊以新增行動',
+      saving: '儲存中...',
+      visible: '顯示',
+      choose_asset: '選擇資源',
+      drag_asset_hint: '把檔案拖移到這裡上傳...',
+      drop_asset_hint: '放開以上傳檔案...',
+      saved: '已儲存',
+      save_now: '立刻儲存'
     },
     settings: {
       profile: '個人資料',
@@ -78,6 +87,26 @@ module.exports = {
       current_password: '目前密碼',
       new_password: '新密碼',
       delete_account_prompt: '您確定要刪除此帳號嗎？您的所有專案都會被刪除且無法復原。'
+    },
+    mime: {
+      jpeg: 'JPEG 圖片',
+      png: 'PNG 圖片',
+      gif: 'GIF 圖片'
+    },
+    component: {
+      navbar: '導覽列',
+      toolbar: '工具列',
+      label: '標籤',
+      card: '卡片',
+      button: '按鈕',
+      block: '區塊',
+      buttonRow: '按鈕列',
+      list: '清單',
+      listItem: '清單項目',
+      listDivider: '清單分隔線',
+      listGroup: '清單群組',
+      image: '圖片',
+      accordion: '擴展式元件'
     }
   }
 };

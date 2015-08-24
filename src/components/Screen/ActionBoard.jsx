@@ -5,6 +5,7 @@ import Immutable, {OrderedSet} from 'immutable';
 import bindActions from '../../utils/bindActions';
 import * as ActionAction from '../../actions/ActionAction';
 import FontAwesome from '../common/FontAwesome';
+import {FormattedMessage} from '../intl';
 
 if (process.env.BROWSER){
   require('../../styles/Screen/ActionBoard.styl');
@@ -70,7 +71,7 @@ class ActionBoard extends React.Component {
     } else {
       content = (
         <div className="action-board__hint">
-          Click here to create a new action
+          <FormattedMessage message="project.new_action_hint"/>
         </div>
       );
     }
@@ -80,7 +81,8 @@ class ActionBoard extends React.Component {
         {content}
         {isSaving && (
           <div className="action-board__saving-hint">
-            <FontAwesome icon="circle-o-notch" spin/>Saving...
+            <FontAwesome icon="circle-o-notch" spin/>
+            <FormattedMessage message="project.saving"/>
           </div>
         )}
       </div>

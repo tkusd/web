@@ -1,6 +1,10 @@
 module.exports = {
   locales: ['en'],
 
+  formats: {
+    //
+  },
+
   messages: {
     common: {
       ok: 'OK',
@@ -49,27 +53,31 @@ module.exports = {
       delete_project: 'Delete project',
       delete_project_prompt: 'Are you sure you want to delete this project?',
       elements: 'Elements',
-      select_screen_hint: 'Please select a screen.',
       attributes: 'Attributes',
-      select_element_hint: 'Please select a element.',
-      top: 'Top',
-      bottom: 'Bottom',
-      left: 'Left',
-      right: 'Right',
       width: 'Width',
       height: 'Height',
-      position: 'Position',
-      style: 'Style',
-      opacity: 'Opacity',
-      default: 'Default',
-      position_relative: 'Relative',
-      position_absolute: 'Absolute',
-      position_fixed: 'Fixed',
-      delete_screen: 'Delete screen',
-      delete_screen_prompt: 'Are you sure you want to delete this screen?',
       set_as_main_screen: 'Set as main screen',
       no_elements: 'No elements.',
-      share: 'Share'
+      theme: 'Theme',
+      updated_at: 'Updated {date}',
+      assets: 'Assets',
+      size: 'Size',
+      dimension: 'Dimension',
+      type: 'Type',
+      events: 'Events',
+      text: 'Text',
+      event: 'Event',
+      action: 'Action',
+      new_event: 'New event',
+      edit_event: 'Edit event',
+      new_action_hint: 'Click here to create a new action',
+      saving: 'Saving...',
+      visible: 'Visible',
+      choose_asset: 'Choose asset',
+      drag_asset_hint: 'Drag files here to upload...',
+      drop_asset_hint: 'Drop to upload files...',
+      saved: 'Saved',
+      save_now: 'Save now'
     },
     settings: {
       profile: 'Profile',
@@ -78,6 +86,26 @@ module.exports = {
       current_password: 'Current password',
       new_password: 'New password',
       delete_account_prompt: 'Are you sure you want to delete this account? All your projects will be deleted and can\'t be undone.'
+    },
+    mime: {
+      jpeg: 'JPEG image',
+      png: 'PNG image',
+      gif: 'GIF image'
+    },
+    component: {
+      navbar: 'Navigation bar',
+      toolbar: 'Toolbar',
+      label: 'Label',
+      card: 'Card',
+      button: 'Button',
+      block: 'Block',
+      buttonRow: 'Button row',
+      list: 'List',
+      listItem: 'List item',
+      listDivider: 'List divider',
+      listGroup: 'List group',
+      image: 'Image',
+      accordion: 'Accordion'
     }
   }
 };
