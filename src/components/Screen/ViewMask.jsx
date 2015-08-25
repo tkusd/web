@@ -1,10 +1,12 @@
 import React from 'react';
+import {findDOMNode} from 'react-dom';
 import ViewContainer from './ViewContainer';
 import debounce from 'lodash/function/debounce';
 import Immutable from 'immutable';
 import pureRender from '../../decorators/pureRender';
 import ItemTypes from '../../constants/ItemTypes';
 import SortableElementList from './SortableElementList';
+import cx from 'classnames';
 
 if (process.env.BROWSER){
   require('../../styles/Screen/ViewMask.styl');
@@ -21,6 +23,9 @@ class ViewMask extends React.Component {
     selectElement: React.PropTypes.func.isRequired,
     activeElement: React.PropTypes.string,
     hoverElements: React.PropTypes.object.isRequired,
+    screenSize: React.PropTypes.string.isRequired,
+    screenDimension: React.PropTypes.string.isRequired,
+    screenScale: React.PropTypes.number.isRequired,
 
     // React DnD
     connectDropTarget: React.PropTypes.func.isRequired
@@ -94,19 +99,41 @@ class ViewMask extends React.Component {
   }
 
   componentDidUpdate(prevProps){
-    if (!Immutable.is(this.props.elements, prevProps.elements)){
+    if (!Immutable.is(this.props.elements, prevProps.elements) ||
+      this.props.screenSize !== prevProps.screenSize ||
+      this.props.screenDimension !== prevProps.screenDimension ||
+      this.props.screenScale !== prevProps.screenScale){
       this.updateRect();
     }
   }
 
   render(){
-    const {connectDropTarget} = this.props;
+    const {
+      connectDropTarget,
+      screenSize,
+      screenDimension,
+      project,
+      screenScale
+    } = this.props;
+    let [width, height] = screenSize.split('x');
+
+    if (screenDimension === 'horizontal'){
+      [height, width] = [width, height];
+    }
+
+    let style = {
+      width,
+      height,
+      transform: `scale(${screenScale})`
+    };
 
     return connectDropTarget(
-      <div className="view-mask">
-        <ViewContainer {...this.props}
-          onClick={this.handleNodeClick}
-          onScroll={this.updateRect}/>
+      <div className="view-mask" onClick={this.handleOutsideClick}>
+        <div className={cx('view-mask__container', project.get('theme'))} style={style}>
+          <ViewContainer {...this.props}
+            onClick={this.handleNodeClick}
+            onScroll={this.updateRect}/>
+        </div>
         {this.renderResizeArea()}
         {this.renderMask()}
       </div>
@@ -220,6 +247,13 @@ class ViewMask extends React.Component {
     if (!target) return;
 
     this.props.selectElement(target.id.substring(1));
+  }
+
+  handleOutsideClick = (e) => {
+    if (e.target !== findDOMNode(this)) return;
+
+    const {selectElement} = this.props;
+    selectElement(null);
   }
 }
 

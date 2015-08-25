@@ -5,7 +5,6 @@ import * as ElementAction from '../../actions/ElementAction';
 import bindActions from '../../utils/bindActions';
 import ElementSidebar from './ElementSidebar';
 import ViewMask from './ViewMask';
-import ViewContainer from './ViewContainer';
 import ScreenToolbar from './ScreenToolbar';
 import cx from 'classnames';
 import Mousetrap from 'mousetrap';
@@ -108,13 +107,15 @@ class Screen extends React.Component {
 
     this.state = {
       screenSize: '360x640',
-      screenDimension: 'landscape'
+      screenDimension: 'landscape',
+      screenScale: 1
     };
 
     this.routerWillLeave = this.routerWillLeave.bind(this);
     this.selectElement = this.selectElement.bind(this);
     this.updateScreenSize = this.updateScreenSize.bind(this);
     this.updateScreenDimension = this.updateScreenDimension.bind(this);
+    this.updateScreenScale = this.updateScreenScale.bind(this);
     this.saveNow = this.saveNow.bind(this);
   }
 
@@ -140,13 +141,8 @@ class Screen extends React.Component {
   }
 
   render(){
-    const {editable, project, screenSize, screenDimension} = this.state;
+    const {editable, elements} = this.state;
     const selectedScreen = this.props.params.screenID;
-    let [width, height] = screenSize.split('x');
-
-    if (screenDimension === 'horizontal'){
-      [height, width] = [width, height];
-    }
 
     let containerClassName = cx('screen__container', {
       'screen__container--full': editable
@@ -155,13 +151,14 @@ class Screen extends React.Component {
     return (
       <div className="screen">
         <div className={containerClassName}>
-          <div className="screen__content" onClick={this.handleOutsideClick} ref="content">
-            <div className={cx('screen__view', project.get('theme'))} style={{width, height}}>
-              {this.renderView()}
-            </div>
+          <div className="screen__content" ref="content">
+            <ViewMask {...this.state}
+              element={elements.get(selectedScreen)}
+              selectElement={this.selectElement}/>
             <ScreenToolbar {...this.state}
               updateScreenSize={this.updateScreenSize}
-              updateScreenDimension={this.updateScreenDimension}/>
+              updateScreenDimension={this.updateScreenDimension}
+              updateScreenScale={this.updateScreenScale}/>
           </div>
           {editable && (
             <ElementSidebar
@@ -171,24 +168,6 @@ class Screen extends React.Component {
           )}
         </div>
       </div>
-    );
-  }
-
-  renderView(){
-    const {editable, elements} = this.state;
-    const selectedScreen = this.props.params.screenID;
-    const element = elements.get(selectedScreen);
-
-    if (editable){
-      return (
-        <ViewMask {...this.state}
-          element={element}
-          selectElement={this.selectElement}/>
-      );
-    }
-
-    return (
-      <ViewContainer {...this.state} element={element}/>
     );
   }
 
@@ -209,10 +188,10 @@ class Screen extends React.Component {
     });
   }
 
-  handleOutsideClick = (e) => {
-    if (e.target !== this.refs.content) return;
-
-    this.selectElement(null);
+  updateScreenScale(scale){
+    this.setState({
+      screenScale: scale
+    });
   }
 
   saveNow(e){

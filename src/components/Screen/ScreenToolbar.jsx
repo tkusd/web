@@ -9,6 +9,18 @@ if (process.env.BROWSER){
   require('../../styles/Screen/ScreenToolbar.styl');
 }
 
+const SCALE_OPTIONS = [0.5, 0.7, 0.9, 1, 1.1, 1.3, 1.5];
+
+const SIZE_OPTIONS = {
+  '320x480': 'iPhone 4',
+  '320x568': 'iPhone 5',
+  '375x667': 'iPhone 6',
+  '414x736': 'iPhone 6 Plus',
+  '384x640': 'Nexus 4',
+  '360x640': 'Nexus 5',
+  '412x732': 'Nexus 6'
+};
+
 @pureRender
 class ScreenToolbar extends React.Component {
   static contextTypes = {
@@ -21,6 +33,7 @@ class ScreenToolbar extends React.Component {
     screenSize: React.PropTypes.string.isRequired,
     updateScreenSize: React.PropTypes.func.isRequired,
     updateScreenDimension: React.PropTypes.func.isRequired,
+    updateScreenScale: React.PropTypes.func.isRequired,
     editable: React.PropTypes.bool.isRequired
   }
 
@@ -56,24 +69,30 @@ class ScreenToolbar extends React.Component {
   }
 
   renderResizeSelect(){
-    const {screenSize} = this.props;
+    const {screenSize, screenScale} = this.props;
 
     return (
       <div className="screen-toolbar__resize">
-      <select value={screenSize} onChange={this.handleScreenResize}>
-        <option value="320x480">Apple iPhone 4 (320x480)</option>
-        <option value="320x568">Apple iPhone 5 (320x568)</option>
-        <option value="375x667">Apple iPhone 6 (375x667)</option>
-        <option value="414x736">Apple iPhone 6 Plus (414x736)</option>
-        <option value="384x640">Google Nexus 4 (384x640)</option>
-        <option value="360x640">Google Nexus 5 (360x640)</option>
-        <option value="412x732">Google Nexus 6 (412x732)</option>
-      </select>
+        <select value={screenScale} onChange={this.handleScreenScale}>
+          {SCALE_OPTIONS.map((scale, i) => (
+            <option value={scale} key={i}>{Math.floor(scale * 100)}%</option>
+          ))}
+        </select>
+        <select value={screenSize} onChange={this.handleScreenResize}>
+          {Object.keys(SIZE_OPTIONS).map((size, i) => (
+            <option value={size} key={i}>{SIZE_OPTIONS[size]} ({size})</option>
+          ))}
+        </select>
         <button className="screen-toolbar__swap-btn" onClick={this.swapScreenDimension}>
           <FontAwesome icon="refresh"/>
         </button>
       </div>
     );
+  }
+
+  handleScreenScale = (e) => {
+    const {updateScreenScale} = this.props;
+    updateScreenScale(+e.target.value);
   }
 
   handleScreenResize = (e) => {
