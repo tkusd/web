@@ -8,6 +8,7 @@ import ViewMask from './ViewMask';
 import ViewContainer from './ViewContainer';
 import ScreenToolbar from './ScreenToolbar';
 import cx from 'classnames';
+import Mousetrap from 'mousetrap';
 
 if (process.env.BROWSER){
   require('../../styles/Screen/Screen.styl');
@@ -114,14 +115,17 @@ class Screen extends React.Component {
     this.selectElement = this.selectElement.bind(this);
     this.updateScreenSize = this.updateScreenSize.bind(this);
     this.updateScreenDimension = this.updateScreenDimension.bind(this);
+    this.saveNow = this.saveNow.bind(this);
   }
 
   componentDidMount(){
     this.context.router.addTransitionHook(this.routerWillLeave);
+    Mousetrap.bind(['command+s', 'ctrl+s'], this.saveNow);
   }
 
   componentWillUnmount(){
     this.context.router.removeTransitionHook(this.routerWillLeave);
+    Mousetrap.unbind(['command+s', 'ctrl+s'], this.saveNow);
   }
 
   componentWillUpdate(nextProps, nextState){
@@ -209,6 +213,13 @@ class Screen extends React.Component {
     if (e.target !== this.refs.content) return;
 
     this.selectElement(null);
+  }
+
+  saveNow(e){
+    e.preventDefault();
+
+    const {updateElementNow} = bindActions(ElementAction, this.context.flux);
+    updateElementNow();
   }
 }
 
