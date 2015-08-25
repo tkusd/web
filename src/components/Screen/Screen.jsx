@@ -7,9 +7,11 @@ import ElementSidebar from './ElementSidebar';
 import ViewMask from './ViewMask';
 import ScreenToolbar from './ScreenToolbar';
 import cx from 'classnames';
-import Mousetrap from 'mousetrap';
+
+let Mousetrap;
 
 if (process.env.BROWSER){
+  Mousetrap = require('mousetrap');
   require('../../styles/Screen/Screen.styl');
 }
 
