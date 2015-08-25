@@ -107,6 +107,33 @@ module.exports = {
       listGroup: '清單群組',
       image: '圖片',
       accordion: '擴展式元件'
+    },
+    action: {
+      alert: {
+        name: '警告',
+        description: '開啟警告視窗。'
+      },
+      confirm: {
+        name: '確認',
+        description: `開啟確認視窗。用於向使用者確認某些行動。`
+      },
+      prompt: {
+        name: '詢問',
+        description: `開啟詢問視窗。用於向使用者取得某些資料。`
+      },
+      transition: {
+        name: '切換頁面',
+        description: '載入指定頁面。'
+      },
+      back: {
+        name: '返回',
+        description: '返回至上一頁。'
+      }
+    },
+    event: {
+      click: '點擊',
+      enter: '進入',
+      leave: '離開'
     }
   }
 };

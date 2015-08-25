@@ -1,12 +1,17 @@
 import React from 'react';
 import Select from 'react-select';
 import {InputGroup} from '../form';
+import {formatIntlFromContext} from '../../utils/formatIntl';
 
 if (process.env.BROWSER){
   require('../../styles/Screen/ActionNode.styl');
 }
 
 class ActionNode extends React.Component {
+  static contextTypes = {
+    flux: React.PropTypes.object.isRequired
+  }
+
   static propTypes = {
     action: React.PropTypes.object.isRequired,
     actionDefinitions: React.PropTypes.object.isRequired,
@@ -15,11 +20,12 @@ class ActionNode extends React.Component {
 
   render(){
     const {action, actionDefinitions} = this.props;
+    const intl = formatIntlFromContext(this.context.flux);
 
     let options = actionDefinitions.map((definition, key) => ({
       value: key,
-      label: definition.get('name'),
-      description: definition.get('description')
+      label: intl.getIntlMessage(`action.${key}.name`),
+      description: intl.getIntlMessage(`action.${key}.description`)
     })).toArray();
 
     return (

@@ -5,6 +5,7 @@ import ActionBoard from './ActionBoard';
 import Select from 'react-select';
 import bindActions from '../../utils/bindActions';
 import * as EventAction from '../../actions/EventAction';
+import {formatIntlFromContext} from '../../utils/formatIntl';
 
 if (process.env.BROWSER){
   require('../../styles/Screen/EventModal.styl');
@@ -51,6 +52,9 @@ class EventModal extends React.Component {
           <ActionBoard {...this.props} actionID={actionValue} ref="board"/>
         </div>
         <div className="modal__btn-group">
+          {event && <button className="modal__btn--danger event-modal__delete-btn" onClick={this.deleteEvent}>
+            <FormattedMessage message="common.delete"/>
+          </button>}
           <button className="modal__btn" onClick={closeModal}>
             <FormattedMessage message="common.cancel"/>
           </button>
@@ -65,10 +69,11 @@ class EventModal extends React.Component {
   renderEventSelector(){
     const {component} = this.props;
     const {eventValue, isSaving} = this.state;
+    const intl = formatIntlFromContext(this.context.flux);
 
     let options = component.get('availableEventTypes').map(event => ({
       value: event,
-      label: event
+      label: intl.getIntlMessage('event.' + event)
     })).toArray();
 
     return (
@@ -85,19 +90,17 @@ class EventModal extends React.Component {
   }
 
   renderActionSelector(){
-    const {actions, actionDefinitions} = this.props;
+    const {actions} = this.props;
     const {actionValue, isSaving} = this.state;
+    const intl = formatIntlFromContext(this.context.flux);
 
     let options = actions
       .filter(action => !action.get('action_id'))
-      .map((action, key) => {
-        const definition = actionDefinitions.get(action.get('action'));
-
-        return {
-          value: key,
-          label: definition.get('name') + (action.get('name') ? ' - ' + action.get('name') : '')
-        };
-      })
+      .map((action, key) => ({
+        value: key,
+        label: intl.getIntlMessage(`action.${action.get('action')}.name`) +
+          (action.get('name') ? ' - ' + action.get('name') : '')
+      }))
       .toArray();
 
     return (
@@ -158,6 +161,14 @@ class EventModal extends React.Component {
     }).catch(err => {
       console.error(err);
     });
+  }
+
+  deleteEvent = () => {
+    const {deleteEvent} = bindActions(EventAction, this.context.flux);
+    const {event, closeModal} = this.props;
+
+    closeModal();
+    deleteEvent(event.get('id'));
   }
 }
 

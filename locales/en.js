@@ -106,6 +106,33 @@ module.exports = {
       listGroup: 'List group',
       image: 'Image',
       accordion: 'Accordion'
+    },
+    action: {
+      alert: {
+        name: 'Alert',
+        description: 'Open an alert modal.'
+      },
+      confirm: {
+        name: 'Confirm',
+        description: `Open a confirm modal. It's used when it is required to confirm some action.`
+      },
+      prompt: {
+        name: 'Prompt',
+        description: `Open a prompt modal. It's used when it is required to get some data from user.`
+      },
+      transition: {
+        name: 'Transition',
+        description: 'Load the specified page.'
+      },
+      back: {
+        name: 'Back',
+        description: 'Go back to the previous page.'
+      }
+    },
+    event: {
+      click: 'Click',
+      enter: 'Enter',
+      leave: 'Leave'
     }
   }
 };

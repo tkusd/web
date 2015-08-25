@@ -5,8 +5,6 @@ import {actions as ElementActionTypes} from '../constants/ElementTypes';
 
 const ACTIONS = Immutable.fromJS({
   [ElementActionTypes.alert]: {
-    name: 'Alert',
-    description: 'Open an alert modal.',
     data: {
       text: {
         type: 'string',
@@ -19,8 +17,6 @@ const ACTIONS = Immutable.fromJS({
     }
   },
   [ElementActionTypes.confirm]: {
-    name: 'Confirm',
-    description: `Open a confirm modal. It's used when it is required to confirm some action.`,
     data: {
       text: {
         type: 'string',
@@ -33,8 +29,6 @@ const ACTIONS = Immutable.fromJS({
     }
   },
   [ElementActionTypes.prompt]: {
-    name: 'Prompt',
-    description: `Open a prompt modal. It's used when it is required to get some data from user.`,
     data: {
       text: {
         type: 'string',
@@ -47,8 +41,6 @@ const ACTIONS = Immutable.fromJS({
     }
   },
   [ElementActionTypes.transition]: {
-    name: 'Transition',
-    description: 'Load the specified page.',
     data: {
       screen: {
         type: 'select',
