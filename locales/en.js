@@ -133,6 +133,29 @@ module.exports = {
       click: 'Click',
       enter: 'Enter',
       leave: 'Leave'
+    },
+    color: {
+      red: 'Red',
+      pink: 'Pink',
+      purple: 'Purple',
+      deeppurple: 'Deep purple',
+      indigo: 'Indigo',
+      blue: 'Blue',
+      lightblue: 'Light blue',
+      cyan: 'Cyan',
+      teal: 'Teal',
+      green: 'Green',
+      lightgreen: 'Light green',
+      lime: 'Lime',
+      yellow: 'Yellow',
+      amber: 'Amber',
+      orange: 'Orange',
+      deeporange: 'Deep orange',
+      brown: 'Brown',
+      gray: 'Gray',
+      bluegray: 'Blue gray',
+      white: 'White',
+      black: 'Black'
     }
   }
 };

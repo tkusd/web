@@ -134,6 +134,29 @@ module.exports = {
       click: '點擊',
       enter: '進入',
       leave: '離開'
+    },
+    color: {
+      red: '紅色',
+      pink: '粉紅色',
+      purple: '紫色',
+      deeppurple: '深紫色',
+      indigo: '靛色',
+      blue: '藍色',
+      lightblue: '粉藍色',
+      cyan: '青色',
+      teal: '鴨綠色',
+      green: '綠色',
+      lightgreen: '粉綠色',
+      lime: '萊姆綠',
+      yellow: '黃色',
+      amber: '琥珀色',
+      orange: '橘色',
+      deeporange: '深橘色',
+      brown: '棕色',
+      gray: '灰色',
+      bluegray: '藍灰色',
+      white: '白色',
+      black: '黑色'
     }
   }
 };

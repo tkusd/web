@@ -26,8 +26,8 @@ class ProjectSidebar extends React.Component {
             <ScreenPalette {...this.props}/>
           </TabPane>
           {this.renderComponentPalette()}
-          {this.renderSettingPalette()}
           {this.renderAssetPalette()}
+          {this.renderSettingPalette()}
         </TabHost>
         <div className="project-sidebar__links">
           <a href={this.makeDownloadHref()} className="project-sidebar__link" target="_blank" onClick={this.openDownloadWindow}>

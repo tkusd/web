@@ -13,7 +13,7 @@ const COMPONENTS = [
     ],
     attributes: {
       theme: {
-        type: 'string',
+        type: 'theme',
         label: 'Theme'
       }
     }

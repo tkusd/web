@@ -1,5 +1,5 @@
 import React from 'react';
-import {InputGroup, Checkbox} from '../form';
+import {InputGroup, Checkbox, ThemePalette} from '../form';
 import {validators} from 'react-form-input';
 import bindActions from '../../utils/bindActions';
 import * as ElementAction from '../../actions/ElementAction';
@@ -181,6 +181,16 @@ class AttributePaletteElement extends React.Component {
               url={value}
               onSubmit={this.setValueInField.bind(this, ['attributes', key])}/>
           </ModalPortal>
+        </div>
+      );
+
+    case 'theme':
+      return (
+        <div className="input-group" key={key}>
+          <label className="input-group__label">{attr.get('label')}</label>
+          <ThemePalette palette={project.get('theme')}
+            value={value}
+            onChange={this.setValueInField.bind(this, ['attributes', key])}/>
         </div>
       );
 
