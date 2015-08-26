@@ -105,7 +105,9 @@ export default {
       cssnano({
         autoprefixer: false,
         zindex: false,
-        reduceIdents: false
+        reduceIdents: false,
+        // Disable convertValues temporarily because postcss-value-parser has bugs
+        convertValues: false
       })
     ];
   }

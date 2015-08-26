@@ -1,5 +1,7 @@
 import postcss from 'postcss';
 
+const rTranslate3d = /translate3d\((.+?), *(.+?), *(.+?)\)/;
+
 export default postcss.plugin('f7', function(options = {}){
   return function(css, result){
     const {input} = css.source;
@@ -19,6 +21,10 @@ export default postcss.plugin('f7', function(options = {}){
       if (options.prefix){
         rule.selector = rule.selectors.map(selector => options.prefix + ' ' + selector).join(', ');
       }
+    });
+
+    css.replaceValues(rTranslate3d, {fast: 'translate3d'}, str => {
+      return str.replace(rTranslate3d, 'translate($1, $2)');
     });
   };
 });
