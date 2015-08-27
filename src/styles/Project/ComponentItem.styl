@@ -5,6 +5,75 @@
   padding: padding-small padding-medium
   user-select: none
   cursor: default
+  width: 50%
 
 .component-item--dragging
   background: color-list-highlight
+
+.component-item__name
+  font-size: 0.9em
+  text-align: center
+  padding-top: 0.5em
+
+$component-item-icon
+  width: 50px
+  height: 50px
+  background-repeat: no-repeat
+  background-position: center
+  background-size: 100%
+  opacity: 0.7
+  margin: auto
+  .component-item--dragging &
+    opacity: 1
+
+.component-item__navbar-icon
+  @extend $component-item-icon
+  background-image: url("../../assets/navbar.png")
+
+.component-item__toolbar-icon
+  @extend $component-item-icon
+  background-image: url("../../assets/toolbar.png")
+
+.component-item__label-icon
+  @extend $component-item-icon
+  background-image: url("../../assets/label.png")
+
+.component-item__card-icon
+  @extend $component-item-icon
+  background-image: url("../../assets/card.png")
+
+.component-item__button-icon
+  @extend $component-item-icon
+  background-image: url("../../assets/button.png")
+
+.component-item__button-row-icon
+  @extend $component-item-icon
+  background-image: url("../../assets/button-row.png")
+
+.component-item__block-icon
+  @extend $component-item-icon
+  background-image: url("../../assets/block.png")
+
+.component-item__list-icon
+  @extend $component-item-icon
+  background-image: url("../../assets/list.png")
+
+.component-item__list-item-icon
+  @extend $component-item-icon
+  background-image: url("../../assets/list-item.png")
+
+.component-item__list-divider-icon
+  @extend $component-item-icon
+  background-image: url("../../assets/list-divider.png")
+
+.component-item__list-group-icon
+  @extend $component-item-icon
+  background-image: url("../../assets/list-group.png")
+
+.component-item__image-icon
+  @extend $component-item-icon
+  background-image: url("../../assets/image.png")
+
+.component-item__accordion-icon
+  @extend $component-item-icon
+  background-image: url("../../assets/accordion.png")

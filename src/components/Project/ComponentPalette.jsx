@@ -4,6 +4,10 @@ import ComponentItem from './ComponentItem';
 import {FormattedMessage} from '../intl';
 import pureRender from '../../decorators/pureRender';
 
+if (process.env.BROWSER){
+  require('../../styles/Project/ComponentPalette.styl');
+}
+
 @pureRender
 class ComponentPalette extends React.Component {
   static propTypes = {
@@ -21,7 +25,7 @@ class ComponentPalette extends React.Component {
 
     return (
       <Palette title={<FormattedMessage message="project.components"/>}>
-        {list}
+        <div className="component-palette">{list}</div>
       </Palette>
     );
   }

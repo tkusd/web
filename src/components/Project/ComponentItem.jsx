@@ -8,6 +8,7 @@ import pureRender from '../../decorators/pureRender';
 import uuid from 'node-uuid';
 import assign from 'lodash/object/assign';
 import {FormattedMessage} from '../intl';
+import kebabCase from 'lodash/string/kebabCase';
 
 if (process.env.BROWSER){
   require('../../styles/Project/ComponentItem.styl');
@@ -91,6 +92,7 @@ class ComponentItem extends React.Component {
 
   render(){
     const {component, connectDragSource, isDragging} = this.props;
+    let type = component.get('type');
 
     let className = cx('component-item', {
       'component-item--dragging': isDragging
@@ -98,7 +100,10 @@ class ComponentItem extends React.Component {
 
     return connectDragSource(
       <div className={className}>
-        <FormattedMessage message={'component.' + component.get('type')}/>
+        <div className={'component-item__' + kebabCase(type) + '-icon'}/>
+        <div className="component-item__name">
+          <FormattedMessage message={'component.' + type}/>
+        </div>
       </div>
     , 'copy');
   }

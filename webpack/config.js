@@ -70,7 +70,7 @@ export default {
       },
       {
         test: /\.png$/,
-        loader: 'file?name=[name]-[hash:8].[ext]'
+        loader: 'url?limit=10000&mimetype=image/png&name=[name]-[hash:8].[ext]'
       }
     ]
   },
