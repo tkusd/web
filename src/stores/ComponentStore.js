@@ -11,6 +11,17 @@ const COMPONENTS = [
       events.enter,
       events.leave
     ],
+    availableChildTypes: [
+      ElementTypes.navbar,
+      ElementTypes.toolbar,
+      ElementTypes.label,
+      ElementTypes.card,
+      ElementTypes.button,
+      ElementTypes.block,
+      ElementTypes.buttonRow,
+      ElementTypes.list,
+      ElementTypes.image
+    ],
     attributes: {
       theme: {
         type: 'theme',
@@ -64,6 +75,12 @@ const COMPONENTS = [
         type: 'string',
         defaultValue: 'Label',
         label: 'Text'
+      }
+    },
+    styles: {
+      color: {
+        type: 'color',
+        label: 'Color'
       }
     }
   },
@@ -235,14 +252,6 @@ const COMPONENTS = [
       src: {
         type: 'asset',
         label: 'Image'
-      },
-      width: {
-        type: 'number',
-        label: 'Width'
-      },
-      height: {
-        type: 'number',
-        label: 'Height'
       }
     }
   },

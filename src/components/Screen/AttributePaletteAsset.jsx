@@ -1,5 +1,4 @@
 import React from 'react';
-import {InputGroup} from '../form';
 import {validators} from 'react-form-input';
 import bindActions from '../../utils/bindActions';
 import * as AssetAction from '../../actions/AssetAction';
@@ -7,6 +6,7 @@ import pureRender from '../../decorators/pureRender';
 import FontAwesome from '../common/FontAwesome';
 import prettyBytes from 'pretty-bytes';
 import {FormattedMessage} from '../intl';
+import AttributeField from './AttributeField';
 
 const MIME_TYPES = {
   'image/jpeg': 'mime.jpeg',
@@ -62,20 +62,20 @@ class AttributePaletteAsset extends React.Component {
 
     return (
       <div className="attribute-palette">
-        <InputGroup
+        <AttributeField
           type="text"
           label={<FormattedMessage message="common.name"/>}
           value={asset.get('name')}
-          onChange={this.handleInputChange.bind(this, ['name'])}
+          onChange={this.setValueInField.bind(this, ['name'])}
           required
           validators={[
             validators.required('Name is required')
           ]}/>
-        <InputGroup
+        <AttributeField
           type="textarea"
           label={<FormattedMessage message="project.description"/>}
           value={asset.get('description')}
-          onChange={this.handleInputChange.bind(this, ['description'])}/>
+          onChange={this.setValueInField.bind(this, ['description'])}/>
         <button className="attribute-palette__delete-btn" onClick={this.deleteAsset}>
           <FontAwesome icon="trash-o"/>
           <FormattedMessage message="common.delete"/>
@@ -91,11 +91,6 @@ class AttributePaletteAsset extends React.Component {
         ))}
       </div>
     );
-  }
-
-  handleInputChange(field, data){
-    if (data.error) return;
-    this.setValueInField(field, data.value);
   }
 
   setValueInField(field, value){

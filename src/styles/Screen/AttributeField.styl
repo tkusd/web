@@ -1,0 +1,23 @@
+@import "nib"
+@import "../common"
+@import "../form/InputGroup"
+
+.attribute-field__select
+  width: 100%
+  display: block
+
+.attribute-field__color
+  @extend .input-group
+  clearfix()
+
+.attribute-field__color-picker
+  float: left
+
+.attribute-field__reset-btn
+  border: none
+  background: none
+  padding: 0 padding-small
+  height: 20px
+  line-height: @height
+  cursor: pointer
+  float: left

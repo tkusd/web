@@ -1,21 +1,16 @@
 import React from 'react';
-import {InputGroup, Checkbox, ThemePalette} from '../form';
 import {validators} from 'react-form-input';
 import bindActions from '../../utils/bindActions';
 import * as ElementAction from '../../actions/ElementAction';
 import * as ProjectAction from '../../actions/ProjectAction';
 import EventList from './EventList';
 import pureRender from '../../decorators/pureRender';
-import debounce from 'lodash/function/debounce';
 import FontAwesome from '../common/FontAwesome';
 import ElementTypes from '../../constants/ElementTypes';
-import {ModalPortal} from '../modal';
-import AssetModal from './AssetModal';
 import {FormattedMessage} from '../intl';
+import AttributeField from './AttributeField';
 
-const DEBOUNCE_DELAY = 250;
-
-@pureRender
+// @pureRender
 class AttributePaletteElement extends React.Component {
   static contextTypes = {
     flux: React.PropTypes.object.isRequired,
@@ -29,24 +24,6 @@ class AttributePaletteElement extends React.Component {
     activeElement: React.PropTypes.string,
     events: React.PropTypes.object.isRequired,
     selectedScreen: React.PropTypes.string.isRequired
-  }
-
-  constructor(props, context){
-    super(props, context);
-
-    this.state = {
-      element: this.getActiveElement()
-    };
-
-    this.commitChange = debounce(this.commitChange.bind(this), DEBOUNCE_DELAY);
-  }
-
-  componentWillReceiveProps(nextProps){
-    if (this.props.activeElement !== nextProps.activeElement || this.props.selectedScreen !== nextProps.selectedScreen){
-      this.setState({
-        element: this.getActiveElement(nextProps)
-      });
-    }
   }
 
   getActiveElement(props = this.props){
@@ -68,7 +45,7 @@ class AttributePaletteElement extends React.Component {
   }
 
   renderContent(){
-    const {element} = this.state;
+    const element = this.getActiveElement();
     const {components, events, activeElement, project, elements} = this.props;
     if (!element) return;
 
@@ -86,20 +63,21 @@ class AttributePaletteElement extends React.Component {
 
     return (
       <div>
-        <InputGroup
+        <AttributeField
           type="text"
           label={<FormattedMessage message="common.name"/>}
           value={element.get('name')}
-          onChange={this.handleInputChange.bind(this, ['name'])}
+          onChange={this.setValueInField.bind(this, ['name'])}
           required
           validators={[
             validators.required('Name is required')
           ]}/>
         {!isScreen && (
-          <Checkbox className="attribute-palette__visible-checkbox"
+          <AttributeField className="attribute-palette__visible-checkbox"
+            type="boolean"
             value={element.get('is_visible')}
             label={<FormattedMessage message="project.visible"/>}
-            onChange={this.handleInputChange.bind(this, ['is_visible'])}/>
+            onChange={this.setValueInField.bind(this, ['is_visible'])}/>
         )}
         {isScreen && (
           <button className="attribute-palette__main-screen-btn"
@@ -125,6 +103,15 @@ class AttributePaletteElement extends React.Component {
               .map(this.renderAttributeField.bind(this)).toArray()}
           </div>
         )}
+        {component.has('styles') && (
+          <div>
+            <h4>
+              <FormattedMessage message="project.styles"/>
+            </h4>
+            {component.get('styles')
+              .map(this.renderStyleField.bind(this)).toArray()}
+          </div>
+        )}
         {component.has('availableEventTypes') && component.get('availableEventTypes').count() && (
           <EventList {...this.props}
             events={elementEvents}
@@ -136,106 +123,41 @@ class AttributePaletteElement extends React.Component {
   }
 
   renderAttributeField(attr, key){
-    const {project} = this.props;
-    const {element} = this.state;
-    const value = element.getIn(['attributes', key]);
-    let inputType = 'text';
-
-    switch (attr.get('type')){
-    case 'boolean':
-      return (
-        <Checkbox key={key}
-          value={value}
-          label={attr.get('label')}
-          onChange={this.handleInputChange.bind(this, ['attributes', key])}/>
-      );
-
-    case 'select':
-      return (
-        <label key={key} className="input-group">
-          <span className="input-group__label">{attr.get('label')}</span>
-          <select className="attribute-palette__select"
-            value={value}
-            onChange={this.handleRawInputChange.bind(this, ['attributes', key])}>
-            {attr.get('values').map(item => (
-              <option key={item.get('value')} value={item.get('value')}>{item.get('label')}</option>
-            )).toArray()}
-          </select>
-        </label>
-      );
-
-    case 'asset':
-      let btn = (
-        <button className="attribute-palette__choose-asset-btn">
-          <FontAwesome icon="file-o"/>
-          <FormattedMessage message="project.choose_asset"/>
-        </button>
-      );
-
-      return (
-        <div className="input-group" key={key}>
-          <label className="input-group__label">{attr.get('label')}</label>
-          <ModalPortal trigger={btn}>
-            <AssetModal
-              projectID={project.get('id')}
-              url={value}
-              onSubmit={this.setValueInField.bind(this, ['attributes', key])}/>
-          </ModalPortal>
-        </div>
-      );
-
-    case 'theme':
-      return (
-        <div className="input-group" key={key}>
-          <label className="input-group__label">{attr.get('label')}</label>
-          <ThemePalette palette={project.get('theme')}
-            value={value}
-            onChange={this.setValueInField.bind(this, ['attributes', key])}/>
-        </div>
-      );
-
-    case 'number':
-      inputType = 'number';
-      break;
-    }
+    const element = this.getActiveElement();
 
     return (
-      <InputGroup
+      <AttributeField {...this.props}
         key={key}
-        type={inputType}
+        value={element.getIn(['attributes', key])}
+        values={attr.get('values')}
         label={attr.get('label')}
-        onChange={this.handleInputChange.bind(this, ['attributes', key])}
-        value={value}/>
+        type={attr.get('type')}
+        onChange={this.setValueInField.bind(this, ['attributes', key])}/>
     );
   }
 
-  handleInputChange(field, data){
-    if (data.error) return;
-    this.setValueInField(field, data.value);
-  }
+  renderStyleField(style, key){
+    const element = this.getActiveElement();
 
-  handleRawInputChange(field, e){
-    const value = (e.target || e.currentTarget).value;
-    this.setValueInField(field, value);
+    return (
+      <AttributeField {...this.props}
+        key={key}
+        value={element.getIn(['styles', key])}
+        label={style.get('label')}
+        type={style.get('type')}
+        onChange={this.setValueInField.bind(this, ['styles', key])}/>
+    );
   }
 
   setValueInField(field, value){
-    this.setState({
-      element: this.state.element.setIn(field, value)
-    });
-
-    this.commitChange();
-  }
-
-  commitChange(){
-    const {element} = this.state;
+    const element = this.getActiveElement();
     const {updateElement} = bindActions(ElementAction, this.context.flux);
 
-    updateElement(element.get('id'), element);
+    updateElement(element.get('id'), element.setIn(field, value));
   }
 
   deleteElement = () => {
-    const {element} = this.state;
+    const element = this.getActiveElement();
     const {selectElement, deleteElement} = bindActions(ElementAction, this.context.flux);
 
     if (element.get('type') === ElementTypes.screen){
@@ -250,7 +172,7 @@ class AttributePaletteElement extends React.Component {
 
   updateMainScreen = () => {
     const {project} = this.props;
-    const {element} = this.state;
+    const element = this.getActiveElement();
     if (element.get('type') !== ElementTypes.screen || project.get('main_screen') === element.get('id')) return;
 
     const {updateProject} = bindActions(ProjectAction, this.context.flux);

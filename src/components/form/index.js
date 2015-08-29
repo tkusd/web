@@ -5,3 +5,4 @@ export LayoutBox from './LayoutBox';
 export NumberInput from './NumberInput';
 export Checkbox from './Checkbox';
 export ThemePalette from './ThemePalette';
+export ColorPicker from './ColorPicker';

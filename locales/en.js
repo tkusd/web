@@ -77,7 +77,8 @@ module.exports = {
       drag_asset_hint: 'Drag files here to upload...',
       drop_asset_hint: 'Drop to upload files...',
       saved: 'Saved',
-      save_now: 'Save now'
+      save_now: 'Save now',
+      styles: 'Styles'
     },
     settings: {
       profile: 'Profile',

@@ -38,7 +38,7 @@
     "normalize.css": "^3.0.3",
     "pretty-bytes": "^2.0.1",
     "react": "^0.14.0-beta3",
-    "react-color": "^1.0.5",
+    "react-color": "tommy351/react-color#react-014",
     "react-dnd": "^1.1.4",
     "react-dom": "^0.14.0-beta3",
     "react-form-input": "^0.3.0",
@@ -50,6 +50,7 @@
     "serialize-javascript": "^1.0.0",
     "serve-static": "^1.10.0",
     "swig": "^1.4.2",
+    "tinycolor2": "^1.1.2",
     "validator": "^4.0.5",
     "webpack": "^1.11.0",
     "xmlbuilder": "^2.6.4"

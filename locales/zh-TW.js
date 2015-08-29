@@ -78,7 +78,8 @@ module.exports = {
       drag_asset_hint: '把檔案拖移到這裡上傳...',
       drop_asset_hint: '放開以上傳檔案...',
       saved: '已儲存',
-      save_now: '立刻儲存'
+      save_now: '立刻儲存',
+      styles: '樣式'
     },
     settings: {
       profile: '個人資料',

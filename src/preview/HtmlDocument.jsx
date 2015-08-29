@@ -41,8 +41,6 @@ class HtmlDocument extends React.Component {
           {styles.map((href, key) => <link rel="stylesheet" type="text/css" href={href} key={key}/>)}
         </head>
         <body>
-          {/* Status bar overlay for full screen mode (PhoneGap) */}
-          <div className="statusbar-overlay"/>
           {/* Panels overlay */}
           <div className="panel-overlay"/>
           {/* Views */}
