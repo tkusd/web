@@ -1,9 +1,10 @@
 import React from 'react';
-import {EditableInput, Saturation, Hue, Alpha, Checkboard} from 'react-color/lib/components/common';
+import {Saturation, Hue, Alpha, Checkboard} from 'react-color/lib/components/common';
 import tinycolor from 'tinycolor2';
-import assign from 'lodash/object/assign';
 import {Dropdown, DropdownMenu} from '../dropdown';
 import debounce from 'lodash/function/debounce';
+import NumberInput from './NumberInput';
+import HexInput from './HexInput';
 
 if (process.env.BROWSER){
   require('../../styles/form/ColorPicker.styl');
@@ -107,21 +108,26 @@ class ColorPicker extends React.Component {
 
     return (
       <div className="color-picker__input-group">
-        <div className="color-picker__input-double">
-          <EditableInput label="hex" value={hex} onChange={this.handleInputChange}/>
-        </div>
-        <div className="color-picker__input-single">
-          <EditableInput label="r" value={rgb.r} onChange={this.handleInputChange}/>
-        </div>
-        <div className="color-picker__input-single">
-          <EditableInput label="g" value={rgb.g} onChange={this.handleInputChange}/>
-        </div>
-        <div className="color-picker__input-single">
-          <EditableInput label="b" value={rgb.b} onChange={this.handleInputChange}/>
-        </div>
-        <div className="color-picker__input-single">
-          <EditableInput label="a" value={rgb.a} onChange={this.handleInputChange}/>
-        </div>
+        <label className="color-picker__input-double">
+          <HexInput value={hex} onChange={this.handleHexChange}/>
+          <span className="color-picker__input-label">Hex</span>
+        </label>
+        <label className="color-picker__input-single">
+          <NumberInput value={rgb.r} min={0} max={255} onChange={this.handleRgbChange.bind(this, 'r')}/>
+          <span className="color-picker__input-label">R</span>
+        </label>
+        <label className="color-picker__input-single">
+          <NumberInput value={rgb.g} min={0} max={255} onChange={this.handleRgbChange.bind(this, 'g')}/>
+          <span className="color-picker__input-label">G</span>
+        </label>
+        <label className="color-picker__input-single">
+          <NumberInput value={rgb.b} min={0} max={255} onChange={this.handleRgbChange.bind(this, 'b')}/>
+          <span className="color-picker__input-label">B</span>
+        </label>
+        <label className="color-picker__input-single">
+          <NumberInput value={rgb.a} min={0} max={1} step={0.01} onChange={this.handleRgbChange.bind(this, 'a')}/>
+          <span className="color-picker__input-label">A</span>
+        </label>
       </div>
     );
   }
@@ -149,13 +155,17 @@ class ColorPicker extends React.Component {
     this.commitChange();
   }
 
-  handleInputChange = (data) => {
-    if (data.r || data.g || data.b || data.a){
-      let {rgb} = this.state.color;
-      this.handleChange(assign(rgb, data));
-    } else if (data.hex){
-      this.handleChange(data.hex);
-    }
+  handleHexChange = (data) => {
+    if (data.error) return;
+    this.handleChange(data.value);
+  }
+
+  handleRgbChange = (key, value) => {
+    const {color} = this.state;
+    let rgb = color.toRgb();
+    rgb[key] = value;
+
+    this.handleChange(rgb);
   }
 
   handleDialogClick = (e) => {

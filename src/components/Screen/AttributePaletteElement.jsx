@@ -10,7 +10,7 @@ import ElementTypes from '../../constants/ElementTypes';
 import {FormattedMessage} from '../intl';
 import AttributeField from './AttributeField';
 
-// @pureRender
+@pureRender
 class AttributePaletteElement extends React.Component {
   static contextTypes = {
     flux: React.PropTypes.object.isRequired,
@@ -143,6 +143,7 @@ class AttributePaletteElement extends React.Component {
       <AttributeField {...this.props}
         key={key}
         value={element.getIn(['styles', key])}
+        values={style.get('values')}
         label={style.get('label')}
         type={style.get('type')}
         onChange={this.setValueInField.bind(this, ['styles', key])}/>

@@ -20,6 +20,26 @@ function makeElementProps(element){
   };
 }
 
+function renderMultiLineString(str){
+  let result = [];
+
+  // Append <br> to every line
+  str.split('\n').forEach((line, i) => {
+    result.push(
+      <span key={i * 2}>{line}</span>,
+      <br key={i * 2 + 1}/>
+    );
+  });
+
+  // Remove last <br>
+  result.pop();
+
+  // Return the string directly if the result only has one element
+  if (result.length === 1) return str;
+
+  return result;
+}
+
 class View extends React.Component {
   static propTypes = {
     element: React.PropTypes.object.isRequired,
@@ -58,7 +78,9 @@ class View extends React.Component {
 
     case ElementTypes.label:
       return (
-        <div {...makeElementProps(element)} onClick={this.props.onClick}>{element.getIn(['attributes', 'text'])}</div>
+        <div {...makeElementProps(element)} onClick={this.props.onClick}>
+          {renderMultiLineString(element.getIn(['attributes', 'text']))}
+        </div>
       );
 
     case ElementTypes.button:

@@ -72,7 +72,7 @@ const COMPONENTS = [
     ],
     attributes: {
       text: {
-        type: 'string',
+        type: 'textarea',
         defaultValue: 'Label',
         label: 'Text'
       }
@@ -80,7 +80,51 @@ const COMPONENTS = [
     styles: {
       color: {
         type: 'color',
-        label: 'Color'
+        label: 'Text color'
+      },
+      textDecoration: {
+        type: 'select',
+        label: 'Text decoration',
+        values: [
+          {value: ''},
+          {value: 'underline', label: 'Underline'},
+          {value: 'line-through', label: 'Strike line'},
+          {value: 'overline', label: 'Overline'}
+        ]
+      },
+      fontStyle: {
+        type: 'select',
+        label: 'Font style',
+        values: [
+          {value: ''},
+          {value: 'italic', label: 'Italic'}
+        ]
+      },
+      fontWeight: {
+        type: 'select',
+        label: 'Font weight',
+        values: [
+          {value: ''},
+          {value: '300', label: 'Light'},
+          {value: '400', label: 'Normal'},
+          {value: '700', label: 'Bold'}
+        ]
+      },
+      textAlign: {
+        type: 'align',
+        label: 'Alignment'
+      },
+      fontSize: {
+        type: 'size',
+        label: 'Text size'
+      },
+      lineHeight: {
+        type: 'size',
+        label: 'Line height'
+      },
+      letterSpacing: {
+        type: 'size',
+        label: 'Letter spacing'
       }
     }
   },

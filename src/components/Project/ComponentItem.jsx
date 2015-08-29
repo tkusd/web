@@ -63,6 +63,7 @@ const spec = {
       project_id: element.project_id,
       element_id: element.id,
       attributes,
+      styles: {},
       is_visible: true
     });
 

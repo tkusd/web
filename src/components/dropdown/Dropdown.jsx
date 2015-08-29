@@ -2,6 +2,7 @@ import React from 'react';
 import cx from 'classnames';
 import assign from 'lodash/object/assign';
 import omit from 'lodash/object/omit';
+import DropdownMenu from './DropdownMenu';
 
 if (process.env.BROWSER){
   require('../../styles/dropdown/Dropdown.styl');
@@ -40,7 +41,17 @@ class Dropdown extends React.Component {
       'dropdown--active': this.isActive()
     }, props.className);
 
-    return <div ref="dropdown" {...props}>{this.props.children}</div>;
+    let children = [];
+
+    React.Children.forEach(this.props.children, item => {
+      if (item.type === DropdownMenu){
+        if (this.isActive()) children.push(item);
+      } else {
+        children.push(item);
+      }
+    });
+
+    return <div ref="dropdown" {...props}>{children}</div>;
   }
 
   handleClick(e){

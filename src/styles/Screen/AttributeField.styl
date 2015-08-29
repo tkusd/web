@@ -21,3 +21,23 @@
   line-height: @height
   cursor: pointer
   float: left
+  outline: none
+  &:hover
+    color: color-accent
+
+.attribute-field__align-btn
+  border: 1px solid color-list-highlight
+  background: none
+  border-right-width: 0
+  outline: none
+  &:first-of-type
+    border-radius: 3px 0 0 3px
+  &:last-of-type
+    border-radius: 0 3px 3px 0
+    border-right-width: 1px
+  &:hover
+    background: color-list-highlight
+    color: color-accent
+
+.attribute-field__align-btn--active
+  background: color-list-highlight

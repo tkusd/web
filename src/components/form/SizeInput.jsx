@@ -1,6 +1,7 @@
 import React from 'react';
 import cx from 'classnames';
 import NumberInput from './NumberInput';
+import debounce from 'lodash/function/debounce';
 
 if (process.env.BROWSER){
   require('../../styles/form/SizeInput.styl');
@@ -8,6 +9,7 @@ if (process.env.BROWSER){
 
 function noop(){}
 
+const DEBOUNCE_DELAY = 100;
 const UNIT_REGEX = /^(\d+)(px|pt|em|%)$/;
 
 class SizeInput extends React.Component {
@@ -32,12 +34,13 @@ class SizeInput extends React.Component {
     super(props, context);
 
     this.state = this.parseRawValue(this.props.value != null ? this.props.value : this.props.defaultValue);
-    this.handleInputChange = this.handleInputChange.bind(this);
-    this.handleSelectChange = this.handleSelectChange.bind(this);
+    this.commitChange = debounce(this.commitChange.bind(this), DEBOUNCE_DELAY, {
+      leading: false
+    });
   }
 
   componentWillReceiveProps(nextProps){
-    if (nextProps.hasOwnProperty('value') && nextProps.value !== this.props.value){
+    if (nextProps.value !== this.props.value){
       this.setState(this.parseRawValue(nextProps.value));
     }
   }
@@ -130,22 +133,24 @@ class SizeInput extends React.Component {
     }
 
     this.setState(newState);
-
-    setTimeout(() => {
-      this.props.onChange(this.getValue());
-    }, 0);
+    this.commitChange();
   }
 
-  handleInputChange(value){
+  handleInputChange = (value) => {
     if (!this.isValueNeeded()) return;
 
     this.setValue({value});
   }
 
-  handleSelectChange(e){
+  handleSelectChange = (e) => {
     this.setValue({
-      unit: e.currentTarget.value
+      unit: (e.currentTarget || e.target).value
     });
+  }
+
+  commitChange(){
+    if (this.isValueNeeded() && !this.state.value) return;
+    this.props.onChange(this.getValue());
   }
 }
 

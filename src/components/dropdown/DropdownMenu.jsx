@@ -78,7 +78,7 @@ class DropdownMenu extends React.Component {
     const windowHeight = window.innerHeight;
 
     let x = parentRect.left;
-    let y = parentRect.bottom;
+    let y = parentRect.top;
 
     if (x + menuRect.width > windowWidth){
       x = x - menuRect.width;

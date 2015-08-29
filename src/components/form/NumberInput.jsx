@@ -1,9 +1,9 @@
 import React from 'react';
-import throttle from 'lodash/function/throttle';
+import debounce from 'lodash/function/debounce';
 
 function noop(){}
 
-const THROTTLE_DELAY = 50;
+const DEBOUNCE_DELAY = 100;
 
 class NumberInput extends React.Component {
   static propTypes = {
@@ -30,14 +30,13 @@ class NumberInput extends React.Component {
       value: this.props.value != null ? this.props.value : this.props.defaultValue
     };
 
-    this.handleChange = this.handleChange.bind(this);
-    this.handleKeyDown = throttle(this.handleKeyDown.bind(this), THROTTLE_DELAY, {
-      leading: true
+    this.commitChange = debounce(this.commitChange.bind(this), DEBOUNCE_DELAY, {
+      leading: false
     });
   }
 
   componentWillReceiveProps(nextProps){
-    if (nextProps.hasOwnProperty('value') && nextProps.value !== this.props.value){
+    if (nextProps.value !== this.props.value){
       this.setState({
         value: nextProps.value
       });
@@ -66,16 +65,14 @@ class NumberInput extends React.Component {
       value: value
     });
 
-    setTimeout(() => {
-      this.props.onChange(this.getValue());
-    }, 0);
+    this.commitChange();
   }
 
-  handleChange(e){
-    this.setValue(Number(e.currentTarget.value));
+  handleChange = (e) => {
+    this.setValue(Number((e.currentTarget || e.target).value));
   }
 
-  handleKeyDown(e){
+  handleKeyDown = (e) => {
     switch (e.keyCode){
     case 38: // up
       this.increase();
@@ -95,6 +92,10 @@ class NumberInput extends React.Component {
 
   decrease(){
     this.setValue(this.getValue() - this.props.step);
+  }
+
+  commitChange(){
+    this.props.onChange(this.getValue());
   }
 }
 
