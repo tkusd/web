@@ -2,7 +2,6 @@ import React from 'react';
 import View from '../preview/View';
 import ItemTypes from '../../constants/ItemTypes';
 import pureRender from '../../decorators/pureRender';
-import getAssetBlobURL from '../../utils/getAssetBlobURL';
 import SortableElementItem from './SortableElementItem';
 import ComponentDropZone from './ComponentDropZone';
 
@@ -15,7 +14,6 @@ class ViewContainer extends React.Component {
   }
 
   static propTypes = {
-    apiEndpoint: React.PropTypes.string.isRequired,
     element: React.PropTypes.object.isRequired,
 
     // React DnD
@@ -24,12 +22,8 @@ class ViewContainer extends React.Component {
   }
 
   render(){
-    const {apiEndpoint} = this.props;
-
     return (
-      <View {...this.props}
-        Container={ViewContainer}
-        getAssetURL={getAssetBlobURL.bind(this, apiEndpoint)}/>
+      <View {...this.props} Container={ViewContainer}/>
     );
   }
 }

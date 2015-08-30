@@ -1,0 +1,18 @@
+@import "nib"
+@import "../common"
+@import "../preview/theme"
+
+.scalable-view
+  position: absolute
+  top: 0
+  left: 0
+  right: 0
+  bottom: 0
+  width: 360px
+  height: 640px
+  margin: auto
+  user-select: none
+  &.ios
+    @extend $theme-ios
+  &.material
+    @extend $theme-material

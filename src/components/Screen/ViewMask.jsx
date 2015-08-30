@@ -6,7 +6,7 @@ import Immutable from 'immutable';
 import pureRender from '../../decorators/pureRender';
 import ItemTypes from '../../constants/ItemTypes';
 import SortableElementList from './SortableElementList';
-import cx from 'classnames';
+import ScalableView from './ScalableView';
 
 if (process.env.BROWSER){
   require('../../styles/Screen/ViewMask.styl');
@@ -23,9 +23,6 @@ class ViewMask extends React.Component {
     selectElement: React.PropTypes.func.isRequired,
     activeElement: React.PropTypes.string,
     hoverElements: React.PropTypes.object.isRequired,
-    screenSize: React.PropTypes.string.isRequired,
-    screenDimension: React.PropTypes.string.isRequired,
-    screenScale: React.PropTypes.number.isRequired,
 
     // React DnD
     connectDropTarget: React.PropTypes.func.isRequired
@@ -106,32 +103,15 @@ class ViewMask extends React.Component {
   }
 
   render(){
-    const {
-      connectDropTarget,
-      screenSize,
-      screenDimension,
-      project,
-      screenScale
-    } = this.props;
-    let [width, height] = screenSize.split('x');
-
-    if (screenDimension === 'horizontal'){
-      [height, width] = [width, height];
-    }
-
-    let style = {
-      width,
-      height,
-      transform: `scale(${screenScale})`
-    };
+    const {connectDropTarget} = this.props;
 
     return connectDropTarget(
       <div className="view-mask" onClick={this.handleOutsideClick}>
-        <div className={cx('view-mask__container', project.get('theme'))} style={style}>
+        <ScalableView {...this.props}>
           <ViewContainer {...this.props}
             onClick={this.handleNodeClick}
             onScroll={this.updateRect}/>
-        </div>
+        </ScalableView>
         {this.renderResizeArea()}
         {this.renderMask()}
       </div>

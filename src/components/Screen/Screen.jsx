@@ -7,12 +7,19 @@ import ElementSidebar from './ElementSidebar';
 import ViewMask from './ViewMask';
 import ScreenToolbar from './ScreenToolbar';
 import cx from 'classnames';
+import ScalableView from './ScalableView';
+import View from '../preview/View';
+import getAssetBlobURL from '../../utils/getAssetBlobURL';
 
 let Mousetrap;
 
 if (process.env.BROWSER){
   Mousetrap = require('mousetrap');
   require('../../styles/Screen/Screen.styl');
+}
+
+function preventDefault(e){
+  e.preventDefault();
 }
 
 @connectToStores([
@@ -84,7 +91,7 @@ class Screen extends React.Component {
   }
 
   render(){
-    const {editable, elements} = this.state;
+    const {editable} = this.state;
     const selectedScreen = this.props.params.screenID;
 
     let containerClassName = cx('screen__container', {
@@ -95,9 +102,7 @@ class Screen extends React.Component {
       <div className="screen">
         <div className={containerClassName}>
           <div className="screen__content" ref="content">
-            <ViewMask {...this.state}
-              element={elements.get(selectedScreen)}
-              selectElement={this.selectElement}/>
+            {this.renderView()}
             <ScreenToolbar {...this.state}
               updateScreenSize={this.updateScreenSize}
               updateScreenDimension={this.updateScreenDimension}
@@ -111,6 +116,31 @@ class Screen extends React.Component {
           )}
         </div>
       </div>
+    );
+  }
+
+  renderView(){
+    const {editable, elements, apiEndpoint} = this.state;
+    const selectedScreen = this.props.params.screenID;
+    const element = elements.get(selectedScreen);
+    const getAssetURL = getAssetBlobURL.bind(null, apiEndpoint);
+
+    if (editable){
+      return (
+        <ViewMask {...this.state}
+          element={element}
+          selectElement={this.selectElement}
+          getAssetURL={getAssetURL}/>
+      );
+    }
+
+    return (
+      <ScalableView {...this.state}>
+        <View {...this.state}
+          element={element}
+          getAssetURL={getAssetURL}
+          onClick={preventDefault}/>
+      </ScalableView>
     );
   }
 
