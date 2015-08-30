@@ -417,7 +417,7 @@ class View extends React.Component {
   makeElementProps(element){
     return {
       id: this.props.getElementID(element),
-      style: element.get('styles').toJS()
+      style: element.get('styles').filter(s => s).toJS()
     };
   }
 }

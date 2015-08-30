@@ -8,30 +8,40 @@
 
 $view-resize-area
   position: fixed
+  &:before
+    content: ""
+    padding: 3px
+    position: absolute
+    top: @padding * -1
+    left: @padding * -1
+    right: @padding * -1
+    bottom: @padding * -1
 
 .view-mask__resize-n
   @extend $view-resize-area
   cursor: n-resize
-  border-top: 2px solid color-accent
+  border-top: 1px solid color-accent
 
 .view-mask__resize-e
   @extend $view-resize-area
   cursor: e-resize
-  border-right: 2px solid color-accent
+  border-right: 1px solid color-accent
 
 .view-mask__resize-s
   @extend $view-resize-area
   cursor: s-resize
-  border-bottom: 2px solid color-accent
+  border-bottom: 1px solid color-accent
 
 .view-mask__resize-w
   @extend $view-resize-area
   cursor: w-resize
-  border-left: 2px solid color-accent
+  border-left: 1px solid color-accent
 
 $view-resize-corner
   @extend $view-resize-area
   background: color-accent
+  width: 1px
+  height: 1px
 
 .view-mask__resize-ne
   @extend $view-resize-corner

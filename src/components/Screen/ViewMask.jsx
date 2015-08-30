@@ -12,8 +12,7 @@ if (process.env.BROWSER){
   require('../../styles/Screen/ViewMask.styl');
 }
 
-const DEBOUNCE_DELAY = 250;
-const RESIZE_AREA_SIZE = 4;
+const DEBOUNCE_DELAY = 150;
 
 @SortableElementList(ItemTypes.VIEW_ITEM)
 @pureRender
@@ -126,59 +125,47 @@ class ViewMask extends React.Component {
       <div className="view-mask__resize-area">
         <div className="view-mask__resize-n"
           style={{
-            top: rect.top - RESIZE_AREA_SIZE / 2,
+            top: rect.top,
             left: rect.left,
-            width: rect.width,
-            height: RESIZE_AREA_SIZE
+            width: rect.width
           }}/>
         <div className="view-mask__resize-e"
           style={{
             top: rect.top,
-            left: rect.right - RESIZE_AREA_SIZE / 2,
-            width: RESIZE_AREA_SIZE,
+            left: rect.right,
             height: rect.height
           }}/>
         <div className="view-mask__resize-s"
           style={{
-            top: rect.bottom - RESIZE_AREA_SIZE / 2,
+            top: rect.bottom,
             left: rect.left,
-            width: rect.width,
-            height: RESIZE_AREA_SIZE
+            width: rect.width
           }}/>
         <div className="view-mask__resize-w"
           style={{
             top: rect.top,
-            left: rect.left - RESIZE_AREA_SIZE / 2,
-            width: RESIZE_AREA_SIZE,
+            left: rect.left,
             height: rect.height
           }}/>
         <div className="view-mask__resize-ne"
           style={{
-            top: rect.top - RESIZE_AREA_SIZE / 2,
-            left: rect.right - RESIZE_AREA_SIZE / 2,
-            width: RESIZE_AREA_SIZE,
-            height: RESIZE_AREA_SIZE
+            top: rect.top,
+            left: rect.right
           }}/>
         <div className="view-mask__resize-se"
           style={{
-            top: rect.bottom - RESIZE_AREA_SIZE / 2,
-            left: rect.right - RESIZE_AREA_SIZE / 2,
-            width: RESIZE_AREA_SIZE,
-            height: RESIZE_AREA_SIZE
+            top: rect.bottom,
+            left: rect.right
           }}/>
         <div className="view-mask__resize-sw"
           style={{
-            top: rect.bottom - RESIZE_AREA_SIZE / 2,
-            left: rect.left - RESIZE_AREA_SIZE / 2,
-            width: RESIZE_AREA_SIZE,
-            height: RESIZE_AREA_SIZE
+            top: rect.bottom,
+            left: rect.left
           }}/>
         <div className="view-mask__resize-nw"
           style={{
-            top: rect.top - RESIZE_AREA_SIZE / 2,
-            left: rect.left - RESIZE_AREA_SIZE / 2,
-            width: RESIZE_AREA_SIZE,
-            height: RESIZE_AREA_SIZE
+            top: rect.top,
+            left: rect.left
           }}/>
       </div>
     );
