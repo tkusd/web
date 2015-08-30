@@ -7,6 +7,7 @@ import cx from 'classnames';
 import FontAwesome from '../common/FontAwesome';
 import startsWith from 'lodash/string/startsWith';
 import {getBlobURL} from '../../utils/getAssetBlobURL';
+import {FormattedMessage} from '../intl';
 
 if (process.env.BROWSER){
   require('../../styles/Project/AssetList.styl');

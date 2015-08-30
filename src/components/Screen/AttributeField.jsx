@@ -1,11 +1,10 @@
 import React from 'react';
 import AssetModal from './AssetModal';
-import {InputGroup, Checkbox, ThemePalette, ColorPicker, SizeInput} from '../form';
+import {InputGroup, Checkbox, ThemePalette} from '../form';
 import FontAwesome from '../common/FontAwesome';
 import {ModalPortal} from '../modal';
 import {FormattedMessage} from '../intl';
 import debounce from 'lodash/function/debounce';
-import cx from 'classnames';
 
 if (process.env.BROWSER){
   require('../../styles/Screen/AttributeField.styl');
@@ -111,43 +110,6 @@ class AttributeField extends React.Component {
             onChange={this.handleChange}/>
         </div>
       );
-/*
-    case 'color':
-      return (
-        <div className="attribute-field__color">
-          <label className="input-group__label">{label}</label>
-          <ColorPicker {...this.props}
-            className="attribute-field__color-picker"
-            value={value}
-            onChange={this.handleChange}/>
-          <button className="attribute-field__reset-btn" onClick={this.reset}>
-            <FontAwesome icon="times"/>
-          </button>
-        </div>
-      );
-
-    case 'align':
-      return (
-        <div className="input-group">
-          <label className="input-group__label">{label}</label>
-          {['left', 'center', 'right', 'justify'].map((align, i) => (
-            <button key={i}
-              className={cx('attribute-field__align-btn', {
-                'attribute-field__align-btn--active': align === value
-              })}
-              onClick={this.handleChange.bind(this, align)}>
-              <FontAwesome icon={'align-' + align}/>
-            </button>
-          ))}
-        </div>
-      );
-
-    case 'size':
-      return (
-        <SizeInput {...this.props}
-          value={value}
-          onChange={this.handleChange}/>
-      );*/
     }
 
     return (
