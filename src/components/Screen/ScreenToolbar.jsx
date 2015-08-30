@@ -75,12 +75,12 @@ class ScreenToolbar extends React.Component {
       <div className="screen-toolbar__resize">
         <select value={screenScale} onChange={this.handleScreenScale}>
           {SCALE_OPTIONS.map((scale, i) => (
-            <option value={scale} key={i}>{Math.floor(scale * 100)}%</option>
+            <option key={i} value={scale}>{Math.floor(scale * 100) + '%'}</option>
           ))}
         </select>
         <select value={screenSize} onChange={this.handleScreenResize}>
           {Object.keys(SIZE_OPTIONS).map((size, i) => (
-            <option value={size} key={i}>{SIZE_OPTIONS[size]} ({size})</option>
+            <option value={size} key={i}>{`${SIZE_OPTIONS[size]} (${size})`}</option>
           ))}
         </select>
         <button className="screen-toolbar__swap-btn" onClick={this.swapScreenDimension}>
