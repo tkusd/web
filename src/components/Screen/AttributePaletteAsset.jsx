@@ -7,6 +7,7 @@ import FontAwesome from '../common/FontAwesome';
 import prettyBytes from 'pretty-bytes';
 import {FormattedMessage} from '../intl';
 import AttributeField from './AttributeField';
+import Palette from '../Project/Palette';
 
 const MIME_TYPES = {
   'image/jpeg': 'mime.jpeg',
@@ -61,35 +62,34 @@ class AttributePaletteAsset extends React.Component {
     }
 
     return (
-      <div className="attribute-palette">
-        <AttributeField
-          type="text"
-          label={<FormattedMessage message="common.name"/>}
-          value={asset.get('name')}
-          onChange={this.setValueInField.bind(this, ['name'])}
-          required
-          validators={[
-            validators.required('Name is required')
-          ]}/>
-        <AttributeField
-          type="textarea"
-          label={<FormattedMessage message="project.description"/>}
-          value={asset.get('description')}
-          onChange={this.setValueInField.bind(this, ['description'])}/>
-        <button className="attribute-palette__delete-btn" onClick={this.deleteAsset}>
-          <FontAwesome icon="trash-o"/>
-          <FormattedMessage message="common.delete"/>
-        </button>
-        <h4>
-          <FormattedMessage message="project.attributes"/>
-        </h4>
-        {attrs.map(([key, value], i) => (
-          <div className="input-group" key={i}>
-            <label className="input-group__label">{key}</label>
-            {value}
-          </div>
-        ))}
-      </div>
+      <Palette title={<FormattedMessage message="project.attributes"/>}>
+        <div className="attribute-palette">
+          <AttributeField
+            type="text"
+            label={<FormattedMessage message="common.name"/>}
+            value={asset.get('name')}
+            onChange={this.setValueInField.bind(this, ['name'])}
+            required
+            validators={[
+              validators.required('Name is required')
+            ]}/>
+          <AttributeField
+            type="textarea"
+            label={<FormattedMessage message="project.description"/>}
+            value={asset.get('description')}
+            onChange={this.setValueInField.bind(this, ['description'])}/>
+          <button className="attribute-palette__delete-btn" onClick={this.deleteAsset}>
+            <FontAwesome icon="trash-o"/>
+            <FormattedMessage message="common.delete"/>
+          </button>
+          {attrs.map(([key, value], i) => (
+            <div className="input-group" key={i}>
+              <label className="input-group__label">{key}</label>
+              {value}
+            </div>
+          ))}
+        </div>
+      </Palette>
     );
   }
 

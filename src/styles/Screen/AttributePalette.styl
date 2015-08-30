@@ -4,8 +4,31 @@
 
 .attribute-palette
   padding: 0 padding-medium
+  position: relative
+  height: 100%
+  overflow: hidden
   .input-group__field
     border-bottom-color: lighten(color-project-sidebar, 20%)
+  .tab-host__tabs
+    text-align: center
+  .tab-host__tab
+    padding: 0 padding-small
+    height: palette-title-height
+    line-height: palette-title-height
+    color: color-secondary-text
+    cursor: pointer
+    &.active
+      color: color-highlight
+    &:hover
+      color: color-highlight
+  .tab-host__content
+    position: absolute
+    top: palette-title-height
+    left: 0
+    right: 0
+    bottom: 0
+    overflow: auto
+    padding: 0 padding-medium
 
 $attribute-palette-btn
   @extend $button-small

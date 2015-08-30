@@ -93,7 +93,7 @@ class ColorPicker extends React.Component {
           <Hue hsl={hsl} onChange={this.handleChange}/>
         </div>
         <div className="color-picker__slider">
-          <Alpha rgb={rgb} onChange={this.handleChange}/>
+          <Alpha hsl={hsl} rgb={rgb} onChange={this.handleChange}/>
         </div>
         {this.renderFields()}
         {this.renderPresetColors()}

@@ -9,6 +9,7 @@ import FontAwesome from '../common/FontAwesome';
 import ElementTypes from '../../constants/ElementTypes';
 import {FormattedMessage} from '../intl';
 import AttributeField from './AttributeField';
+import {TabHost, TabPane} from '../tab';
 
 @pureRender
 class AttributePaletteElement extends React.Component {
@@ -38,22 +39,23 @@ class AttributePaletteElement extends React.Component {
 
   render(){
     return (
-      <div className="attribute-palette">
-        {this.renderContent()}
-      </div>
+      <TabHost className="attribute-palette">
+        {this.renderInfoTab()}
+        {this.renderStyleTab()}
+        {this.renderEventTab()}
+      </TabHost>
     );
   }
 
-  renderContent(){
+  renderInfoTab(){
     const element = this.getActiveElement();
-    const {components, events, project, elements} = this.props;
+    const {components, project, elements} = this.props;
     if (!element) return;
 
     const component = components.get(element.get('type'));
     if (!component) return;
 
     const parent = elements.get(element.get('element_id'));
-    const elementEvents = events.filter(event => event.get('element_id') === element.get('id'));
     const isScreen = element.get('type') === ElementTypes.screen;
     let parentComponent;
 
@@ -62,7 +64,7 @@ class AttributePaletteElement extends React.Component {
     }
 
     return (
-      <div>
+      <TabPane tab={<FontAwesome icon="info-circle"/>}>
         <AttributeField
           type="text"
           label={<FormattedMessage message="common.name"/>}
@@ -103,22 +105,47 @@ class AttributePaletteElement extends React.Component {
               .map(this.renderAttributeField.bind(this)).toArray()}
           </div>
         )}
-        {component.has('styles') && (
-          <div>
-            <h4>
-              <FormattedMessage message="project.styles"/>
-            </h4>
-            {component.get('styles')
-              .map(this.renderStyleField.bind(this)).toArray()}
-          </div>
-        )}
-        {component.has('availableEventTypes') && component.get('availableEventTypes').count() && (
-          <EventList {...this.props}
-            events={elementEvents}
-            element={element}
-            component={component}/>
-        )}
-      </div>
+      </TabPane>
+    );
+  }
+
+  renderStyleTab(){
+    const element = this.getActiveElement();
+    const {components} = this.props;
+    if (!element) return;
+
+    const component = components.get(element.get('type'));
+    if (!component) return;
+
+    return (
+      <TabPane tab={<FontAwesome icon="magic"/>}>
+        {component.has('styles') && component.get('styles')
+          .map(this.renderStyleField.bind(this)).toArray()}
+      </TabPane>
+    );
+  }
+
+  renderEventTab(){
+    const element = this.getActiveElement();
+    const {components, events} = this.props;
+    if (!element) return;
+
+    const component = components.get(element.get('type'));
+    if (!component) return;
+
+    const elementEvents = events.filter(event => event.get('element_id') === element.get('id'));
+
+    if (!component.has('availableEventTypes') || !component.get('availableEventTypes').count()){
+      return;
+    }
+
+    return (
+      <TabPane tab={<FontAwesome icon="mouse-pointer"/>}>
+        <EventList {...this.props}
+          events={elementEvents}
+          element={element}
+          component={component}/>
+      </TabPane>
     );
   }
 

@@ -1,6 +1,4 @@
 import React from 'react';
-import Palette from '../Project/Palette';
-import {FormattedMessage} from '../intl';
 import pureRender from '../../decorators/pureRender';
 import AttributePaletteElement from './AttributePaletteElement';
 import AttributePaletteAsset from './AttributePaletteAsset';
@@ -16,14 +14,6 @@ class AttributePalette extends React.Component {
   }
 
   render(){
-    return (
-      <Palette title={<FormattedMessage message="project.attributes"/>}>
-        {this.renderContent()}
-      </Palette>
-    );
-  }
-
-  renderContent(){
     const {selectedAsset} = this.props;
 
     if (selectedAsset){
