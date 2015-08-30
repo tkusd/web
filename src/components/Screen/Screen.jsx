@@ -15,41 +15,6 @@ if (process.env.BROWSER){
   require('../../styles/Screen/Screen.styl');
 }
 
-function loadThemeCSS(theme){
-  if (!process.env.BROWSER) return Promise.resolve();
-
-  return new Promise((resolve, reject) => {
-    switch (theme){
-    case 'ios':
-      require.ensure([
-        'framework7/dist/css/framework7.ios.css?theme=ios',
-        'framework7/dist/css/framework7.ios.colors.css?theme=ios'
-      ], require => {
-        require('framework7/dist/css/framework7.ios.css?theme=ios');
-        require('framework7/dist/css/framework7.ios.colors.css?theme=ios');
-        resolve();
-      }, 'theme-ios');
-
-      break;
-
-    case 'material':
-      require.ensure([
-        'framework7/dist/css/framework7.material.css?theme=material',
-        'framework7/dist/css/framework7.material.colors.css?theme=material'
-      ], require => {
-        require('framework7/dist/css/framework7.material.css?theme=material');
-        require('framework7/dist/css/framework7.material.colors.css?theme=material');
-        resolve();
-      }, 'theme-material');
-
-      break;
-
-    default:
-      resolve();
-    }
-  });
-}
-
 @connectToStores([
   'ElementStore',
   'ComponentStore',
@@ -76,29 +41,6 @@ function loadThemeCSS(theme){
 }))
 @pureRender
 class Screen extends React.Component {
-  static onEnter(state, transition){
-    const {AppStore, ProjectStore} = this.getStore();
-    const {getFullElement} = bindActions(ElementAction, this);
-    let promise;
-
-    if (AppStore.isFirstRender()){
-      promise = Promise.resolve();
-    } else {
-      promise = getFullElement(state.params.screenID);
-    }
-
-    return promise.then(element => {
-      const project = ProjectStore.getProject(state.params.projectID);
-      return loadThemeCSS(project.get('theme'));
-    }).catch(err => {
-      if (err.response && err.response.status === 404){
-        transition.to('/projects/' + state.params.projectID);
-      } else {
-        throw err;
-      }
-    });
-  }
-
   static contextTypes = {
     flux: React.PropTypes.object.isRequired,
     router: React.PropTypes.object.isRequired
@@ -133,7 +75,6 @@ class Screen extends React.Component {
 
   componentWillUpdate(nextProps, nextState){
     if (this.state.project.get('theme') !== nextState.project.get('theme')){
-      loadThemeCSS(nextState.project.get('theme'));
       this.selectElement(null);
     }
   }

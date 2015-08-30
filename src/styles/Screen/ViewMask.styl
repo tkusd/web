@@ -1,5 +1,6 @@
 @import "nib"
 @import "../common"
+@import "../preview/theme"
 
 .view-mask
   height: 100%
@@ -16,17 +17,9 @@
   margin: auto
   user-select: none
   &.ios
-    font-family: Helvetica Neue, Helvetica, Arial, sans-serif
-    color: #000
-    font-size: 14px
-    line-height: 1.4
-    background: #fff
+    @extend $theme-ios
   &.material
-    font-family: Roboto, Noto, Helvetica, Arial, sans-serif
-    color: #212121
-    font-size: 14px
-    line-height: 1.5
-    background: #fff
+    @extend $theme-material
 
 $view-resize-area
   position: fixed

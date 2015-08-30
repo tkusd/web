@@ -1,41 +1,31 @@
 @import "nib"
 @import "../common"
 
+screen-width = 360px
+screen-height = 640px
+screen-scale = 0.3
+
 .screen-item
   position: relative
+  padding: padding-small 12px
+  cursor: pointer
+
+.screen-item--selected
+  background: color-list-highlight
 
 .screen-item__name
   line-height: 1
   white-space: nowrap
   overflow: hidden
   text-overflow: ellipsis
-  display: block
   user-select: none
-  padding: padding-small padding-medium + 12px padding-small padding-medium
-  text-decoration: none
-  color: inherit
-  .screen-item--selected &
-    background: color-list-highlight
-
-.screen-item__dropdown
-  position: absolute
-  top: 0
-  right: 0
-  bottom: 0
-
-.screen-item__more-btn
-  background: none
-  border: none
-  padding: 0 12px
-  line-height: 30px
-  &:hover
-    background: #666
+  padding-top: padding-small
+  padding-right: 12px
 
 .screen-item--main
   &:before
     content: "M"
     position: absolute
-    top: 0
     bottom: 0
     right: 0
     color: color-secondary-text
@@ -46,3 +36,27 @@
 
 .screen-item--dragging
   opacity: 0
+
+.screen-item__view-container
+  width: screen-width * screen-scale
+  height: screen-height * screen-scale
+  margin: auto
+  pointer-events: none
+
+.screen-item__view
+  width: screen-width
+  height: screen-height
+  transform: scale(screen-scale)
+  transform-origin: 0 0
+  &.ios
+    font-family: Helvetica Neue, Helvetica, Arial, sans-serif
+    color: #000
+    font-size: 14px
+    line-height: 1.4
+    background: #fff
+  &.material
+    font-family: Roboto, Noto, Helvetica, Arial, sans-serif
+    color: #212121
+    font-size: 14px
+    line-height: 1.5
+    background: #fff

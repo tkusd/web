@@ -56,12 +56,12 @@ class ViewMask extends React.Component {
     window.removeEventListener('resize', this.handleWindowResize);
   }
 
-  componentWillReceiveProps(nextProps){
-    if (this.props.activeElement !== nextProps.activeElement){
+  componentDidUpdate(prevProps){
+    if (this.props.activeElement !== prevProps.activeElement){
       let node;
 
-      if (nextProps.activeElement){
-        node = document.getElementById('e' + nextProps.activeElement);
+      if (this.props.activeElement){
+        node = document.getElementById('e' + this.props.activeElement);
       }
 
       if (node){
@@ -77,11 +77,11 @@ class ViewMask extends React.Component {
       }
     }
 
-    if (!Immutable.is(this.props.hoverElements, nextProps.hoverElements)){
+    if (!Immutable.is(this.props.hoverElements, prevProps.hoverElements)){
       let node;
 
-      if (nextProps.hoverElements.count()){
-        node = document.getElementById('e' + nextProps.hoverElements.last());
+      if (this.props.hoverElements.count()){
+        node = document.getElementById('e' + this.props.hoverElements.last());
       }
 
       if (node){
@@ -96,9 +96,7 @@ class ViewMask extends React.Component {
         });
       }
     }
-  }
 
-  componentDidUpdate(prevProps){
     if (!Immutable.is(this.props.elements, prevProps.elements) ||
       this.props.screenSize !== prevProps.screenSize ||
       this.props.screenDimension !== prevProps.screenDimension ||

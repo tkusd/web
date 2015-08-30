@@ -1,13 +1,16 @@
 import React from 'react';
 import cx from 'classnames';
-import {Link} from 'react-router';
 import pureRender from '../../decorators/pureRender';
 import {DragSource, DropTarget} from 'react-dnd';
 import ItemTypes from '../../constants/ItemTypes';
+import View from '../preview/View';
+import getAssetBlobURL from '../../utils/getAssetBlobURL';
 
 if (process.env.BROWSER){
   require('../../styles/Project/ScreenItem.styl');
 }
+
+function noop(){}
 
 const sourceSpec = {
   beginDrag(props){
@@ -65,6 +68,7 @@ class ScreenItem extends React.Component {
     editable: React.PropTypes.bool.isRequired,
     moveScreen: React.PropTypes.func.isRequired,
     updateIndex: React.PropTypes.func.isRequired,
+    apiEndpoint: React.PropTypes.string.isRequired,
 
     // React DnD
     connectDragSource: React.PropTypes.func.isRequired,
@@ -75,11 +79,13 @@ class ScreenItem extends React.Component {
   render(){
     const {
       element,
+      elements,
       selectedScreen,
       project,
       connectDragSource,
       connectDropTarget,
-      isDragging
+      isDragging,
+      apiEndpoint
     } = this.props;
 
     const id = element.get('id');
@@ -90,12 +96,25 @@ class ScreenItem extends React.Component {
     });
 
     return connectDragSource(connectDropTarget(
-      <div className={className}>
-        <Link to={`/projects/${element.get('project_id')}/screens/${id}`} className="screen-item__name">
+      <div className={className} onClick={this.handleScreenClick}>
+        <div className="screen-item__view-container">
+          <div className={cx('screen-item__view', project.get('theme'))}>
+            <View {...this.props}
+              element={elements.get(id)}
+              getAssetURL={getAssetBlobURL.bind(this, apiEndpoint)}
+              getElementID={noop}/>
+          </div>
+        </div>
+        <div className="screen-item__name">
           {element.get('name')}
-        </Link>
+        </div>
       </div>
     ));
+  }
+
+  handleScreenClick = (e) => {
+    const {element, project} = this.props;
+    this.context.router.transitionTo(`/projects/${project.get('id')}/screens/${element.get('id')}`);
   }
 }
 
