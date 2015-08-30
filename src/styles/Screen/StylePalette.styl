@@ -1,0 +1,72 @@
+@import "nib"
+@import "../common"
+
+.style-palette__section
+  clearfix()
+  margin: 0 padding-small * -1
+
+.style-palette__input-group
+  clearfix()
+  padding: 4px padding-small
+  font-size: 0.9em
+  position: relative
+  clear: both
+
+.style-palette__input-group-half
+  @extend .style-palette__input-group
+  float: left
+  width: 50%
+  clear: none
+
+.style-palette__input-label
+  width: 40%
+  float: left
+  padding-right: padding-small
+  white-space: nowrap
+  overflow: hidden
+  text-overflow: ellipsis
+  color: color-secondary-text
+  line-height: line-height
+
+.style-palette__input-field
+  width: 60%
+  float: left
+
+.style-palette__input-field--border
+  @extend .style-palette__input-field
+  border-bottom: 2px solid color-list-highlight
+  padding-bottom: 4px
+
+.style-palette__color-picker-wrap
+  @extend .style-palette__input-field
+  position: absolute
+  right: 0
+  top: 0
+  height: 100%
+
+.style-palette__color-picker
+  .color-picker__toggle
+    width: 20px
+    height: @width
+    border-radius: 3px
+    margin: 3px
+    float: left
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,.15), inset 0 0 4px rgba(0,0,0,.25)
+
+.style-palette__btn-group
+  button
+    background: none
+    border: 1px solid color-list-highlight
+    border-right-width: 0
+    cursor: pointer
+    outline: none
+    line-height: 1
+    &:first-of-type
+      border-radius: 3px 0 0 3px
+    &:last-of-type
+      border-radius: 0 3px 3px 0
+      border-right-width: 1px
+    &:hover
+      color: color-highlight
+    &.active
+      color: color-accent

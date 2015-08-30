@@ -5,6 +5,7 @@ import {Dropdown, DropdownMenu} from '../dropdown';
 import debounce from 'lodash/function/debounce';
 import NumberInput from './NumberInput';
 import HexInput from './HexInput';
+import FontAwesome from '../common/FontAwesome';
 
 if (process.env.BROWSER){
   require('../../styles/form/ColorPicker.styl');
@@ -68,13 +69,18 @@ class ColorPicker extends React.Component {
 
   render(){
     return (
-      <Dropdown className={this.props.className}>
-        <div className="color-picker__toggle">
-          <Checkboard/>
-          <div className="color-picker__toggle-color" style={{backgroundColor: this.props.value}}/>
-        </div>
-        {this.renderDialog()}
-      </Dropdown>
+      <div className={this.props.className}>
+        <Dropdown className="color-picker__dropdown">
+          <div className="color-picker__toggle">
+            <Checkboard/>
+            <div className="color-picker__toggle-color" style={{backgroundColor: this.props.value}}/>
+          </div>
+          {this.renderDialog()}
+        </Dropdown>
+        <button className="color-picker__reset" onClick={this.reset}>
+          <FontAwesome icon="times"/>
+        </button>
+      </div>
     );
   }
 
@@ -174,6 +180,13 @@ class ColorPicker extends React.Component {
 
   commitChange(){
     this.props.onChange(this.getColorString());
+  }
+
+  reset = () => {
+    this.setState({
+      color: tinycolor('')
+    });
+    this.props.onChange('');
   }
 }
 

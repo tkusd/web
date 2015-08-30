@@ -1,13 +1,14 @@
 @import "nib"
 @import "../common"
 
+.color-picker__dropdown
+  height: 100%
+
 .color-picker__toggle
-  height: 20px
-  width: 60px
+  height: 100%
+  cursor: pointer
   position: relative
   overflow: hidden
-  border-radius: 3px
-  border: 1px solid rgba(0, 0, 0, 0.15)
 
 .color-picker__toggle-color
   position: absolute
@@ -107,3 +108,11 @@ $color-picker-input
   display: block
   padding: 4px 0
   line-height: 1
+
+.color-picker__reset
+  background: none
+  border: none
+  outline: none
+  cursor: pointer
+  &:hover
+    color: color-highlight

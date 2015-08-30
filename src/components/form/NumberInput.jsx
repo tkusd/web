@@ -1,5 +1,6 @@
 import React from 'react';
 import debounce from 'lodash/function/debounce';
+import Big from 'big.js';
 
 function noop(){}
 
@@ -27,7 +28,7 @@ class NumberInput extends React.Component {
     super(props, context);
 
     this.state = {
-      value: this.props.value != null ? this.props.value : this.props.defaultValue
+      value: new Big(this.props.value != null ? this.props.value : this.props.defaultValue)
     };
 
     this.commitChange = debounce(this.commitChange.bind(this), DEBOUNCE_DELAY, {
@@ -38,38 +39,38 @@ class NumberInput extends React.Component {
   componentWillReceiveProps(nextProps){
     if (nextProps.value !== this.props.value){
       this.setState({
-        value: nextProps.value
+        value: new Big(nextProps.value)
       });
     }
   }
 
   render(){
+    const {value} = this.state;
+
     return <input
       {...this.props}
-      value={this.state.value}
+      value={value.toString()}
       onChange={this.handleChange}
       onKeyDown={this.handleKeyDown}/>;
   }
 
   getValue(){
-    return this.state.value;
+    return +this.state.value;
   }
 
-  setValue(value){
+  setValue(value_){
     const {min, max} = this.props;
+    let value = new Big(value_);
 
-    if (typeof min === 'number' && value < min) value = min;
-    if (typeof max === 'number' && value > max) value = max;
+    if (min != null && value.lt(min)) value = new Big(min);
+    if (max != null && value.gt(max)) value = new Big(max);
 
-    this.setState({
-      value: value
-    });
-
+    this.setState({value});
     this.commitChange();
   }
 
   handleChange = (e) => {
-    this.setValue(Number((e.currentTarget || e.target).value));
+    this.setValue((e.currentTarget || e.target).value);
   }
 
   handleKeyDown = (e) => {
@@ -86,12 +87,12 @@ class NumberInput extends React.Component {
     this.props.onKeyDown(e);
   }
 
-  increase(){
-    this.setValue(this.getValue() + this.props.step);
+  increase(n = this.props.step){
+    this.setValue(this.state.value.plus(n));
   }
 
-  decrease(){
-    this.setValue(this.getValue() - this.props.step);
+  decrease(n = this.props.step){
+    this.setValue(this.state.value.minus(n));
   }
 
   commitChange(){

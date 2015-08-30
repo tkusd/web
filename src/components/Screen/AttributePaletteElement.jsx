@@ -10,6 +10,7 @@ import ElementTypes from '../../constants/ElementTypes';
 import {FormattedMessage} from '../intl';
 import AttributeField from './AttributeField';
 import {TabHost, TabPane} from '../tab';
+import StylePalette from './StylePalette';
 
 @pureRender
 class AttributePaletteElement extends React.Component {
@@ -111,16 +112,13 @@ class AttributePaletteElement extends React.Component {
 
   renderStyleTab(){
     const element = this.getActiveElement();
-    const {components} = this.props;
     if (!element) return;
-
-    const component = components.get(element.get('type'));
-    if (!component) return;
 
     return (
       <TabPane tab={<FontAwesome icon="magic"/>}>
-        {component.has('styles') && component.get('styles')
-          .map(this.renderStyleField.bind(this)).toArray()}
+        <StylePalette {...this.props}
+          element={element}
+          setValueInField={this.setValueInField.bind(this)}/>
       </TabPane>
     );
   }
@@ -160,20 +158,6 @@ class AttributePaletteElement extends React.Component {
         label={attr.get('label')}
         type={attr.get('type')}
         onChange={this.setValueInField.bind(this, ['attributes', key])}/>
-    );
-  }
-
-  renderStyleField(style, key){
-    const element = this.getActiveElement();
-
-    return (
-      <AttributeField {...this.props}
-        key={key}
-        value={element.getIn(['styles', key])}
-        values={style.get('values')}
-        label={style.get('label')}
-        type={style.get('type')}
-        onChange={this.setValueInField.bind(this, ['styles', key])}/>
     );
   }
 

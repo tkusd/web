@@ -1,7 +1,6 @@
 import React from 'react';
 import cx from 'classnames';
 import NumberInput from './NumberInput';
-import debounce from 'lodash/function/debounce';
 
 if (process.env.BROWSER){
   require('../../styles/form/SizeInput.styl');
@@ -9,20 +8,13 @@ if (process.env.BROWSER){
 
 function noop(){}
 
-const DEBOUNCE_DELAY = 100;
 const UNIT_REGEX = /^(\d+)(px|pt|em|%)$/;
 
 class SizeInput extends React.Component {
   static propTypes = {
-    label: React.PropTypes.oneOfType([
-      React.PropTypes.string,
-      React.PropTypes.element
-    ]),
     defaultValue: React.PropTypes.string,
     value: React.PropTypes.string,
     onChange: React.PropTypes.func.isRequired,
-    min: React.PropTypes.number,
-    max: React.PropTypes.number,
     className: React.PropTypes.string
   }
 
@@ -34,9 +26,6 @@ class SizeInput extends React.Component {
     super(props, context);
 
     this.state = this.parseRawValue(this.props.value != null ? this.props.value : this.props.defaultValue);
-    this.commitChange = debounce(this.commitChange.bind(this), DEBOUNCE_DELAY, {
-      leading: false
-    });
   }
 
   componentWillReceiveProps(nextProps){
@@ -57,7 +46,7 @@ class SizeInput extends React.Component {
       data.unit = 'auto';
     } else if (UNIT_REGEX.test(value)){
       let match = value.match(UNIT_REGEX);
-      data.value = Number(match[1]);
+      data.value = +match[1];
       data.unit = match[2];
     }
 
@@ -65,34 +54,28 @@ class SizeInput extends React.Component {
   }
 
   render(){
-    const {label} = this.props;
     let className = cx('size-input', {
       'size-input--full': this.isValueNeeded()
     }, this.props.className);
 
     return (
       <div className={className}>
-        <label>
-          {label && <span className="size-input__label">{label}</span>}
-          <div className="size-input__field">
-            <NumberInput
-              className="size-input__value"
-              value={this.state.value}
-              onChange={this.handleInputChange}
-              min={this.props.min}
-              max={this.props.max}/>
-            <select
-              className="size-input__unit"
-              value={this.state.unit}
-              onChange={this.handleSelectChange}>
-              <option value=""></option>
-              <option value="auto">auto</option>
-              <option value="px">px</option>
-              <option value="pt">pt</option>
-              <option value="em">em</option>
-              <option value="%">%</option>
-            </select>
-          </div>
+        <NumberInput {...this.props}
+          className="size-input__value"
+          value={this.state.value}
+          onChange={this.handleInputChange}/>
+        <label className="size-input__unit">
+          {this.state.unit}
+          <select className="size-input__unit-select"
+            value={this.state.unit}
+            onChange={this.handleSelectChange}>
+            <option value=""></option>
+            <option value="auto">auto</option>
+            <option value="px">px</option>
+            <option value="pt">pt</option>
+            <option value="em">em</option>
+            <option value="%">%</option>
+          </select>
         </label>
       </div>
     );
@@ -133,7 +116,11 @@ class SizeInput extends React.Component {
     }
 
     this.setState(newState);
-    this.commitChange();
+
+    setTimeout(() => {
+      if (this.isValueNeeded() && !this.state.value) return;
+      this.props.onChange(this.getValue());
+    }, 0);
   }
 
   handleInputChange = (value) => {
@@ -146,11 +133,6 @@ class SizeInput extends React.Component {
     this.setValue({
       unit: (e.currentTarget || e.target).value
     });
-  }
-
-  commitChange(){
-    if (this.isValueNeeded() && !this.state.value) return;
-    this.props.onChange(this.getValue());
   }
 }
 

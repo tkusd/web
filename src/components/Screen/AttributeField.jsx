@@ -111,7 +111,7 @@ class AttributeField extends React.Component {
             onChange={this.handleChange}/>
         </div>
       );
-
+/*
     case 'color':
       return (
         <div className="attribute-field__color">
@@ -147,7 +147,7 @@ class AttributeField extends React.Component {
         <SizeInput {...this.props}
           value={value}
           onChange={this.handleChange}/>
-      );
+      );*/
     }
 
     return (

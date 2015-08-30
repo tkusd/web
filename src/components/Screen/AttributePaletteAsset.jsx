@@ -78,16 +78,16 @@ class AttributePaletteAsset extends React.Component {
             label={<FormattedMessage message="project.description"/>}
             value={asset.get('description')}
             onChange={this.setValueInField.bind(this, ['description'])}/>
-          <button className="attribute-palette__delete-btn" onClick={this.deleteAsset}>
-            <FontAwesome icon="trash-o"/>
-            <FormattedMessage message="common.delete"/>
-          </button>
           {attrs.map(([key, value], i) => (
             <div className="input-group" key={i}>
               <label className="input-group__label">{key}</label>
               {value}
             </div>
           ))}
+          <button className="attribute-palette__delete-btn" onClick={this.deleteAsset}>
+            <FontAwesome icon="trash-o"/>
+            <FormattedMessage message="common.delete"/>
+          </button>
         </div>
       </Palette>
     );
