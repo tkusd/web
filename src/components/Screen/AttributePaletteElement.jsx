@@ -46,14 +46,14 @@ class AttributePaletteElement extends React.Component {
 
   renderContent(){
     const element = this.getActiveElement();
-    const {components, events, activeElement, project, elements} = this.props;
+    const {components, events, project, elements} = this.props;
     if (!element) return;
 
     const component = components.get(element.get('type'));
     if (!component) return;
 
     const parent = elements.get(element.get('element_id'));
-    const elementEvents = events.filter(event => event.get('element_id') === activeElement);
+    const elementEvents = events.filter(event => event.get('element_id') === element.get('id'));
     const isScreen = element.get('type') === ElementTypes.screen;
     let parentComponent;
 
