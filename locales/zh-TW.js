@@ -133,8 +133,7 @@ module.exports = {
     },
     event: {
       click: '點擊',
-      enter: '進入',
-      leave: '離開'
+      init: '初始化'
     },
     color: {
       red: '紅色',

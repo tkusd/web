@@ -60,15 +60,20 @@ function loadThemeCSS(theme){
 @pureRender
 class ProjectContainer extends React.Component {
   static onEnter(state, transition){
-    const {AppStore} = this.getStore();
+    const {AppStore, ProjectStore} = this.getStore();
     const {getFullProject} = bindActions(ProjectAction, this);
     const {setPageTitle, setStatusCode} = bindActions(AppAction, this);
+    const {projectID} = state.params;
+    let promise;
 
     if (AppStore.isFirstRender()){
-      return Promise.resolve();
+      const project = ProjectStore.getProject(projectID);
+      promise = Promise.resolve(project.toJS());
+    } else {
+      promise = getFullProject(projectID);
     }
 
-    return getFullProject(state.params.projectID).then(project => {
+    return promise.then(project => {
       setPageTitle(project.title);
 
       if (!state.params.screenID && project.main_screen){

@@ -12,7 +12,7 @@ import {
   generateVariable
 } from '../utils/esprima';
 import base62uuid from '../utils/base62uuid';
-import {actions} from '../constants/ElementTypes';
+import {actions, events} from '../constants/ElementTypes';
 import View from '../components/preview/View';
 import getAssetBlobURL from '../utils/getAssetBlobURL';
 import merge from 'lodash/object/merge';
@@ -105,6 +105,36 @@ function generateActions(flux, projectID){
   }).toArray();
 }
 
+function generateEventListener(flux, event){
+  const {ElementStore} = flux.getStore();
+  const element = ElementStore.getElement(event.get('element_id'));
+
+  switch (event.get('event')){
+  case events.init:
+    return generateExpressionStatement(
+      generateCallExpression(generateMemberExpression('app.onPageInit'), [
+        generateLiteral(event.get('element_id')),
+        generateIdentifier(getActionID(event.get('action_id')))
+      ])
+    );
+  }
+
+  return generateExpressionStatement(
+    generateCallExpression({
+      type: 'MemberExpression',
+      object: generateCallExpression(
+        generateIdentifier('Dom7'),
+        [generateIdentifier('document')]
+      ),
+      property: generateIdentifier('on')
+    }, [
+      generateLiteral(event.get('event')),
+      generateLiteral(getElementID(element)),
+      generateIdentifier(getActionID(event.get('action_id')))
+    ])
+  );
+}
+
 function generateEvents(flux, projectID){
   const {ElementStore, EventStore} = flux.getStore();
   const elements = ElementStore.getElementsOfProject(projectID);
@@ -112,6 +142,8 @@ function generateEvents(flux, projectID){
   return elements.toArray().map(element => {
     const events = EventStore.getEventsOfElement(element.get('id'));
 
+    return events.toArray().map(generateEventListener.bind(null, flux));
+/*
     return events.toArray().map(event => {
       return generateExpressionStatement(
         generateCallExpression({
@@ -127,7 +159,7 @@ function generateEvents(flux, projectID){
           generateIdentifier(getActionID(event.get('action_id')))
         ])
       );
-    });
+    });*/
   }).reduce(flattenArray, []);
 }
 

@@ -132,8 +132,7 @@ module.exports = {
     },
     event: {
       click: 'Click',
-      enter: 'Enter',
-      leave: 'Leave'
+      init: 'Initialize'
     },
     color: {
       red: 'Red',

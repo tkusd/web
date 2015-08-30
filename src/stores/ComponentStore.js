@@ -8,8 +8,7 @@ const COMPONENTS = [
     hidden: true,
     container: true,
     availableEventTypes: [
-      events.enter,
-      events.leave
+      events.init
     ],
     availableChildTypes: [
       ElementTypes.navbar,

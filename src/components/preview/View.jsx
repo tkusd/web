@@ -2,6 +2,7 @@ import React from 'react';
 import cx from 'classnames';
 import ElementTypes from '../../constants/ElementTypes';
 import NoopContainer from './NoopContainer';
+import pureRender from '../../decorators/pureRender';
 
 function getElementID(element){
   return 'e' + element.get('id');
@@ -33,6 +34,7 @@ function renderMultiLineString(str){
   return result;
 }
 
+@pureRender
 class View extends React.Component {
   static propTypes = {
     element: React.PropTypes.object.isRequired,
