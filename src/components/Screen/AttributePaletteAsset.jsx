@@ -63,7 +63,7 @@ class AttributePaletteAsset extends React.Component {
 
     return (
       <Palette title={<FormattedMessage message="project.attributes"/>}>
-        <div className="attribute-palette">
+        <div className="attribute-palette__content">
           <AttributeField
             type="text"
             label={<FormattedMessage message="common.name"/>}

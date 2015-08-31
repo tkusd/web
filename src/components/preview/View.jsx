@@ -16,9 +16,13 @@ function getDirectURL(url){
 
 function renderMultiLineString(str){
   let result = [];
+  let lines = str.split('\n');
+
+  // Return the string directly if it has only one line
+  if (lines.length === 1) return str;
 
   // Append <br> to every line
-  str.split('\n').forEach((line, i) => {
+  lines.forEach((line, i) => {
     result.push(
       <span key={i * 2}>{line}</span>,
       <br key={i * 2 + 1}/>
@@ -28,10 +32,11 @@ function renderMultiLineString(str){
   // Remove last <br>
   result.pop();
 
-  // Return the string directly if the result only has one element
-  if (result.length === 1) return str;
-
   return result;
+}
+
+function filterTrue(s){
+  return s;
 }
 
 @pureRender
@@ -415,9 +420,22 @@ class View extends React.Component {
   }
 
   makeElementProps(element){
+    let styles = element.get('styles').filter(filterTrue);
+
+    if (styles.has('textShadow')){
+      const textShadow = styles.get('textShadow');
+
+      styles = styles.set('textShadow', [
+        textShadow.get('offsetX', '0'),
+        textShadow.get('offsetY', '0'),
+        textShadow.get('blur', '0'),
+        textShadow.get('color', '')
+      ].join(' '));
+    }
+
     return {
       id: this.props.getElementID(element),
-      style: element.get('styles').filter(s => s).toJS()
+      style: styles.toJS()
     };
   }
 }

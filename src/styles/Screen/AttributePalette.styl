@@ -3,7 +3,6 @@
 @import "../button"
 
 .attribute-palette
-  padding: 0 padding-medium
   position: relative
   height: 100%
   overflow: auto
@@ -11,6 +10,7 @@
     border-bottom-color: lighten(color-project-sidebar, 20%)
   .tab-host__tabs
     text-align: center
+    border-bottom: 1px solid color-list-highlight
   .tab-host__tab
     padding: 0 padding-small
     height: palette-title-height
@@ -30,10 +30,19 @@
     overflow: auto
     padding: 0 padding-medium
 
+.attribute-palette__content
+  padding: 0 padding-medium
+  .input-group__field
+    border-bottom-color: lighten(color-project-sidebar, 20%)
+
+.attribute-palette__btn-group
+  display: flex
+  flex-flow: row nowrap
+
 $attribute-palette-btn
   @extend $button-small
   margin-right: padding-small
-  margin-bottom: padding-small
+  white-space: nowrap
   i
     padding-right: 0.5em
 

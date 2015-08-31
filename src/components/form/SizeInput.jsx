@@ -15,11 +15,13 @@ class SizeInput extends React.Component {
     defaultValue: React.PropTypes.string,
     value: React.PropTypes.string,
     onChange: React.PropTypes.func.isRequired,
-    className: React.PropTypes.string
+    className: React.PropTypes.string,
+    acceptZero: React.PropTypes.bool
   }
 
   static defaultProps = {
-    onChange: noop
+    onChange: noop,
+    acceptZero: false
   }
 
   constructor(props, context){
@@ -118,7 +120,7 @@ class SizeInput extends React.Component {
     this.setState(newState);
 
     setTimeout(() => {
-      if (this.isValueNeeded() && !this.state.value) return;
+      if (this.isValueNeeded() && !this.props.acceptZero && !this.state.value) return;
       this.props.onChange(this.getValue());
     }, 0);
   }

@@ -153,25 +153,38 @@ class StylePalette extends React.Component {
   }
 
   renderTextShadowSection(){
+    const {element} = this.props;
+
     return (
       <div className="style-palette__section">
         <div className="style-palette__input-group-half">
           <span className="style-palette__input-label">X</span>
-          <SizeInput className="style-palette__input-field--border"/>
+          <SizeInput className="style-palette__input-field--border"
+            acceptZero={true}
+            value={element.getIn(['styles', 'textShadow', 'offsetX'])}
+            onChange={this.setValueInField.bind(this, ['styles', 'textShadow', 'offsetX'])}/>
         </div>
         <div className="style-palette__input-group-half">
           <span className="style-palette__input-label">Y</span>
-          <SizeInput className="style-palette__input-field--border"/>
+          <SizeInput className="style-palette__input-field--border"
+            acceptZero={true}
+            value={element.getIn(['styles', 'textShadow', 'offsetY'])}
+            onChange={this.setValueInField.bind(this, ['styles', 'textShadow', 'offsetY'])}/>
         </div>
         <div className="style-palette__input-group-half">
           <span className="style-palette__input-label">Color</span>
           <div className="style-palette__input-field">
-            <ColorPicker className="style-palette__color-picker"/>
+            <ColorPicker className="style-palette__color-picker"
+              value={element.getIn(['styles', 'textShadow', 'color'])}
+              onChange={this.setValueInField.bind(this, ['styles', 'textShadow', 'color'])}/>
           </div>
         </div>
         <div className="style-palette__input-group-half">
           <span className="style-palette__input-label">Blur</span>
-          <SizeInput className="style-palette__input-field--border"/>
+          <SizeInput className="style-palette__input-field--border"
+            acceptZero={true}
+            value={element.getIn(['styles', 'textShadow', 'blur'])}
+            onChange={this.setValueInField.bind(this, ['styles', 'textShadow', 'blur'])}/>
         </div>
       </div>
     );

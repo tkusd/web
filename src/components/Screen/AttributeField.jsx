@@ -136,10 +136,6 @@ class AttributeField extends React.Component {
   commitChange(){
     this.props.onChange(this.state.value);
   }
-
-  reset = () => {
-    this.handleChange('');
-  }
 }
 
 export default AttributeField;

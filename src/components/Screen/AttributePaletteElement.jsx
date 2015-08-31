@@ -66,6 +66,7 @@ class AttributePaletteElement extends React.Component {
 
     return (
       <TabPane tab={<FontAwesome icon="info-circle"/>}>
+        <h4>Info</h4>
         <AttributeField
           type="text"
           label={<FormattedMessage message="common.name"/>}
@@ -82,18 +83,20 @@ class AttributePaletteElement extends React.Component {
             label={<FormattedMessage message="project.visible"/>}
             onChange={this.setValueInField.bind(this, ['is_visible'])}/>
         )}
-        {isScreen && (
-          <button className="attribute-palette__main-screen-btn"
-            onClick={this.updateMainScreen}
-            disabled={project.get('main_screen') === element.get('id')}>
-            <FontAwesome icon="mobile"/>
-            <FormattedMessage message="project.set_as_main_screen"/>
+        <div className="attribute-palette__btn-group">
+          {isScreen && (
+            <button className="attribute-palette__main-screen-btn"
+              onClick={this.updateMainScreen}
+              disabled={project.get('main_screen') === element.get('id')}>
+              <FontAwesome icon="mobile"/>
+              <FormattedMessage message="project.set_as_main_screen"/>
+            </button>
+          )}
+          <button className="attribute-palette__delete-btn" onClick={this.deleteElement}>
+            <FontAwesome icon="trash-o"/>
+            <FormattedMessage message="common.delete"/>
           </button>
-        )}
-        <button className="attribute-palette__delete-btn" onClick={this.deleteElement}>
-          <FontAwesome icon="trash-o"/>
-          <FormattedMessage message="common.delete"/>
-        </button>
+        </div>
         {component.has('attributes') && (
           <div>
             <h4>
