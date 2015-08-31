@@ -1,5 +1,5 @@
 import React from 'react';
-import {SizeInput, ColorPicker, ButtonGroup} from '../form';
+import {SizeInput, ColorPicker, ButtonGroup, Checkbox} from '../form';
 import FontAwesome from '../common/FontAwesome';
 import {TabHost, TabPane} from '../tab';
 import capitalize from 'lodash/string/capitalize';
@@ -191,7 +191,10 @@ class StylePalette extends React.Component {
   }
 
   renderFillSection(){
-    //
+    return (
+      <div className="style-palette__section">
+      </div>
+    );
   }
 
   renderBorderSection(){
@@ -248,33 +251,47 @@ class StylePalette extends React.Component {
   }
 
   renderShadowSection(){
+    const {element} = this.props;
+
     return (
       <div className="style-palette__section">
         <div className="style-palette__input-group-half">
           <span className="style-palette__input-label">X</span>
-          <SizeInput className="style-palette__input-field--border"/>
+          <SizeInput className="style-palette__input-field--border"
+            value={element.getIn(['styles', 'boxShadow', 'offsetX'])}
+            onChange={this.setValueInField.bind(this, ['styles', 'boxShadow', 'offsetX'])}/>
         </div>
         <div className="style-palette__input-group-half">
           <span className="style-palette__input-label">Y</span>
-          <SizeInput className="style-palette__input-field--border"/>
+          <SizeInput className="style-palette__input-field--border"
+            value={element.getIn(['styles', 'boxShadow', 'offsetY'])}
+            onChange={this.setValueInField.bind(this, ['styles', 'boxShadow', 'offsetY'])}/>
         </div>
         <div className="style-palette__input-group-half">
           <span className="style-palette__input-label">Blur</span>
-          <SizeInput className="style-palette__input-field--border"/>
+          <SizeInput className="style-palette__input-field--border"
+            value={element.getIn(['styles', 'boxShadow', 'blur'])}
+            onChange={this.setValueInField.bind(this, ['styles', 'boxShadow', 'blur'])}/>
         </div>
         <div className="style-palette__input-group-half">
           <span className="style-palette__input-label">Spread</span>
-          <SizeInput className="style-palette__input-field--border"/>
+          <SizeInput className="style-palette__input-field--border"
+            value={element.getIn(['styles', 'boxShadow', 'spread'])}
+            onChange={this.setValueInField.bind(this, ['styles', 'boxShadow', 'spread'])}/>
         </div>
         <div className="style-palette__input-group-half">
           <span className="style-palette__input-label">Color</span>
           <div className="style-palette__input-field">
-            <ColorPicker className="style-palette__color-picker"/>
+            <ColorPicker className="style-palette__color-picker"
+              value={element.getIn(['styles', 'boxShadow', 'color'])}
+              onChange={this.setValueInField.bind(this, ['styles', 'boxShadow', 'color'])}/>
           </div>
         </div>
         <div className="style-palette__input-group-half">
           <span className="style-palette__input-label">Inset</span>
-          <input type="checkbox"/>
+          <Checkbox
+            value={element.getIn(['styles', 'boxShadow', 'inset'])}
+            onChange={this.setValueInField.bind(this, ['styles', 'boxShadow', 'inset'])}/>
         </div>
       </div>
     );

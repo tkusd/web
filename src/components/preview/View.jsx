@@ -433,6 +433,19 @@ class View extends React.Component {
       ].join(' '));
     }
 
+    if (styles.has('boxShadow')){
+      const boxShadow = styles.get('boxShadow');
+
+      styles = styles.set('boxShadow', [
+        boxShadow.get('inset') ? 'inset' : '',
+        boxShadow.get('offsetX', '0'),
+        boxShadow.get('offsetY', '0'),
+        boxShadow.get('blur', '0'),
+        boxShadow.get('spread', '0'),
+        boxShadow.get('color', '')
+      ].join(' '));
+    }
+
     return {
       id: this.props.getElementID(element),
       style: styles.toJS()

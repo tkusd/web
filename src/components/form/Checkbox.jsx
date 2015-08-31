@@ -71,7 +71,7 @@ class Checkbox extends React.Component {
     let value = (e.target || e.currentTarget).checked;
 
     this.setState({value});
-    this.props.onChange({value});
+    this.props.onChange(value);
   }
 }
 

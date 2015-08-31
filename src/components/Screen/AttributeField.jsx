@@ -63,7 +63,7 @@ class AttributeField extends React.Component {
       return (
         <Checkbox {...this.props}
           value={value}
-          onChange={this.handleInputChange}/>
+          onChange={this.handleChange}/>
       );
 
     case 'select':
