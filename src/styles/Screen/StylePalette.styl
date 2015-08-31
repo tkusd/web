@@ -56,20 +56,24 @@
     float: right
 
 .style-palette__btn-group
+  display: flex
   button
+    flex: 1 1 auto
     background: none
     border: 1px solid color-list-highlight
     border-right-width: 0
     cursor: pointer
     outline: none
     line-height: 1
+    padding: 4px
     &:first-of-type
       border-radius: 3px 0 0 3px
     &:last-of-type
       border-radius: 0 3px 3px 0
       border-right-width: 1px
     &:hover
-      color: color-highlight
+      background: color-highlight
+      color: #444
     &.active
       color: color-accent
 

@@ -12,9 +12,9 @@ if (process.env.BROWSER){
 
 const fontWeightOptions = [
   {value: ''},
-  {value: '300', label: 'light'},
-  {value: '400', label: 'normal'},
-  {value: '700', label: 'bold'}
+  {value: '300'},
+  {value: '400'},
+  {value: '700'}
 ];
 
 const textAlignOptions = [
@@ -93,7 +93,6 @@ class StylePalette extends React.Component {
 
   renderFontSection(){
     const {element} = this.props;
-    const intl = formatIntlFromContext(this.context.flux);
 
     return (
       <div className="style-palette__section">
@@ -121,15 +120,11 @@ class StylePalette extends React.Component {
           <span className="style-palette__input-label">
             <FormattedMessage message="style.weight"/>
           </span>
-          <select className="style-palette__input-field"
+          <ButtonGroup className="style-palette__btn-group"
             value={element.getIn(['styles', 'fontWeight'], '')}
-            onChange={this.handleSelectChange.bind(this, ['styles', 'fontWeight'])}>
-            {fontWeightOptions.map((option, i) => (
-              <option value={option.value} key={i}>
-                {option.label && intl.getIntlMessage('style.' + option.label)}
-              </option>
-            ))}
-          </select>
+            options={fontWeightOptions}
+            renderer={this.renderFontWeightOption}
+            onChange={this.setValueInField.bind(this, ['styles', 'fontWeight'])}/>
         </div>
         <div className="style-palette__input-group">
           <span className="style-palette__input-label">
@@ -162,6 +157,11 @@ class StylePalette extends React.Component {
         </div>
       </div>
     );
+  }
+
+  renderFontWeightOption(option){
+    if (!option.value) return '—';
+    return <span style={{fontWeight: option.value}}>A</span>;
   }
 
   renderTextAlignOption(option){
