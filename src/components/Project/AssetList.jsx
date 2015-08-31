@@ -82,12 +82,12 @@ class AssetList extends React.Component {
         </div>
         {!assets.count() && !isDragging && (
           <div className="asset-list__overlay">
-            <FormattedMessage message="project.drag_asset_hint"/>
+            <FormattedMessage message="project.dragAssetHint"/>
           </div>
         )}
         {isDragging && (
           <div className="asset-list__overlay--dragging">
-            <FormattedMessage message="project.drop_asset_hint"/>
+            <FormattedMessage message="project.dropAssetHint"/>
           </div>
         )}
       </div>

@@ -79,7 +79,7 @@ class ScreenPalette extends React.Component {
     if (!screens.count()){
       return (
         <div className="screen-palette__empty">
-          <FormattedMessage message="project.no_screens"/>
+          <FormattedMessage message="project.noScreens"/>
         </div>
       );
     }

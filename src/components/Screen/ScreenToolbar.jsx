@@ -60,7 +60,7 @@ class ScreenToolbar extends React.Component {
     } else if (hasUnsavedChanges){
       return (
         <a className="screen-toolbar__save-btn" onClick={this.saveNow}>
-          <FormattedMessage message="project.save_now"/>
+          <FormattedMessage message="project.saveNow"/>
         </a>
       );
     } else {

@@ -31,7 +31,7 @@ class ElementPalette extends React.Component {
     } else {
       content = (
         <div className="element-palette__empty">
-          <FormattedMessage message="project.no_elements"/>
+          <FormattedMessage message="project.noElements"/>
         </div>
       );
     }

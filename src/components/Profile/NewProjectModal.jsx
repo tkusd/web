@@ -46,7 +46,7 @@ class NewProjectModal extends React.Component {
     const {closeModal} = this.props;
 
     return (
-      <Modal title={<FormattedMessage message="profile.new_project"/>} onDismiss={closeModal}>
+      <Modal title={<FormattedMessage message="profile.newProject"/>} onDismiss={closeModal}>
         <Form onSubmit={this.handleSubmit}>
           {error && !error.field && <div>{error.message}</div>}
           <InputGroup

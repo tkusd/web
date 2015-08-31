@@ -66,7 +66,9 @@ class AttributePaletteElement extends React.Component {
 
     return (
       <TabPane tab={<FontAwesome icon="info-circle"/>}>
-        <h4>Info</h4>
+        <h4>
+          <FormattedMessage message="project.info"/>
+        </h4>
         <AttributeField
           type="text"
           label={<FormattedMessage message="common.name"/>}
@@ -89,7 +91,7 @@ class AttributePaletteElement extends React.Component {
               onClick={this.updateMainScreen}
               disabled={project.get('main_screen') === element.get('id')}>
               <FontAwesome icon="mobile"/>
-              <FormattedMessage message="project.set_as_main_screen"/>
+              <FormattedMessage message="project.setAsMainScreen"/>
             </button>
           )}
           <button className="attribute-palette__delete-btn" onClick={this.deleteElement}>

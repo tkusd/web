@@ -40,20 +40,20 @@ class ChangePassword extends React.Component {
         {error && !error.field && <div className="settings__form-error">{error.message}</div>}
         <InputGroup
           ref="old_password"
-          label={<FormattedMessage message="settings.current_password"/>}
+          label={<FormattedMessage message="settings.currentPassword"/>}
           type="password"
           validators={[
             validators.length(6, 50, 'The length of the password must be between 6 to 50')
           ]}/>
         <InputGroup
           ref="password"
-          label={<FormattedMessage message="settings.new_password"/>}
+          label={<FormattedMessage message="settings.newPassword"/>}
           type="password"
           validators={[
             validators.length(6, 50, 'The length of the password must be between 6 to 50')
           ]}/>
         <button type="submit" className="settings__button--primary">
-          <FormattedMessage message="settings.change_password"/>
+          <FormattedMessage message="settings.changePassword"/>
         </button>
       </Form>
     );

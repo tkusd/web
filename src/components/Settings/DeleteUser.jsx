@@ -11,7 +11,7 @@ class DeleteUser extends React.Component {
   render(){
     let btn = (
       <button className="settings__button--danger">
-        <FormattedMessage message="settings.delete_account"/>
+        <FormattedMessage message="settings.deleteAccount"/>
       </button>
     );
 

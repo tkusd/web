@@ -3,12 +3,58 @@ import {SizeInput, ColorPicker, ButtonGroup, Checkbox} from '../form';
 import FontAwesome from '../common/FontAwesome';
 import {TabHost, TabPane} from '../tab';
 import capitalize from 'lodash/string/capitalize';
+import {FormattedMessage} from '../intl';
+import {formatIntlFromContext} from '../../utils/formatIntl';
 
 if (process.env.BROWSER){
   require('../../styles/Screen/StylePalette.styl');
 }
 
+const fontWeightOptions = [
+  {value: ''},
+  {value: '300', label: 'light'},
+  {value: '400', label: 'normal'},
+  {value: '700', label: 'bold'}
+];
+
+const textAlignOptions = [
+  {value: 'left'},
+  {value: 'center'},
+  {value: 'right'},
+  {value: 'justify'}
+];
+
+const textTransformOptions = [
+  {value: '', label: '—'},
+  {value: 'capitalize', label: 'Abc'},
+  {value: 'uppercase', label: 'ABC'},
+  {value: 'lowercase', label: 'abc'}
+];
+
+const textDecorationOptions = [
+  {value: ''},
+  {value: 'underline'},
+  {value: 'line-through'},
+  {value: 'overline'}
+];
+
+const borderStyleOptions = [
+  {value: ''},
+  {value: 'dotted'},
+  {value: 'dashed'},
+  {value: 'solid'},
+  {value: 'double'},
+  {value: 'groove'},
+  {value: 'ridge'},
+  {value: 'inset'},
+  {value: 'outset'}
+];
+
 class StylePalette extends React.Component {
+  static contextTypes = {
+    flux: React.PropTypes.object.isRequired
+  }
+
   static propTypes = {
     element: React.PropTypes.object.isRequired,
     setValueInField: React.PropTypes.func.isRequired
@@ -17,17 +63,29 @@ class StylePalette extends React.Component {
   render(){
     return (
       <div>
-        <h4>Font</h4>
+        <h4>
+          <FormattedMessage message="style.font"/>
+        </h4>
         {this.renderFontSection()}
-        <h4>Spacing</h4>
+        <h4>
+          <FormattedMessage message="style.spacing"/>
+        </h4>
         {this.renderSpacingSection()}
-        <h4>Text shadow</h4>
+        <h4>
+          <FormattedMessage message="style.textShadow"/>
+        </h4>
         {this.renderTextShadowSection()}
-        <h4>Fills</h4>
+        <h4>
+          <FormattedMessage message="style.fills"/>
+        </h4>
         {this.renderFillSection()}
-        <h4>Borders</h4>
+        <h4>
+          <FormattedMessage message="style.borders"/>
+        </h4>
         {this.renderBorderSection()}
-        <h4>Shadow</h4>
+        <h4>
+          <FormattedMessage message="style.shadow"/>
+        </h4>
         {this.renderShadowSection()}
       </div>
     );
@@ -35,32 +93,14 @@ class StylePalette extends React.Component {
 
   renderFontSection(){
     const {element} = this.props;
-
-    const textAlignOptions = [
-      {value: 'left'},
-      {value: 'center'},
-      {value: 'right'},
-      {value: 'justify'}
-    ];
-
-    const textTransformOptions = [
-      {value: '', label: '—'},
-      {value: 'capitalize', label: 'Abc'},
-      {value: 'uppercase', label: 'ABC'},
-      {value: 'lowercase', label: 'abc'}
-    ];
-
-    const textDecorationOptions = [
-      {value: ''},
-      {value: 'underline'},
-      {value: 'line-through'},
-      {value: 'overline'}
-    ];
+    const intl = formatIntlFromContext(this.context.flux);
 
     return (
       <div className="style-palette__section">
         <div className="style-palette__input-group-half">
-          <span className="style-palette__input-label">Size</span>
+          <span className="style-palette__input-label">
+            <FormattedMessage message="style.size"/>
+          </span>
           <SizeInput className="style-palette__input-field--border"
             value={element.getIn(['styles', 'fontSize'])}
             min={0}
@@ -68,7 +108,9 @@ class StylePalette extends React.Component {
             onChange={this.setValueInField.bind(this, ['styles', 'fontSize'])}/>
         </div>
         <div className="style-palette__input-group-half">
-          <span className="style-palette__input-label">Color</span>
+          <span className="style-palette__input-label">
+            <FormattedMessage message="style.color"/>
+          </span>
           <div className="style-palette__input-field">
             <ColorPicker className="style-palette__color-picker"
               value={element.getIn(['styles', 'color'])}
@@ -76,18 +118,23 @@ class StylePalette extends React.Component {
           </div>
         </div>
         <div className="style-palette__input-group">
-          <span className="style-palette__input-label">Weight</span>
+          <span className="style-palette__input-label">
+            <FormattedMessage message="style.weight"/>
+          </span>
           <select className="style-palette__input-field"
             value={element.getIn(['styles', 'fontWeight'], '')}
             onChange={this.handleSelectChange.bind(this, ['styles', 'fontWeight'])}>
-            <option value=""></option>
-            <option value="300">Light</option>
-            <option value="400">Normal</option>
-            <option value="700">Bold</option>
+            {fontWeightOptions.map((option, i) => (
+              <option value={option.value} key={i}>
+                {option.label && intl.getIntlMessage('style.' + option.label)}
+              </option>
+            ))}
           </select>
         </div>
         <div className="style-palette__input-group">
-          <span className="style-palette__input-label">Align</span>
+          <span className="style-palette__input-label">
+            <FormattedMessage message="style.align"/>
+          </span>
           <ButtonGroup className="style-palette__btn-group"
             value={element.getIn(['styles', 'textAlign'], '')}
             options={textAlignOptions}
@@ -95,14 +142,18 @@ class StylePalette extends React.Component {
             onChange={this.setValueInField.bind(this, ['styles', 'textAlign'])}/>
         </div>
         <div className="style-palette__input-group">
-          <span className="style-palette__input-label">Transform</span>
+          <span className="style-palette__input-label">
+            <FormattedMessage message="style.textTransform"/>
+          </span>
           <ButtonGroup className="style-palette__btn-group"
             value={element.getIn(['styles', 'textTransform'], '')}
             options={textTransformOptions}
             onChange={this.setValueInField.bind(this, ['styles', 'textTransform'])}/>
         </div>
         <div className="style-palette__input-group">
-          <span className="style-palette__input-label">Decoration</span>
+          <span className="style-palette__input-label">
+            <FormattedMessage message="style.decoration"/>
+          </span>
           <ButtonGroup className="style-palette__btn-group"
             value={element.getIn(['styles', 'textDecoration'], '')}
             options={textDecorationOptions}
@@ -128,25 +179,33 @@ class StylePalette extends React.Component {
     return (
       <div className="style-palette__section">
         <div className="style-palette__input-group-half">
-          <span className="style-palette__input-label">Line</span>
+          <span className="style-palette__input-label">
+            <FormattedMessage message="style.line"/>
+          </span>
           <SizeInput className="style-palette__input-field--border"
             value={element.getIn(['styles', 'lineHeight'])}
             onChange={this.setValueInField.bind(this, ['styles', 'lineHeight'])}/>
         </div>
         <div className="style-palette__input-group-half">
-          <span className="style-palette__input-label">Letter</span>
+          <span className="style-palette__input-label">
+            <FormattedMessage message="style.letter"/>
+          </span>
           <SizeInput className="style-palette__input-field--border"
             value={element.getIn(['styles', 'letterSpacing'])}
             onChange={this.setValueInField.bind(this, ['styles', 'letterSpacing'])}/>
         </div>
         <div className="style-palette__input-group-half">
-          <span className="style-palette__input-label">Word</span>
+          <span className="style-palette__input-label">
+            <FormattedMessage message="style.word"/>
+          </span>
           <SizeInput className="style-palette__input-field--border"
             value={element.getIn(['styles', 'wordSpacing'])}
             onChange={this.setValueInField.bind(this, ['styles', 'wordSpacing'])}/>
         </div>
         <div className="style-palette__input-group-half">
-          <span className="style-palette__input-label">Indent</span>
+          <span className="style-palette__input-label">
+            <FormattedMessage message="style.indent"/>
+          </span>
           <SizeInput className="style-palette__input-field--border"
             value={element.getIn(['styles', 'textIndent'])}
             onChange={this.setValueInField.bind(this, ['styles', 'textIndent'])}/>
@@ -161,19 +220,25 @@ class StylePalette extends React.Component {
     return (
       <div className="style-palette__section">
         <div className="style-palette__input-group-half">
-          <span className="style-palette__input-label">X</span>
+          <span className="style-palette__input-label">
+            <FormattedMessage message="style.horizontal"/>
+          </span>
           <SizeInput className="style-palette__input-field--border"
             value={element.getIn(['styles', 'textShadow', 'offsetX'])}
             onChange={this.setValueInField.bind(this, ['styles', 'textShadow', 'offsetX'])}/>
         </div>
         <div className="style-palette__input-group-half">
-          <span className="style-palette__input-label">Y</span>
+          <span className="style-palette__input-label">
+            <FormattedMessage message="style.vertical"/>
+          </span>
           <SizeInput className="style-palette__input-field--border"
             value={element.getIn(['styles', 'textShadow', 'offsetY'])}
             onChange={this.setValueInField.bind(this, ['styles', 'textShadow', 'offsetY'])}/>
         </div>
         <div className="style-palette__input-group-half">
-          <span className="style-palette__input-label">Color</span>
+          <span className="style-palette__input-label">
+            <FormattedMessage message="style.color"/>
+          </span>
           <div className="style-palette__input-field">
             <ColorPicker className="style-palette__color-picker"
               value={element.getIn(['styles', 'textShadow', 'color'])}
@@ -181,7 +246,9 @@ class StylePalette extends React.Component {
           </div>
         </div>
         <div className="style-palette__input-group-half">
-          <span className="style-palette__input-label">Blur</span>
+          <span className="style-palette__input-label">
+            <FormattedMessage message="style.blur"/>
+          </span>
           <SizeInput className="style-palette__input-field--border"
             value={element.getIn(['styles', 'textShadow', 'blur'])}
             onChange={this.setValueInField.bind(this, ['styles', 'textShadow', 'blur'])}/>
@@ -196,7 +263,9 @@ class StylePalette extends React.Component {
     return (
       <div className="style-palette__section">
         <div className="style-palette__input-group-half">
-          <span className="style-palette__input-label">Color</span>
+          <span className="style-palette__input-label">
+            <FormattedMessage message="style.color"/>
+          </span>
           <div className="style-palette__input-field">
             <ColorPicker className="style-palette__color-picker"
               value={element.getIn(['styles', 'backgroundColor'])}
@@ -204,7 +273,9 @@ class StylePalette extends React.Component {
           </div>
         </div>
         <div className="style-palette__input-group-half">
-          <span className="style-palette__input-label">Radius</span>
+          <span className="style-palette__input-label">
+            <FormattedMessage message="style.radius"/>
+          </span>
           <SizeInput className="style-palette__input-field--border"
             min={0}
             value={element.getIn(['styles', 'borderRadius'])}
@@ -228,11 +299,15 @@ class StylePalette extends React.Component {
   renderBorderTab(direction){
     const {element} = this.props;
     const borderKey = 'border' + capitalize(direction);
+    const intl = formatIntlFromContext(this.context.flux);
 
     return (
-      <TabPane tab={direction} className="style-palette__section">
+      <TabPane tab={<FormattedMessage message={'style.' + direction}/>}
+        className="style-palette__section">
         <div className="style-palette__input-group-half">
-          <span className="style-palette__input-label">Width</span>
+          <span className="style-palette__input-label">
+            <FormattedMessage message="style.width"/>
+          </span>
           <SizeInput className="style-palette__input-field--border"
             acceptZero={false}
             min={0}
@@ -240,7 +315,9 @@ class StylePalette extends React.Component {
             onChange={this.setValueInField.bind(this, ['styles', borderKey + 'Width'])}/>
         </div>
         <div className="style-palette__input-group-half">
-          <span className="style-palette__input-label">Color</span>
+          <span className="style-palette__input-label">
+            <FormattedMessage message="style.color"/>
+          </span>
           <div className="style-palette__input-field">
             <ColorPicker className="style-palette__color-picker"
               value={element.getIn(['styles', borderKey + 'Color'])}
@@ -248,19 +325,17 @@ class StylePalette extends React.Component {
           </div>
         </div>
         <div className="style-palette__input-group">
-          <span className="style-palette__input-label">Style</span>
+          <span className="style-palette__input-label">
+            <FormattedMessage message="style.style"/>
+          </span>
           <select className="style-palette__input-field"
             value={element.getIn(['styles', borderKey + 'Style'], '')}
             onChange={this.handleSelectChange.bind(this, ['styles', borderKey + 'Style'])}>
-            <option value=""></option>
-            <option value="dotted">Dotted</option>
-            <option value="dashed">Dashed</option>
-            <option value="solid">Solid</option>
-            <option value="double">Double</option>
-            <option value="groove">Groove</option>
-            <option value="ridge">Ridge</option>
-            <option value="inset">Inset</option>
-            <option value="outset">Outset</option>
+            {borderStyleOptions.map((option, i) => (
+              <option key={i} value={option.value}>
+                {option.value && intl.getIntlMessage('style.' + option.value)}
+              </option>
+            ))}
           </select>
         </div>
       </TabPane>
@@ -273,31 +348,41 @@ class StylePalette extends React.Component {
     return (
       <div className="style-palette__section">
         <div className="style-palette__input-group-half">
-          <span className="style-palette__input-label">X</span>
+          <span className="style-palette__input-label">
+            <FormattedMessage message="style.horizontal"/>
+          </span>
           <SizeInput className="style-palette__input-field--border"
             value={element.getIn(['styles', 'boxShadow', 'offsetX'])}
             onChange={this.setValueInField.bind(this, ['styles', 'boxShadow', 'offsetX'])}/>
         </div>
         <div className="style-palette__input-group-half">
-          <span className="style-palette__input-label">Y</span>
+          <span className="style-palette__input-label">
+            <FormattedMessage message="style.vertical"/>
+          </span>
           <SizeInput className="style-palette__input-field--border"
             value={element.getIn(['styles', 'boxShadow', 'offsetY'])}
             onChange={this.setValueInField.bind(this, ['styles', 'boxShadow', 'offsetY'])}/>
         </div>
         <div className="style-palette__input-group-half">
-          <span className="style-palette__input-label">Blur</span>
+          <span className="style-palette__input-label">
+            <FormattedMessage message="style.blur"/>
+          </span>
           <SizeInput className="style-palette__input-field--border"
             value={element.getIn(['styles', 'boxShadow', 'blur'])}
             onChange={this.setValueInField.bind(this, ['styles', 'boxShadow', 'blur'])}/>
         </div>
         <div className="style-palette__input-group-half">
-          <span className="style-palette__input-label">Spread</span>
+          <span className="style-palette__input-label">
+            <FormattedMessage message="style.spread"/>
+          </span>
           <SizeInput className="style-palette__input-field--border"
             value={element.getIn(['styles', 'boxShadow', 'spread'])}
             onChange={this.setValueInField.bind(this, ['styles', 'boxShadow', 'spread'])}/>
         </div>
         <div className="style-palette__input-group-half">
-          <span className="style-palette__input-label">Color</span>
+          <span className="style-palette__input-label">
+            <FormattedMessage message="style.color"/>
+          </span>
           <div className="style-palette__input-field">
             <ColorPicker className="style-palette__color-picker"
               value={element.getIn(['styles', 'boxShadow', 'color'])}
@@ -305,7 +390,9 @@ class StylePalette extends React.Component {
           </div>
         </div>
         <div className="style-palette__input-group-half">
-          <span className="style-palette__input-label">Inset</span>
+          <span className="style-palette__input-label">
+            <FormattedMessage message="style.inset"/>
+          </span>
           <Checkbox
             value={element.getIn(['styles', 'boxShadow', 'inset'])}
             onChange={this.setValueInField.bind(this, ['styles', 'boxShadow', 'inset'])}/>

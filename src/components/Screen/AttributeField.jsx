@@ -85,7 +85,7 @@ class AttributeField extends React.Component {
       let btn = (
         <button className="attribute-palette__choose-asset-btn">
           <FontAwesome icon="file-o"/>
-          <FormattedMessage message="project.choose_asset"/>
+          <FormattedMessage message="project.chooseAsset"/>
         </button>
       );
 

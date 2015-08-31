@@ -87,7 +87,7 @@ class ProjectList extends React.Component {
 
     let btn = (
       <button className="project-list__new-project-btn">
-        <FontAwesome icon="plus"/><FormattedMessage message="profile.new_project"/>
+        <FontAwesome icon="plus"/><FormattedMessage message="profile.newProject"/>
       </button>
     );
 
@@ -104,7 +104,7 @@ class ProjectList extends React.Component {
     if (!projects.count()){
       return (
         <div className="project-list__empty">
-          <FormattedMessage message="profile.no_projects"/>
+          <FormattedMessage message="profile.noProjects"/>
         </div>
       );
     }

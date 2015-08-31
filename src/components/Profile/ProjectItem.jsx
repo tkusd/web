@@ -38,7 +38,7 @@ class ProjectItem extends React.Component {
           <strong>{project.get('title')}</strong>
           <footer className="project-item__footer">
             <FormattedMessage
-              message="project.updated_at"
+              message="project.updatedAt"
               date={<FormattedRelative value={project.get('updated_at')}/>}/>
           </footer>
         </Link>

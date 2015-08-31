@@ -42,7 +42,7 @@ class EventModal extends React.Component {
 
     return (
       <Modal
-        title={<FormattedMessage message={event ? 'project.edit_event' : 'project.new_event'}/>}
+        title={<FormattedMessage message={event ? 'project.editEvent' : 'project.newEvent'}/>}
         onDismiss={closeModal} large>
         <div className="event-modal__select-wrap">
           {this.renderEventSelector()}

@@ -42,7 +42,7 @@ class AssetModal extends React.Component {
     const {closeModal} = this.props;
 
     return (
-      <Modal title={<FormattedMessage message="project.choose_asset"/>}
+      <Modal title={<FormattedMessage message="project.chooseAsset"/>}
         onDismiss={closeModal} large>
         <TabHost className="asset-modal__tabs">
           {this.renderUploadTab()}

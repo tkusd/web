@@ -18,9 +18,9 @@ class DeleteProjectModal extends React.Component {
     const {closeModal} = this.props;
 
     return (
-      <Modal title={<FormattedMessage message="project.delete_project"/>} onDismiss={closeModal}>
+      <Modal title={<FormattedMessage message="project.deleteProject"/>} onDismiss={closeModal}>
         <p>
-          <FormattedMessage message="project.delete_project_prompt"/>
+          <FormattedMessage message="project.deleteProjectPrompt"/>
         </p>
         <div className="modal__btn-group">
           <button className="modal__btn" onClick={closeModal}>

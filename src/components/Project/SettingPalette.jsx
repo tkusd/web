@@ -50,7 +50,7 @@ class SettingPalette extends React.Component {
     let deleteBtn = (
       <div className="setting-palette__btn-wrap">
         <button className="setting-palette__delete">
-          <FormattedMessage message="project.delete_project"/>
+          <FormattedMessage message="project.deleteProject"/>
         </button>
       </div>
     );

@@ -30,7 +30,7 @@ class HomeHeader extends React.Component {
           <Link
             to={`/users/${currentUser.get('id')}`}
             className="home-header__link--primary">
-            <FormattedMessage message="home.my_projects"/>
+            <FormattedMessage message="home.myProjects"/>
           </Link>
         </div>
       );

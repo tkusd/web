@@ -23,7 +23,7 @@ class ProfileData extends React.Component {
         <h1 className="profile-data__name">{user.get('name')}</h1>
         {currentUser && user.get('id') === currentUser.get('id') && (
           <Link to="/settings" className="profile-data__edit-link">
-            <FontAwesome icon="pencil"/><FormattedMessage message="profile.edit_profile"/>
+            <FontAwesome icon="pencil"/><FormattedMessage message="profile.editProfile"/>
           </Link>
         )}
       </div>

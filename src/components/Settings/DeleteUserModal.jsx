@@ -25,10 +25,10 @@ class DeleteUserModal extends React.Component {
     const {closeModal} = this.props;
 
     return (
-      <Modal title={<FormattedMessage message="settings.delete_account"/>} onDismiss={closeModal}>
+      <Modal title={<FormattedMessage message="settings.deleteAccount"/>} onDismiss={closeModal}>
         <Form onSubmit={this.handleSubmit}>
           <p>
-            <FormattedMessage message="settings.delete_account_prompt"/>
+            <FormattedMessage message="settings.deleteAccountPrompt"/>
           </p>
           <div className="modal__btn-group">
             <a className="modal__btn" onClick={closeModal}>

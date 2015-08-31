@@ -71,7 +71,7 @@ class ActionBoard extends React.Component {
     } else {
       content = (
         <div className="action-board__hint">
-          <FormattedMessage message="project.new_action_hint"/>
+          <FormattedMessage message="project.newActionHint"/>
         </div>
       );
     }

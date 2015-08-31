@@ -83,7 +83,7 @@ class Signup extends React.Component {
           <FormattedMessage message="common.signup"/>
         </button>
         <div className="login-container__link-group">
-          <FormattedMessage message="login.login_link_hint"/>
+          <FormattedMessage message="login.loginLinkHint"/>
           {' '}
           <Link to="/login" className="login-container__link">
             <FormattedMessage message="common.login"/>

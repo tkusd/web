@@ -49,7 +49,7 @@ class Settings extends React.Component {
             </section>
             <section className="settings__section">
               <h2 className="settings__section-title">
-                <FormattedMessage message="settings.change_password"/>
+                <FormattedMessage message="settings.changePassword"/>
               </h2>
               <div className="settings__section-content">
                 <ChangePassword user={user}/>
@@ -57,7 +57,7 @@ class Settings extends React.Component {
             </section>
             <section className="settings__section">
               <h2 className="settings__section-title">
-                <FormattedMessage message="settings.delete_account"/>
+                <FormattedMessage message="settings.deleteAccount"/>
               </h2>
               <div className="settings__section-content">
                 <DeleteUser user={user}/>

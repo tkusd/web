@@ -39,7 +39,7 @@ class NewScreenModal extends React.Component {
     const {closeModal} = this.props;
 
     return (
-      <Modal title={<FormattedMessage message="project.new_screen"/>} onDismiss={closeModal}>
+      <Modal title={<FormattedMessage message="project.newScreen"/>} onDismiss={closeModal}>
         <Form onSubmit={this.handleSubmit}>
           {error && !error.field && <div>{error.message}</div>}
           <InputGroup
