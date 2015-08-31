@@ -191,8 +191,25 @@ class StylePalette extends React.Component {
   }
 
   renderFillSection(){
+    const {element} = this.props;
+
     return (
       <div className="style-palette__section">
+        <div className="style-palette__input-group-half">
+          <span className="style-palette__input-label">Color</span>
+          <div className="style-palette__input-field">
+            <ColorPicker className="style-palette__color-picker"
+              value={element.getIn(['styles', 'backgroundColor'])}
+              onChange={this.setValueInField.bind(this, ['styles', 'backgroundColor'])}/>
+          </div>
+        </div>
+        <div className="style-palette__input-group-half">
+          <span className="style-palette__input-label">Radius</span>
+          <SizeInput className="style-palette__input-field--border"
+            min={0}
+            value={element.getIn(['styles', 'borderRadius'])}
+            onChange={this.setValueInField.bind(this, ['styles', 'borderRadius'])}/>
+        </div>
       </div>
     );
   }

@@ -420,7 +420,7 @@ class View extends React.Component {
   }
 
   makeElementProps(element){
-    let styles = element.get('styles').filter(filterTrue);
+    let styles = element.get('styles');
 
     if (styles.has('textShadow')){
       const textShadow = styles.get('textShadow');
@@ -448,7 +448,7 @@ class View extends React.Component {
 
     return {
       id: this.props.getElementID(element),
-      style: styles.toJS()
+      style: styles.filter(filterTrue).toJS()
     };
   }
 }
