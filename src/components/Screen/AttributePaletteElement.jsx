@@ -143,7 +143,7 @@ class AttributePaletteElement extends React.Component {
     }
 
     return (
-      <TabPane tab={<FontAwesome icon="mouse-pointer"/>}>
+      <TabPane tab={<FontAwesome icon="hand-pointer-o"/>}>
         <EventList {...this.props}
           events={elementEvents}
           element={element}

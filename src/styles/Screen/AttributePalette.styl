@@ -9,16 +9,21 @@
   .input-group__field
     border-bottom-color: lighten(color-project-sidebar, 20%)
   > .tab-host__tabs
-    text-align: center
+    display: flex
+    flex-flow: row nowrap
     border-bottom: 1px solid color-list-highlight
     .tab-host__tab
-      padding: 0 padding-small
       height: palette-title-height
       line-height: palette-title-height
       color: color-secondary-text
       cursor: pointer
+      flex: 1 1 auto
+      text-align: center
+      font-size: 20px
+      border-bottom: 2px solid transparent
       &.active
         color: color-highlight
+        border-bottom-color: color-accent
       &:hover
         color: color-highlight
   > .tab-host__content
