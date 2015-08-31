@@ -50,6 +50,11 @@ const borderStyleOptions = [
   {value: 'outset'}
 ];
 
+function getDimensionKey(prefix, field){
+  if (!prefix) return field;
+  return prefix + capitalize(field);
+}
+
 class StylePalette extends React.Component {
   static contextTypes = {
     flux: React.PropTypes.object.isRequired
@@ -63,6 +68,10 @@ class StylePalette extends React.Component {
   render(){
     return (
       <div>
+        <h4>
+          <FormattedMessage message="style.dimensions"/>
+        </h4>
+        {this.renderDimensionSection()}
         <h4>
           <FormattedMessage message="style.font"/>
         </h4>
@@ -88,6 +97,45 @@ class StylePalette extends React.Component {
         </h4>
         {this.renderShadowSection()}
       </div>
+    );
+  }
+
+  renderDimensionSection(){
+    return (
+      <TabHost className="style-palette__tab-host">
+        {this.renderDimensionTab('')}
+        {this.renderDimensionTab('min')}
+        {this.renderDimensionTab('max')}
+      </TabHost>
+    );
+  }
+
+  renderDimensionTab(prefix){
+    const {element} = this.props;
+    let tab = prefix || 'default';
+
+    return (
+      <TabPane tab={<FormattedMessage message={'style.' + tab}/>}
+        className="style-palette__section">
+        <div className="style-palette__input-group-half">
+          <span className="style-palette__input-label">
+            <FormattedMessage message="style.width"/>
+          </span>
+          <SizeInput className="style-palette__input-field--border"
+            min={0}
+            value={element.getIn(['styles', getDimensionKey(prefix, 'width')])}
+            onChange={this.setValueInField.bind(this, ['styles', getDimensionKey(prefix, 'width')])}/>
+        </div>
+        <div className="style-palette__input-group-half">
+          <span className="style-palette__input-label">
+            <FormattedMessage message="style.height"/>
+          </span>
+          <SizeInput className="style-palette__input-field--border"
+            min={0}
+            value={element.getIn(['styles', getDimensionKey(prefix, 'height')])}
+            onChange={this.setValueInField.bind(this, ['styles', getDimensionKey(prefix, 'height')])}/>
+        </div>
+      </TabPane>
     );
   }
 

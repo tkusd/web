@@ -119,7 +119,11 @@ module.exports = {
       x: 'X',
       y: 'Y',
       horizontal: '水平',
-      vertical: '垂直'
+      vertical: '垂直',
+      dimensions: '尺寸',
+      default: '預設',
+      min: '最小',
+      max: '最大'
     },
     settings: {
       profile: '個人資料',

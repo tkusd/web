@@ -119,7 +119,11 @@ module.exports = {
       x: 'X',
       y: 'Y',
       horizontal: 'Horizontal',
-      vertical: 'Vertical'
+      vertical: 'Vertical',
+      dimensions: 'Dimensions',
+      default: 'Default',
+      min: 'Min',
+      max: 'Max'
     },
     settings: {
       profile: 'Profile',
