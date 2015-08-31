@@ -58,7 +58,8 @@ class TabHost extends React.Component {
           {child.props.tab}
         </a>
       );
-      tabContent.push(child.props.children);
+
+      tabContent.push(child);
     });
 
     let className = cx('tab-host', this.props.className);

@@ -8,20 +8,20 @@
   overflow: auto
   .input-group__field
     border-bottom-color: lighten(color-project-sidebar, 20%)
-  .tab-host__tabs
+  > .tab-host__tabs
     text-align: center
     border-bottom: 1px solid color-list-highlight
-  .tab-host__tab
-    padding: 0 padding-small
-    height: palette-title-height
-    line-height: palette-title-height
-    color: color-secondary-text
-    cursor: pointer
-    &.active
-      color: color-highlight
-    &:hover
-      color: color-highlight
-  .tab-host__content
+    .tab-host__tab
+      padding: 0 padding-small
+      height: palette-title-height
+      line-height: palette-title-height
+      color: color-secondary-text
+      cursor: pointer
+      &.active
+        color: color-highlight
+      &:hover
+        color: color-highlight
+  > .tab-host__content
     position: absolute
     top: palette-title-height
     left: 0

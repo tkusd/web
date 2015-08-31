@@ -1,6 +1,8 @@
 import React from 'react';
 import {SizeInput, ColorPicker, ButtonGroup} from '../form';
 import FontAwesome from '../common/FontAwesome';
+import {TabHost, TabPane} from '../tab';
+import capitalize from 'lodash/string/capitalize';
 
 if (process.env.BROWSER){
   require('../../styles/Screen/StylePalette.styl');
@@ -62,6 +64,7 @@ class StylePalette extends React.Component {
           <SizeInput className="style-palette__input-field--border"
             value={element.getIn(['styles', 'fontSize'])}
             min={0}
+            acceptZero={false}
             onChange={this.setValueInField.bind(this, ['styles', 'fontSize'])}/>
         </div>
         <div className="style-palette__input-group-half">
@@ -75,7 +78,7 @@ class StylePalette extends React.Component {
         <div className="style-palette__input-group">
           <span className="style-palette__input-label">Weight</span>
           <select className="style-palette__input-field"
-            value={element.getIn(['styles', 'fontWeight'])}
+            value={element.getIn(['styles', 'fontWeight'], '')}
             onChange={this.handleSelectChange.bind(this, ['styles', 'fontWeight'])}>
             <option value=""></option>
             <option value="300">Light</option>
@@ -86,7 +89,7 @@ class StylePalette extends React.Component {
         <div className="style-palette__input-group">
           <span className="style-palette__input-label">Align</span>
           <ButtonGroup className="style-palette__btn-group"
-            value={element.getIn(['styles', 'textAlign'])}
+            value={element.getIn(['styles', 'textAlign'], '')}
             options={textAlignOptions}
             renderer={this.renderTextAlignOption}
             onChange={this.setValueInField.bind(this, ['styles', 'textAlign'])}/>
@@ -94,14 +97,14 @@ class StylePalette extends React.Component {
         <div className="style-palette__input-group">
           <span className="style-palette__input-label">Transform</span>
           <ButtonGroup className="style-palette__btn-group"
-            value={element.getIn(['styles', 'textTransform'])}
+            value={element.getIn(['styles', 'textTransform'], '')}
             options={textTransformOptions}
             onChange={this.setValueInField.bind(this, ['styles', 'textTransform'])}/>
         </div>
         <div className="style-palette__input-group">
           <span className="style-palette__input-label">Decoration</span>
           <ButtonGroup className="style-palette__btn-group"
-            value={element.getIn(['styles', 'textDecoration'])}
+            value={element.getIn(['styles', 'textDecoration'], '')}
             options={textDecorationOptions}
             renderer={this.renderTextDecorationOption}
             onChange={this.setValueInField.bind(this, ['styles', 'textDecoration'])}/>
@@ -160,14 +163,12 @@ class StylePalette extends React.Component {
         <div className="style-palette__input-group-half">
           <span className="style-palette__input-label">X</span>
           <SizeInput className="style-palette__input-field--border"
-            acceptZero={true}
             value={element.getIn(['styles', 'textShadow', 'offsetX'])}
             onChange={this.setValueInField.bind(this, ['styles', 'textShadow', 'offsetX'])}/>
         </div>
         <div className="style-palette__input-group-half">
           <span className="style-palette__input-label">Y</span>
           <SizeInput className="style-palette__input-field--border"
-            acceptZero={true}
             value={element.getIn(['styles', 'textShadow', 'offsetY'])}
             onChange={this.setValueInField.bind(this, ['styles', 'textShadow', 'offsetY'])}/>
         </div>
@@ -182,7 +183,6 @@ class StylePalette extends React.Component {
         <div className="style-palette__input-group-half">
           <span className="style-palette__input-label">Blur</span>
           <SizeInput className="style-palette__input-field--border"
-            acceptZero={true}
             value={element.getIn(['styles', 'textShadow', 'blur'])}
             onChange={this.setValueInField.bind(this, ['styles', 'textShadow', 'blur'])}/>
         </div>
@@ -195,7 +195,56 @@ class StylePalette extends React.Component {
   }
 
   renderBorderSection(){
-    //
+    return (
+      <TabHost className="style-palette__tab-host">
+        {this.renderBorderTab('top')}
+        {this.renderBorderTab('right')}
+        {this.renderBorderTab('bottom')}
+        {this.renderBorderTab('left')}
+      </TabHost>
+    );
+  }
+
+  renderBorderTab(direction){
+    const {element} = this.props;
+    const borderKey = 'border' + capitalize(direction);
+
+    return (
+      <TabPane tab={direction} className="style-palette__section">
+        <div className="style-palette__input-group-half">
+          <span className="style-palette__input-label">Width</span>
+          <SizeInput className="style-palette__input-field--border"
+            acceptZero={false}
+            min={0}
+            value={element.getIn(['styles', borderKey + 'Width'])}
+            onChange={this.setValueInField.bind(this, ['styles', borderKey + 'Width'])}/>
+        </div>
+        <div className="style-palette__input-group-half">
+          <span className="style-palette__input-label">Color</span>
+          <div className="style-palette__input-field">
+            <ColorPicker className="style-palette__color-picker"
+              value={element.getIn(['styles', borderKey + 'Color'])}
+              onChange={this.setValueInField.bind(this, ['styles', borderKey + 'Color'])}/>
+          </div>
+        </div>
+        <div className="style-palette__input-group">
+          <span className="style-palette__input-label">Style</span>
+          <select className="style-palette__input-field"
+            value={element.getIn(['styles', borderKey + 'Style'], '')}
+            onChange={this.handleSelectChange.bind(this, ['styles', borderKey + 'Style'])}>
+            <option value=""></option>
+            <option value="dotted">Dotted</option>
+            <option value="dashed">Dashed</option>
+            <option value="solid">Solid</option>
+            <option value="double">Double</option>
+            <option value="groove">Groove</option>
+            <option value="ridge">Ridge</option>
+            <option value="inset">Inset</option>
+            <option value="outset">Outset</option>
+          </select>
+        </div>
+      </TabPane>
+    );
   }
 
   renderShadowSection(){

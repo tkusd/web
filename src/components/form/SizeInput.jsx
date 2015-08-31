@@ -21,7 +21,7 @@ class SizeInput extends React.Component {
 
   static defaultProps = {
     onChange: noop,
-    acceptZero: false
+    acceptZero: true
   }
 
   constructor(props, context){
