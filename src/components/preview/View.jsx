@@ -47,6 +47,7 @@ class View extends React.Component {
     Container: React.PropTypes.func.isRequired,
     onClick: React.PropTypes.func.isRequired,
     onScroll: React.PropTypes.func.isRequired,
+    onDoubleClick: React.PropTypes.func.isRequired,
     getAssetURL: React.PropTypes.func.isRequired,
     getElementID: React.PropTypes.func.isRequired
   }
@@ -55,6 +56,7 @@ class View extends React.Component {
     Container: NoopContainer,
     onClick: noop,
     onScroll: noop,
+    onDoubleClick: noop,
     getAssetURL: getDirectURL,
     getElementID
   }
@@ -80,7 +82,7 @@ class View extends React.Component {
 
     case ElementTypes.label:
       return (
-        <div {...this.makeElementProps(element)} onClick={this.props.onClick}>
+        <div {...this.makeElementProps(element)}>
           {renderMultiLineString(element.getIn(['attributes', 'text']))}
         </div>
       );
@@ -90,7 +92,7 @@ class View extends React.Component {
 
     case ElementTypes.buttonRow:
       return (
-        <div {...this.makeElementProps(element)} className="buttons-row" onClick={this.props.onClick}>
+        <div {...this.makeElementProps(element)} className="buttons-row">
           {this.renderElements(children)}
         </div>
       );
@@ -188,7 +190,7 @@ class View extends React.Component {
     const elements = this.getChildElements(element.get('id'));
 
     return (
-      <div {...this.makeElementProps(element)} className="navbar" onClick={this.props.onClick}>
+      <div {...this.makeElementProps(element)} className="navbar">
         <div className="navbar-inner">
           <div className="left">
             {this.renderElements(elements.filter(element => (
@@ -212,7 +214,7 @@ class View extends React.Component {
     const elements = this.getChildElements(element.get('id'));
 
     return (
-      <div {...this.makeElementProps(element)} className="toolbar" onClick={this.props.onClick}>
+      <div {...this.makeElementProps(element)} className="toolbar">
         <div className="toolbar-inner">
           {this.renderElements(elements)}
         </div>
@@ -253,8 +255,7 @@ class View extends React.Component {
     return (
       <a {...this.makeElementProps(element)}
         href={element.getIn(['attributes', 'href'], '#')}
-        className={className}
-        onClick={this.props.onClick}>
+        className={className}>
         {element.getIn(['attributes', 'text'])}
       </a>
     );
@@ -267,7 +268,7 @@ class View extends React.Component {
     return (
       <div>
         {title && <div className="content-block-title">{title}</div>}
-        <div id={getElementID(element)} className="content-block" onClick={this.props.onClick}>
+        <div {...this.makeElementProps(element)} className="content-block">
           {this.renderElements(elements)}
         </div>
       </div>
@@ -286,7 +287,7 @@ class View extends React.Component {
     return (
       <div>
         {title && <div className="content-block-title">{title}</div>}
-        <div {...this.makeElementProps(element)} className={className} onClick={this.props.onClick}>
+        <div {...this.makeElementProps(element)} className={className}>
           <ul>
             {this.renderElements(elements)}
           </ul>
@@ -319,7 +320,7 @@ class View extends React.Component {
 
       return (
         <li>
-          <a {...this.makeElementProps(element)} className={className} onClick={this.props.onClick}>
+          <a {...this.makeElementProps(element)} className={className}>
             {media}
             {content}
           </a>
@@ -328,7 +329,7 @@ class View extends React.Component {
     } else {
       return (
         <li>
-          <div {...this.makeElementProps(element)} className={className} onClick={this.props.onClick}>
+          <div {...this.makeElementProps(element)} className={className}>
             {media}
             {content}
           </div>
@@ -339,7 +340,7 @@ class View extends React.Component {
 
   renderListDivider(element){
     return (
-      <li {...this.makeElementProps(element)} className="item-divider" onClick={this.props.onClick}>
+      <li {...this.makeElementProps(element)} className="item-divider">
         {element.getIn(['attributes', 'title'])}
       </li>
     );
@@ -347,7 +348,7 @@ class View extends React.Component {
 
   renderListGroup(element){
     return (
-      <div {...this.makeElementProps(element)} className="list-group" onClick={this.props.onClick}>
+      <div {...this.makeElementProps(element)} className="list-group">
         <ul>
           <li className="list-group-title">{element.getIn(['attributes', 'title'])}</li>
           {this.renderElements(this.getChildElements(element.get('id')))}
@@ -370,7 +371,7 @@ class View extends React.Component {
     }
 
     return (
-      <div {...this.makeElementProps(element)} className="card" onClick={this.props.onClick}>
+      <div {...this.makeElementProps(element)} className="card">
         {header && (
           <div className="card-header">{this.renderElements(header)}</div>
         )}
@@ -406,7 +407,7 @@ class View extends React.Component {
     });
 
     return (
-      <li {...this.makeElementProps(element)} className={className} onClick={this.props.onClick}>
+      <li {...this.makeElementProps(element)} className={className}>
         <a href="#" className="item-content item-link">
           <div className="item-inner">
             <div className="item-title">{element.getIn(['attributes', 'title'])}</div>
@@ -448,7 +449,9 @@ class View extends React.Component {
 
     return {
       id: this.props.getElementID(element),
-      style: styles.filter(filterTrue).toJS()
+      style: styles.filter(filterTrue).toJS(),
+      onClick: this.props.onClick,
+      onDoubleClick: this.props.onDoubleClick
     };
   }
 }

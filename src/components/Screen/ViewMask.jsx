@@ -14,6 +14,17 @@ if (process.env.BROWSER){
 
 const DEBOUNCE_DELAY = 150;
 
+function findParentUntilElement(node){
+  let target = node;
+
+  while (target){
+    if (target.id && target.id[0] === 'e') break;
+    target = target.parentNode;
+  }
+
+  return target;
+}
+
 @SortableElementList(ItemTypes.VIEW_ITEM)
 @pureRender
 class ViewMask extends React.Component {
@@ -109,7 +120,8 @@ class ViewMask extends React.Component {
         <ScalableView {...this.props}>
           <ViewContainer {...this.props}
             onClick={this.handleNodeClick}
-            onScroll={this.updateRect}/>
+            onScroll={this.updateRect}
+            onDoubleClick={this.handleDoubleClick}/>
         </ScalableView>
         {this.renderResizeArea()}
         {this.renderMask()}
@@ -202,14 +214,10 @@ class ViewMask extends React.Component {
   handleNodeClick(e){
     e.preventDefault();
 
-    let target = e.target;
-
-    while (target){
-      if (target.id && target.id[0] === 'e') break;
-      target = target.parentNode;
-    }
-
+    let target = findParentUntilElement(e.target);
     if (!target) return;
+
+    e.stopPropagation();
 
     this.props.selectElement(target.id.substring(1));
   }
@@ -219,6 +227,13 @@ class ViewMask extends React.Component {
 
     const {selectElement} = this.props;
     selectElement(null);
+  }
+
+  handleDoubleClick(e){
+    let target = findParentUntilElement(e.target);
+    if (!target) return;
+
+    e.stopPropagation();
   }
 }
 
