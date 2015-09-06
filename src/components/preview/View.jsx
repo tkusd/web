@@ -163,7 +163,7 @@ class View extends React.Component {
     });
 
     content.push(
-      <div className="page-content" key={id} onScroll={onScroll}>
+      <div className="page-content" key={id} onScroll={process.env.BROWSER && onScroll}>
         {this.renderElements(children.filter(element => (
           element.get('type') !== ElementTypes.navbar &&
           element.get('type') !== ElementTypes.toolbar

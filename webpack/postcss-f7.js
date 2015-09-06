@@ -10,7 +10,7 @@ export default postcss.plugin('f7', function(options = {}){
       return;
     }
 
-    css.eachRule(rule => {
+    css.walkRules(rule => {
       const {selectors} = rule;
 
       if (~selectors.indexOf('html') || ~selectors.indexOf('body')){

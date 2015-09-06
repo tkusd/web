@@ -44,7 +44,8 @@ class ElementStore extends CollectionStore {
     pushHoverElement: Actions.PUSH_HOVER_ELEMENT,
     popHoverElement: Actions.POP_HOVER_ELEMENT,
     updateElementNow: Actions.UPDATE_ELEMENT_NOW,
-    updateElementIndex: Actions.UPDATE_ELEMENT_INDEX
+    updateElementIndex: Actions.UPDATE_ELEMENT_INDEX,
+    focusElement: Actions.FOCUS_ELEMENT
   }
 
   constructor(context){
@@ -55,6 +56,7 @@ class ElementStore extends CollectionStore {
     this.currentTask = null;
     this.selectedElement = null;
     this.hoverElements = OrderedSet();
+    this.focusedElement = null;
   }
 
   getSelectedElement(){
@@ -318,6 +320,15 @@ class ElementStore extends CollectionStore {
     });
 
     this.pushQueue(id);
+  }
+
+  getFocusedElement(){
+    return this.focusedElement;
+  }
+
+  focusElement(id){
+    this.focusedElement = id;
+    this.emitChange();
   }
 }
 

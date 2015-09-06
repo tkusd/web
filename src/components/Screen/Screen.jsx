@@ -44,7 +44,8 @@ function preventDefault(e){
   actionDefinitions: stores.ActionStore.getDefinitions(),
   assets: stores.AssetStore.getAssetsOfProject(props.params.projectID),
   apiEndpoint: stores.AppStore.getAPIEndpoint(),
-  selectedAsset: stores.AssetStore.getSelectedAsset()
+  selectedAsset: stores.AssetStore.getSelectedAsset(),
+  focusedElement: stores.ElementStore.getFocusedElement()
 }))
 @pureRender
 class Screen extends React.Component {
@@ -61,13 +62,6 @@ class Screen extends React.Component {
       screenDimension: 'landscape',
       screenScale: 1
     };
-
-    this.routerWillLeave = this.routerWillLeave.bind(this);
-    this.selectElement = this.selectElement.bind(this);
-    this.updateScreenSize = this.updateScreenSize.bind(this);
-    this.updateScreenDimension = this.updateScreenDimension.bind(this);
-    this.updateScreenScale = this.updateScreenScale.bind(this);
-    this.saveNow = this.saveNow.bind(this);
   }
 
   componentDidMount(){
@@ -86,7 +80,7 @@ class Screen extends React.Component {
     }
   }
 
-  routerWillLeave(state, transition){
+  routerWillLeave = (state, transition) => {
     this.selectElement(null);
   }
 
@@ -130,6 +124,7 @@ class Screen extends React.Component {
         <ViewMask {...this.state}
           element={element}
           selectElement={this.selectElement}
+          focusElement={this.focusElement}
           getAssetURL={getAssetURL}/>
       );
     }
@@ -144,30 +139,35 @@ class Screen extends React.Component {
     );
   }
 
-  selectElement(id){
+  selectElement = (id) => {
     const {selectElement} = bindActions(ElementAction, this.context.flux);
     selectElement(id);
   }
 
-  updateScreenSize(size){
+  focusElement = (id) => {
+    const {focusElement} = bindActions(ElementAction, this.context.flux);
+    focusElement(id);
+  }
+
+  updateScreenSize = (size) => {
     this.setState({
       screenSize: size
     });
   }
 
-  updateScreenDimension(dimension){
+  updateScreenDimension = (dimension) => {
     this.setState({
       screenDimension: dimension
     });
   }
 
-  updateScreenScale(scale){
+  updateScreenScale = (scale) => {
     this.setState({
       screenScale: scale
     });
   }
 
-  saveNow(e){
+  saveNow = (e) => {
     e.preventDefault();
 
     const {updateElementNow} = bindActions(ElementAction, this.context.flux);

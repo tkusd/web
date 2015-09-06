@@ -108,3 +108,7 @@ export function pushHoverElement(id){
 export function popHoverElement(id){
   this.dispatch(Actions.POP_HOVER_ELEMENT, id);
 }
+
+export function focusElement(id){
+  this.dispatch(Actions.FOCUS_ELEMENT, id);
+}

@@ -1,6 +1,6 @@
 import path from 'path';
 import webpack from 'webpack';
-import autoprefixer from 'autoprefixer-core';
+import autoprefixer from 'autoprefixer';
 import cssnano from 'cssnano';
 import postcssF7 from './postcss-f7';
 import loaderUtils from 'loader-utils';
@@ -12,12 +12,12 @@ let entry = {
   main: ['./src/client'],
   preview: ['./src/preview/client'],
   preview_ios: [
-    'framework7/dist/css/framework7.ios.css',
-    'framework7/dist/css/framework7.ios.colors.css'
+    '!!style!css!framework7/dist/css/framework7.ios.css',
+    '!!style!css!framework7/dist/css/framework7.ios.colors.css'
   ],
   preview_material: [
-    'framework7/dist/css/framework7.material.css',
-    'framework7/dist/css/framework7.material.colors.css'
+    '!!style!css!framework7/dist/css/framework7.material.css',
+    '!!style!css!framework7/dist/css/framework7.material.colors.css'
   ],
   vendor: [
     'react',
@@ -40,13 +40,14 @@ export default {
     extensions: ['', '.js', '.jsx', '.json']
   },
   module: {
+    /*
     preLoaders: [
       {
         test: /\.jsx?$/,
         exclude: /node_modules/,
         loaders: ['eslint']
       }
-    ],
+    ],*/
     loaders: [
       {
         test: /\.woff2?(\?v=\d+\.\d+\.\d+)?$/,

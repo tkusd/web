@@ -1,0 +1,55 @@
+@import "nib"
+@import "../common"
+
+$view-resize-area
+  position: fixed
+  &:before
+    content: ""
+    padding: 3px
+    position: absolute
+    top: @padding * -1
+    left: @padding * -1
+    right: @padding * -1
+    bottom: @padding * -1
+
+.view-resize__n
+  @extend $view-resize-area
+  cursor: n-resize
+  border-top: 1px solid color-accent
+
+.view-resize__e
+  @extend $view-resize-area
+  cursor: e-resize
+  border-right: 1px solid color-accent
+
+.view-resize__s
+  @extend $view-resize-area
+  cursor: s-resize
+  border-bottom: 1px solid color-accent
+
+.view-resize__w
+  @extend $view-resize-area
+  cursor: w-resize
+  border-left: 1px solid color-accent
+
+$view-resize-corner
+  @extend $view-resize-area
+  background: color-accent
+  width: 1px
+  height: 1px
+
+.view-resize__ne
+  @extend $view-resize-corner
+  cursor: ne-resize
+
+.view-resize__se
+  @extend $view-resize-corner
+  cursor: se-resize
+
+.view-resize__sw
+  @extend $view-resize-corner
+  cursor: sw-resize
+
+.view-resize__nw
+  @extend $view-resize-corner
+  cursor: nw-resize

@@ -24,6 +24,7 @@ export default keyMirror({
   POP_HOVER_ELEMENT: null,
   UPDATE_ELEMENT_NOW: null,
   UPDATE_ELEMENT_INDEX: null,
+  FOCUS_ELEMENT: null,
 
   OPEN_MODAL: null,
   CLOSE_MODAL: null,
