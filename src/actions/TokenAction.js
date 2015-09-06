@@ -46,11 +46,7 @@ export function logout(){
   const {TokenStore} = this.getStore();
   if (!TokenStore.isLoggedIn()) return Promise.resolve();
 
-  const id = TokenStore.getUserID();
-
-  return deleteToken.call(this, TokenStore.getToken()).then(() => {
-    this.dispatch(Actions.DELETE_USER, id);
-  });
+  return deleteToken.call(this, TokenStore.getToken());
 }
 
 export function checkToken(payload){

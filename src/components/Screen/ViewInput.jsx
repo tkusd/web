@@ -71,7 +71,7 @@ class ViewInput extends React.Component {
           'fontSize', 'fontFamily', 'lineHeight', 'color', 'letterSpacing',
           'color', 'textAlign', 'textIndent', 'textShadow', 'fontWeight',
           'paddingTop', 'paddingLeft', 'paddingRight', 'paddingBottom',
-          'textDecoration'
+          'textDecoration', 'fontStyle'
         ]),
         top: rect.top,
         left: rect.left,
