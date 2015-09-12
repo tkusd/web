@@ -3,8 +3,7 @@ import cx from 'classnames';
 import pureRender from '../../decorators/pureRender';
 import {DragSource, DropTarget} from 'react-dnd';
 import ItemTypes from '../../constants/ItemTypes';
-import View from '../preview/View';
-import getAssetBlobURL from '../../utils/getAssetBlobURL';
+import View from '../../embed/View';
 
 if (process.env.BROWSER){
   require('../../styles/Project/ScreenItem.styl');
@@ -68,7 +67,6 @@ class ScreenItem extends React.Component {
     editable: React.PropTypes.bool.isRequired,
     moveScreen: React.PropTypes.func.isRequired,
     updateIndex: React.PropTypes.func.isRequired,
-    apiEndpoint: React.PropTypes.string.isRequired,
 
     // React DnD
     connectDragSource: React.PropTypes.func.isRequired,
@@ -84,8 +82,7 @@ class ScreenItem extends React.Component {
       project,
       connectDragSource,
       connectDropTarget,
-      isDragging,
-      apiEndpoint
+      isDragging
     } = this.props;
 
     const id = element.get('id');
@@ -101,7 +98,6 @@ class ScreenItem extends React.Component {
           <div className={cx('screen-item__view', project.get('theme'))}>
             <View {...this.props}
               element={elements.get(id)}
-              getAssetURL={getAssetBlobURL.bind(this, apiEndpoint)}
               getElementID={noop}/>
           </div>
         </div>

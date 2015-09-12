@@ -1,4 +1,5 @@
 import React from 'react';
+import {Link} from 'react-router';
 import ScreenPalette from './ScreenPalette';
 import ComponentPalette from './ComponentPalette';
 import SettingPalette from './SettingPalette';
@@ -19,6 +20,8 @@ class ProjectSidebar extends React.Component {
   }
 
   render(){
+    const {project} = this.props;
+
     return (
       <div className="project-sidebar">
         <TabHost>
@@ -33,9 +36,9 @@ class ProjectSidebar extends React.Component {
           <a href={this.makeDownloadHref()} className="project-sidebar__link" target="_blank" onClick={this.openDownloadWindow}>
             <FontAwesome icon="download"/>
           </a>
-          <a href={this.makePreviewHref()} className="project-sidebar__link" target="_blank" onClick={this.openPreviewWindow}>
+          <Link to={`/projects/${project.get('id')}/preview`} className="project-sidebar__link">
             <FontAwesome icon="eye"/>
-          </a>
+          </Link>
         </div>
       </div>
     );
@@ -70,23 +73,23 @@ class ProjectSidebar extends React.Component {
       </TabPane>
     );
   }
-
-  makePreviewHref(){
-    const {project} = this.props;
-    return `/projects/${project.get('id')}/preview`;
-  }
+  //
+  // makePreviewHref(){
+  //   const {project} = this.props;
+  //   return `/projects/${project.get('id')}/preview`;
+  // }
 
   makeDownloadHref(){
     const {project} = this.props;
     return `/projects/${project.get('id')}/download`;
   }
 
-  openPreviewWindow = (e) => {
-    e.preventDefault();
-
-    const {project} = this.props;
-    window.open(this.makePreviewHref(), project.get('id'), 'menubar=no, location=no, width=360, height=640, status=no');
-  }
+  // openPreviewWindow = (e) => {
+  //   e.preventDefault();
+  //
+  //   const {project} = this.props;
+  //   window.open(this.makePreviewHref(), project.get('id'), 'menubar=no, location=no, width=360, height=640, status=no');
+  // }
 
   openDownloadWindow = (e) => {
     e.preventDefault();

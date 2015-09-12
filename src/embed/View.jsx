@@ -1,8 +1,8 @@
 import React from 'react';
 import cx from 'classnames';
-import ElementTypes from '../../constants/ElementTypes';
-import NoopContainer from './NoopContainer';
-import pureRender from '../../decorators/pureRender';
+import ElementTypes from '../constants/ElementTypes';
+import pureRender from '../decorators/pureRender';
+import {extractAssetID} from '../utils/getAssetBlobURL';
 
 function getElementID(element){
   return 'e' + element.get('id');
@@ -10,8 +10,11 @@ function getElementID(element){
 
 function noop(){}
 
-function getDirectURL(url){
-  return url;
+function getAssetURL(url){
+  const id = extractAssetID(url);
+  if (!id) return url;
+
+  return `/_api/assets/${id}/blob`;
 }
 
 function renderMultiLineString(str){
@@ -39,6 +42,12 @@ function filterTrue(s){
   return s;
 }
 
+class NoopContainer extends React.Component {
+  render(){
+    return <View {...this.props}/>;
+  }
+}
+
 @pureRender
 class View extends React.Component {
   static propTypes = {
@@ -57,7 +66,7 @@ class View extends React.Component {
     onClick: noop,
     onScroll: noop,
     onDoubleClick: noop,
-    getAssetURL: getDirectURL,
+    getAssetURL,
     getElementID
   }
 

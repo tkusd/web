@@ -21,9 +21,9 @@ export default merge({}, config, {
   devtool: 'eval',
   entry: {
     main: [].concat(HOT_LOAD_SCRIPTS, config.entry.main),
-    preview: [].concat(HOT_LOAD_SCRIPTS, config.entry.preview),
-    preview_ios: [].concat(HOT_LOAD_SCRIPTS, config.entry.preview_ios),
-    preview_material: [].concat(HOT_LOAD_SCRIPTS, config.entry.preview_material)
+    embed: [].concat(HOT_LOAD_SCRIPTS, config.entry.embed),
+    embed_ios: [].concat(HOT_LOAD_SCRIPTS, config.entry.embed_ios),
+    embed_material: [].concat(HOT_LOAD_SCRIPTS, config.entry.embed_material)
   },
   module: {
     loaders: config.module.loaders.concat([

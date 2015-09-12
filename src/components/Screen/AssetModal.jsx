@@ -16,8 +16,7 @@ const ASSET_PREFIX = 'asset:';
 function noop(){}
 
 @connectToStores(['AssetStore', 'AppStore'], (stores, props) => ({
-  assets: stores.AssetStore.getAssetsOfProject(props.projectID),
-  apiEndpoint: stores.AppStore.getAPIEndpoint()
+  assets: stores.AssetStore.getAssetsOfProject(props.projectID)
 }))
 class AssetModal extends React.Component {
   static propTypes = {
@@ -61,7 +60,7 @@ class AssetModal extends React.Component {
   }
 
   renderUploadTab(){
-    const {assets, apiEndpoint, selectedAsset} = this.state;
+    const {assets, selectedAsset} = this.state;
 
     return (
       <TabPane tab={<FormattedMessage message="project.assets"/>}>
@@ -69,7 +68,6 @@ class AssetModal extends React.Component {
           <AssetList {...this.props}
             selectedAsset={selectedAsset}
             assets={assets}
-            apiEndpoint={apiEndpoint}
             viewMode="grid"
             onItemClick={this.selectAsset}/>
         </div>

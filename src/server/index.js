@@ -57,7 +57,7 @@ server.use((req, res, next) => {
 // Internal API
 server.use('/_api', require('./api'));
 server.get('/logout', require('./logout'));
-server.get('/projects/:id/preview', require('../preview'));
+server.get('/projects/:id/embed', require('../embed'));
 server.get('/projects/:id/download', require('../download'));
 
 // Render the app server-side and send it as response.

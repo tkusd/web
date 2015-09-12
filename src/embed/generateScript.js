@@ -13,7 +13,7 @@ import {
 } from '../utils/esprima';
 import base62uuid from '../utils/base62uuid';
 import {actions, events} from '../constants/ElementTypes';
-import View from '../components/preview/View';
+import View from '../embed/View';
 import getAssetBlobURL from '../utils/getAssetBlobURL';
 import merge from 'lodash/object/merge';
 
@@ -143,23 +143,6 @@ function generateEvents(flux, projectID){
     const events = EventStore.getEventsOfElement(element.get('id'));
 
     return events.toArray().map(generateEventListener.bind(null, flux));
-/*
-    return events.toArray().map(event => {
-      return generateExpressionStatement(
-        generateCallExpression({
-          type: 'MemberExpression',
-          object: generateCallExpression(
-            generateIdentifier('Dom7'),
-            [generateIdentifier('document')]
-          ),
-          property: generateIdentifier('on')
-        }, [
-          generateLiteral(event.get('event')),
-          generateLiteral(getElementID(element)),
-          generateIdentifier(getActionID(event.get('action_id')))
-        ])
-      );
-    });*/
   }).reduce(flattenArray, []);
 }
 
@@ -229,12 +212,6 @@ function generateProgram(flux, projectID, options){
 }
 
 export default function generateScript(flux, projectID, options){
-  const {AppStore} = flux.getStore();
-
-  options = merge({
-    getAssetURL: getAssetBlobURL.bind(this, AppStore.getAPIEndpoint())
-  }, options);
-
   let ast = {
     type: 'Program',
     body: generateProgram(flux, projectID, options)

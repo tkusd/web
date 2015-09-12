@@ -8,8 +8,7 @@ import ViewMask from './ViewMask';
 import ScreenToolbar from './ScreenToolbar';
 import cx from 'classnames';
 import ScalableView from './ScalableView';
-import View from '../preview/View';
-import getAssetBlobURL from '../../utils/getAssetBlobURL';
+import View from '../../embed/View';
 
 let Mousetrap;
 
@@ -28,8 +27,7 @@ function preventDefault(e){
   'ProjectStore',
   'ActionStore',
   'EventStore',
-  'AssetStore',
-  'AppStore'
+  'AssetStore'
 ], (stores, props) => ({
   project: stores.ProjectStore.getProject(props.params.projectID),
   elements: stores.ElementStore.getElementsOfProject(props.params.projectID),
@@ -43,7 +41,6 @@ function preventDefault(e){
   events: stores.EventStore.getList(),
   actionDefinitions: stores.ActionStore.getDefinitions(),
   assets: stores.AssetStore.getAssetsOfProject(props.params.projectID),
-  apiEndpoint: stores.AppStore.getAPIEndpoint(),
   selectedAsset: stores.AssetStore.getSelectedAsset(),
   focusedElement: stores.ElementStore.getFocusedElement()
 }))
@@ -114,18 +111,16 @@ class Screen extends React.Component {
   }
 
   renderView(){
-    const {editable, elements, apiEndpoint} = this.state;
+    const {editable, elements} = this.state;
     const selectedScreen = this.props.params.screenID;
     const element = elements.get(selectedScreen);
-    const getAssetURL = getAssetBlobURL.bind(null, apiEndpoint);
 
     if (editable){
       return (
         <ViewMask {...this.state}
           element={element}
           selectElement={this.selectElement}
-          focusElement={this.focusElement}
-          getAssetURL={getAssetURL}/>
+          focusElement={this.focusElement}/>
       );
     }
 
@@ -133,7 +128,6 @@ class Screen extends React.Component {
       <ScalableView {...this.state}>
         <View {...this.state}
           element={element}
-          getAssetURL={getAssetURL}
           onClick={preventDefault}/>
       </ScalableView>
     );

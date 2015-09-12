@@ -6,7 +6,6 @@ import * as AssetAction from '../../actions/AssetAction';
 import cx from 'classnames';
 import FontAwesome from '../common/FontAwesome';
 import startsWith from 'lodash/string/startsWith';
-import {getBlobURL} from '../../utils/getAssetBlobURL';
 import {FormattedMessage} from '../intl';
 
 if (process.env.BROWSER){
@@ -49,7 +48,6 @@ class AssetList extends React.Component {
   static propTypes = {
     assets: React.PropTypes.object.isRequired,
     projectID: React.PropTypes.string.isRequired,
-    apiEndpoint: React.PropTypes.string.isRequired,
     viewMode: React.PropTypes.oneOf(['list', 'grid']),
     selectedAsset: React.PropTypes.string,
     onItemClick: React.PropTypes.func.isRequired,
@@ -118,7 +116,7 @@ class AssetList extends React.Component {
   }
 
   renderAssetIcon(asset){
-    const {apiEndpoint, viewMode} = this.props;
+    const {viewMode} = this.props;
     const id = asset.get('id');
 
     if (id[0] === '_'){
@@ -126,7 +124,7 @@ class AssetList extends React.Component {
     }
 
     if (viewMode === 'grid' && startsWith(asset.get('type'), 'image/')){
-      return <img src={getBlobURL(apiEndpoint, id)}/>;
+      return <img src={`/_api/assets/${id}/blob`}/>;
     }
 
     return <FontAwesome icon="file"/>;

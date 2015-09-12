@@ -48,6 +48,10 @@ export default function(context){
                 ...r(require('./components/Screen'))
               }
             ]
+          },
+          {
+            path: '/projects/:projectID/preview',
+            ...r(require('./components/Preview'))
           }
         ]
       },

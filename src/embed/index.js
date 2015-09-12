@@ -1,11 +1,11 @@
-import React from 'react';
-import ReactDOM from 'react-dom/server';
+import path from 'path';
 
-import {Container} from '../flux';
-import HtmlDocument from './HtmlDocument';
 import readWebpackStats from '../server/readWebpackStats';
 import generateScript from './generateScript';
 import prepareFullProject from '../server/prepareFullProject';
+import nunjucksRender from '../utils/nunjucksRender';
+
+const TEMPLATE_PATH = path.join(__dirname, 'template.html');
 
 export default function(req, res, next){
   const projectID = req.params.id;
@@ -15,17 +15,17 @@ export default function(req, res, next){
     readWebpackStats(req),
     prepareFullProject(req)
   ]).then(([stats]) => {
-    const {AppStore} = flux.getStore();
+    const {ProjectStore} = flux.getStore();
+    const project = ProjectStore.getProject(projectID);
     let script = 'window.$INIT = function(){' + generateScript(flux, projectID) + '}';
 
-    let html = ReactDOM.renderToStaticMarkup(
-      React.createElement(Container, {flux},
-        React.createElement(HtmlDocument, {stats, projectID, script})
-      )
-    );
-
-    res.status(AppStore.getStatusCode());
-    res.send('<!DOCTYPE html>' + html);
+    return nunjucksRender(TEMPLATE_PATH, {
+      script,
+      stats,
+      project
+    });
+  }).then(html => {
+    res.send(html);
   }).catch(err => {
     if (err.response && err.response.status === 404){
       return res.status(404).send('Not found');

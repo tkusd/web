@@ -25,20 +25,6 @@ function setupRequestOptions(options){
   return options;
 }
 
-export function api(url, options, context){
-  const {AppStore, TokenStore} = context.getStore();
-  const apiEndpoint = AppStore.getAPIEndpoint();
-
-  options = setupRequestOptions(options);
-  options.mode = 'cors';
-
-  if (TokenStore.isLoggedIn()){
-    options.headers.Authorization = 'Bearer ' + TokenStore.getToken();
-  }
-
-  return fetch(apiEndpoint + url, options);
-}
-
 export function internal(url, options, context){
   options = setupRequestOptions(options);
 
@@ -57,6 +43,24 @@ export function internal(url, options, context){
 
       return res;
     });
+}
+
+export function api(url, options, context){
+  if (process.env.BROWSER){
+    return internal(url, options, context);
+  }
+
+  const {AppStore, TokenStore} = context.getStore();
+  const apiEndpoint = AppStore.getAPIEndpoint();
+
+  options = setupRequestOptions(options);
+  options.mode = 'cors';
+
+  if (TokenStore.isLoggedIn()){
+    options.headers.Authorization = 'Bearer ' + TokenStore.getToken();
+  }
+
+  return fetch(apiEndpoint + url, options);
 }
 
 class ResponseError extends Error {

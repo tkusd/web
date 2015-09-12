@@ -10,12 +10,12 @@ const assetPath = path.join(__dirname, '../public/build');
 
 let entry = {
   main: ['./src/client'],
-  preview: ['./src/preview/client'],
-  preview_ios: [
+  embed: ['./src/embed/client'],
+  embed_ios: [
     '!!style!css!framework7/dist/css/framework7.ios.css',
     '!!style!css!framework7/dist/css/framework7.ios.colors.css'
   ],
-  preview_material: [
+  embed_material: [
     '!!style!css!framework7/dist/css/framework7.material.css',
     '!!style!css!framework7/dist/css/framework7.material.colors.css'
   ],

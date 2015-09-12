@@ -5,14 +5,3 @@ export function extractAssetID(url){
     return url.match(REGEX_ASSET)[1];
   }
 }
-
-export function getBlobURL(apiEndpoint, id){
-  return `${apiEndpoint}assets/${id}/blob`;
-}
-
-export default function getAssetBlobURL(apiEndpoint, url){
-  const id = extractAssetID(url);
-  if (!id) return url;
-
-  return getBlobURL(apiEndpoint, id);
-}

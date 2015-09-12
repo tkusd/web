@@ -1,5 +1,5 @@
 import React from 'react';
-import View from '../preview/View';
+import View from '../../embed/View';
 import ItemTypes from '../../constants/ItemTypes';
 import pureRender from '../../decorators/pureRender';
 import SortableElementItem from './SortableElementItem';

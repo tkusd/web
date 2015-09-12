@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>{{ project.get('title') }}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="{{ project.get('title') }}">
+  <meta name="mobile-web-app-capable" content="yes">
+  <link rel="stylesheet" type="text/css" href="{{ stats.embed.css }}">
+  <link rel="stylesheet" type="text/css" href="{{ stats['embed_' + project.get('theme')].css }}">
+</head>
+<body>
+  <div class="panel-overlay"></div>
+  <div class="views">
+    <div class="view view-main">
+      <div class="pages"></div>
+    </div>
+  </div>
+  <script>{{ script }}</script>
+  <script src="{{ stats.embed.js }}"></script>
+  <script src="{{ stats['embed_' + project.get('theme')].js }}"></script>
+</body>
+</html>

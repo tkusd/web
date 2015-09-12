@@ -1,20 +1,10 @@
 import express from 'express';
-import {api} from '../utils/request';
+import request from 'request';
 
 const app = express();
 
-function proxy(res){
-  return function(response){
-    let contentType = response.headers.get('Content-Type');
-
-    res.status(response.status);
-    if (contentType) res.header('Content-Type', contentType);
-
-    return response.text().then(txt => {
-      res.send(txt);
-      return response;
-    });
-  };
+function getAPIEndpoint(req){
+  return req.flux.getStore().AppStore.getAPIEndpoint();
 }
 
 app.use((req, res, next) => {
@@ -25,13 +15,13 @@ app.use((req, res, next) => {
 function checkToken(req, res, next){
   if (!req.session.token) return next();
 
+  const apiEndpoint = getAPIEndpoint(req);
   const {token} = req.session;
 
-  api('tokens/' + token.id, {
-    method: 'put'
-  }, req.flux)
-  .then(response => {
-    if (response.status === 200) {
+  request.put(apiEndpoint + 'tokens/' + token.id, (err, res) => {
+    if (err) return next(err);
+
+    if (res.statusCode === 200){
       res.status(400).send({
         error: 2000,
         message: 'You have already logged in.'
@@ -40,29 +30,28 @@ function checkToken(req, res, next){
       req.session.token = null;
       next();
     }
-  })
-  .catch(next);
+  });
 }
 
 app.post('/tokens', checkToken, (req, res, next) => {
-  api('tokens', {
-    method: 'post',
-    body: req.body
-  }, req.flux)
-  .then(response => {
-    if (response.status !== 201){
-      return proxy(res)(response);
+  const apiEndpoint = getAPIEndpoint(req);
+
+  request.post(apiEndpoint + 'tokens', {
+    body: req.body,
+    json: true
+  }, (err, response, body) => {
+    if (err) return next(err);
+
+    if (response.statusCode === 201){
+      req.session.token = body;
     }
 
-    return response.json().then(json => {
-      req.session.token = json;
-      res.status(response.status).json(json);
-    });
-  })
-  .catch(next);
+    response.pipe(res);
+  });
 });
 
 app.delete('/tokens', (req, res, next) => {
+  const apiEndpoint = getAPIEndpoint(req);
   let {token} = req.session;
 
   if (!token){
@@ -72,25 +61,33 @@ app.delete('/tokens', (req, res, next) => {
     });
   }
 
-  api('tokens/' + req.body.id, {
-    method: 'delete'
-  }, req.flux)
-  .then(response => {
-    if (response.status === 204){
+  request.del(apiEndpoint + 'tokens/' + req.body.id, (err, response, body) => {
+    if (err) return next(err);
+
+    if (response.statusCode === 204){
       req.session.token = null;
     }
 
-    return response;
-  })
-  .then(proxy(res))
-  .catch(next);
+    response.pipe(res);
+  });
 });
 
 app.use((req, res, next) => {
-  res.status(404).send({
-    error: 1002,
-    message: 'This is the internal API. Check http://tkusd.zespia.tw/v1 for more detail.'
+  const apiEndpoint = getAPIEndpoint(req);
+  const {token} = req.session;
+  let headers = {};
+
+  if (token){
+    headers.Authorization = 'Bearer ' + token.id;
+  }
+
+  let url = apiEndpoint + req.url.substring(1);
+  let stream = request(url, {
+    method: req.method,
+    headers
   });
+
+  req.pipe(stream).pipe(res);
 });
 
 export default app;
