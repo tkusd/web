@@ -61,7 +61,7 @@ class ResetPassword extends React.Component {
     sendPasswordReset(this.props.params.resetToken, {
       password: password.getValue()
     }).then(() => {
-      this.context.router.transitionTo('/');
+      this.context.router.transitionTo('/login');
     }).catch(err => {
       this.setState({error: err.body || err});
     });

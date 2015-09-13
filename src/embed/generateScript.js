@@ -1,158 +1,63 @@
-import escodegen from 'escodegen';
 import {createElement} from 'react';
 import {renderToStaticMarkup} from 'react-dom/server';
-import {
-  generateLiteral,
-  generateIdentifier,
-  generateExpressionStatement,
-  generateCallExpression,
-  generateBlockStatement,
-  generateMemberExpression,
-  generateObjectExpression,
-  generateVariable
-} from '../utils/esprima';
-import base62uuid from '../utils/base62uuid';
-import {actions, events} from '../constants/ElementTypes';
+import path from 'path';
+import vm from 'vm';
+import fs from 'graceful-fs';
+import {DOMParser} from 'xmldom';
 import View from '../embed/View';
-import getAssetBlobURL from '../utils/getAssetBlobURL';
-import merge from 'lodash/object/merge';
+import nunjucksRender from '../utils/nunjucksRender';
 
-function getElementID(element){
-  return '#e' + element.get('id');
-}
+const TEMPLATE_PATH = path.join(__dirname, 'template.js');
+const BLOCKLY_DIR = path.join(__dirname, '../../web_modules/blockly');
 
-function getActionID(actionID){
-  return 'a_' + base62uuid(actionID);
-}
+const BLOCKLY_FILES = [
+  path.join(BLOCKLY_DIR, 'blockly_compressed.js'),
+  path.join(BLOCKLY_DIR, 'blocks_compressed.js'),
+  path.join(BLOCKLY_DIR, 'javascript_compressed.js'),
+  path.join(BLOCKLY_DIR, 'msg/js/en.js')
+];
 
-function getViewID(elementID){
-  return 'v_' + base62uuid(elementID);
-}
+const BLOCKLY_SCRIPTS = [
+  'blockly_compressed.js',
+  'blocks_compressed.js',
+  'javascript_compressed.js',
+  'msg/js/en.js'
+]
+.map(p => path.join(BLOCKLY_DIR, p))
+.map(path => fs.readFileSync(path, 'utf8'))
+.map(content => new vm.Script(content));
 
 function flattenArray(arr, item){
   return item ? arr.concat(item) : arr;
 }
 
-function generateActionContent(flux, action){
-  let args = [];
-
-  switch (action.get('action')){
-  case actions.alert:
-    args = [
-      generateLiteral(action.getIn(['data', 'text'], ''))
-    ];
-
-    if (action.getIn(['data', 'title'])){
-      args.push(
-        generateLiteral(action.getIn(['data', 'title']))
-      );
-    }
-
-    return generateCallExpression(generateMemberExpression('app.alert'), args);
-
-  case actions.confirm:
-    args = [
-      generateLiteral(action.getIn(['data', 'text'], ''))
-    ];
-
-    if (action.getIn(['data', 'title'])){
-      args.push(action.getIn(['data', 'title']));
-    }
-
-    return generateCallExpression(generateMemberExpression('app.confirm'), args);
-
-  case actions.prompt:
-    args = [
-      generateLiteral(action.getIn(['data', 'text'], ''))
-    ];
-
-    if (action.getIn(['data', 'title'])){
-      args.push(action.getIn(['data', 'title']));
-    }
-
-    return generateCallExpression(generateMemberExpression('app.prompt'), args);
-
-  case actions.transition:
-    const screen = action.getIn(['data', 'screen']);
-    if (!screen) return [];
-
-    return generateCallExpression(generateMemberExpression('view.router.load'), [
-      generateObjectExpression({
-        content: generateIdentifier(getViewID(screen))
-      })
-    ]);
-
-  case actions.back:
-    return generateCallExpression(generateMemberExpression('view.router.back'), []);
-  }
-
-  return [];
-}
-
-function generateActions(flux, projectID){
-  const {ActionStore} = flux.getStore();
-  const actions = ActionStore.getActionsOfProject(projectID);
-
-  return actions.map((action, id) => {
-    return {
-      type: 'FunctionDeclaration',
-      id: generateIdentifier(getActionID(id)),
-      params: [],
-      body: generateBlockStatement(
-        generateActionContent(flux, action)
-      )
-    };
-  }).toArray();
-}
-
-function generateEventListener(flux, event){
-  const {ElementStore} = flux.getStore();
-  const element = ElementStore.getElement(event.get('element_id'));
-
-  switch (event.get('event')){
-  case events.init:
-    return generateExpressionStatement(
-      generateCallExpression(generateMemberExpression('app.onPageInit'), [
-        generateLiteral(event.get('element_id')),
-        generateIdentifier(getActionID(event.get('action_id')))
-      ])
-    );
-  }
-
-  return generateExpressionStatement(
-    generateCallExpression({
-      type: 'MemberExpression',
-      object: generateCallExpression(
-        generateIdentifier('Dom7'),
-        [generateIdentifier('document')]
-      ),
-      property: generateIdentifier('on')
-    }, [
-      generateLiteral(event.get('event')),
-      generateLiteral(getElementID(element)),
-      generateIdentifier(getActionID(event.get('action_id')))
-    ])
-  );
-}
-
-function generateEvents(flux, projectID){
+function flattenEvents(flux, projectID){
   const {ElementStore, EventStore} = flux.getStore();
   const elements = ElementStore.getElementsOfProject(projectID);
 
   return elements.toArray().map(element => {
-    const events = EventStore.getEventsOfElement(element.get('id'));
-
-    return events.toArray().map(generateEventListener.bind(null, flux));
+    return EventStore.getEventsOfElement(element.get('id')).toArray();
   }).reduce(flattenArray, []);
 }
 
-function generateViews(flux, projectID, options){
+function prepareBlocklyContext(){
+  const ctx = {DOMParser};
+
+  vm.createContext(ctx);
+  BLOCKLY_SCRIPTS.forEach(script => script.runInContext(ctx));
+
+  return ctx;
+}
+
+export default function generateScript(flux, projectID, options){
   const {ProjectStore, ElementStore} = flux.getStore();
   const project = ProjectStore.getProject(projectID);
   const elements = ElementStore.getElementsOfProject(projectID);
-  const mainScreen = project.get('main_screen');
+  const props = {
+    elements, project
+  };
 
-  let result = elements.filter(element => !element.get('element_id'))
+  let views = elements.filter(element => !element.get('element_id'))
     .map(element => (
       createElement(View, {
         ...options,
@@ -162,66 +67,26 @@ function generateViews(flux, projectID, options){
       })
     ))
     .map(renderToStaticMarkup)
-    .map((str, key) => (
-      generateVariable(getViewID(key), generateLiteral(str))
-    ))
+    .map((markup, key) => ({key, markup}))
     .toArray();
 
-  if (mainScreen){
-    result.push(generateExpressionStatement(
-      generateCallExpression(generateMemberExpression('view.router.load'), [
-        generateObjectExpression({
-          content: generateIdentifier(getViewID(mainScreen)),
-          animatePages: generateLiteral(false)
-        })
-      ])
-    ));
-  }
+  const {Blockly} = prepareBlocklyContext();
 
-  return result;
-}
+  require('../blockly/blocks')(Blockly, props);
+  require('../blockly/generators')(Blockly);
 
-function generateProgram(flux, projectID, options){
-  const {ProjectStore} = flux.getStore();
-  const project = ProjectStore.getProject(projectID);
+  let events = flattenEvents(flux, projectID).map(event => {
+    const workspace = new Blockly.Workspace();
+    const xml = Blockly.Xml.textToDom(event.get('workspace'));
+    Blockly.Xml.domToWorkspace(workspace, xml);
+    const code = Blockly.JavaScript.workspaceToCode(workspace);
 
-  return [].concat(
-    generateExpressionStatement(
-      generateLiteral('use strict')
-    ),
-    generateVariable('app', {
-      type: 'NewExpression',
-      callee: generateIdentifier('Framework7'),
-      arguments: [
-        generateObjectExpression({
-          material: generateLiteral(project.get('theme') === 'material'),
-          modalTitle: generateLiteral(project.get('title', '')),
-          modalCloseByOutside: generateLiteral(true)
-        })
-      ]
-    }),
-    generateVariable('view',
-      generateCallExpression(generateMemberExpression('app.addView'), [
-        generateLiteral('.view-main')
-      ])
-    ),
-    generateViews(flux, projectID, options),
-    generateActions(flux, projectID),
-    generateEvents(flux, projectID)
-  );
-}
+    return event.set('code', code);
+  });
 
-export default function generateScript(flux, projectID, options){
-  let ast = {
-    type: 'Program',
-    body: generateProgram(flux, projectID, options)
-  };
-
-  return escodegen.generate(ast, {
-    format: {
-      indent: {
-        style: '  '
-      }
-    }
+  return nunjucksRender(TEMPLATE_PATH, {
+    project,
+    views,
+    events
   });
 }

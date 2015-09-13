@@ -1,12 +1,21 @@
 import nunjucks, {Environment} from 'nunjucks';
 import fs from 'graceful-fs';
 import promisify from '../utils/promisify';
+import base62uuid from '../utils/base62uuid';
 
 const env = new Environment(null, {
   autoescape: false
 });
 const readFile = promisify(fs.readFile);
 let compiledTemplates = {};
+
+env.addFilter('stringify', (str) => {
+  return JSON.stringify(str);
+});
+
+env.addFilter('base62uuid', (str) => {
+  return base62uuid(str);
+});
 
 function getCompiledTemplate(path){
   if (process.env.NODE_ENV === 'production' && compiledTemplates.hasOwnProperty(path)){

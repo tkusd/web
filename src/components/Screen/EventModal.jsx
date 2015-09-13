@@ -1,11 +1,11 @@
 import React from 'react';
 import {Modal} from '../modal';
 import {FormattedMessage} from '../intl';
-import ActionBoard from './ActionBoard';
 import Select from 'react-select';
 import bindActions from '../../utils/bindActions';
 import * as EventAction from '../../actions/EventAction';
 import {formatIntlFromContext} from '../../utils/formatIntl';
+import BlocklyWorkspace from './BlocklyWorkspace';
 
 if (process.env.BROWSER){
   require('../../styles/Screen/EventModal.styl');
@@ -19,9 +19,7 @@ class EventModal extends React.Component {
 
   static propTypes = {
     event: React.PropTypes.object,
-    component: React.PropTypes.object.isRequired,
-    actions: React.PropTypes.object.isRequired,
-    actionDefinitions: React.PropTypes.object.isRequired
+    component: React.PropTypes.object.isRequired
   }
 
   constructor(props, context){
@@ -31,26 +29,25 @@ class EventModal extends React.Component {
 
     this.state = {
       eventValue: event && event.get('event'),
-      actionValue: event && event.get('action_id'),
       isSaving: false
     };
   }
 
   render(){
     const {closeModal, event} = this.props;
-    const {actionValue} = this.state;
 
     return (
       <Modal
         title={<FormattedMessage message={event ? 'project.editEvent' : 'project.newEvent'}/>}
-        onDismiss={closeModal} large>
+        onDismiss={closeModal}
+        large>
         <div className="event-modal__select-wrap">
           {this.renderEventSelector()}
-          {this.renderActionSelector()}
         </div>
-        <div className="event-modal__action-board">
-          <ActionBoard {...this.props} actionID={actionValue} ref="board"/>
-        </div>
+        <BlocklyWorkspace {...this.props}
+          className="event-modal__workspace"
+          ref="workspace"
+          workspace={event && event.get('workspace')}/>
         <div className="modal__btn-group">
           {event && <button className="modal__btn--danger event-modal__delete-btn" onClick={this.deleteEvent}>
             <FormattedMessage message="common.delete"/>
@@ -89,34 +86,6 @@ class EventModal extends React.Component {
     );
   }
 
-  renderActionSelector(){
-    const {actions} = this.props;
-    const {actionValue, isSaving} = this.state;
-    const intl = formatIntlFromContext(this.context.flux);
-
-    let options = actions
-      .filter(action => !action.get('action_id'))
-      .map((action, key) => ({
-        value: key,
-        label: intl.getIntlMessage(`action.${action.get('action')}.name`) +
-          (action.get('name') ? ' - ' + action.get('name') : '')
-      }))
-      .toArray();
-
-    return (
-      <div className="event-modal__select">
-        <label className="event-modal__select-label">
-          <FormattedMessage message="project.action"/>
-        </label>
-        <Select value={actionValue}
-          options={options}
-          onChange={this.handleSelectChange.bind(this, 'actionValue')}
-          placeholder="New action..."
-          disabled={isSaving}/>
-      </div>
-    );
-  }
-
   handleSelectChange(field, value){
     this.setState({
       [field]: value
@@ -127,15 +96,12 @@ class EventModal extends React.Component {
     const {element, closeModal} = this.props;
     const {eventValue} = this.state;
     const {createEvent} = bindActions(EventAction, this.context.flux);
-    const {board} = this.refs;
 
     if (!eventValue) return;
 
-    board.saveChanges().then(() => {
-      return createEvent(element.get('id'), {
-        event: eventValue,
-        action_id: board.getActionID()
-      });
+    createEvent(element.get('id'), {
+      event: eventValue,
+      workspace: this.refs.workspace.getXMLString()
     }).then(() => {
       closeModal();
     }).catch(err => {
@@ -144,18 +110,15 @@ class EventModal extends React.Component {
   }
 
   updateEvent = () => {
-    const {updateEvent} = bindActions(EventAction, this.context.flux);
     const {event, closeModal} = this.props;
     const {eventValue} = this.state;
-    const {board} = this.refs;
+    const {updateEvent} = bindActions(EventAction, this.context.flux);
 
     if (!eventValue) return;
 
-    board.saveChanges().then(() => {
-      return updateEvent(event.get('id'), {
-        event: eventValue,
-        action_id: board.getActionID()
-      });
+    updateEvent(event.get('id'), {
+      event: eventValue,
+      workspace: this.refs.workspace.getXMLString()
     }).then(() => {
       closeModal();
     }).catch(err => {
@@ -164,6 +127,8 @@ class EventModal extends React.Component {
   }
 
   deleteEvent = () => {
+    if (!confirm('Are you sure?')) return;
+
     const {deleteEvent} = bindActions(EventAction, this.context.flux);
     const {event, closeModal} = this.props;
 

@@ -9,12 +9,11 @@ if (process.env.BROWSER){
 
 class EventItem extends React.Component {
   static propTypes = {
-    event: React.PropTypes.object.isRequired,
-    action: React.PropTypes.object.isRequired
+    event: React.PropTypes.object.isRequired
   }
 
   render(){
-    const {event, action} = this.props;
+    const {event} = this.props;
 
     let trigger = (
       <li className="event-item">
@@ -22,10 +21,6 @@ class EventItem extends React.Component {
           <strong className="event-item__event">
             <FormattedMessage message={'event.' + event.get('event')}/>
           </strong>
-          <span className="event-item__action">
-            <FormattedMessage message={`action.${action.get('action')}.name`}/>
-            {action.get('name') && ' - ' + action.get('name')}
-          </span>
         </div>
       </li>
     );

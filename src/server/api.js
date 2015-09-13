@@ -1,6 +1,7 @@
 import express from 'express';
 import request from 'request';
 import omit from 'lodash/object/omit';
+import bodyParser from 'body-parser';
 
 const app = express();
 
@@ -34,7 +35,7 @@ function checkToken(req, res, next){
   });
 }
 
-app.post('/tokens', checkToken, (req, res, next) => {
+app.post('/tokens', checkToken, bodyParser.json(), (req, res, next) => {
   const apiEndpoint = getAPIEndpoint(req);
 
   request.post(apiEndpoint + 'tokens', {
@@ -53,7 +54,7 @@ app.post('/tokens', checkToken, (req, res, next) => {
   });
 });
 
-app.delete('/tokens', (req, res, next) => {
+app.delete('/tokens', bodyParser.json(), (req, res, next) => {
   const apiEndpoint = getAPIEndpoint(req);
   let {token} = req.session;
 
@@ -79,25 +80,22 @@ app.delete('/tokens', (req, res, next) => {
 app.use((req, res, next) => {
   const apiEndpoint = getAPIEndpoint(req);
   const {token} = req.session;
-  let headers = {};
+  let headers = {
+    'Content-Type': req.get('Content-Type')
+  };
 
   if (token){
-    headers.Authorization = 'Bearer ' + token.id;
+    headers.Authorization = 'Bearer ' + token.secret;
   }
 
   let url = apiEndpoint + req.url.substring(1);
-
-  request(url, {
+  let stream = request(url, {
     method: req.method,
-    headers,
-    body: req.body,
-    json: true
-  }, (err, response, body) => {
-    if (err) return next(err);
-
-    res.status(response.statusCode);
-    res.send(body);
+    headers
   });
+
+  req.pipe(stream).on('error', next)
+    .pipe(res).on('error', next);
 });
 
 export default app;

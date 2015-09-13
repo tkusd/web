@@ -1,7 +1,6 @@
 import path from 'path';
 import express from 'express';
 import compression from 'compression';
-import bodyParser from 'body-parser';
 import cookieSession from 'cookie-session';
 import morgan from 'morgan';
 import csurf from 'csurf';
@@ -22,11 +21,9 @@ const DEFAULT_LOCALE = 'en';
 
 server.set('trust proxy', ['loopback', 'linklocal', 'uniquelocal']);
 server.set('x-powered-by', false);
-// server.set('config', config);
 
 // Middleware
 server.use(morgan(PRODUCTION ? 'combined' : 'dev'));
-server.use(bodyParser.json());
 server.use(cookieSession({
   keys: config.secret,
   maxAge: 1000 * 60 * 60 * 24 * 30 // 1 month

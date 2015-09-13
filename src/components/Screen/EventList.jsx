@@ -14,12 +14,11 @@ if (process.env.BROWSER){
 class EventList extends React.Component {
   static propTypes = {
     events: React.PropTypes.object.isRequired,
-    actions: React.PropTypes.object.isRequired,
     elements: React.PropTypes.object.isRequired
   }
 
   render(){
-    const {events, actions} = this.props;
+    const {events} = this.props;
 
     return (
       <div>
@@ -33,8 +32,7 @@ class EventList extends React.Component {
           {events.map((event, key) => (
             <EventItem {...this.props}
               key={key}
-              event={event}
-              action={actions.get(event.get('action_id'))}/>
+              event={event}/>
           )).toArray()}
         </ul>
       </div>

@@ -25,7 +25,6 @@ function preventDefault(e){
   'ElementStore',
   'ComponentStore',
   'ProjectStore',
-  'ActionStore',
   'EventStore',
   'AssetStore'
 ], (stores, props) => ({
@@ -37,9 +36,7 @@ function preventDefault(e){
   hoverElements: stores.ElementStore.getHoverElements(),
   hasUnsavedChanges: stores.ElementStore.hasUnsavedChanges(),
   isSavingChanges: stores.ElementStore.isSavingChanges(),
-  actions: stores.ActionStore.getActionsOfProject(props.params.projectID),
   events: stores.EventStore.getList(),
-  actionDefinitions: stores.ActionStore.getDefinitions(),
   assets: stores.AssetStore.getAssetsOfProject(props.params.projectID),
   selectedAsset: stores.AssetStore.getSelectedAsset(),
   focusedElement: stores.ElementStore.getFocusedElement()

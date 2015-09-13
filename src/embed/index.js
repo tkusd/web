@@ -11,16 +11,17 @@ export default function(req, res, next){
   const projectID = req.params.id;
   const flux = req.flux;
 
-  Promise.all([
-    readWebpackStats(req),
-    prepareFullProject(req)
-  ]).then(([stats]) => {
+  return prepareFullProject(req).then(() => {
+    return Promise.all([
+      readWebpackStats(req),
+      generateScript(flux, projectID)
+    ]);
+  }).then(([stats, script]) => {
     const {ProjectStore} = flux.getStore();
     const project = ProjectStore.getProject(projectID);
-    let script = 'window.$INIT = function(){' + generateScript(flux, projectID) + '}';
 
     return nunjucksRender(TEMPLATE_PATH, {
-      script,
+      script: `window.$INIT = function(){${script}}`,
       stats,
       project
     });

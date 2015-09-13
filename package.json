@@ -54,7 +54,8 @@
     "tinycolor2": "^1.1.2",
     "validator": "^4.0.5",
     "webpack": "^1.11.0",
-    "xmlbuilder": "^2.6.4"
+    "xmlbuilder": "^2.6.4",
+    "xmldom": "^0.1.19"
   },
   "devDependencies": {
     "autoprefixer": "^6.0.0",
@@ -67,9 +68,11 @@
     "eslint-loader": "^1.0.0",
     "eslint-plugin-babel": "^2.1.1",
     "eslint-plugin-react": "^3.3.2",
+    "exports-loader": "^0.6.2",
     "expose-loader": "^0.7.0",
     "extract-text-webpack-plugin": "^0.8.2",
     "file-loader": "^0.8.4",
+    "imports-loader": "^0.6.4",
     "json-loader": "^0.5.2",
     "less": "^2.5.1",
     "less-loader": "^2.2.0",

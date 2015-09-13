@@ -58,13 +58,23 @@ export default function(req, res, next){
   const projectID = req.params.id;
 
   prepareFullProject(req).then(() => {
-    const {ProjectStore} = flux.getStore();
+    const {ProjectStore, AssetStore} = flux.getStore();
     const project = ProjectStore.getProject(projectID);
+    const assets = AssetStore.getAssetsOfProject(projectID);
 
-    return nunjucksRender(TEMPLATE_PATH, {
-      project
-    });
-  }).then(html => {
+    return Promise.all([
+      nunjucksRender(TEMPLATE_PATH, {project}),
+      generateScript(flux, projectID, {
+        getAssetURL(url){
+          let id = extractAssetID(url);
+          if (!id) return url;
+
+          const asset = assets.get(id);
+          if (asset) return 'assets/' + asset.get('name');
+        }
+      })
+    ]);
+  }).then(([html, script]) => {
     const {AppStore, ProjectStore, AssetStore, TokenStore} = flux.getStore();
     const projectID = req.params.id;
     const project = ProjectStore.getProject(projectID);
@@ -86,16 +96,6 @@ export default function(req, res, next){
     zip.append(html, {name: 'www/index.html'});
 
     // www/js/script.js
-    let script = generateScript(flux, projectID, {
-      getAssetURL(url){
-        let id = extractAssetID(url);
-        if (!id) return url;
-
-        const asset = assets.get(id);
-        if (asset) return 'assets/' + asset.get('name');
-      }
-    });
-
     script = '(function(){' + script + '})()';
     zip.append(script, {name: 'www/js/script.js'});
 
