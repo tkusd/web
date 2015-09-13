@@ -57,7 +57,7 @@ export function api(url, options, context){
   options.mode = 'cors';
 
   if (TokenStore.isLoggedIn()){
-    options.headers.Authorization = 'Bearer ' + TokenStore.getToken();
+    options.headers.Authorization = 'Bearer ' + TokenStore.getTokenSecret();
   }
 
   return fetch(apiEndpoint + url, options);

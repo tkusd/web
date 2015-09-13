@@ -6,6 +6,8 @@ import bindActions from '../../utils/bindActions';
 import * as AppAction from '../../actions/AppAction';
 import {FormattedMessage} from '../intl';
 import {validators} from 'react-form-input';
+import {ModalPortal} from '../modal';
+import ResetPasswordModal from './ResetPasswordModal';
 
 class Login extends React.Component {
   static contextTypes = {
@@ -44,6 +46,9 @@ class Login extends React.Component {
 
   render(){
     let {error} = this.state;
+    let resetPasswordTrigger = (
+      <a href="" className="login-container__link">Forgot password?</a>
+    );
 
     return (
       <Form onSubmit={this.handleSubmit}>
@@ -78,6 +83,11 @@ class Login extends React.Component {
           <Link to="/signup" className="login-container__link">
             <FormattedMessage message="common.signup"/>
           </Link>
+        </div>
+        <div className="login-container__link-group">
+          <ModalPortal trigger={resetPasswordTrigger}>
+            <ResetPasswordModal/>
+          </ModalPortal>
         </div>
       </Form>
     );

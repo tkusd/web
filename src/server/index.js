@@ -59,6 +59,7 @@ server.use('/_api', require('./api'));
 server.get('/logout', require('./logout'));
 server.get('/projects/:id/embed', require('../embed'));
 server.get('/projects/:id/download', require('../download'));
+server.get('/activation/:id', require('./activation'));
 
 // Render the app server-side and send it as response.
 server.get('/*', require('./render'));

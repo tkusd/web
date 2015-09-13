@@ -9,7 +9,7 @@ import HtmlDocument from './HtmlDocument';
 import readWebpackStats from './readWebpackStats';
 import checkCurrentUser from './checkCurrentUser';
 
-function render(req, res, next){
+export default function render(req, res, next){
   const flux = req.flux;
   const {AppStore, LocaleStore} = flux.getStore();
   let stats;
@@ -53,5 +53,3 @@ function render(req, res, next){
     });
   }).catch(next);
 }
-
-export default render;

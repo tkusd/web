@@ -14,15 +14,6 @@ export function createToken(payload){
     .then(dispatchEvent(this, Actions.UPDATE_TOKEN));
 }
 
-export function updateToken(id){
-  return api('tokens/' + id, {
-    method: 'put'
-  }, this)
-    .then(filterError)
-    .then(parseJSON)
-    .then(dispatchEvent(this, Actions.UPDATE_TOKEN));
-}
-
 export function deleteToken(id){
   return internal('tokens', {
     method: 'delete',
@@ -46,10 +37,13 @@ export function logout(){
   const {TokenStore} = this.getStore();
   if (!TokenStore.isLoggedIn()) return Promise.resolve();
 
-  return deleteToken.call(this, TokenStore.getToken());
+  return deleteToken.call(this, TokenStore.getTokenID());
 }
 
 export function checkToken(payload){
   if (!payload || !payload.id) return Promise.resolve();
-  return updateToken.call(this, payload.id);
+
+  return api('tokens/' + payload.id, {
+    method: 'get'
+  }, this).then(filterError);
 }

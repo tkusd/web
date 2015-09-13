@@ -12,10 +12,15 @@ class TokenStore extends BaseStore {
 
     this.id = null;
     this.userID = null;
+    this.secret = null;
   }
 
-  getToken(){
+  getTokenID(){
     return this.id;
+  }
+
+  getTokenSecret(){
+    return this.secret;
   }
 
   getUserID(){
@@ -24,12 +29,14 @@ class TokenStore extends BaseStore {
 
   setData(payload){
     this.id = payload.id;
+    this.secret = payload.secret;
     this.userID = payload.user_id;
     this.emitChange();
   }
 
   deleteData(){
     this.id = null;
+    this.secret = null;
     this.userID = null;
     this.emitChange();
   }

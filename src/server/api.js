@@ -1,5 +1,6 @@
 import express from 'express';
 import request from 'request';
+import omit from 'lodash/object/omit';
 
 const app = express();
 
@@ -46,7 +47,9 @@ app.post('/tokens', checkToken, (req, res, next) => {
       req.session.token = body;
     }
 
-    response.pipe(res);
+    res.set('Content-Type', 'application/json');
+    res.status(response.statusCode);
+    res.send(omit(body, 'secret'));
   });
 });
 
@@ -68,7 +71,8 @@ app.delete('/tokens', (req, res, next) => {
       req.session.token = null;
     }
 
-    response.pipe(res);
+    res.status(response.statusCode);
+    res.send(body);
   });
 });
 
@@ -82,12 +86,18 @@ app.use((req, res, next) => {
   }
 
   let url = apiEndpoint + req.url.substring(1);
-  let stream = request(url, {
-    method: req.method,
-    headers
-  });
 
-  req.pipe(stream).pipe(res);
+  request(url, {
+    method: req.method,
+    headers,
+    body: req.body,
+    json: true
+  }, (err, response, body) => {
+    if (err) return next(err);
+
+    res.status(response.statusCode);
+    res.send(body);
+  });
 });
 
 export default app;

@@ -70,7 +70,7 @@ export default function(req, res, next){
     const project = ProjectStore.getProject(projectID);
     const assets = AssetStore.getAssetsOfProject(projectID);
     const apiEndpoint = AppStore.getAPIEndpoint();
-    const token = TokenStore.getToken();
+    const token = TokenStore.getTokenSecret();
     const zip = archiver.create('zip', {});
 
     zip.on('error', next);

@@ -25,6 +25,10 @@ export default function(context){
           {
             path: '/login',
             ...r(require('./components/Login'))
+          },
+          {
+            path: '/reset_password/:resetToken',
+            ...r(require('./components/ResetPassword'))
           }
         ]
       },
