@@ -30,10 +30,6 @@ export default keyMirror({
   CLOSE_MODAL: null,
   KILL_MODAL: null,
 
-  UPDATE_ACTION: null,
-  UPDATE_ACTION_LIST: null,
-  DELETE_ACTION: null,
-
   UPDATE_EVENT: null,
   UPDATE_EVENT_LIST: null,
   DELETE_EVENT: null,

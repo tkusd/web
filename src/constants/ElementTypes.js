@@ -17,14 +17,6 @@ export default keyMirror({
   accordion: null
 });
 
-export const actions = keyMirror({
-  alert: null,
-  prompt: null,
-  confirm: null,
-  transition: null,
-  back: null
-});
-
 export const events = keyMirror({
   click: null,
   init: null
