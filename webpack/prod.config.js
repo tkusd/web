@@ -14,7 +14,7 @@ export default merge({}, config, {
       {
         test: /\.jsx?$/,
         loaders: ['babel?cacheDirectory'],
-        exclude: /node_modules/
+        exclude: /(node|web)_modules/
       },
       {
         test: /\.css(\?theme=\w+)?$/,
