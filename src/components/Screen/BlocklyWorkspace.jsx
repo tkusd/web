@@ -79,6 +79,9 @@ const toolbox = `<xml>
   <block type="transition_screen"></block>
   <block type="transition_back"></block>
 </category>
+<category name="Network">
+  <block type="network_loadJSON"></block>
+</category>
 </xml>`;
 
 class BlocklyWorkspace extends React.Component {

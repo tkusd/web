@@ -41,7 +41,10 @@ function flattenEvents(flux, projectID){
 }
 
 function prepareBlocklyContext(){
-  const ctx = {DOMParser};
+  const ctx = {
+    DOMParser,
+    console
+  };
 
   vm.createContext(ctx);
   BLOCKLY_SCRIPTS.forEach(script => script.runInContext(ctx));

@@ -7,9 +7,10 @@ var app = new Framework7({
 });
 
 var view = app.addView('.view-main');
+var viewContents = {};
 
 {% for view in views %}
-var v_{{ view.key | base62uuid }} = {{ view.markup | stringify }};
+viewContents[{{ view.key | stringify }}] = {{ view.markup | stringify }};
 {% endfor %}
 
 {% for event in events %}
@@ -20,7 +21,7 @@ Dom7(document).on({{ event.get('event') | stringify }}, '#e{{ event.get("element
 
 {% if project.get('main_screen') %}
 view.router.load({
-  content: v_{{ project.get('main_screen') | base62uuid }},
+  content: viewContents[{{ project.get('main_screen') | stringify }}],
   animatePages: false
 });
 {% endif %}

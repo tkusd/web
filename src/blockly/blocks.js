@@ -1,7 +1,8 @@
 export default function(Blockly, props){
   const COLORS = {
     modal: 210,
-    transition: 240
+    transition: 240,
+    network: 270
   };
 
   Blockly.Blocks.modal_alert = {
@@ -87,6 +88,26 @@ export default function(Blockly, props){
       this.setPreviousStatement(true);
       this.setNextStatement(true);
       this.setTooltip('Go back to the previous page.');
+    }
+  };
+
+  Blockly.Blocks.network_loadJSON = {
+    init(){
+      this.setColour(COLORS.network);
+
+      this.appendValueInput('URL')
+        .setCheck('String')
+        .appendField('Load JSON from');
+
+      this.appendStatementInput('SUCCESS')
+        .appendField('success')
+        .appendField(new Blockly.FieldVariable('result'), 'SUCCESS_RES');
+
+      this.appendStatementInput('ERROR')
+        .appendField('failed');
+
+      this.setPreviousStatement(true);
+      this.setTooltip('Load JSON from the specified URL.');
     }
   };
 }
