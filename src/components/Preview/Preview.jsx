@@ -53,7 +53,7 @@ class Preview extends React.Component {
 
     return (
       <div className="preview__container">
-        <iframe className="preview__frame" src={url}/>
+        <iframe className="preview__frame" src={url + '?t=' + Date.now()}/>
         <svg className="preview__qrcode" viewBox={`0 0 ${svgPath.size} ${svgPath.size}`}>
           <path d={svgPath.path}/>
         </svg>
