@@ -77,6 +77,14 @@ class StylePalette extends React.Component {
         </h4>
         {this.renderFontSection()}
         <h4>
+          <FormattedMessage message="style.padding"/>
+        </h4>
+        {this.renderPaddingSection()}
+        <h4>
+          <FormattedMessage message="style.margin"/>
+        </h4>
+        {this.renderMarginSection()}
+        <h4>
           <FormattedMessage message="style.spacing"/>
         </h4>
         {this.renderSpacingSection()}
@@ -107,6 +115,92 @@ class StylePalette extends React.Component {
         {this.renderDimensionTab('min')}
         {this.renderDimensionTab('max')}
       </TabHost>
+    );
+  }
+
+  renderPaddingSection(){
+    const {element} = this.props;
+
+    return (
+      <div className="style-palette__section">
+        <div className="style-palette__input-group-half">
+          <span className="style-palette__input-label">
+            <FormattedMessage message="style.top"/>
+          </span>
+          <SizeInput className="style-palette__input-field--border"
+            min={0}
+            value={element.getIn(['styles', 'paddingTop'])}
+            onChange={this.setValueInField.bind(this, ['styles', 'paddingTop'])}/>
+        </div>
+        <div className="style-palette__input-group-half">
+          <span className="style-palette__input-label">
+            <FormattedMessage message="style.bottom"/>
+          </span>
+          <SizeInput className="style-palette__input-field--border"
+            min={0}
+            value={element.getIn(['styles', 'paddingBottom'])}
+            onChange={this.setValueInField.bind(this, ['styles', 'paddingBottom'])}/>
+        </div>
+        <div className="style-palette__input-group-half">
+          <span className="style-palette__input-label">
+            <FormattedMessage message="style.left"/>
+          </span>
+          <SizeInput className="style-palette__input-field--border"
+            min={0}
+            value={element.getIn(['styles', 'paddingLeft'])}
+            onChange={this.setValueInField.bind(this, ['styles', 'paddingLeft'])}/>
+        </div>
+        <div className="style-palette__input-group-half">
+          <span className="style-palette__input-label">
+            <FormattedMessage message="style.right"/>
+          </span>
+          <SizeInput className="style-palette__input-field--border"
+            min={0}
+            value={element.getIn(['styles', 'paddingRight'])}
+            onChange={this.setValueInField.bind(this, ['styles', 'paddingRight'])}/>
+        </div>
+      </div>
+    );
+  }
+
+  renderMarginSection(){
+    const {element} = this.props;
+
+    return (
+      <div className="style-palette__section">
+        <div className="style-palette__input-group-half">
+          <span className="style-palette__input-label">
+            <FormattedMessage message="style.top"/>
+          </span>
+          <SizeInput className="style-palette__input-field--border"
+            value={element.getIn(['styles', 'marginTop'])}
+            onChange={this.setValueInField.bind(this, ['styles', 'marginTop'])}/>
+        </div>
+        <div className="style-palette__input-group-half">
+          <span className="style-palette__input-label">
+            <FormattedMessage message="style.bottom"/>
+          </span>
+          <SizeInput className="style-palette__input-field--border"
+            value={element.getIn(['styles', 'marginBottom'])}
+            onChange={this.setValueInField.bind(this, ['styles', 'marginBottom'])}/>
+        </div>
+        <div className="style-palette__input-group-half">
+          <span className="style-palette__input-label">
+            <FormattedMessage message="style.left"/>
+          </span>
+          <SizeInput className="style-palette__input-field--border"
+            value={element.getIn(['styles', 'marginLeft'])}
+            onChange={this.setValueInField.bind(this, ['styles', 'marginLeft'])}/>
+        </div>
+        <div className="style-palette__input-group-half">
+          <span className="style-palette__input-label">
+            <FormattedMessage message="style.right"/>
+          </span>
+          <SizeInput className="style-palette__input-field--border"
+            value={element.getIn(['styles', 'marginRight'])}
+            onChange={this.setValueInField.bind(this, ['styles', 'marginRight'])}/>
+        </div>
+      </div>
     );
   }
 

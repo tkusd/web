@@ -123,7 +123,9 @@ module.exports = {
       dimensions: 'Dimensions',
       default: 'Default',
       min: 'Min',
-      max: 'Max'
+      max: 'Max',
+      padding: 'Padding',
+      margin: 'Margin'
     },
     settings: {
       profile: 'Profile',

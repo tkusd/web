@@ -6,7 +6,7 @@ export default function(Blockly){
     let title = Blockly.JavaScript.valueToCode(block, 'TITLE', Blockly.JavaScript.ORDER_NONE) || `''`;
     let code = `app.alert(${content}, ${title})`;
 
-    return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
+    return code;
   };
 
   Blockly.JavaScript.modal_confirm = function(block){
@@ -35,10 +35,10 @@ export default function(Blockly){
       })`;
     }
 
-    return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
+    return code;
   };
 
   Blockly.JavaScript.transition_back = function(block){
-    return ['view.router.back()', Blockly.JavaScript.ORDER_FUNCTION_CALL];
+    return 'view.router.back()';
   };
 }

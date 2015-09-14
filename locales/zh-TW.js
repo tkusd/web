@@ -123,7 +123,9 @@ module.exports = {
       dimensions: '尺寸',
       default: '預設',
       min: '最小',
-      max: '最大'
+      max: '最大',
+      padding: '留白',
+      margin: '邊界'
     },
     settings: {
       profile: '個人資料',
