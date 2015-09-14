@@ -7,6 +7,10 @@ if (process.env.BROWSER){
   require('../../styles/Screen/ViewInput.styl');
 }
 
+function getPureNumber(str){
+  return Number(str.replace(/px$/, ''));
+}
+
 class ViewInput extends React.Component {
   static contextTypes = {
     flux: React.PropTypes.object.isRequired
@@ -58,6 +62,7 @@ class ViewInput extends React.Component {
     const element = elements.get(focusedElement);
     const component = components.get(element.get('type'));
     let tagName = 'input';
+    let {paddingTop, paddingLeft, paddingRight, paddingBottom} = styles;
 
     if (component.getIn(['attributes', 'text', 'type']) === 'textarea'){
       tagName = 'textarea';
@@ -70,13 +75,12 @@ class ViewInput extends React.Component {
         ...pick(styles, [
           'fontSize', 'fontFamily', 'lineHeight', 'color', 'letterSpacing',
           'color', 'textAlign', 'textIndent', 'textShadow', 'fontWeight',
-          'paddingTop', 'paddingLeft', 'paddingRight', 'paddingBottom',
           'textDecoration', 'fontStyle'
         ]),
-        top: rect.top,
-        left: rect.left,
-        width: rect.width,
-        height: rect.height
+        top: rect.top + getPureNumber(paddingTop),
+        left: rect.left + getPureNumber(paddingLeft),
+        width: rect.width - getPureNumber(paddingLeft) - getPureNumber(paddingRight),
+        height: rect.height - getPureNumber(paddingTop) - getPureNumber(paddingBottom)
       },
       value,
       onChange: this.handleChange,

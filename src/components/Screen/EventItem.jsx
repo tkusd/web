@@ -2,6 +2,7 @@ import React from 'react';
 import {ModalPortal} from '../modal';
 import EventModal from './EventModal';
 import {FormattedMessage} from '../intl';
+import FontAwesome from '../common/FontAwesome';
 
 if (process.env.BROWSER){
   require('../../styles/Screen/EventItem.styl');
@@ -18,9 +19,8 @@ class EventItem extends React.Component {
     let trigger = (
       <li className="event-item">
         <div className="event-item__content">
-          <strong className="event-item__event">
-            <FormattedMessage message={'event.' + event.get('event')}/>
-          </strong>
+          <FontAwesome icon="bolt"/>
+          <FormattedMessage message={'event.' + event.get('event')}/>
         </div>
       </li>
     );

@@ -13,12 +13,12 @@ function loadBlockly(){
       'blockly/blocks_compressed',
       'blockly/msg/js/en'
     ], require => {
-      const {Blockly, goog} = require('!!imports?this=>window!exports?Blockly,goog!blockly/blockly_compressed');
+      const {Blockly, goog} = require('imports?this=>window!exports?Blockly,goog!blockly/blockly_compressed');
       global.Blockly = Blockly;
       global.goog = goog;
 
-      require('!!blockly/blocks_compressed');
-      require('!!blockly/msg/js/en');
+      require('blockly/blocks_compressed');
+      require('blockly/msg/js/en');
 
       resolve(Blockly);
     }, 'blockly');
