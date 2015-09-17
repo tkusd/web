@@ -45,6 +45,13 @@
   <block type="math_constrain"></block>
   <block type="math_random_int"></block>
   <block type="math_random_float"></block>
+  <block type="math_trig"></block>
+  <block type="math_constant"></block>
+  <block type="math_number_property"></block>
+  <block type="math_change"></block>
+  <block type="math_round"></block>
+  <block type="math_on_list"></block>
+  <block type="math_modulo"></block>
 </category>
 <category name="Text">
   <block type="text"></block>
