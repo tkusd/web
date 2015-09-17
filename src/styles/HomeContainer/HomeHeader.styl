@@ -2,6 +2,9 @@
 @import "../common"
 @import "../button"
 
+logo-width = 78px
+logo-height = 40px
+
 .home-header
   clearfix()
   padding: 48px 0
@@ -16,3 +19,14 @@
 
 .home-header__link--primary
   @extend $button-borderless-dark-primary
+
+.home-header__logo-wrap
+  float: left
+  margin: 0
+
+.home-header__logo
+  hide-text()
+  display: block
+  width: logo-width
+  height: logo-height
+  image: "../../assets/logo.png" @width @height

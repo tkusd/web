@@ -11,11 +11,14 @@ if (process.env.BROWSER){
 @connectToStores(['UserStore'], (stores, props) => ({
   currentUser: stores.UserStore.getCurrentUser()
 }))
-@pureRender
+// @pureRender
 class HomeHeader extends React.Component {
   render(){
     return (
       <header className="home-header">
+        <h1 className="home-header__logo-wrap">
+          <Link to="/" className="home-header__logo">Diff</Link>
+        </h1>
         <nav className="home-header__right">{this.renderRightNav()}</nav>
       </header>
     );

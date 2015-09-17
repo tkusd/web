@@ -299,7 +299,7 @@ const COMPONENTS = [
         ]
       }
     }
-  },
+  }/*,
   {
     type: ElementTypes.inputText,
     container: false,
@@ -401,7 +401,7 @@ const COMPONENTS = [
         }
       }
     }
-  }
+  }*/
 ];
 
 class ComponentStore extends BaseStore {
