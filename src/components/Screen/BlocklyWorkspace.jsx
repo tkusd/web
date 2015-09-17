@@ -1,8 +1,11 @@
 import React from 'react';
+import ElementTypes from '../../constants/ElementTypes';
 
 if (process.env.BROWSER){
   require('../../styles/Screen/BlocklyWorkspace.styl');
 }
+
+let defaultToolbox;
 
 function loadBlockly(){
   if (global.Blockly) return Promise.resolve(global.Blockly);
@@ -11,7 +14,8 @@ function loadBlockly(){
     require.ensure([
       'blockly/blockly_compressed',
       'blockly/blocks_compressed',
-      'blockly/msg/js/en'
+      'blockly/msg/js/en',
+      '!!raw!../../assets/blocklyToolbox.xml'
     ], require => {
       const {Blockly, goog} = require('imports?this=>window!exports?Blockly,goog!blockly/blockly_compressed');
       global.Blockly = Blockly;
@@ -20,74 +24,18 @@ function loadBlockly(){
       require('blockly/blocks_compressed');
       require('blockly/msg/js/en');
 
+      defaultToolbox = require('!!raw!../../assets/blocklyToolbox.xml');
+
       resolve(Blockly);
     }, 'blockly');
   });
 }
 
-
-const toolbox = `<xml>
-<category name="Logic">
-  <block type="controls_if"></block>
-  <block type="logic_compare"></block>
-  <block type="logic_operation"></block>
-  <block type="logic_negate"></block>
-  <block type="logic_boolean"></block>
-  <block type="logic_null"></block>
-</category>
-<category name="Loops">
-  <block type="controls_repeat_ext">
-    <value name="TIMES">
-      <block type="math_number">
-        <field name="NUM">10</field>
-      </block>
-    </value>
-  </block>
-  <block type="controls_whileUntil"></block>
-  <block type="controls_for"></block>
-  <block type="controls_forEach"></block>
-</category>
-<category name="Math">
-  <block type="math_number"></block>
-  <block type="math_arithmetic"></block>
-  <block type="math_single"></block>
-  <block type="math_constrain"></block>
-  <block type="math_random_int"></block>
-  <block type="math_random_float"></block>
-</category>
-<category name="Text">
-  <block type="text"></block>
-  <block type="text_join"></block>
-  <block type="text_append"></block>
-  <block type="text_length"></block>
-  <block type="text_isEmpty"></block>
-  <block type="text_indexOf"></block>
-  <block type="text_charAt"></block>
-  <block type="text_getSubstring"></block>
-  <block type="text_changeCase"></block>
-  <block type="text_trim"></block>
-</category>
-<category name="Variables" custom="VARIABLE"></category>
-<category name="Functions" custom="PROCEDURE"></category>
-<sep></sep>
-<category name="Modal">
-  <block type="modal_alert"></block>
-  <block type="modal_confirm"></block>
-  <block type="modal_prompt"></block>
-</category>
-<category name="Transition">
-  <block type="transition_screen"></block>
-  <block type="transition_back"></block>
-</category>
-<category name="Network">
-  <block type="network_loadJSON"></block>
-</category>
-</xml>`;
-
 class BlocklyWorkspace extends React.Component {
   static propTypes = {
     elements: React.PropTypes.object.isRequired,
-    workspace: React.PropTypes.string
+    workspace: React.PropTypes.string,
+    components: React.PropTypes.object.isRequired
   }
 
   static defaultProps = {
@@ -103,8 +51,9 @@ class BlocklyWorkspace extends React.Component {
 
   componentDidMount(){
     loadBlockly().then(Blockly => {
+      // const toolbox = '<xml>' + defaultToolbox + this.makeElementToolbox() + '</xml>';
       const workspace = this.workspace = Blockly.inject(this.refs.workspace, {
-        toolbox
+        toolbox: this.prepareToolbox()
       });
       this.Blockly = Blockly;
       require('../../blockly/blocks')(Blockly, this.props);
@@ -138,6 +87,65 @@ class BlocklyWorkspace extends React.Component {
     let xml = this.Blockly.Xml.workspaceToDom(this.workspace);
     return this.Blockly.Xml.domToText(xml);
   }
+
+  prepareToolbox(){
+    let result = '<xml>' + defaultToolbox;
+    result += '</xml>';
+
+    return result;
+  }
+
+  // makeElementToolbox(){
+  //   const {elements} = this.props;
+  //   let toolbox = '<sep></sep>';
+  //
+  //   elements.filter(element => !element.get('element_id'))
+  //     .forEach(element => {
+  //       toolbox += this.makeScreenCategory(element);
+  //     });
+  //
+  //   return toolbox;
+  // }
+  //
+  // makeScreenCategory(element){
+  //   let result = `<category name="Screen ${element.get('name')}">`;
+  //   result += `<block type="transition_screen">
+  //     <field name="SCREEN">${element.get('id')}</field>
+  //   </block>`;
+  //   result += this.makeChildrenBlocks(element);
+  //   result += '</category>';
+  //
+  //   return result;
+  // }
+  //
+  // makeChildrenBlocks(element){
+  //   const {elements} = this.props;
+  //   const parentID = element.get('id');
+  //   let result = '';
+  //
+  //   elements.filter(element => element.get('element_id') === parentID)
+  //     .forEach(element => {
+  //       result += this.makeElementBlock(element);
+  //
+  //       if (element.get('type') === ElementTypes.inputText){
+  //         result += `<block type="view_getInputValue">
+  //           <field name="ELEMENT">${element.get('id')}</field>
+  //         </block>`;
+  //       }
+  //     });
+  //
+  //   return result;
+  // }
+  //
+  // makeElementBlock(element){
+  //   let result = '<block type="view_setAttribute">';
+  //
+  //   result += `<field name="ELEMENT">${element.get('id')}</field>`;
+  //   result += '</block>';
+  //   result += this.makeChildrenBlocks(element);
+  //
+  //   return result;
+  // }
 }
 
 export default BlocklyWorkspace;

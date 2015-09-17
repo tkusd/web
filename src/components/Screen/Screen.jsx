@@ -116,6 +116,7 @@ class Screen extends React.Component {
       return (
         <ViewMask {...this.state}
           element={element}
+          accordionExpanded={true}
           selectElement={this.selectElement}
           focusElement={this.focusElement}/>
       );
@@ -124,6 +125,7 @@ class Screen extends React.Component {
     return (
       <ScalableView {...this.state}>
         <View {...this.state}
+          accordionExpanded={true}
           element={element}
           onClick={preventDefault}/>
       </ScalableView>

@@ -8,15 +8,37 @@ var app = new Framework7({
 
 var view = app.addView('.view-main');
 var viewContents = {};
+var listSelections = {};
 
 {% for view in views %}
 viewContents[{{ view.key | stringify }}] = {{ view.markup | stringify }};
 {% endfor %}
 
 {% for event in events %}
-Dom7(document).on({{ event.get('event') | stringify }}, '#e{{ event.get("element_id") }}', function(){
-  {{ event.get('code') }}
-});
+  {% set element = elements.get(event.get('element_id')) %}
+
+  {% if event.get('event') == 'init' %}
+    app.onPageInit('{{ event.get("element_id") }}', function(){
+      {{ event.get('code') }}
+    });
+  {% elif event.get('event') == 'itemClick' %}
+    Dom7(document).on('click', '#e{{ event.get("element_id") }} li', function(){
+      var index = this.dataset.index;
+      if (!index) return;
+
+      var list = this.parentNode.parentNode;
+      var listID = list.id;
+      if (!listID) return;
+
+      listSelections[listID.substring(1)] = +index + 1;
+
+      {{ event.get('code') }}
+    });
+  {% else %}
+    Dom7(document).on({{ event.get('event') | stringify }}, '#e{{ event.get("element_id") }}', function(){
+      {{ event.get('code') }}
+    });
+  {% endif %}
 {% endfor %}
 
 {% if project.get('main_screen') %}

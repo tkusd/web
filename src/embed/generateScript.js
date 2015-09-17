@@ -3,19 +3,15 @@ import {renderToStaticMarkup} from 'react-dom/server';
 import path from 'path';
 import vm from 'vm';
 import fs from 'graceful-fs';
+import esprima from 'esprima';
+import esmangle from 'esmangle';
+import escodegen from 'escodegen';
 import {DOMParser} from 'xmldom';
 import View from '../embed/View';
 import nunjucksRender from '../utils/nunjucksRender';
 
 const TEMPLATE_PATH = path.join(__dirname, 'template.js');
 const BLOCKLY_DIR = path.join(__dirname, '../../web_modules/blockly');
-
-const BLOCKLY_FILES = [
-  path.join(BLOCKLY_DIR, 'blockly_compressed.js'),
-  path.join(BLOCKLY_DIR, 'blocks_compressed.js'),
-  path.join(BLOCKLY_DIR, 'javascript_compressed.js'),
-  path.join(BLOCKLY_DIR, 'msg/js/en.js')
-];
 
 const BLOCKLY_SCRIPTS = [
   'blockly_compressed.js',
@@ -52,12 +48,13 @@ function prepareBlocklyContext(){
   return ctx;
 }
 
-export default function generateScript(flux, projectID, options){
-  const {ProjectStore, ElementStore} = flux.getStore();
+export default function generateScript(flux, projectID, options = {}){
+  const {ProjectStore, ElementStore, ComponentStore} = flux.getStore();
   const project = ProjectStore.getProject(projectID);
   const elements = ElementStore.getElementsOfProject(projectID);
+  const components = ComponentStore.getList();
   const props = {
-    elements, project
+    elements, project, components
   };
 
   let views = elements.filter(element => !element.get('element_id'))
@@ -76,7 +73,7 @@ export default function generateScript(flux, projectID, options){
   const {Blockly} = prepareBlocklyContext();
 
   require('../blockly/blocks')(Blockly, props);
-  require('../blockly/generators')(Blockly);
+  require('../blockly/generators')(Blockly, props);
 
   let events = flattenEvents(flux, projectID).map(event => {
     const workspace = new Blockly.Workspace();
@@ -90,6 +87,21 @@ export default function generateScript(flux, projectID, options){
   return nunjucksRender(TEMPLATE_PATH, {
     project,
     views,
-    events
+    events,
+    elements
+  }).then(code => {
+    let ast = esprima.parse(code);
+
+    if (options.mangle){
+      ast = esmangle.mangle(ast);
+    }
+
+    return escodegen.generate(ast, {
+      format: {
+        indent: {
+          style: '  '
+        }
+      }
+    });
   });
 }

@@ -78,11 +78,10 @@ class ViewMask extends React.Component {
   }
 
   handleDoubleClick = (e) => {
-    e.preventDefault();
-
     let target = findParentUntilElement(e.target);
     if (!target) return;
 
+    e.preventDefault();
     e.stopPropagation();
 
     this.props.focusElement(target.id.substring(1));

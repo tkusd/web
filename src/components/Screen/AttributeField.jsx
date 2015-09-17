@@ -4,15 +4,12 @@ import {InputGroup, Checkbox, ThemePalette} from '../form';
 import FontAwesome from '../common/FontAwesome';
 import {ModalPortal} from '../modal';
 import {FormattedMessage} from '../intl';
-import debounce from 'lodash/function/debounce';
 
-if (process.env.BROWSER){
+if (process.env.BROWSER) {
   require('../../styles/Screen/AttributeField.styl');
 }
 
-function noop(){}
-
-const DEBOUNCE_DELAY = 200;
+function noop() {}
 
 class AttributeField extends React.Component {
   static propTypes = {
@@ -32,31 +29,8 @@ class AttributeField extends React.Component {
     onChange: noop
   }
 
-  constructor(props, context){
-    super(props, context);
-
-    this.state = {
-      value: this.props.value,
-      displayColorPicker: false,
-      colorPickerStyle: {}
-    };
-
-    this.commitChange = debounce(this.commitChange.bind(this), DEBOUNCE_DELAY, {
-      leading: false
-    });
-  }
-
-  componentWillReceiveProps(nextProps){
-    if (this.props.value !== nextProps.value){
-      this.setState({
-        value: nextProps.value
-      });
-    }
-  }
-
-  render(){
-    const {type, label, project, values} = this.props;
-    const {value} = this.state;
+  render() {
+    const {type, label, project, values, value} = this.props;
 
     switch (type){
     case 'boolean':
@@ -67,14 +41,20 @@ class AttributeField extends React.Component {
       );
 
     case 'select':
+      let options = values;
+
+      if (typeof values === 'function'){
+        options = values(this.props);
+      }
+
       return (
-        <label className="input-group">
-          <span className="input-group__label">{label}</span>
-          <select className="attribute-field__select"
+        <label className='input-group'>
+          <span className='input-group__label'>{label}</span>
+          <select className='attribute-field__select'
             {...this.props}
             value={value}
             onChange={this.handleSelectChange}>
-            {values && values.map((item, i) => (
+            {options && options.map((item, i) => (
               <option key={i} value={item.get('value')}>{item.get('label')}</option>
             )).toArray()}
           </select>
@@ -83,15 +63,15 @@ class AttributeField extends React.Component {
 
     case 'asset':
       let btn = (
-        <button className="attribute-palette__choose-asset-btn">
-          <FontAwesome icon="file-o"/>
-          <FormattedMessage message="project.chooseAsset"/>
+        <button className='attribute-palette__choose-asset-btn'>
+          <FontAwesome icon='file-o'/>
+          <FormattedMessage message='project.chooseAsset'/>
         </button>
       );
 
       return (
-        <div className="input-group">
-          <label className="input-group__label">{label}</label>
+        <div className='input-group'>
+          <label className='input-group__label'>{label}</label>
           <ModalPortal trigger={btn}>
             <AssetModal {...this.props}
               projectID={project.get('id')}
@@ -103,9 +83,10 @@ class AttributeField extends React.Component {
 
     case 'theme':
       return (
-        <div className="input-group">
-          <label className="input-group__label">{label}</label>
+        <div className='input-group'>
+          <label className='input-group__label'>{label}</label>
           <ThemePalette {...this.props}
+            palette={project.get('theme')}
             value={value}
             onChange={this.handleChange}/>
         </div>
@@ -129,12 +110,7 @@ class AttributeField extends React.Component {
   }
 
   handleChange = (value) => {
-    this.setState({value});
-    this.commitChange();
-  }
-
-  commitChange(){
-    this.props.onChange(this.state.value);
+    this.props.onChange(value);
   }
 }
 

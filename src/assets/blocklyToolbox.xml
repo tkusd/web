@@ -1,0 +1,111 @@
+<category name="Logic">
+  <block type="controls_if"></block>
+  <block type="logic_compare"></block>
+  <block type="logic_operation"></block>
+  <block type="logic_operation">
+    <field name="OP">OR</field>
+  </block>
+  <block type="logic_negate"></block>
+  <block type="logic_boolean"></block>
+  <block type="logic_boolean">
+    <field name="BOOL">FALSE</field>
+  </block>
+  <block type="logic_null"></block>
+</category>
+<category name="Loops">
+  <block type="controls_repeat_ext">
+    <value name="TIMES">
+      <block type="math_number">
+        <field name="NUM">10</field>
+      </block>
+    </value>
+  </block>
+  <block type="controls_whileUntil"></block>
+  <block type="controls_for"></block>
+  <block type="controls_forEach"></block>
+</category>
+<category name="Lists">
+  <block type="lists_create_empty"></block>
+  <block type="lists_create_with"></block>
+  <block type="lists_create_with_container"></block>
+  <block type="lists_create_with_item"></block>
+  <block type="lists_repeat"></block>
+  <block type="lists_length"></block>
+  <block type="lists_isEmpty"></block>
+  <block type="lists_indexOf"></block>
+  <block type="lists_getIndex"></block>
+  <block type="lists_setIndex"></block>
+  <block type="lists_getSublist"></block>
+  <block type="lists_split"></block>
+</category>
+<category name="Math">
+  <block type="math_number"></block>
+  <block type="math_arithmetic"></block>
+  <block type="math_single"></block>
+  <block type="math_constrain"></block>
+  <block type="math_random_int"></block>
+  <block type="math_random_float"></block>
+</category>
+<category name="Text">
+  <block type="text"></block>
+  <block type="text_join"></block>
+  <block type="text_append"></block>
+  <block type="text_length"></block>
+  <block type="text_isEmpty"></block>
+  <block type="text_indexOf"></block>
+  <block type="text_charAt"></block>
+  <block type="text_getSubstring"></block>
+  <block type="text_changeCase"></block>
+  <block type="text_trim"></block>
+  <block type="text_encodeURI"></block>
+  <block type="text_parseJSON"></block>
+</category>
+<category name="Variables">
+  <block type="variables_get"></block>
+  <block type="variables_set"></block>
+  <block type="variables_getProperty"></block>
+  <block type="variables_setProperty"></block>
+  <block type="variables_hasProperty"></block>
+  <block type="variables_getKeyList"></block>
+  <block type="variables_getValueList"></block>
+</category>
+<category name="Functions" custom="PROCEDURE"></category>
+<sep></sep>
+<category name="Modal">
+  <block type="modal_alert"></block>
+  <block type="modal_confirm"></block>
+  <block type="modal_prompt"></block>
+  <block type="modal_showLoadingModal">
+    <value name="TITLE">
+      <block type="text">
+        <field name="TEXT">Loading...</field>
+      </block>
+    </value>
+  </block>
+  <block type="modal_hideLoadingModal"></block>
+  <block type="modal_showLoadingIndicator"></block>
+  <block type="modal_hideLoadingIndicator"></block>
+</category>
+<category name="Transition">
+  <block type="transition_screen"></block>
+  <block type="transition_back"></block>
+</category>
+<category name="View">
+  <block type="view_setAttribute"></block>
+  <block type="view_setList"></block>
+  <block type="view_getInputValue"></block>
+  <block type="view_listGetSelection"></block>
+</category>
+<category name="Network">
+  <block type="network_loadJSON"></block>
+</category>
+<category name="Timer">
+  <block type="timer_timeout"></block>
+  <block type="timer_interval"></block>
+</category>
+<category name="Storage">
+  <block type="storage_setItem"></block>
+  <block type="storage_getItem"></block>
+  <block type="storage_removeItem"></block>
+  <block type="storage_clearAll"></block>
+</category>

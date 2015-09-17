@@ -1,6 +1,7 @@
 import BaseStore from './BaseStore';
-import Immutable, {OrderedMap} from 'immutable';
+import Immutable, {Map, OrderedMap} from 'immutable';
 import ElementTypes, {events} from '../constants/ElementTypes';
+import findChildElements from '../utils/findChildElements';
 
 const COMPONENTS = [
   {
@@ -19,7 +20,12 @@ const COMPONENTS = [
       ElementTypes.block,
       ElementTypes.buttonRow,
       ElementTypes.list,
-      ElementTypes.image
+      ElementTypes.image,
+      ElementTypes.inputText,
+      ElementTypes.inputSelect,
+      ElementTypes.inputCheckbox,
+      ElementTypes.inputSlider,
+      ElementTypes.searchBar
     ],
     attributes: {
       theme: {
@@ -36,23 +42,23 @@ const COMPONENTS = [
     ],
     availableChildTypes: [
       ElementTypes.button,
-      ElementTypes.label
+      ElementTypes.label,
+      ElementTypes.inputText,
+      ElementTypes.inputSelect,
+      ElementTypes.inputCheckbox,
+      ElementTypes.inputSlider
+
     ],
-    attributes: {
-      title: {
-        type: 'string',
-        label: 'Title'
-      }
-    },
     childAttributes: {
       position: {
         type: 'select',
         label: 'Position',
         values: [
+          {value: '', label: 'Content'},
           {value: 'left', label: 'Left'},
           {value: 'right', label: 'Right'}
         ],
-        defaultValue: 'left'
+        defaultValue: ''
       }
     }
   },
@@ -87,7 +93,11 @@ const COMPONENTS = [
       ElementTypes.label,
       ElementTypes.button,
       ElementTypes.buttonRow,
-      ElementTypes.image
+      ElementTypes.image,
+      ElementTypes.inputText,
+      ElementTypes.inputSelect,
+      ElementTypes.inputCheckbox,
+      ElementTypes.inputSlider
     ],
     attributes: {
       header: {
@@ -152,7 +162,11 @@ const COMPONENTS = [
       ElementTypes.label,
       ElementTypes.card,
       ElementTypes.button,
-      ElementTypes.buttonRow
+      ElementTypes.buttonRow,
+      ElementTypes.inputText,
+      ElementTypes.inputSelect,
+      ElementTypes.inputCheckbox,
+      ElementTypes.inputSlider
     ],
     attributes: {
       title: {
@@ -170,6 +184,9 @@ const COMPONENTS = [
   {
     type: ElementTypes.list,
     container: true,
+    availableEventTypes: [
+      events.itemClick
+    ],
     availableChildTypes: [
       ElementTypes.listItem,
       ElementTypes.listDivider,
@@ -191,23 +208,33 @@ const COMPONENTS = [
   {
     type: ElementTypes.listItem,
     container: true,
-    availableChildTypes: [ElementTypes.label],
+    availableChildTypes: [
+      ElementTypes.label,
+      ElementTypes.image,
+      ElementTypes.button,
+      ElementTypes.inputText,
+      ElementTypes.inputSelect,
+      ElementTypes.inputCheckbox,
+      ElementTypes.inputSlider
+    ],
     availableEventTypes: [
       events.click
     ],
     attributes: {
-      media: {
-        type: 'string',
-        label: 'Media'
-      },
-      title: {
-        type: 'string',
-        label: 'Title',
-        defaultValue: 'List item'
-      },
       link: {
         type: 'boolean',
         label: 'Link'
+      }
+    },
+    childAttributes: {
+      position: {
+        type: 'select',
+        label: 'Position',
+        values: [
+          {value: 'left', label: 'Left'},
+          {value: 'right', label: 'Right'}
+        ],
+        defaultValue: 'left'
       }
     }
   },
@@ -215,9 +242,9 @@ const COMPONENTS = [
     type: ElementTypes.listDivider,
     container: false,
     attributes: {
-      title: {
+      text: {
         type: 'string',
-        label: 'Title',
+        label: 'Text',
         defaultValue: 'List divider'
       }
     }
@@ -256,24 +283,129 @@ const COMPONENTS = [
       ElementTypes.label,
       ElementTypes.button,
       ElementTypes.buttonRow,
-      ElementTypes.image
+      ElementTypes.image,
+      ElementTypes.inputText,
+      ElementTypes.inputSelect,
+      ElementTypes.inputCheckbox,
+      ElementTypes.inputSlider
+    ],
+    childAttributes: {
+      position: {
+        type: 'select',
+        label: 'Position',
+        values: [
+          {value: '', label: 'Content'},
+          {value: 'title', label: 'Title'}
+        ]
+      }
+    }
+  },
+  {
+    type: ElementTypes.inputText,
+    container: false,
+    availableEventTypes: [
+      events.change
     ],
     attributes: {
-      title: {
+      value: {
         type: 'string',
-        label: 'Title',
-        defaultValue: 'Accordion'
+        label: 'Value'
       },
-      expanded: {
+      type: {
+        type: 'select',
+        label: 'Type',
+        values: [
+          {value: 'text', label: 'Text'},
+          {value: 'email', label: 'Email'},
+          {value: 'url', label: 'URL'},
+          {value: 'password', label: 'Password'},
+          {value: 'tel', label: 'Telephone'},
+          {value: 'date', label: 'Date'},
+          {value: 'datetime', label: 'Date & Time'}
+        ],
+        defaultValue: 'text'
+      },
+      placeholder: {
+        type: 'string',
+        label: 'Placeholder'
+      }
+    }
+  },
+  {
+    type: ElementTypes.inputCheckbox,
+    container: false,
+    availableEventTypes: [
+      events.change
+    ],
+    attributes: {
+      checked: {
         type: 'boolean',
-        label: 'Expanded'
+        label: 'Checked'
+      }
+    }
+  },
+  {
+    type: ElementTypes.inputSlider,
+    container: false,
+    availableEventTypes: [
+      events.change
+    ],
+    attributes: {
+      min: {
+        type: 'number',
+        label: 'Min'
+      },
+      max: {
+        type: 'number',
+        label: 'Max'
+      },
+      step: {
+        type: 'number',
+        label: 'Step'
+      },
+      value: {
+        type: 'number',
+        label: 'Value'
+      }
+    }
+  },
+  {
+    type: ElementTypes.searchBar,
+    container: false,
+    availableEventTypes: [
+      events.change
+    ],
+    attributes: {
+      placeholder: {
+        type: 'string',
+        label: 'Placeholder',
+        defaultValue: 'Search'
+      },
+      list: {
+        type: 'select',
+        label: 'List',
+        values(props){
+          const elements = findChildElements(props.elements, props.selectedScreen);
+
+          let options = elements.filter(element => element.get('type') === ElementTypes.list)
+            .map(element => Map({
+              value: element.get('id'),
+              label: element.get('name')
+            }))
+            .toList();
+
+          return options.unshift(Map({
+            value: '',
+            label: ''
+          }));
+        }
       }
     }
   }
 ];
 
 class ComponentStore extends BaseStore {
-  constructor(context){
+  constructor(context) {
     super(context);
 
     this.data = OrderedMap().withMutations(data => {
@@ -283,15 +415,15 @@ class ComponentStore extends BaseStore {
     });
   }
 
-  shouldDehydrate(){
+  shouldDehydrate() {
     return false;
   }
 
-  get(id){
+  get(id) {
     return this.data.get(id);
   }
 
-  getList(){
+  getList() {
     return this.data;
   }
 }

@@ -179,7 +179,9 @@ module.exports = {
     },
     event: {
       click: 'Click',
-      init: 'Initialize'
+      init: 'Initialize',
+      change: 'Change',
+      itemClick: 'Item click'
     },
     color: {
       red: 'Red',

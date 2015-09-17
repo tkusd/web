@@ -103,6 +103,10 @@ class ElementStore extends CollectionStore {
       this.selectedElement = element.get('element_id');
     }
 
+    if (this.focusedElement === id){
+      this.focusedElement = null;
+    }
+
     this.queue = this.queue.remove(id);
 
     this.data = this.data.withMutations(data => {
@@ -272,6 +276,10 @@ class ElementStore extends CollectionStore {
 
           if (this.selectedElement === id){
             this.selectedElement = data.id;
+          }
+
+          if (this.focusedElement === id){
+            this.focusedElement = data.id;
           }
 
           id = data.id;

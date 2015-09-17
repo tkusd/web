@@ -58,7 +58,8 @@ class View extends React.Component {
     onScroll: React.PropTypes.func.isRequired,
     onDoubleClick: React.PropTypes.func.isRequired,
     getAssetURL: React.PropTypes.func.isRequired,
-    getElementID: React.PropTypes.func.isRequired
+    getElementID: React.PropTypes.func.isRequired,
+    accordionExpanded: React.PropTypes.bool.isRequired
   }
 
   static defaultProps = {
@@ -67,7 +68,8 @@ class View extends React.Component {
     onScroll: noop,
     onDoubleClick: noop,
     getAssetURL,
-    getElementID
+    getElementID,
+    accordionExpanded: false
   }
 
   getChildElements(parent){
@@ -129,6 +131,18 @@ class View extends React.Component {
 
     case ElementTypes.accordion:
       return this.renderAccordion(element);
+
+    case ElementTypes.inputText:
+      return this.renderInputText(element);
+
+    case ElementTypes.inputCheckbox:
+      return this.renderInputCheckbox(element);
+
+    case ElementTypes.inputSlider:
+      return this.renderInputSlider(element);
+
+    case ElementTypes.searchBar:
+      return this.renderSearchBar(element);
     }
 
     return <div/>;
@@ -207,7 +221,9 @@ class View extends React.Component {
             )))}
           </div>
           <div className="center">
-            {element.getIn(['attributes', 'title'])}
+            {this.renderElements(elements.filter(element => (
+              element.getIn(['attributes', 'position']) !== 'left' && element.getIn(['attributes', 'position']) !== 'right'
+            )))}
           </div>
           <div className="right">
             {this.renderElements(elements.filter(element => (
@@ -306,20 +322,20 @@ class View extends React.Component {
   }
 
   renderListItem(element){
+    let children = this.getChildElements(element.get('id'));
     let className = 'item-content';
-    let media;
-
-    if (element.getIn(['attributes', 'media'])){
-      media = (
-        <div className="item-media">{element.getIn(['attributes', 'media'])}</div>
-      );
-    }
 
     let content = (
       <div className="item-inner">
-        <div className="item-title">{element.getIn(['attributes', 'title'])}</div>
+        <div className="item-title">
+          {this.renderElements(children.filter(
+            item => item.getIn(['attributes', 'position']) === 'left'
+          ))}
+        </div>
         <div className="item-after">
-          {this.renderElements(this.getChildElements(element.get('id')))}
+          {this.renderElements(children.filter(
+            item => item.getIn(['attributes', 'position']) === 'right'
+          ))}
         </div>
       </div>
     );
@@ -329,8 +345,7 @@ class View extends React.Component {
 
       return (
         <li>
-          <a {...this.makeElementProps(element)} className={className}>
-            {media}
+          <a {...this.makeElementProps(element)} className={className} href="#">
             {content}
           </a>
         </li>
@@ -339,7 +354,6 @@ class View extends React.Component {
       return (
         <li>
           <div {...this.makeElementProps(element)} className={className}>
-            {media}
             {content}
           </div>
         </li>
@@ -411,21 +425,82 @@ class View extends React.Component {
   }
 
   renderAccordion(element){
+    let children = this.getChildElements(element.get('id'));
     let className = cx('accordion-item', {
-      'accordion-item-expanded': element.getIn(['attributes', 'expanded'])
+      'accordion-item-expanded': this.props.accordionExpanded
     });
 
     return (
       <li {...this.makeElementProps(element)} className={className}>
         <a href="#" className="item-content item-link">
           <div className="item-inner">
-            <div className="item-title">{element.getIn(['attributes', 'title'])}</div>
+            <div className="item-title">
+              {this.renderElements(children.filter(item => (
+                item.getIn(['attributes', 'position']) === 'title'
+              )))}
+            </div>
           </div>
         </a>
         <div className="accordion-item-content">
-          {this.renderElements(this.getChildElements(element.get('id')))}
+          <div className="content-block">
+            {this.renderElements(children.filter(item => (
+              item.getIn(['attributes', 'position']) !== 'title'
+            )))}
+          </div>
         </div>
       </li>
+    );
+  }
+
+  renderInputText(element){
+    return (
+      <div className="item-input">
+        <input {...this.makeElementProps(element)}
+          type={element.getIn(['attributes', 'type'])}
+          value={element.getIn(['attributes', 'value'])}
+          placeholder={element.getIn(['attributes', 'placeholder'])}/>
+      </div>
+    );
+  }
+
+  renderInputCheckbox(element){
+    return (
+      <div className="item-input">
+        <label {...this.makeElementProps(element)} className="label-switch">
+          <input type="checkbox" checked={element.getIn(['attributes', 'checked'])}/>
+          <div className="checkbox"/>
+        </label>
+      </div>
+    );
+  }
+
+  renderInputSlider(element){
+    return (
+      <div className="item-input">
+        <div className="range-slider">
+          <input {...this.makeElementProps(element)}
+            type="range"
+            min={element.getIn(['attributes', 'min'])}
+            max={element.getIn(['attributes', 'max'])}
+            step={element.getIn(['attributes', 'step'])}
+            value={element.getIn(['attributes', 'value'])}/>
+        </div>
+      </div>
+    );
+  }
+
+  renderSearchBar(element){
+    return (
+      <form {...this.makeElementProps(element)}
+        className="searchbar searchbar-init"
+        data-search-list={'#e' + element.getIn(['attributes', 'list'])}
+        data-search-in=".item-title">
+        <div className="searchbar-input">
+          <input type="search" placeholder={element.getIn(['attributes', 'placeholder'])}/>
+          <a href="#" className="searchbar-clear"/>
+        </div>
+        <a href="#" className="searchbar-cancel">Cancel</a>
+      </form>
     );
   }
 

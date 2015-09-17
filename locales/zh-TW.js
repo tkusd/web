@@ -179,7 +179,9 @@ module.exports = {
     },
     event: {
       click: '點擊',
-      init: '初始化'
+      init: '初始化',
+      change: '變更',
+      itemClick: '點擊清單項目'
     },
     color: {
       red: '紅色',

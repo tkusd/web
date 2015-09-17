@@ -14,10 +14,17 @@ export default keyMirror({
   listItem: null,
   listDivider: null,
   listGroup: null,
-  accordion: null
+  accordion: null,
+  inputText: null,
+  inputSelect: null,
+  inputCheckbox: null,
+  inputSlider: null,
+  searchBar: null
 });
 
 export const events = keyMirror({
   click: null,
-  init: null
+  init: null,
+  change: null,
+  itemClick: null
 });

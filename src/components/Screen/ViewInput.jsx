@@ -75,7 +75,7 @@ class ViewInput extends React.Component {
         ...pick(styles, [
           'fontSize', 'fontFamily', 'lineHeight', 'color', 'letterSpacing',
           'color', 'textAlign', 'textIndent', 'textShadow', 'fontWeight',
-          'textDecoration', 'fontStyle'
+          'textDecoration', 'fontStyle', 'textTransform'
         ]),
         top: rect.top + getPureNumber(paddingTop),
         left: rect.left + getPureNumber(paddingLeft),
