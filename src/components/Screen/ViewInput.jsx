@@ -27,7 +27,6 @@ class ViewInput extends React.Component {
     super(props, context);
 
     this.state = {
-      value: null,
       rect: null
     };
   }
@@ -35,7 +34,7 @@ class ViewInput extends React.Component {
   componentDidUpdate(prevProps){
     if (this.props.focusedElement !== prevProps.focusedElement){
       const {focusedElement, components, elements} = this.props;
-      let rect, value;
+      let rect;
 
       if (focusedElement){
         const element = elements.get(focusedElement);
@@ -44,20 +43,21 @@ class ViewInput extends React.Component {
 
         if (node && component.getIn(['attributes', 'text'])){
           rect = node.getBoundingClientRect();
-          value = element.getIn(['attributes', 'text']);
         }
       }
 
-      this.setState({rect, value});
+      this.setState({rect});
     }
   }
 
   render(){
     const {focusedElement, components, elements} = this.props;
-    const {rect, value} = this.state;
+    const {rect} = this.state;
     if (!focusedElement || !rect) return <div/>;
 
     const node = document.getElementById('e' + focusedElement);
+    if (!node) return <div/>;
+
     const styles = window.getComputedStyle(node);
     const element = elements.get(focusedElement);
     const component = components.get(element.get('type'));
@@ -82,7 +82,7 @@ class ViewInput extends React.Component {
         width: rect.width - getPureNumber(paddingLeft) - getPureNumber(paddingRight),
         height: rect.height - getPureNumber(paddingTop) - getPureNumber(paddingBottom)
       },
-      value,
+      value: element.getIn(['attributes', 'text']),
       onChange: this.handleChange,
       onBlur: this.handleBlur,
       onKeyDown: this.handleKeyDown
@@ -92,28 +92,24 @@ class ViewInput extends React.Component {
   handleKeyDown = (e) => {
     switch (e.keyCode){
     case 27: // esc
-      this.props.focusElement(null);
+      this.handleBlur(e);
       break;
     }
   }
 
   handleChange = (e) => {
-    this.setState({
-      value: (e.target || e.currentTarget).value
-    });
+    const {focusedElement, elements} = this.props;
+    const {updateElement} = bindActions(ElementAction, this.context.flux);
+    const element = elements.get(focusedElement);
+    let value = (e.target || e.currentTarget).value;
+
+    updateElement(focusedElement, element.setIn(['attributes', 'text'], value));
   }
 
   handleBlur = (e) => {
-    const {focusedElement, focusElement, elements} = this.props;
-    const {value} = this.state;
-    const {updateElement} = bindActions(ElementAction, this.context.flux);
-    const element = elements.get(focusedElement);
+    const {focusElement} = this.props;
 
     focusElement(null);
-
-    if (element.getIn(['attributes', 'text']) === value) return;
-
-    updateElement(focusedElement, element.setIn(['attributes', 'text'], value));
   }
 }
 
