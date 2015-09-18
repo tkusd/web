@@ -7,4 +7,5 @@ export default function(Blockly, props){
   require('./text')(Blockly, props);
   require('./variables')(Blockly, props);
   require('./view')(Blockly, props);
+  require('./lists')(Blockly, props);
 }
