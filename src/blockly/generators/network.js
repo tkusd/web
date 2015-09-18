@@ -11,7 +11,7 @@ export default function(Blockly, props){
     return `Dom7.ajax({
       url: ${url},
       success: function(${successArg0}){
-        ${successResult} = JSON.parse(${successArg0});
+        var ${successResult} = JSON.parse(${successArg0});
         ${successCallback}
       },
       error: function(){

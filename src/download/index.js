@@ -6,6 +6,7 @@ import path from 'path';
 import request from 'request';
 import {extractAssetID} from '../utils/getAssetBlobURL';
 import nunjucksRender from '../utils/nunjucksRender';
+import base62uuid from '../utils/base62uuid';
 
 const F7_PATH = path.join(__dirname, '../../node_modules/framework7');
 const F7_DIST = path.join(F7_PATH, 'dist');
@@ -13,8 +14,8 @@ const TEMPLATE_PATH = path.join(__dirname, 'template.html');
 
 function generateXML(project){
   let root = xmlbuilder.create('widget');
-  root.att('id', 'tw.tkusd.diff'); // TODO: change package name
-  root.att('version', '0.0.1');
+  root.att('id', 'tw.tkusd.diff.app' + base62uuid(project.get('id')));
+  root.att('version', '1.0.0');
   root.att('xmlns', 'http://www.w3.org/ns/widgets');
   root.att('xmlns:cdv', 'http://cordova.apache.org/ns/1.0');
 
@@ -25,12 +26,23 @@ function generateXML(project){
   }, 'Diff');
   root.ele('content', {src: 'index.html'});
 
+  root.ele('preference', {
+    name: 'DisallowOverscroll',
+    value: 'true'
+  });
+
+  root.ele('preference', {
+    name: 'Orientation',
+    value: 'default'
+  });
+
   root.ele('plugin', {
     name: 'cordova-plugin-whitelist',
     spec: '1'
   });
 
   root.ele('access', {origin: '*'});
+  root.ele('allow-navigation', {href: '*'});
 
   root.ele('allow-intent', {href: 'http://*/*'});
   root.ele('allow-intent', {href: 'https://*/*'});
@@ -39,16 +51,19 @@ function generateXML(project){
   root.ele('allow-intent', {href: 'mailto:*'});
   root.ele('allow-intent', {href: 'geo:*'});
 
-  root.ele('platform', {name: 'android'})
-    .ele('allow-intent', {href: 'market:*'});
+  let android = root.ele('platform', {name: 'android'});
+  android.ele('allow-intent', {href: 'market:*'});
 
-  root.ele('platform', {name: 'ios'})
-    .ele('allow-intent', {href: 'itms:*'}).up()
-    .ele('allow-intent', {href: 'itms:*'});
+  let ios = root.ele('platform', {name: 'ios'});
+  ios.ele('allow-intent', {href: 'itms:*'});
+  ios.ele('plugin', {
+    name: 'sk.kcorp.cordova.ios-security',
+    spec: 'https://github.com/robertklein/cordova-ios-security.git'
+  });
 
   return root.end({
     pretty: true,
-    indent: '  ', // 2 spaces
+    indent: '    ', // 4 spaces
     newline: '\n'
   });
 }
